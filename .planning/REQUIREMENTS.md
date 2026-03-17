@@ -84,33 +84,33 @@
 
 ## Traceability
 
-*Updated during roadmap creation.*
+*Updated after roadmap creation — 2026-03-17.*
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| DECK-01 | Phase 2 | Pending |
-| DECK-02 | Phase 2 | Pending |
-| DECK-03 | Phase 2 | Pending |
-| DECK-04 | Phase 2 | Pending |
-| DECK-05 | Phase 2 | Pending |
-| DECK-06 | Phase 2 | Pending |
-| STUDY-01 | Phase 3 | Pending |
-| STUDY-02 | Phase 3 | Pending |
-| STUDY-03 | Phase 3 | Pending |
-| STUDY-04 | Phase 3 | Pending |
-| STUDY-05 | Phase 3 | Pending |
-| STUDY-06 | Phase 3 | Pending |
-| HAB-01 | Phase 4 | Pending |
-| HAB-02 | Phase 4 | Pending |
-| HAB-03 | Phase 4 | Pending |
-| HAB-04 | Phase 5 | Pending |
-| HAB-05 | Phase 5 | Pending |
-| HAB-06 | Phase 4 | Pending |
-| HAB-07 | Phase 4 | Pending |
+| AUTH-01 | Phase 1: Foundation | Pending |
+| AUTH-02 | Phase 1: Foundation | Pending |
+| AUTH-03 | Phase 1: Foundation | Pending |
+| AUTH-04 | Phase 1: Foundation | Pending |
+| DECK-01 | Phase 2: Deck and Card Management | Pending |
+| DECK-02 | Phase 2: Deck and Card Management | Pending |
+| DECK-03 | Phase 2: Deck and Card Management | Pending |
+| DECK-04 | Phase 2: Deck and Card Management | Pending |
+| DECK-05 | Phase 2: Deck and Card Management | Pending |
+| DECK-06 | Phase 2: Deck and Card Management | Pending |
+| STUDY-01 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-02 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-03 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-04 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-05 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-06 | Phase 3: Study Engine and Study UI | Pending |
+| HAB-01 | Phase 4: Habitat Engine | Pending |
+| HAB-06 | Phase 4: Habitat Engine | Pending |
+| HAB-02 | Phase 5: Habitat UI | Pending |
+| HAB-03 | Phase 5: Habitat UI | Pending |
+| HAB-04 | Phase 6: Milestone System and Dashboard Polish | Pending |
+| HAB-05 | Phase 6: Milestone System and Dashboard Polish | Pending |
+| HAB-07 | Phase 6: Milestone System and Dashboard Polish | Pending |
 
 **Coverage:**
 - v1 requirements: 23 total
@@ -120,4 +120,4 @@
 ---
 
 *Requirements defined: 2026-03-17*
-*Last updated: 2026-03-17 after initial definition*
+*Last updated: 2026-03-17 after roadmap creation*
