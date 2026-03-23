@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Phase complete — ready for verification
-stopped_at: Completed 01-foundation-03-PLAN.md — Phase 01-foundation fully complete
-last_updated: "2026-03-23T19:08:41.992Z"
+stopped_at: "Completed 01-foundation-04-PLAN.md — gap closure: env.ts wired into module graph, RESEND_API_KEY added to CI"
+last_updated: "2026-03-23T19:29:29.218Z"
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -49,6 +49,7 @@ Plan: 3 of 3
 | Phase 01-foundation P01 | 29 | 2 tasks | 22 files |
 | Phase 01-foundation P02 | 2 | 2 tasks | 4 files |
 | Phase 01-foundation P03 | 18 | 3 tasks | 9 files |
+| Phase 01-foundation P04 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,7 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: useSearchParams in reset-password wrapped in Suspense boundary — required by Next.js 16 for pages that prerender
 - [Phase 01-foundation]: Better Auth client uses requestPasswordReset not forgetPassword — plan interface contract was inaccurate about client method name
 - [Phase 01-foundation]: LogoutButton extracted as separate client component to keep dashboard page a server component
+- [Phase 01-foundation]: env.ts wired via side-effect import in layout.tsx (not named import) — triggers Zod validation at app startup without unused-variable lint warnings
 
 ### Pending Todos
 
@@ -85,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T19:08:41.986Z
-Stopped at: Completed 01-foundation-03-PLAN.md — Phase 01-foundation fully complete
+Last session: 2026-03-23T19:29:29.212Z
+Stopped at: Completed 01-foundation-04-PLAN.md — gap closure: env.ts wired into module graph, RESEND_API_KEY added to CI
 Resume file: None

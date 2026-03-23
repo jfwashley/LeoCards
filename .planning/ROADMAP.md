@@ -12,7 +12,7 @@ TioCards ships in six phases, each delivering a coherent, verifiable capability.
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on
+- [x] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on (completed 2026-03-23)
 - [ ] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow
 - [ ] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards
 - [ ] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route
@@ -36,7 +36,7 @@ Plans:
 - [x] 01-01-PLAN.md — Project scaffold: Next.js 16, TypeScript strict, Tailwind 4, Biome, shadcn/ui, Drizzle + Neon, full DB schema (all 6 phases), Vitest, CI pipeline, env validation
 - [x] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
 - [x] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
-- [ ] 01-04-PLAN.md — Gap closure: wire orphaned env.ts into app module graph, add RESEND_API_KEY to CI env block
+- [x] 01-04-PLAN.md — Gap closure: wire orphaned env.ts into app module graph, add RESEND_API_KEY to CI env block
 
 ### Phase 2: Deck and Card Management
 **Goal**: Users can populate their decks — browsing pre-made word lists, manually entering words with auto-translation, and managing their saved cards.
@@ -123,7 +123,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 3/4 | In Progress|  |
+| 1. Foundation | 4/4 | Complete   | 2026-03-23 |
 | 2. Deck and Card Management | 0/3 | Not started | - |
 | 3. Study Engine and Study UI | 0/3 | Not started | - |
 | 4. Habitat Engine | 0/2 | Not started | - |
