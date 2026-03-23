@@ -30,12 +30,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. User can close the browser and return to find themselves still logged in
   3. User can log out from any page and be redirected to the login screen
   4. User who has forgotten their password can receive a reset link by email and set a new one
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold: Next.js 16, TypeScript strict, Tailwind 4, Biome, shadcn/ui, Drizzle + Neon, full DB schema (all 6 phases), Vitest, CI pipeline, env validation
 - [x] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
 - [x] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
+- [ ] 01-04-PLAN.md — Gap closure: wire orphaned env.ts into app module graph, add RESEND_API_KEY to CI env block
 
 ### Phase 2: Deck and Card Management
 **Goal**: Users can populate their decks — browsing pre-made word lists, manually entering words with auto-translation, and managing their saved cards.
@@ -122,7 +123,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/4 | In Progress|  |
 | 2. Deck and Card Management | 0/3 | Not started | - |
 | 3. Study Engine and Study UI | 0/3 | Not started | - |
 | 4. Habitat Engine | 0/2 | Not started | - |
