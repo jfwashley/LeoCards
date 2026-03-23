@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed Phase 01-foundation Plan 02 — Better Auth server, browser client, API route, and proxy.ts route protection
-last_updated: "2026-03-23T17:07:53.856Z"
+stopped_at: "Stopped at checkpoint: Phase 01-foundation Plan 03 Task 3 (human-verify) — auth UI pages built, awaiting visual verification"
+last_updated: "2026-03-23T17:17:04.586Z"
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -64,6 +64,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: proxy.ts used instead of middleware.ts — Next.js 16 breaking change renames the file and function
 - [Phase 01-foundation]: nextCookies() placed last in Better Auth plugins array — required for server actions to set cookies correctly
 - [Phase 01-foundation]: Full schema (import * as schema) passed to drizzleAdapter — partial schema causes runtime TypeError in Better Auth
+- [Phase 01-foundation]: useSearchParams in reset-password wrapped in Suspense boundary — required by Next.js 16 for pages that prerender
+- [Phase 01-foundation]: Better Auth client uses requestPasswordReset not forgetPassword — plan interface contract was inaccurate about client method name
+- [Phase 01-foundation]: LogoutButton extracted as separate client component to keep dashboard page a server component
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T17:07:53.850Z
-Stopped at: Completed Phase 01-foundation Plan 02 — Better Auth server, browser client, API route, and proxy.ts route protection
+Last session: 2026-03-23T17:16:46.392Z
+Stopped at: Stopped at checkpoint: Phase 01-foundation Plan 03 Task 3 (human-verify) — auth UI pages built, awaiting visual verification
 Resume file: None
