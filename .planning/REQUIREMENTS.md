@@ -9,10 +9,10 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can create an account with email and password
-- [ ] **AUTH-02**: User can log in with email and password and stay logged in across sessions
-- [ ] **AUTH-03**: User can log out from any page
-- [ ] **AUTH-04**: User can reset password via email link
+- [x] **AUTH-01**: User can create an account with email and password
+- [x] **AUTH-02**: User can log in with email and password and stay logged in across sessions
+- [x] **AUTH-03**: User can log out from any page
+- [x] **AUTH-04**: User can reset password via email link
 
 ### Deck & Card Management
 
@@ -88,10 +88,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1: Foundation | Pending |
-| AUTH-02 | Phase 1: Foundation | Pending |
-| AUTH-03 | Phase 1: Foundation | Pending |
-| AUTH-04 | Phase 1: Foundation | Pending |
+| AUTH-01 | Phase 1: Foundation | Complete |
+| AUTH-02 | Phase 1: Foundation | Complete |
+| AUTH-03 | Phase 1: Foundation | Complete |
+| AUTH-04 | Phase 1: Foundation | Complete |
 | DECK-01 | Phase 2: Deck and Card Management | Pending |
 | DECK-02 | Phase 2: Deck and Card Management | Pending |
 | DECK-03 | Phase 2: Deck and Card Management | Pending |

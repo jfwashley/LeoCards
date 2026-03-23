@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Executing Phase 01
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-03-23T16:29:12.054Z"
+status: Ready to execute
+stopped_at: Completed Phase 01-foundation Plan 01 — project scaffold and DB schema
+last_updated: "2026-03-23T17:01:35.173Z"
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 3
-  completed_plans: 0
+  completed_plans: 1
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Plan: 1 of 3
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-foundation P01 | 29 | 2 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -57,6 +58,8 @@ Recent decisions affecting current work:
 - Stack: Next.js 15 + Better Auth + Drizzle + Neon + PixiJS 8.x + Motion 11.x + DeepL + Vitest + Biome (see research/SUMMARY.md)
 - Architecture: Compute-on-read — habitat level, decay, mood, and milestones derived at request time from raw DB facts; never stored as computed columns
 - Study: Client-local session state via `useReducer`; single batch POST to `/api/study/complete` at session end
+- [Phase 01-foundation]: Biome CSS linting disabled — Tailwind 4 directives incompatible with Biome CSS parser; CSS files excluded via includes pattern
+- [Phase 01-foundation]: src/db/index.ts uses process.env.DATABASE_URL directly (not env.ts) to avoid circular import when auth.ts imports db at module scope
 
 ### Pending Todos
 
@@ -71,6 +74,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T15:15:39.202Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-foundation/01-UI-SPEC.md
+Last session: 2026-03-23T17:01:35.156Z
+Stopped at: Completed Phase 01-foundation Plan 01 — project scaffold and DB schema
+Resume file: None

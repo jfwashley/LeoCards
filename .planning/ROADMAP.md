@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold: Next.js 16, TypeScript strict, Tailwind 4, Biome, shadcn/ui, Drizzle + Neon, full DB schema (all 6 phases), Vitest, CI pipeline, env validation
+- [x] 01-01-PLAN.md — Project scaffold: Next.js 16, TypeScript strict, Tailwind 4, Biome, shadcn/ui, Drizzle + Neon, full DB schema (all 6 phases), Vitest, CI pipeline, env validation
 - [ ] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
 - [ ] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
 
