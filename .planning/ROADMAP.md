@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold: Next.js 16, TypeScript strict, Tailwind 4, Biome, shadcn/ui, Drizzle + Neon, full DB schema (all 6 phases), Vitest, CI pipeline, env validation
-- [ ] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
+- [x] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
 - [ ] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
 
 ### Phase 2: Deck and Card Management
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Planning complete | - |
+| 1. Foundation | 2/3 | In Progress|  |
 | 2. Deck and Card Management | 0/3 | Not started | - |
 | 3. Study Engine and Study UI | 0/3 | Not started | - |
 | 4. Habitat Engine | 0/2 | Not started | - |

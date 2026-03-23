@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed Phase 01-foundation Plan 01 — project scaffold and DB schema
-last_updated: "2026-03-23T17:01:35.173Z"
+stopped_at: Completed Phase 01-foundation Plan 02 — Better Auth server, browser client, API route, and proxy.ts route protection
+last_updated: "2026-03-23T17:07:53.856Z"
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 2 of 3
 
 *Updated after each plan completion*
 | Phase 01-foundation P01 | 29 | 2 tasks | 22 files |
+| Phase 01-foundation P02 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -60,6 +61,9 @@ Recent decisions affecting current work:
 - Study: Client-local session state via `useReducer`; single batch POST to `/api/study/complete` at session end
 - [Phase 01-foundation]: Biome CSS linting disabled — Tailwind 4 directives incompatible with Biome CSS parser; CSS files excluded via includes pattern
 - [Phase 01-foundation]: src/db/index.ts uses process.env.DATABASE_URL directly (not env.ts) to avoid circular import when auth.ts imports db at module scope
+- [Phase 01-foundation]: proxy.ts used instead of middleware.ts — Next.js 16 breaking change renames the file and function
+- [Phase 01-foundation]: nextCookies() placed last in Better Auth plugins array — required for server actions to set cookies correctly
+- [Phase 01-foundation]: Full schema (import * as schema) passed to drizzleAdapter — partial schema causes runtime TypeError in Better Auth
 
 ### Pending Todos
 
@@ -74,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T17:01:35.156Z
-Stopped at: Completed Phase 01-foundation Plan 01 — project scaffold and DB schema
+Last session: 2026-03-23T17:07:53.850Z
+Stopped at: Completed Phase 01-foundation Plan 02 — Better Auth server, browser client, API route, and proxy.ts route protection
 Resume file: None
