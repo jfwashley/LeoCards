@@ -37,6 +37,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
   test:
     name: Unit tests
