@@ -51,8 +51,8 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Schema migration (remove unique constraint, add name/nativeLanguage columns), DeepL translation proxy route, word list JSON data (6 language pairs, 14 categories), dependency installation
-- [ ] 02-02-PLAN.md — Server Actions (createDeck, saveCard, editCard, deleteCard, addWordToCard, removeWordFromDeck) and read queries (getUserDecks, getDeckCards, getDeckCardWords)
+- [x] 02-01-PLAN.md — Schema migration (remove unique constraint, add name/nativeLanguage columns), DeepL translation proxy route, word list JSON data (6 language pairs, 14 categories), dependency installation
+- [x] 02-02-PLAN.md — Server Actions (createDeck, saveCard, editCard, deleteCard, addWordToCard, removeWordFromDeck) and read queries (getUserDecks, getDeckCards, getDeckCardWords)
 - [ ] 02-03-PLAN.md — Dashboard UI: app header with deck switcher, first-visit language picker, card list with search, card edit/delete dialog with confirmation
 - [ ] 02-04-PLAN.md — Word list browser page with category/CEFR filter and +/- toggle, manual card entry page with bidirectional debounced DeepL translation
 
@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 4/4 | Complete   | 2026-03-23 |
-| 2. Deck and Card Management | 0/4 | Not started | - |
+| 2. Deck and Card Management | 2/4 | In Progress|  |
 | 3. Study Engine and Study UI | 0/3 | Not started | - |
 | 4. Habitat Engine | 0/2 | Not started | - |
 | 5. Habitat UI | 0/3 | Not started | - |

@@ -16,12 +16,12 @@
 
 ### Deck & Card Management
 
-- [ ] **DECK-01**: User can browse a built-in word list for their chosen language and add words to their deck
-- [ ] **DECK-02**: User can manually enter a word in their native language and receive an auto-translated result for the target language
-- [ ] **DECK-03**: User can review and edit the auto-translated result before saving a manually-entered card
-- [ ] **DECK-04**: User can edit the translation on any saved card
-- [ ] **DECK-05**: User can delete a card from their deck
-- [ ] **DECK-06**: User can manage decks for French, Spanish, and English independently
+- [x] **DECK-01**: User can browse a built-in word list for their chosen language and add words to their deck
+- [x] **DECK-02**: User can manually enter a word in their native language and receive an auto-translated result for the target language
+- [x] **DECK-03**: User can review and edit the auto-translated result before saving a manually-entered card
+- [x] **DECK-04**: User can edit the translation on any saved card
+- [x] **DECK-05**: User can delete a card from their deck
+- [x] **DECK-06**: User can manage decks for French, Spanish, and English independently
 
 ### Study
 
@@ -92,12 +92,12 @@
 | AUTH-02 | Phase 1: Foundation | Complete |
 | AUTH-03 | Phase 1: Foundation | Complete |
 | AUTH-04 | Phase 1: Foundation | Complete |
-| DECK-01 | Phase 2: Deck and Card Management | Pending |
-| DECK-02 | Phase 2: Deck and Card Management | Pending |
-| DECK-03 | Phase 2: Deck and Card Management | Pending |
-| DECK-04 | Phase 2: Deck and Card Management | Pending |
-| DECK-05 | Phase 2: Deck and Card Management | Pending |
-| DECK-06 | Phase 2: Deck and Card Management | Pending |
+| DECK-01 | Phase 2: Deck and Card Management | Complete |
+| DECK-02 | Phase 2: Deck and Card Management | Complete |
+| DECK-03 | Phase 2: Deck and Card Management | Complete |
+| DECK-04 | Phase 2: Deck and Card Management | Complete |
+| DECK-05 | Phase 2: Deck and Card Management | Complete |
+| DECK-06 | Phase 2: Deck and Card Management | Complete |
 | STUDY-01 | Phase 3: Study Engine and Study UI | Pending |
 | STUDY-02 | Phase 3: Study Engine and Study UI | Pending |
 | STUDY-03 | Phase 3: Study Engine and Study UI | Pending |

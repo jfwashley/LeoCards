@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-03-24T12:26:36.341Z"
+status: Ready to execute
+stopped_at: Completed 02-deck-and-card-management-02-03-PLAN.md
+last_updated: "2026-03-24T15:55:07.809Z"
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 8
+  completed_plans: 6
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 01 — foundation
+**Current focus:** Phase 02 — deck-and-card-management
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (deck-and-card-management) — EXECUTING
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -50,6 +50,9 @@ Plan: Not started
 | Phase 01-foundation P02 | 2 | 2 tasks | 4 files |
 | Phase 01-foundation P03 | 18 | 3 tasks | 9 files |
 | Phase 01-foundation P04 | 5 | 1 tasks | 2 files |
+| Phase 02-deck-and-card-management P01 | 45 | 3 tasks | 19 files |
+| Phase 02-deck-and-card-management P02 | 10 | 2 tasks | 3 files |
+| Phase 02-deck-and-card-management P03 | 25 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -73,6 +76,15 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Better Auth client uses requestPasswordReset not forgetPassword — plan interface contract was inaccurate about client method name
 - [Phase 01-foundation]: LogoutButton extracted as separate client component to keep dashboard page a server component
 - [Phase 01-foundation]: env.ts wired via side-effect import in layout.tsx (not named import) — triggers Zod validation at app startup without unused-variable lint warnings
+- [Phase 02-deck-and-card-management]: DeepL target language 'en' mapped to 'en-US' (DeepL requires specific English variant codes)
+- [Phase 02-deck-and-card-management]: Word lists stored as static JSON files — version-controlled, zero migration risk
+- [Phase 02-deck-and-card-management]: DeepL client instantiated inside handler (not module scope) to prevent env access at import time
+- [Phase 02-deck-and-card-management]: vi.hoisted() required for vitest mocks that are referenced inside vi.mock() factories
+- [Phase 02-deck-and-card-management]: deck-queries.ts has no 'use server' — Server Component data fetchers, not client-callable server actions
+- [Phase 02-deck-and-card-management]: Branded type cast (userId as UserId) required when comparing plain string to branded Drizzle column in eq()
+- [Phase 02-deck-and-card-management]: URL params (?deck=id) for active deck state — enables SSR and shareable URLs
+- [Phase 02-deck-and-card-management]: DeckView as separate client component so dashboard page remains a server component
+- [Phase 02-deck-and-card-management]: DeleteConfirm replaces dialog body content (same Dialog) — not a nested second Dialog
 
 ### Pending Todos
 
@@ -87,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T12:26:36.333Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-deck-and-card-management/02-UI-SPEC.md
+Last session: 2026-03-24T15:55:07.806Z
+Stopped at: Completed 02-deck-and-card-management-02-03-PLAN.md
+Resume file: None
