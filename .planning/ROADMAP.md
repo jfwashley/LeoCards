@@ -13,7 +13,7 @@ TioCards ships in six phases, each delivering a coherent, verifiable capability.
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on (completed 2026-03-23)
-- [ ] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow
+- [x] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow (completed 2026-03-24)
 - [ ] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards
 - [ ] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route
 - [ ] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions
@@ -53,8 +53,8 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Schema migration (remove unique constraint, add name/nativeLanguage columns), DeepL translation proxy route, word list JSON data (6 language pairs, 14 categories), dependency installation
 - [x] 02-02-PLAN.md — Server Actions (createDeck, saveCard, editCard, deleteCard, addWordToCard, removeWordFromDeck) and read queries (getUserDecks, getDeckCards, getDeckCardWords)
-- [ ] 02-03-PLAN.md — Dashboard UI: app header with deck switcher, first-visit language picker, card list with search, card edit/delete dialog with confirmation
-- [ ] 02-04-PLAN.md — Word list browser page with category/CEFR filter and +/- toggle, manual card entry page with bidirectional debounced DeepL translation
+- [x] 02-03-PLAN.md — Dashboard UI: app header with deck switcher, first-visit language picker, card list with search, card edit/delete dialog with confirmation
+- [x] 02-04-PLAN.md — Word list browser page with category/CEFR filter and +/- toggle, manual card entry page with bidirectional debounced DeepL translation
 
 ### Phase 3: Study Engine and Study UI
 **Goal**: Users can run a flashcard study session, see their mastery grow, and have the server reliably record which cards they have learned.
