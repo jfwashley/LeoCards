@@ -18,6 +18,7 @@ const signupSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  nativeLanguage: z.enum(["en", "fr", "es"]),
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -33,6 +34,9 @@ export default function SignupPage() {
     formState: { errors, isSubmitted },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      nativeLanguage: "en",
+    },
   });
 
   async function onSubmit(values: SignupFormValues) {
@@ -43,6 +47,8 @@ export default function SignupPage() {
       email: values.email,
       password: values.password,
       name: values.name,
+      // nativeLanguage is stored in onboarding flow after signup
+      // Better Auth's signUp.email does not accept arbitrary fields
     });
 
     setIsPending(false);
@@ -117,6 +123,24 @@ export default function SignupPage() {
             {isSubmitted && errors.password && (
               <p className="text-sm text-destructive">
                 {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid gap-1.5">
+            <Label htmlFor="nativeLanguage">Native language</Label>
+            <select
+              id="nativeLanguage"
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              {...register("nativeLanguage")}
+            >
+              <option value="en">English</option>
+              <option value="fr">French</option>
+              <option value="es">Spanish</option>
+            </select>
+            {isSubmitted && errors.nativeLanguage && (
+              <p className="text-sm text-destructive">
+                {errors.nativeLanguage.message}
               </p>
             )}
           </div>

@@ -32,6 +32,7 @@ export const user = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  nativeLanguage: text("nativeLanguage").notNull().default("en"),
 });
 
 export const session = pgTable("session", {
@@ -78,21 +79,16 @@ export const verification = pgTable("verification", {
 // App tables — defined in Phase 1, populated in later phases
 // ============================================================
 
-export const decks = pgTable(
-  "decks",
-  {
-    id: text("id").primaryKey().$type<DeckId>(),
-    userId: text("userId")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    language: text("language").notNull(), // "fr" | "es" | "en"
-    createdAt: timestamp("createdAt").notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
-  },
-  (table) => [
-    unique("decks_userId_language_unique").on(table.userId, table.language),
-  ],
-);
+export const decks = pgTable("decks", {
+  id: text("id").primaryKey().$type<DeckId>(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  language: text("language").notNull(), // "fr" | "es" | "en"
+  name: text("name").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
 
 export const cards = pgTable("cards", {
   id: text("id").primaryKey().$type<CardId>(),
