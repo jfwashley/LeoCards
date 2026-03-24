@@ -87,14 +87,16 @@ Inherited from Phase 1 — tokens confirmed in `src/app/globals.css`.
 
 Accent (`--primary`) reserved for:
 1. "Save card" button on manual card entry page (primary CTA for that view)
-2. "Create deck" button on first-visit language picker (primary CTA for that flow)
-3. Focus ring on all interactive form elements (`ring-primary` / `--ring`)
-4. Active/checked state of word list +/- toggle when a word is added to the deck (checkmark icon rendered in accent color)
+2. "Save changes" button in the card edit dialog (primary CTA for that modal)
+3. "Create deck" button on first-visit language picker (primary CTA for that flow)
+4. Focus ring on all interactive form elements (`ring-primary` / `--ring`)
+5. Active/checked state of word list +/- toggle when a word is added to the deck (checkmark icon rendered in accent color)
 
 Accent is NOT used for: heading text, body copy, card list row hover state, CEFR badges, source indicator pills, navigation links, the deck switcher trigger, or the search input.
 
 Secondary action style for non-primary buttons:
-- "Cancel" in modals: `variant="outline"` — border-border, no fill
+- "Discard changes" in card edit dialog: `variant="outline"` — border-border, no fill
+- "Keep card" in delete confirmation dialog: `variant="outline"` — border-border, no fill
 - "Edit" row icon button: `variant="ghost"` — no border, hover shows muted background
 - Search clear button: `variant="ghost"`
 - Word list "−" remove button: `variant="ghost"` with destructive-colored icon (not full destructive style — icon only)
@@ -116,6 +118,8 @@ Source indicator pill:
 Phase 2 delivers: a rebuilt `/dashboard` (deck management view), a `/deck/new-card` page (manual card entry), and a first-visit language picker flow. Each state is defined below.
 
 ### /dashboard (Deck Management View — replaces Phase 1 stub)
+
+**Focal point:** The card list table is the primary focal element. On load, visual weight flows from the page heading "My Deck" (20px/600) → search bar (full-width, immediately below heading) → card list rows. The two action buttons ("Browse words", "Add a card") are right-aligned above the table and carry secondary visual weight. No competing focal regions; the header is minimal and recedes visually.
 
 #### Sub-state: First visit — no decks exist
 
@@ -177,7 +181,7 @@ Route: `/deck/browse`
 
 | State | Behavior |
 |-------|----------|
-| Default open | Both native and target fields pre-populated with current values; "Save changes" CTA (accent); "Cancel" button (outline); "Delete card" link/button (destructive color, bottom of modal) |
+| Default open | Both native and target fields pre-populated with current values; "Save changes" CTA (accent); "Discard changes" button (outline); "Delete card" link/button (destructive color, bottom of modal) |
 | Saving | "Save changes" disabled + spinner; fields locked |
 | Save success | Modal closes; card list row updates inline |
 | Save error | Inline error below "Save changes": "Couldn't save. Try again." |
@@ -187,7 +191,7 @@ Route: `/deck/browse`
 
 | State | Behavior |
 |-------|----------|
-| Default | Heading "Delete this card?", body "This can't be undone.", "Delete" CTA (destructive), "Cancel" button (outline) |
+| Default | Heading "Delete this card?", body "This can't be undone.", "Delete" CTA (destructive), "Keep card" button (outline) |
 | Deleting | "Delete" disabled + spinner |
 | Delete success | Both dialogs close; card removed from list without page reload |
 | Delete error | Error text inside dialog: "Couldn't delete. Try again." — dialog stays open |
@@ -251,11 +255,11 @@ Route: `/deck/browse`
 
 ### Card Edit Dialog
 
-- Modal trigger: lucide `Pencil` icon button (`variant="ghost"`, 44px tap area) in each card list row
+- Modal trigger: lucide `Pencil` icon button (`variant="ghost"`, 44px tap area, `aria-label="Edit card"`) in each card list row
 - Dialog width: `max-w-md` (448px), centered
 - Both fields use shadcn `<Input>` with visible `<Label>` above each
 - "Save changes" button: `variant="default"` (accent), full width
-- "Cancel" button: `variant="outline"`, full width — stacked below Save, or side by side if space allows
+- "Discard changes" button: `variant="outline"`, full width — stacked below Save, or side by side if space allows; closes the dialog without saving
 - "Delete card": text link with lucide `Trash2` icon, `text-sm text-destructive`, positioned at bottom of modal with visual separator
 - Nested delete confirmation: replaces the edit form content within the same Dialog — do not open a second Dialog on top
 
@@ -263,7 +267,7 @@ Route: `/deck/browse`
 
 - Replace dialog body content (animate with `opacity` transition, not slide)
 - "Delete" CTA: `variant="destructive"`, full width
-- "Cancel": `variant="outline"`, full width — returns to edit view (does not close the dialog)
+- "Keep card": `variant="outline"`, full width — returns to edit view (does not close the dialog)
 
 ### First-Visit Language Picker
 
@@ -307,6 +311,8 @@ Route: `/deck/browse`
 | Primary CTA — save card | "Save card" |
 | Primary CTA — save edit | "Save changes" |
 | Primary CTA — delete confirm | "Delete" |
+| Secondary — discard edit | "Discard changes" |
+| Secondary — keep card | "Keep card" |
 | Deck switcher — new deck item | "+ New deck" |
 | Column header — native word | "Your language" (or resolved language name, e.g. "English") |
 | Column header — target word | "Learning" (or resolved language name, e.g. "French") |
@@ -334,7 +340,7 @@ Route: `/deck/browse`
 | Deck auto-name format | "{Language} #{n}" (e.g., "French #1", "French #2") |
 
 Destructive actions in Phase 2:
-- **Delete card:** triggered from edit modal → confirm dialog inside modal → "Delete" destructive CTA. No undo. Confirmation copy: "Delete this card? / This can't be undone."
+- **Delete card:** triggered from edit modal → confirm dialog inside modal → "Delete" destructive CTA. No undo. Confirmation copy: "Delete this card? / This can't be undone." Secondary button in confirmation: "Keep card" (returns to edit view).
 
 ---
 
@@ -391,3 +397,8 @@ No third-party registries declared for this phase. Components added via `npx sha
 | Word list as dedicated page /deck/browse (not slide-in panel) | Claude's Discretion — cleaner separation of concerns |
 | CEFR badge color scheme (muted/secondary within warm palette) | Claude's Discretion |
 | Success message: "Card saved." auto-dismisses after 3s | Claude's Discretion (CONTEXT.md §Manual card entry success feedback) |
+| "Discard changes" replaces "Cancel" in card edit dialog | Checker revision — blocked generic label |
+| "Keep card" replaces "Cancel" in delete confirmation dialog | Checker revision — blocked generic label |
+| /dashboard focal point declaration (card list as primary focal element) | Checker revision — Dimension 2 flag |
+| aria-label="Edit card" on Pencil icon button | Checker revision — Dimension 2 flag |
+| "Save changes" added to accent reserved-for list | Checker revision — Dimension 3 flag |
