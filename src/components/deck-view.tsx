@@ -59,13 +59,13 @@ export function DeckView({
           <h1 className="text-xl font-semibold">My Deck</h1>
           <div className="flex items-center gap-3">
             <Link
-              href="/deck/browse"
+              href={`/deck/browse?deck=${activeDeckId}`}
               className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-8 text-sm hover:bg-muted transition-colors"
             >
               Browse words
             </Link>
             <Link
-              href="/deck/new-card"
+              href={`/deck/new-card?deck=${activeDeckId}`}
               className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-8 text-sm hover:bg-muted transition-colors"
             >
               Add a card
