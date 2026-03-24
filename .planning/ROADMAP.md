@@ -48,12 +48,13 @@ Plans:
   3. User can open any saved card and edit its translation
   4. User can delete a card from their deck
   5. User sees separate decks for French, Spanish, and English with independent card counts
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: DeepL translation proxy — `/api/translate` Route Handler, server-side key, never exposed to client; pre-made word list data ingestion
-- [ ] 02-02: Deck and card data layer — CRUD API routes, Drizzle queries, Zod validation, per-language deck isolation
-- [ ] 02-03: Deck management UI — word list browser, manual card entry with translate-preview-confirm flow, card edit and delete
+- [ ] 02-01-PLAN.md — Schema migration (remove unique constraint, add name/nativeLanguage columns), DeepL translation proxy route, word list JSON data (6 language pairs, 14 categories), dependency installation
+- [ ] 02-02-PLAN.md — Server Actions (createDeck, saveCard, editCard, deleteCard, addWordToCard, removeWordFromDeck) and read queries (getUserDecks, getDeckCards, getDeckCardWords)
+- [ ] 02-03-PLAN.md — Dashboard UI: app header with deck switcher, first-visit language picker, card list with search, card edit/delete dialog with confirmation
+- [ ] 02-04-PLAN.md — Word list browser page with category/CEFR filter and +/- toggle, manual card entry page with bidirectional debounced DeepL translation
 
 ### Phase 3: Study Engine and Study UI
 **Goal**: Users can run a flashcard study session, see their mastery grow, and have the server reliably record which cards they have learned.
@@ -119,12 +120,12 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 4/4 | Complete   | 2026-03-23 |
-| 2. Deck and Card Management | 0/3 | Not started | - |
+| 2. Deck and Card Management | 0/4 | Not started | - |
 | 3. Study Engine and Study UI | 0/3 | Not started | - |
 | 4. Habitat Engine | 0/2 | Not started | - |
 | 5. Habitat UI | 0/3 | Not started | - |
