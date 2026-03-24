@@ -80,10 +80,14 @@ beforeEach(() => {
   vi.clearAllMocks();
 
   // Re-wire chain return values after clearAllMocks
-  vi.mocked(db.select).mockReturnValue(selectChain as ReturnType<typeof db.select>);
-  vi.mocked(db.insert).mockReturnValue(insertChain as ReturnType<typeof db.insert>);
-  vi.mocked(db.update).mockReturnValue(updateChain as ReturnType<typeof db.update>);
-  vi.mocked(db.delete).mockReturnValue(deleteChain as ReturnType<typeof db.delete>);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  vi.mocked(db.select).mockReturnValue(selectChain as unknown as ReturnType<typeof db.select>);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  vi.mocked(db.insert).mockReturnValue(insertChain as unknown as ReturnType<typeof db.insert>);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  vi.mocked(db.update).mockReturnValue(updateChain as unknown as ReturnType<typeof db.update>);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  vi.mocked(db.delete).mockReturnValue(deleteChain as unknown as ReturnType<typeof db.delete>);
 
   selectChain.from.mockReturnValue(selectChain);
   selectChain.where.mockReturnValue(selectChain);
