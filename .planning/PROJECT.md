@@ -61,4 +61,4 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 | 3–4 correct recalls = "learned" | Spaced-repetition-lite without full SRS complexity | — Pending |
 
 ---
-*Last updated: 2026-03-17 after initialization*
+*Last updated: 2026-03-24 after Phase 2 completion — deck/card CRUD, word list browser, manual card entry with DeepL translation all shipped*
