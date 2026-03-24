@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 02-deck-and-card-management-02-03-PLAN.md
-last_updated: "2026-03-24T15:55:07.809Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02-deck-and-card-management-02-04-PLAN.md
+last_updated: "2026-03-24T16:09:55.494Z"
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -53,6 +53,7 @@ Plan: 4 of 4
 | Phase 02-deck-and-card-management P01 | 45 | 3 tasks | 19 files |
 | Phase 02-deck-and-card-management P02 | 10 | 2 tasks | 3 files |
 | Phase 02-deck-and-card-management P03 | 25 | 3 tasks | 8 files |
+| Phase 02-deck-and-card-management P04 | 5 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,10 @@ Recent decisions affecting current work:
 - [Phase 02-deck-and-card-management]: URL params (?deck=id) for active deck state — enables SSR and shareable URLs
 - [Phase 02-deck-and-card-management]: DeckView as separate client component so dashboard page remains a server component
 - [Phase 02-deck-and-card-management]: DeleteConfirm replaces dialog body content (same Dialog) — not a nested second Dialog
+- [Phase 02-deck-and-card-management]: useTransition wraps server action calls for optimistic updates without blocking UI
+- [Phase 02-deck-and-card-management]: activeField ref prevents translation feedback loop — only updates other field if user is still typing in the same field
+- [Phase 02-deck-and-card-management]: Skeleton shimmer replaces Input component during in-flight translation (not overlay)
+- [Phase 02-deck-and-card-management]: deck-view links updated to pass ?deck= param so browse/new-card pre-select correct deck
 
 ### Pending Todos
 
@@ -99,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T15:55:07.806Z
-Stopped at: Completed 02-deck-and-card-management-02-03-PLAN.md
+Last session: 2026-03-24T16:09:55.490Z
+Stopped at: Completed 02-deck-and-card-management-02-04-PLAN.md
 Resume file: None

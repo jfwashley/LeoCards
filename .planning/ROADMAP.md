@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 4/4 | Complete   | 2026-03-23 |
-| 2. Deck and Card Management | 2/4 | In Progress|  |
+| 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 0/3 | Not started | - |
 | 4. Habitat Engine | 0/2 | Not started | - |
 | 5. Habitat UI | 0/3 | Not started | - |
