@@ -1,17 +1,41 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// --- Mock next/headers ---
+// vi.hoisted runs before vi.mock factories — use it to create shared mocks
+const { mockGetSession, selectChain, insertChain, updateChain, deleteChain } =
+  vi.hoisted(() => {
+    const selectChain = {
+      from: vi.fn(),
+      where: vi.fn(),
+      innerJoin: vi.fn(),
+    };
+    selectChain.from.mockReturnValue(selectChain);
+    selectChain.where.mockReturnValue(selectChain);
+    selectChain.innerJoin.mockReturnValue(selectChain);
+
+    const insertChain = { values: vi.fn().mockResolvedValue(undefined) };
+
+    const updateChain = {
+      set: vi.fn(),
+      where: vi.fn().mockResolvedValue(undefined),
+    };
+    updateChain.set.mockReturnValue(updateChain);
+
+    const deleteChain = { where: vi.fn().mockResolvedValue(undefined) };
+
+    const mockGetSession = vi.fn();
+
+    return { mockGetSession, selectChain, insertChain, updateChain, deleteChain };
+  });
+
+// --- Mocks using hoisted variables ---
 vi.mock("next/headers", () => ({
   headers: vi.fn().mockResolvedValue(new Headers()),
 }));
 
-// --- Mock next/cache ---
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
 
-// --- Mock @/lib/auth ---
-const mockGetSession = vi.fn();
 vi.mock("@/lib/auth", () => ({
   auth: {
     api: {
@@ -20,41 +44,16 @@ vi.mock("@/lib/auth", () => ({
   },
 }));
 
-// --- Mock drizzle DB ---
-const mockDbSelect = vi.fn();
-const mockDbInsert = vi.fn();
-const mockDbUpdate = vi.fn();
-const mockDbDelete = vi.fn();
-
-// Chain helpers
-const selectChain = {
-  from: vi.fn().mockReturnThis(),
-  where: vi.fn().mockReturnThis(),
-  innerJoin: vi.fn().mockReturnThis(),
-};
-
-const insertChain = {
-  values: vi.fn().mockResolvedValue(undefined),
-};
-
-const updateChain = {
-  set: vi.fn().mockReturnThis(),
-  where: vi.fn().mockResolvedValue(undefined),
-};
-
-const deleteChain = {
-  where: vi.fn().mockResolvedValue(undefined),
-};
-
 vi.mock("@/db", () => ({
   db: {
-    select: mockDbSelect,
-    insert: mockDbInsert,
-    update: mockDbUpdate,
-    delete: mockDbDelete,
+    select: vi.fn().mockReturnValue(selectChain),
+    insert: vi.fn().mockReturnValue(insertChain),
+    update: vi.fn().mockReturnValue(updateChain),
+    delete: vi.fn().mockReturnValue(deleteChain),
   },
 }));
 
+import { db } from "@/db";
 import { revalidatePath } from "next/cache";
 import {
   addWordToCard,
@@ -70,9 +69,7 @@ const FAKE_DECK_ID = "deck-xyz-456";
 const FAKE_CARD_ID = "card-def-789";
 
 function mockSession(userId = FAKE_USER_ID) {
-  mockGetSession.mockResolvedValue({
-    user: { id: userId },
-  });
+  mockGetSession.mockResolvedValue({ user: { id: userId } });
 }
 
 function mockNoSession() {
@@ -82,23 +79,18 @@ function mockNoSession() {
 beforeEach(() => {
   vi.clearAllMocks();
 
-  // Default: DB select returns count=0
-  mockDbSelect.mockReturnValue(selectChain);
+  // Re-wire chain return values after clearAllMocks
+  vi.mocked(db.select).mockReturnValue(selectChain as ReturnType<typeof db.select>);
+  vi.mocked(db.insert).mockReturnValue(insertChain as ReturnType<typeof db.insert>);
+  vi.mocked(db.update).mockReturnValue(updateChain as ReturnType<typeof db.update>);
+  vi.mocked(db.delete).mockReturnValue(deleteChain as ReturnType<typeof db.delete>);
+
   selectChain.from.mockReturnValue(selectChain);
   selectChain.where.mockReturnValue(selectChain);
   selectChain.innerJoin.mockReturnValue(selectChain);
-
-  // Default resolved value for select queries (count = 0)
-  selectChain.where.mockResolvedValue([{ count: 0 }]);
-
-  mockDbInsert.mockReturnValue(insertChain);
-  insertChain.values.mockResolvedValue(undefined);
-
-  mockDbUpdate.mockReturnValue(updateChain);
   updateChain.set.mockReturnValue(updateChain);
+  insertChain.values.mockResolvedValue(undefined);
   updateChain.where.mockResolvedValue(undefined);
-
-  mockDbDelete.mockReturnValue(deleteChain);
   deleteChain.where.mockResolvedValue(undefined);
 });
 
@@ -114,10 +106,7 @@ describe("createDeck", () => {
 
   it("generates name 'French #1' when no existing French decks", async () => {
     mockSession();
-    // count query returns 0
     selectChain.where.mockResolvedValueOnce([{ count: 0 }]);
-    // deck ownership check (not needed for createDeck)
-    mockDbInsert.mockReturnValue(insertChain);
 
     const result = await createDeck("fr");
 
@@ -157,9 +146,9 @@ describe("createDeck", () => {
     mockSession();
     selectChain.where.mockResolvedValueOnce([{ count: 0 }]);
 
-    const result = await createDeck("fr");
+    await createDeck("fr");
 
-    expect(mockDbInsert).toHaveBeenCalled();
+    expect(db.insert).toHaveBeenCalled();
     expect(insertChain.values).toHaveBeenCalledWith(
       expect.objectContaining({
         language: "fr",
@@ -184,7 +173,6 @@ describe("saveCard", () => {
 
   it("throws Forbidden if deck does not belong to user", async () => {
     mockSession();
-    // Deck lookup returns different userId
     selectChain.where.mockResolvedValueOnce([
       { id: FAKE_DECK_ID, userId: "other-user" },
     ]);
@@ -196,7 +184,6 @@ describe("saveCard", () => {
 
   it("inserts card and returns id for valid input", async () => {
     mockSession();
-    // Deck ownership check: deck belongs to user
     selectChain.where.mockResolvedValueOnce([
       { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
     ]);
@@ -204,7 +191,7 @@ describe("saveCard", () => {
     const result = await saveCard(FAKE_DECK_ID, "hello", "bonjour", "manual");
 
     expect(result.id).toBeDefined();
-    expect(mockDbInsert).toHaveBeenCalled();
+    expect(db.insert).toHaveBeenCalled();
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 });
@@ -223,7 +210,6 @@ describe("editCard", () => {
 
   it("throws Forbidden if card's deck does not belong to user", async () => {
     mockSession();
-    // Card+deck join returns different userId
     selectChain.where.mockResolvedValueOnce([
       { cardId: FAKE_CARD_ID, deckUserId: "other-user" },
     ]);
@@ -235,14 +221,13 @@ describe("editCard", () => {
 
   it("updates card when owned by user", async () => {
     mockSession();
-    // Card+deck join returns matching userId
     selectChain.where.mockResolvedValueOnce([
       { cardId: FAKE_CARD_ID, deckUserId: FAKE_USER_ID },
     ]);
 
     await editCard(FAKE_CARD_ID, "new front", "new back");
 
-    expect(mockDbUpdate).toHaveBeenCalled();
+    expect(db.update).toHaveBeenCalled();
     expect(updateChain.set).toHaveBeenCalledWith(
       expect.objectContaining({ front: "new front", back: "new back" }),
     );
@@ -277,7 +262,7 @@ describe("deleteCard", () => {
 
     await deleteCard(FAKE_CARD_ID);
 
-    expect(mockDbDelete).toHaveBeenCalled();
+    expect(db.delete).toHaveBeenCalled();
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 });
@@ -357,7 +342,7 @@ describe("removeWordFromDeck", () => {
 
     await removeWordFromDeck(FAKE_DECK_ID, "hello", "bonjour");
 
-    expect(mockDbDelete).toHaveBeenCalled();
+    expect(db.delete).toHaveBeenCalled();
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 });
