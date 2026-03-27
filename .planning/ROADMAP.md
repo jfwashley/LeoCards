@@ -66,12 +66,12 @@ Plans:
   3. A card marked correct 3 or more times across sessions is recorded as learned and contributes to habitat progression
   4. Approximately 10% of cards in each session are already-learned cards resurfaced to prevent forgetting; a failed resurface resets the card's recall count
   5. At session end, all grades are committed to the server in a single batch — partial sessions do not corrupt card state
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Study engine — pure functions: card selection, mastery threshold (recall >= 3), 10% resurface logic, session card list assembly; Vitest unit tests
-- [ ] 03-02: Session commit route — `/api/study/complete` batch POST, server-side recall count validation, learned card persistence
-- [ ] 03-03: Study UI — `useReducer` client-local session state, card flip animation (Motion), grade buttons with 300ms delay, progress indicator, session end screen
+- [ ] 03-01-PLAN.md — Schema migration (direction, masteryRound, cooldownUntil columns) + study engine pure functions with TDD (session assembly, mastery rounds, resurface interleaving, cooldown timer)
+- [ ] 03-02-PLAN.md — Session commit route (POST /api/study/complete) with transactional writes + study queries (getStudyCards)
+- [ ] 03-03-PLAN.md — Full-screen study UI: Motion 12 3D card flip, swipe-to-grade, card stack visual, session state machine, end screen, deck-view Study button with countdown, card-list mastery dots
 
 ### Phase 4: Habitat Engine
 **Goal**: The server can compute the full habitat state from raw DB facts at request time — no derived state stored, no cron jobs, correct decay and mood output available via API.
