@@ -97,6 +97,9 @@ export function CardList({
               <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4 w-20">
                 Source
               </th>
+              <th className="text-left text-sm text-muted-foreground font-normal pb-2 w-20">
+                Round
+              </th>
               <th className="pb-2 w-11" />
             </tr>
           </thead>
@@ -112,6 +115,28 @@ export function CardList({
                   <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
                     {card.source === "wordlist" ? "word list" : "manual"}
                   </span>
+                </td>
+                <td className="py-3 pr-4">
+                  <div
+                    className="flex items-center gap-1"
+                    aria-label={`${card.masteryRound ?? 0} of 3 rounds complete`}
+                  >
+                    {[0, 1, 2].map((round) => (
+                      <span
+                        key={round}
+                        className={`inline-block w-2 h-2 rounded-full ${
+                          (card.masteryRound ?? 0) > round
+                            ? "bg-primary"
+                            : "border border-border"
+                        }`}
+                        title={
+                          (card.masteryRound ?? 0) > round
+                            ? `Round ${round + 1} of 3 complete`
+                            : `Round ${round + 1} of 3 not yet complete`
+                        }
+                      />
+                    ))}
+                  </div>
                 </td>
                 <td className="py-3">
                   <Button
