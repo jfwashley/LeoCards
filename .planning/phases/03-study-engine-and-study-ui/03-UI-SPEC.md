@@ -75,13 +75,13 @@ All values from `globals.css` `:root` block — already established in Phase 1.
 |------|-------|----------------|-------|
 | Dominant (60%) | `--background` | `hsl(30 20% 98%)` | Full-screen study page background, card stack background |
 | Secondary (30%) | `--card` | `hsl(30 15% 96%)` | Active flashcard face (front and back), session end card surface |
-| Accent (10%) | `--primary` | `hsl(24 95% 53%)` (warm orange) | "Study" button, swipe-right confirmation flash, progress dot fill (earned rounds), ring focus |
+| Accent (10%) | `--primary` | `hsl(24 95% 53%)` (warm orange) | "Start studying" button, swipe-right confirmation flash, progress dot fill (earned rounds), ring focus |
 | Destructive | `--destructive` | `hsl(0 84% 60%)` | "Quit session" confirmation destructive action only |
 | Muted text | `--muted-foreground` | `hsl(0 0% 45%)` | Direction label, countdown timer, "Still learning" hint text |
 | Border | `--border` | `hsl(30 10% 88%)` | Card border, progress dot outline (empty rounds) |
 
 Accent reserved for:
-- Study button (entry point in deck view)
+- Start studying button (entry point in deck view)
 - Swipe-right confirmation visual (brief green-tint overlay is acceptable if warmer feel — but primary orange is the fallback)
 - Filled progress dots (mastery rounds completed: `●`)
 - Ring/focus state on interactive elements
@@ -90,6 +90,12 @@ Accent reserved for:
 Swipe directional color hints (Claude's discretion):
 - Swipe right (correct): Brief `bg-green-50` wash on card, 150ms, then card exits. Green is acceptable here as it is a universal "correct" signal — not brand accent.
 - Swipe left (still learning): Brief `bg-red-50` wash on card, 150ms, then card exits.
+
+---
+
+## Focal Point
+
+Primary study screen focal point: the active flashcard face is the single visual anchor — it occupies the horizontal center of the viewport at a fixed vertical midpoint (`top: 40%`), all other chrome (deck label, quit button, progress dots) is muted and pushed to edges so the eye lands on the card word first.
 
 ---
 
@@ -110,7 +116,7 @@ These are the specific UI components this phase introduces or modifies. Executor
 
 | Component | File | Modification |
 |-----------|------|-------------|
-| `DeckView` | `src/components/deck-view.tsx` | Add "Study" button with disabled state + countdown timer ("Next cards in Xh Ym") |
+| `DeckView` | `src/components/deck-view.tsx` | Add "Start studying" button with disabled state + countdown timer ("Next cards in Xh Ym") |
 | `CardList` | `src/components/card-list.tsx` | Add mastery progress dots per card row (●●○ pattern, 3 dots max) |
 
 ### Shadcn Components to Add
@@ -160,7 +166,7 @@ No new shadcn components needed — existing Button, Card, Dialog are sufficient
 - When all cards are in cooldown: `<Button disabled>` with text "Next cards in Xh Ym"
 - Countdown text format: `Xh Ym` (e.g., "4h 23m", "0h 45m"). If under 1 minute: "Next cards in <1m".
 - Refresh interval: countdown text recomputes every 60 seconds via `setInterval` in the component
-- When at least one card is due: `<Button>` with text "Study" (primary variant, full accent color)
+- When at least one card is due: `<Button>` with text "Start studying" (primary variant, full accent color)
 
 ### Session End Screen (D-19, D-20, D-21)
 
@@ -172,8 +178,8 @@ No new shadcn components needed — existing Button, Card, Dialog are sufficient
 
 ### Quit Session (D-04)
 
-- A "Quit" button is always visible during the session (top-right corner, ghost/muted variant)
-- Tapping Quit shows a confirmation: "Quit session? Your progress so far will be saved."
+- A "Quit session" button is always visible during the session (top-right corner, ghost/muted variant)
+- Tapping "Quit session" shows a confirmation: "Quit session? Your progress so far will be saved."
 - Confirmation uses a simple inline text + two buttons (Continue studying / Quit and save) — not a Dialog, to keep the full-screen feel undisrupted
 - "Quit and save" commits all grades collected so far, then navigates to `/dashboard?deck={deckId}`
 - Destructive color (`--destructive`) is NOT used here — quitting is not destructive (progress is saved)
@@ -184,7 +190,7 @@ No new shadcn components needed — existing Button, Card, Dialog are sufficient
 
 | Element | Copy | Source |
 |---------|------|--------|
-| Study button (active) | "Study" | D-06 / standard |
+| Study button (active) | "Start studying" | FLAG resolution — verb + noun |
 | Study button (disabled) | "Next cards in Xh Ym" | D-07 (CONTEXT.md) |
 | Card face prompt (native→target) | "What's the translation?" | Default (discretion) |
 | Card face prompt (target→native) | "What does this mean?" | Default (discretion) |
@@ -193,13 +199,15 @@ No new shadcn components needed — existing Button, Card, Dialog are sufficient
 | Session end heading | "Great work, keep it up!" | D-19: tiger is always proud, no performance judgment |
 | Session end stat labels | "studied" / "correct" / "learned" | D-20 (CONTEXT.md) |
 | Session end CTA | "Back to deck" | D-21 (CONTEXT.md) |
-| Quit button | "Quit" | Default |
+| Quit button | "Quit session" | FLAG resolution — verb + noun |
 | Quit confirmation | "Quit session? Your progress so far will be saved." | D-04 (CONTEXT.md) |
 | Quit confirmation: keep studying | "Keep studying" | Default |
 | Quit confirmation: quit | "Save and quit" | Default |
 | Progress dot tooltip (accessible title) | "Round X of 3 complete" | Accessibility default |
 | Empty deck state (no cards) | "No cards in this deck yet." / "Add some cards to start studying." | Default |
 | Cooldown under 1 minute | "Next cards in <1m" | Default |
+| Session save error message | "Couldn't save your progress. Check your connection and try again." | BLOCK resolution — POST /api/study/complete failure |
+| Session save error retry CTA | "Retry saving session" | BLOCK resolution — POST /api/study/complete failure |
 
 ---
 
