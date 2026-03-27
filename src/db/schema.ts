@@ -18,6 +18,7 @@ export type UserId = Brand<string, "UserId">;
 export type DeckId = Brand<string, "DeckId">;
 export type CardId = Brand<string, "CardId">;
 export type RecallEventId = Brand<string, "RecallEventId">;
+export type RecallDirection = "n2t" | "t2n";
 
 // ============================================================
 // Better Auth tables — must match Better Auth's expected shape
@@ -99,6 +100,8 @@ export const cards = pgTable("cards", {
   back: text("back").notNull(), // translated word
   source: text("source").notNull(), // "manual" | "wordlist"
   recallCount: integer("recallCount").notNull().default(0),
+  masteryRound: integer("masteryRound").notNull().default(0), // 0=new, 1=round1done, 2=round2done, 3=learned
+  cooldownUntil: timestamp("cooldownUntil"), // null = available now
   lastStudiedAt: timestamp("lastStudiedAt"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
@@ -110,6 +113,7 @@ export const recall_events = pgTable("recall_events", {
     .notNull()
     .references(() => cards.id, { onDelete: "cascade" }),
   correct: boolean("correct").notNull(),
+  direction: text("direction").notNull(), // "n2t" | "t2n"
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 });
 
