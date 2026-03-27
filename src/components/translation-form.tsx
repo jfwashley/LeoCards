@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { useDebounceCallback } from "use-debounce";
+import { useDebouncedCallback as useDebounceCallback } from "use-debounce";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

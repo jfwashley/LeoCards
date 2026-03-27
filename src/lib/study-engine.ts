@@ -42,7 +42,9 @@ export function shuffleTake<T>(arr: T[], n: number): T[] {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    const tmp = copy[i] as T;
+    copy[i] = copy[j] as T;
+    copy[j] = tmp;
   }
   return copy.slice(0, n);
 }
@@ -121,13 +123,15 @@ export function interleave(
     // Add `interval` learning cards
     const chunkEnd = Math.min(li + interval, learning.length);
     while (li < chunkEnd) {
-      result.push(learning[li]);
+      const learningCard = learning[li];
+      if (learningCard) result.push(learningCard);
       li++;
     }
 
     // Add 1 resurface card after the chunk (if available)
     if (ri < resurface.length && li <= learning.length) {
-      result.push(resurface[ri]);
+      const resurfaceCard = resurface[ri];
+      if (resurfaceCard) result.push(resurfaceCard);
       ri++;
     }
   }

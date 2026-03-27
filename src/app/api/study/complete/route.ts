@@ -3,7 +3,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { cards, decks, recall_events, habitat_metadata } from "@/db/schema";
-import type { CardId, RecallEventId } from "@/db/schema";
+import type { CardId, DeckId, RecallEventId } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { computeCardUpdate } from "@/lib/study-engine";
 import type { GradeEntry } from "@/lib/study-engine";
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
   const [ownedDeck] = await db
     .select({ id: decks.id })
     .from(decks)
-    .where(and(eq(decks.id, deckId), eq(decks.userId, session.user.id as string)));
+    .where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, session.user.id as string)));
 
   if (!ownedDeck) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
