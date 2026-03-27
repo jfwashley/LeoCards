@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on (completed 2026-03-23)
 - [x] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow (completed 2026-03-24)
-- [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
+- [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
 - [ ] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route
 - [ ] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions
 - [ ] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown
@@ -81,11 +81,11 @@ Plans:
   1. A user who has just completed a study session can fetch `/api/habitat` and receive a habitat state that reflects their total learned card count across all languages
   2. A user who has been inactive for more than 2 days sees a decayed habitat state (habitat quality reduced linearly from day 3 onward); a user inactive for fewer than 2 days sees no decay
   3. The habitat state response includes a computed tiger mood (happy, neutral, sad) and the current visual level — both derived purely from DB facts with no stored computed columns
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: Habitat engine — pure functions: `computeHabitatState()`, `applyDecay()` (2-day grace, linear 5%/day), tiger mood classification, visual level from card count; Vitest unit tests
-- [ ] 04-02: Habitat API route — `GET /api/habitat`, reads `last_activity_at` and learned card counts, calls engine, returns typed habitat state; no writes to computed columns
+- [ ] 04-01-PLAN.md — Habitat engine pure functions with TDD: computeQuality (2-day grace, 5%/day linear decay, 10% floor), habitatLevel (10 thresholds), classifyMood (excited/happy/neutral/sad), computeHabitatState orchestrator; Vitest unit tests
+- [ ] 04-02-PLAN.md — Habitat data fetcher (cross-deck learned card count via JOIN) + GET /api/habitat Route Handler (auth, fetch facts, compute state, return JSON)
 
 ### Phase 5: Habitat UI
 **Goal**: Users can see their tiger and his habitat rendered and animated in the browser — mood state visible, habitat background matching progression level, scene performance acceptable on mid-range devices.
