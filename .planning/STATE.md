@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 03-study-engine-and-study-ui 03-02-PLAN.md
-last_updated: "2026-03-27T22:54:27.117Z"
+stopped_at: Completed 03-study-engine-and-study-ui 03-03-PLAN.md
+last_updated: "2026-03-27T23:11:21.885Z"
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 03 (study-engine-and-study-ui) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 2 of 3
 | Phase 02-deck-and-card-management P03 | 25 | 3 tasks | 8 files |
 | Phase 02-deck-and-card-management P04 | 5 | 3 tasks | 5 files |
 | Phase 03-study-engine-and-study-ui P02 | 2 | 2 tasks | 2 files |
+| Phase 03-study-engine-and-study-ui P03 | 13 | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,9 @@ Recent decisions affecting current work:
 - [Phase 02-deck-and-card-management]: Skeleton shimmer replaces Input component during in-flight translation (not overlay)
 - [Phase 02-deck-and-card-management]: deck-view links updated to pass ?deck= param so browse/new-card pre-select correct deck
 - [Phase 03-study-engine-and-study-ui]: Ownership check uses single AND query (deckId + userId) — avoids two round-trips to DB
+- [Phase 03-study-engine-and-study-ui]: motion/react (not framer-motion) is the correct import path for Motion 12 in this codebase
+- [Phase 03-study-engine-and-study-ui]: useReducer state machine for study session phases (studying/committing/end/error) — cleaner than multiple useState hooks
+- [Phase 03-study-engine-and-study-ui]: DeckView hasDueCards/earliestCooldownEnd computed server-side in dashboard page — no client DB calls needed
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T22:54:27.114Z
-Stopped at: Completed 03-study-engine-and-study-ui 03-02-PLAN.md
+Last session: 2026-03-27T23:11:21.880Z
+Stopped at: Completed 03-study-engine-and-study-ui 03-03-PLAN.md
 Resume file: None

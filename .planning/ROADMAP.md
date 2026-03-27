@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on (completed 2026-03-23)
 - [x] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow (completed 2026-03-24)
-- [ ] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards
+- [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
 - [ ] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route
 - [ ] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions
 - [ ] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown
@@ -71,7 +71,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — Schema migration (direction, masteryRound, cooldownUntil columns) + study engine pure functions with TDD (session assembly, mastery rounds, resurface interleaving, cooldown timer)
 - [x] 03-02-PLAN.md — Session commit route (POST /api/study/complete) with transactional writes + study queries (getStudyCards)
-- [ ] 03-03-PLAN.md — Full-screen study UI: Motion 12 3D card flip, swipe-to-grade, card stack visual, session state machine, end screen, deck-view Study button with countdown, card-list mastery dots
+- [x] 03-03-PLAN.md — Full-screen study UI: Motion 12 3D card flip, swipe-to-grade, card stack visual, session state machine, end screen, deck-view Study button with countdown, card-list mastery dots
 
 ### Phase 4: Habitat Engine
 **Goal**: The server can compute the full habitat state from raw DB facts at request time — no derived state stored, no cron jobs, correct decay and mood output available via API.
@@ -126,7 +126,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 4/4 | Complete   | 2026-03-23 |
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
-| 3. Study Engine and Study UI | 2/3 | In Progress|  |
+| 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 0/2 | Not started | - |
 | 5. Habitat UI | 0/3 | Not started | - |
 | 6. Milestone System and Dashboard Polish | 0/3 | Not started | - |
