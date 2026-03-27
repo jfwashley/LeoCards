@@ -25,11 +25,11 @@
 
 ### Study
 
-- [ ] **STUDY-01**: User can start a flashcard study session for a language
+- [x] **STUDY-01**: User can start a flashcard study session for a language
 - [ ] **STUDY-02**: User sees a card's word, can reveal the translation, and marks themselves correct or still learning
-- [ ] **STUDY-03**: A card is considered "learned" after 3–4 successful self-graded recalls
+- [x] **STUDY-03**: A card is considered "learned" after 3–4 successful self-graded recalls
 - [ ] **STUDY-04**: Learned cards are saved and contribute to habitat progression
-- [ ] **STUDY-05**: Approximately 10% of each study session resurfaces already-learned cards to prevent forgetting
+- [x] **STUDY-05**: Approximately 10% of each study session resurfaces already-learned cards to prevent forgetting
 - [ ] **STUDY-06**: User can see a session progress indicator (cards remaining in current session)
 
 ### Habitat
@@ -98,11 +98,11 @@
 | DECK-04 | Phase 2: Deck and Card Management | Complete |
 | DECK-05 | Phase 2: Deck and Card Management | Complete |
 | DECK-06 | Phase 2: Deck and Card Management | Complete |
-| STUDY-01 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-01 | Phase 3: Study Engine and Study UI | Complete |
 | STUDY-02 | Phase 3: Study Engine and Study UI | Pending |
-| STUDY-03 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-03 | Phase 3: Study Engine and Study UI | Complete |
 | STUDY-04 | Phase 3: Study Engine and Study UI | Pending |
-| STUDY-05 | Phase 3: Study Engine and Study UI | Pending |
+| STUDY-05 | Phase 3: Study Engine and Study UI | Complete |
 | STUDY-06 | Phase 3: Study Engine and Study UI | Pending |
 | HAB-01 | Phase 4: Habitat Engine | Pending |
 | HAB-06 | Phase 4: Habitat Engine | Pending |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-03-27T22:11:56.070Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-27T22:49:41.367Z"
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 11
+  completed_plans: 9
 ---
 
 # Project State
@@ -54,6 +54,7 @@ Plan: Not started
 | Phase 02-deck-and-card-management P02 | 10 | 2 tasks | 3 files |
 | Phase 02-deck-and-card-management P03 | 25 | 3 tasks | 8 files |
 | Phase 02-deck-and-card-management P04 | 5 | 3 tasks | 5 files |
+| Phase 03-study-engine-and-study-ui P01 | 3 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 02-deck-and-card-management]: activeField ref prevents translation feedback loop — only updates other field if user is still typing in the same field
 - [Phase 02-deck-and-card-management]: Skeleton shimmer replaces Input component during in-flight translation (not overlay)
 - [Phase 02-deck-and-card-management]: deck-view links updated to pass ?deck= param so browse/new-card pre-select correct deck
+- [Phase 03-study-engine-and-study-ui]: computeCardUpdate caps directional grade counts at threshold to prevent multi-round inflation per session (Pitfall 4 anti-inflation guard)
+- [Phase 03-study-engine-and-study-ui]: db:migrate not applied in worktree env (placeholder DATABASE_URL) — migration SQL generated and committed for real-env application
 
 ### Pending Todos
 
@@ -104,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T22:11:56.061Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-study-engine-and-study-ui/03-UI-SPEC.md
+Last session: 2026-03-27T22:49:41.363Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: None
