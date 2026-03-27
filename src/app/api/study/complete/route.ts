@@ -1,0 +1,162 @@
+import { headers } from "next/headers";
+import { and, eq, inArray, sql } from "drizzle-orm";
+import { z } from "zod";
+import { db } from "@/db";
+import { cards, decks, recall_events, habitat_metadata } from "@/db/schema";
+import type { CardId, RecallEventId } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { computeCardUpdate } from "@/lib/study-engine";
+import type { GradeEntry } from "@/lib/study-engine";
+
+// ============================================================
+// Validation schemas
+// ============================================================
+
+const GradeSchema = z.object({
+  cardId: z.string(),
+  direction: z.enum(["n2t", "t2n"]),
+  correct: z.boolean(),
+});
+
+const CommitSchema = z.object({
+  deckId: z.string(),
+  grades: z.array(GradeSchema).min(1).max(500),
+});
+
+// ============================================================
+// POST /api/study/complete
+// ============================================================
+
+/**
+ * Batch session commit — persists all grades from a completed study session.
+ *
+ * Flow:
+ * 1. Authenticate user
+ * 2. Validate request body
+ * 3. Verify deck ownership
+ * 4. Load current card states
+ * 5. Compute mastery updates via study engine
+ * 6. Execute all writes in a single transaction (D-04 partial save guarantee)
+ * 7. Return success
+ */
+export async function POST(request: Request) {
+  // 1. Auth check
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // 2. Parse and validate request body
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid input" }, { status: 400 });
+  }
+
+  const parsed = CommitSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Invalid input" }, { status: 400 });
+  }
+
+  const { deckId, grades } = parsed.data;
+
+  // 3. Verify deck ownership — single query checks both existence and ownership
+  const [ownedDeck] = await db
+    .select({ id: decks.id })
+    .from(decks)
+    .where(and(eq(decks.id, deckId), eq(decks.userId, session.user.id as string)));
+
+  if (!ownedDeck) {
+    return Response.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // 4. Load current card states for all graded cards
+  const uniqueCardIds = [...new Set(grades.map((g) => g.cardId))];
+
+  const cardRows = await db
+    .select({ id: cards.id, masteryRound: cards.masteryRound })
+    .from(cards)
+    .where(inArray(cards.id, uniqueCardIds as CardId[]));
+
+  // Build a Map for quick lookup
+  const cardMap = new Map(cardRows.map((c) => [c.id as string, c]));
+
+  // Verify all graded cards exist in this deck
+  for (const cardId of uniqueCardIds) {
+    if (!cardMap.has(cardId)) {
+      return Response.json({ error: "Invalid card" }, { status: 400 });
+    }
+  }
+
+  // 5. Compute mastery updates per card
+  const now = new Date();
+
+  const cardUpdates = uniqueCardIds.map((cardId) => {
+    const card = cardMap.get(cardId);
+    if (!card) throw new Error(`Card not found: ${cardId}`);
+
+    const cardGrades: GradeEntry[] = grades
+      .filter((g) => g.cardId === cardId)
+      .map((g) => ({
+        cardId: g.cardId as CardId,
+        direction: g.direction,
+        correct: g.correct,
+      }));
+
+    const { newRound, cooldownUntil, recallCountDelta } = computeCardUpdate(
+      cardId as CardId,
+      card.masteryRound,
+      cardGrades,
+      now,
+    );
+
+    return { cardId: cardId as CardId, newRound, cooldownUntil, recallCountDelta };
+  });
+
+  // 6. Execute all writes in a single transaction
+  try {
+    await db.transaction(async (tx) => {
+      // a. Batch insert all recall_events
+      await tx.insert(recall_events).values(
+        grades.map((g) => ({
+          id: crypto.randomUUID() as RecallEventId,
+          cardId: g.cardId as CardId,
+          direction: g.direction,
+          correct: g.correct,
+        })),
+      );
+
+      // b. Update each card with new mastery state
+      for (const update of cardUpdates) {
+        await tx
+          .update(cards)
+          .set({
+            masteryRound: update.newRound,
+            cooldownUntil: update.cooldownUntil,
+            recallCount: sql`"recallCount" + ${update.recallCountDelta}`,
+            lastStudiedAt: now,
+          })
+          .where(eq(cards.id, update.cardId));
+      }
+
+      // c. Upsert habitat_metadata — row may not exist yet (Pitfall 5)
+      await tx
+        .insert(habitat_metadata)
+        .values({
+          id: crypto.randomUUID(),
+          userId: session.user.id,
+          lastActivityAt: now,
+        })
+        .onConflictDoUpdate({
+          target: habitat_metadata.userId,
+          set: { lastActivityAt: now },
+        });
+    });
+  } catch {
+    return Response.json({ error: "Failed to save session" }, { status: 500 });
+  }
+
+  // 7. Return success
+  return Response.json({ success: true });
+}
