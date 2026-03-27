@@ -12,16 +12,15 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Users can create accounts and their progress is saved across devices — Validated in Phase 1: Foundation
+- [x] Users can study French, Spanish, or English with pre-made word lists — Validated in Phase 2: Deck and Card Management
+- [x] Users can manually add words to any language deck (auto-translated, editable) — Validated in Phase 2: Deck and Card Management
+- [x] Users can browse built-in word lists and select cards to add to their deck — Validated in Phase 2: Deck and Card Management
+- [x] Flashcard practice uses classic show-and-self-grade mechanic — Validated in Phase 3: Study Engine and Study UI
+- [x] A card is considered "learned" after 3–4 successful self-graded recalls — Validated in Phase 3: Study Engine and Study UI (evolved to 3-round spaced mastery with directional tracking)
 
 ### Active
 
-- [ ] Users can create accounts and their progress is saved across devices
-- [ ] Users can study French, Spanish, or English with pre-made word lists
-- [ ] Users can manually add words to any language deck (auto-translated, editable)
-- [ ] Users can browse built-in word lists and select cards to add to their deck
-- [ ] Flashcard practice uses classic show-and-self-grade mechanic
-- [ ] A card is considered "learned" after 3–4 successful self-graded recalls
 - [ ] All learned cards across all languages feed into one shared tiger habitat
 - [ ] The habitat improves gradually as cards are learned (grass, environment quality)
 - [ ] Milestone unlocks trigger special moments at key card-count thresholds
@@ -57,8 +56,8 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 |----------|-----------|---------|
 | One shared habitat across all languages | Rewards breadth of learning, simpler emotional narrative | — Pending |
 | Hard decay on inactivity | Creates real stakes and daily motivation | — Pending |
-| Show & self-grade flashcard mechanic | Lowest friction, classic and proven | — Pending |
-| 3–4 correct recalls = "learned" | Spaced-repetition-lite without full SRS complexity | — Pending |
+| Show & self-grade flashcard mechanic | Lowest friction, classic and proven | Shipped (Phase 3) |
+| 3-round spaced mastery with directional tracking | Evolved from simple 3-4 recalls to 3-round system with 12h/24h cooldowns and bidirectional testing | Shipped (Phase 3) |
 
 ---
-*Last updated: 2026-03-24 after Phase 2 completion — deck/card CRUD, word list browser, manual card entry with DeepL translation all shipped*
+*Last updated: 2026-03-27 after Phase 3 completion — study engine with spaced mastery, session commit route, full-screen study UI with swipe-to-grade and card stack visual all shipped*
