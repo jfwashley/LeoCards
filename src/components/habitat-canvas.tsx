@@ -36,17 +36,34 @@ function VisibilityController() {
   return null;
 }
 
+// useRendererSize: reads the actual PixiJS renderer dimensions and re-renders when they change.
+// This ensures sprites always match the canvas size, even when resizeTo resizes it asynchronously.
+function useRendererSize() {
+  const { app } = useApplication();
+  const [size, setSize] = useState({ width: app.screen.width, height: app.screen.height });
+
+  useEffect(() => {
+    const check = () => {
+      const w = app.screen.width;
+      const h = app.screen.height;
+      setSize((prev) => (prev.width !== w || prev.height !== h ? { width: w, height: h } : prev));
+    };
+
+    app.ticker.add(check);
+    return () => { app.ticker.remove(check); };
+  }, [app]);
+
+  return size;
+}
+
 // Scene: loads sprite atlases and renders the full habitat composition
 // Lives inside <Application> so Assets.load() runs in the correct PixiJS context (Pitfall 5)
 function Scene({
   habitatState,
-  sceneWidth,
-  sceneHeight,
 }: {
   habitatState: HabitatState;
-  sceneWidth: number;
-  sceneHeight: number;
 }) {
+  const { width: sceneWidth, height: sceneHeight } = useRendererSize();
   const [tigerSheet, setTigerSheet] = useState<Spritesheet | null>(null);
   const [habitatSheet, setHabitatSheet] = useState<Spritesheet | null>(null);
 
@@ -109,31 +126,6 @@ function Scene({
 // Loaded via next/dynamic with ssr:false from habitat-scene.tsx
 export default function HabitatCanvas({ habitatState }: { habitatState: HabitatState }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [sceneDimensions, setSceneDimensions] = useState({ width: 960, height: 540 });
-
-  // Track container dimensions for scene-relative sprite sizing
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (entry) {
-        const { width, height } = entry.contentRect;
-        setSceneDimensions({ width, height });
-      }
-    });
-
-    observer.observe(el);
-
-    // Set initial dimensions
-    const { clientWidth, clientHeight } = el;
-    if (clientWidth > 0 && clientHeight > 0) {
-      setSceneDimensions({ width: clientWidth, height: clientHeight });
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <div
@@ -141,12 +133,8 @@ export default function HabitatCanvas({ habitatState }: { habitatState: HabitatS
       className="w-full"
       style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
     >
-      <Application resizeTo={containerRef}>
-        <Scene
-          habitatState={habitatState}
-          sceneWidth={sceneDimensions.width}
-          sceneHeight={sceneDimensions.height}
-        />
+      <Application resizeTo={containerRef} backgroundAlpha={0}>
+        <Scene habitatState={habitatState} />
       </Application>
     </div>
   );
