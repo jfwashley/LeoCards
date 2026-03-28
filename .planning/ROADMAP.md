@@ -37,7 +37,7 @@ Plans:
 - [x] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
 - [x] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
 - [x] 01-04-PLAN.md — Gap closure: wire orphaned env.ts into app module graph, add RESEND_API_KEY to CI env block
-- [ ] 01-05-PLAN.md — Gap closure: fix login Suspense boundary (build blocker), TypeScript errors, Biome lint/format violations, LF line endings
+- [x] 01-05-PLAN.md — Gap closure: fix login Suspense boundary (build blocker), TypeScript errors, Biome lint/format violations, LF line endings
 - [ ] 01-06-PLAN.md — Gap closure: fix CI pipeline step ordering and missing DEEPL_API_KEY, update .env.example
 
 ### Phase 2: Deck and Card Management
