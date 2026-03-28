@@ -38,7 +38,7 @@
 - [x] **HAB-02**: The tiger displays different mood states (happy, neutral, sad) based on recent activity
 - [x] **HAB-03**: The habitat environment gradually improves as total learned cards increase
 - [x] **HAB-04**: Milestone thresholds trigger special unlock moments (new toy, tree, play area, etc.)
-- [ ] **HAB-05**: New animals appear in the habitat as visual milestone rewards
+- [x] **HAB-05**: New animals appear in the habitat as visual milestone rewards
 - [x] **HAB-06**: After a 2-day grace period of inactivity, habitat begins to decay (hard decay)
 - [x] **HAB-07**: The dashboard shows a per-language breakdown of learned card counts
 
@@ -109,7 +109,7 @@
 | HAB-02 | Phase 5: Habitat UI | Complete |
 | HAB-03 | Phase 5: Habitat UI | Complete |
 | HAB-04 | Phase 6: Milestone System and Dashboard Polish | Complete |
-| HAB-05 | Phase 6: Milestone System and Dashboard Polish | Pending |
+| HAB-05 | Phase 6: Milestone System and Dashboard Polish | Complete |
 | HAB-07 | Phase 6: Milestone System and Dashboard Polish | Complete |
 
 **Coverage:**

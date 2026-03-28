@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Executing Phase 06
-stopped_at: Phase 6 UI-SPEC approved
-last_updated: "2026-03-28T19:53:15.785Z"
+status: Ready to execute
+stopped_at: "Checkpoint: 06-02 Task 3 human-verify pending"
+last_updated: "2026-03-28T21:44:47.813Z"
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 19
-  completed_plans: 16
+  completed_plans: 18
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 06 (milestone-system-and-dashboard-polish) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Plan: 1 of 3
 | Phase 05-habitat-ui P01 | 25 | 2 tasks | 7 files |
 | Phase 05-habitat-ui P02 | 16 | 2 tasks | 7 files |
 | Phase 05-habitat-ui P03 | 7 | 3 tasks | 5 files |
+| Phase 06-milestone-system-and-dashboard-polish P02 | 25 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,8 @@ Recent decisions affecting current work:
 - [Phase 05-habitat-ui]: ResizeObserver on canvas container passes sceneWidth/sceneHeight to PixiJS components for percentage-based layout
 - [Phase 05-habitat-ui]: HabitatWidget shown above FirstVisitPicker for new users — tiger visible before first deck is created
 - [Phase 05-habitat-ui]: retry() in HabitatScene prefers cached data over error state — offline banner beats error page for UX
+- [Phase 06-milestone-system-and-dashboard-polish]: computeStats returns leveledUp: null as base value; overwritten by API response data in dispatch
+- [Phase 06-milestone-system-and-dashboard-polish]: celebratingLevel threaded through DeckView and HabitatWidget to reach HabitatCanvas
 
 ### Pending Todos
 
@@ -127,6 +130,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T18:57:44.954Z
-Stopped at: Phase 6 UI-SPEC approved
-Resume file: .planning/phases/06-milestone-system-and-dashboard-polish/06-UI-SPEC.md
+Last session: 2026-03-28T21:44:47.808Z
+Stopped at: Checkpoint: 06-02 Task 3 human-verify pending
+Resume file: None

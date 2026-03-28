@@ -113,8 +113,8 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Milestone queries (markMilestonesSeen, getLanguageBreakdown) with TDD + study/complete API extension for level-up detection
-- [ ] 06-02-PLAN.md — Level-up celebration overlay (confetti + level display), bird sprite at level 10, study-session and habitat-canvas integration
+- [x] 06-01-PLAN.md — Milestone queries (markMilestonesSeen, getLanguageBreakdown) with TDD + study/complete API extension for level-up detection
+- [x] 06-02-PLAN.md — Level-up celebration overlay (confetti + level display), bird sprite at level 10, study-session and habitat-canvas integration
 - [ ] 06-03-PLAN.md — Dashboard language breakdown: per-language learned card query wired to DeckView text display
 
 ## Progress
@@ -129,4 +129,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
-| 6. Milestone System and Dashboard Polish | 0/3 | Planned    |  |
+| 6. Milestone System and Dashboard Polish | 2/3 | In Progress|  |
