@@ -1,5 +1,5 @@
 ---
-status: partial
+status: diagnosed
 phase: 01-foundation
 source: 01-01-SUMMARY.md, 01-02-SUMMARY.md, 01-03-SUMMARY.md, 01-04-SUMMARY.md
 started: 2026-03-28T12:00:00Z
@@ -130,9 +130,12 @@ blocked: 9
   reason: "User reported: npm run build fails with exit code 1. /login page uses useSearchParams() without Suspense boundary causing prerender error. Also: Better Auth base URL WARN spam during page collection (9+ warnings)."
   severity: blocker
   test: 1
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "LoginPage calls useSearchParams() directly without Suspense boundary. Next.js 16 requires useSearchParams to be inside a Suspense boundary for prerendering. reset-password already has the correct pattern but login was missed."
+  artifacts:
+    - path: "src/app/(auth)/login/page.tsx"
+      issue: "useSearchParams() at line 26 without Suspense wrapper"
+  missing:
+    - "Extract form into LoginForm inner component, wrap in <Suspense> in default export"
   debug_session: ""
 
 - truth: "npx tsc --noEmit passes with zero type errors"
@@ -140,9 +143,13 @@ blocked: 9
   reason: "12 type errors in src/lib/study-engine.test.ts — branded CardId type mismatches from Phase 3 code"
   severity: major
   test: 13
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "makeCard helper's overrides parameter uses Partial<CardForSession> & { id?: string } which widens CardId to plain string. Also 3 errors from array index access on result[] with noUncheckedIndexedAccess."
+  artifacts:
+    - path: "src/lib/study-engine.test.ts"
+      issue: "makeCard signature widens CardId to string; array index access without null check"
+  missing:
+    - "Remove { id?: string } intersection from makeCard overrides type — use Partial<CardForSession> only"
+    - "Add non-null assertions or null checks for result[3], result[7], result[11]"
   debug_session: ""
 
 - truth: "Biome lint and format checks pass"
@@ -150,9 +157,14 @@ blocked: 9
   reason: "102 errors and 12 warnings across 75 files. Import ordering violations and lint issues spanning all phases."
   severity: major
   test: 14
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "Three categories: (1) ~43 files have CRLF line endings — no .gitattributes enforces LF, agents wrote CRLF on Windows. (2) 36 files have unsorted imports. (3) ~9 files have manual-fix issues (useExhaustiveDependencies, noArrayIndexKey, a11y). ~93 of 102 errors are auto-fixable via biome check --write."
+  artifacts:
+    - path: "src/ (43+ files)"
+      issue: "CRLF line endings, unsorted imports, format divergence"
+  missing:
+    - "Run biome check --write src/ to auto-fix 93 of 102 errors"
+    - "Add .gitattributes with * text=auto eol=lf"
+    - "Manually fix 9 remaining: useExhaustiveDependencies, noArrayIndexKey, a11y issues"
   debug_session: ""
 
 - truth: "CI pipeline would pass on a PR"
@@ -160,9 +172,14 @@ blocked: 9
   reason: "CI runs tsc and biome ci which both currently fail. Also missing DEEPL_API_KEY secret."
   severity: major
   test: 16
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "Three issues: (1) tsc runs before next build — next-env.d.ts and .next/types/ don't exist in CI checkout, causing type errors. Must reorder Build before Type check. (2) DEEPL_API_KEY missing from Build env block (added in Phase 02 but ci.yml not updated). (3) setup-biome@v2 not version-pinned to 2.4.8."
+  artifacts:
+    - path: ".github/workflows/ci.yml"
+      issue: "Step ordering wrong, missing DEEPL_API_KEY, unpinned Biome version"
+  missing:
+    - "Move Build step before Type check step"
+    - "Add DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }} to Build env"
+    - "Pin biomejs/setup-biome@v2 with version: 2.4.8"
   debug_session: ""
 
 - truth: "npm install completes cleanly"
@@ -170,9 +187,10 @@ blocked: 9
   reason: "7 vulnerabilities (5 moderate, 2 high)"
   severity: minor
   test: 17
-  root_cause: ""
+  root_cause: "Upstream dependency vulnerabilities — standard for a project with this many deps. Requires npm audit fix."
   artifacts: []
-  missing: []
+  missing:
+    - "Run npm audit fix to address non-breaking vulnerabilities"
   debug_session: ""
 
 - truth: ".env.example documents all required env vars"
@@ -180,7 +198,10 @@ blocked: 9
   reason: "DEEPL_API_KEY required by env.ts but missing from .env.example. New developer would get Zod crash."
   severity: major
   test: 18
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "DEEPL_API_KEY was added to env.ts in Phase 02-01 commit eee1baf but .env.example was not updated in that same commit."
+  artifacts:
+    - path: ".env.example"
+      issue: "Missing DEEPL_API_KEY entry"
+  missing:
+    - "Add DEEPL_API_KEY=your_deepl_api_key under a # Translation (DeepL) comment"
   debug_session: ""
