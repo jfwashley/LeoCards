@@ -110,12 +110,12 @@ Plans:
   1. When a user's total learned card count crosses a milestone threshold (e.g., 10, 25, 50, 100), a special unlock animation plays in the habitat scene exactly once — a page refresh does not replay it
   2. At selected milestones, a new animal sprite appears in the habitat scene and remains visible in all subsequent sessions
   3. The dashboard shows a per-language count of learned cards (e.g., French: 23, Spanish: 10, English: 4) so users can see how each language contributes to the shared habitat
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: Milestone detection and acknowledgment — `computePendingMilestones()` in habitat engine, `milestones_seen` DB column, `POST /api/milestone/acknowledge` to mark seen; exactly-once guarantee tested
-- [ ] 06-02: Milestone reveal UI — unlock animation sequence in PixiJS scene (Motion for React-layer overlay), animal sprite appearance, triggered at session end only
-- [ ] 06-03: Dashboard language breakdown — per-language learned card query, breakdown display component on dashboard
+- [ ] 06-01-PLAN.md — Milestone queries (markMilestonesSeen, getLanguageBreakdown) with TDD + study/complete API extension for level-up detection
+- [ ] 06-02-PLAN.md — Level-up celebration overlay (confetti + level display), bird sprite at level 10, study-session and habitat-canvas integration
+- [ ] 06-03-PLAN.md — Dashboard language breakdown: per-language learned card query wired to DeckView text display
 
 ## Progress
 
