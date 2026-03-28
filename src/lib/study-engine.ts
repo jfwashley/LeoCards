@@ -28,6 +28,7 @@ export type SessionStats = {
   cardsStudied: number;
   correctCount: number;
   newlyLearned: number;
+  leveledUp: number | null;
 };
 
 // ============================================================

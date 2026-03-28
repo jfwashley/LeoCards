@@ -3,10 +3,13 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { cards, decks, recall_events, habitat_metadata } from "@/db/schema";
-import type { CardId, DeckId, RecallEventId } from "@/db/schema";
+import type { CardId, DeckId, RecallEventId, UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { computeCardUpdate } from "@/lib/study-engine";
 import type { GradeEntry } from "@/lib/study-engine";
+import { computeHabitatState } from "@/lib/habitat-engine";
+import { getHabitatFacts } from "@/lib/habitat-queries";
+import { markMilestonesSeen } from "@/lib/milestone-queries";
 
 // ============================================================
 // Validation schemas
@@ -92,6 +95,10 @@ export async function POST(request: Request) {
   // 5. Compute mastery updates per card
   const now = new Date();
 
+  // Step A: capture pre-session habitat level for level-up detection (per D-05)
+  const factsBefore = await getHabitatFacts(session.user.id as UserId);
+  const prevLevel = computeHabitatState(factsBefore, now).level;
+
   const cardUpdates = uniqueCardIds.map((cardId) => {
     const card = cardMap.get(cardId);
     if (!card) throw new Error(`Card not found: ${cardId}`);
@@ -156,6 +163,17 @@ export async function POST(request: Request) {
     return Response.json({ error: "Failed to save session" }, { status: 500 });
   }
 
+  // Step B: capture post-session level (Pitfall 2: must be AFTER habitat_metadata upsert)
+  const factsAfter = await getHabitatFacts(session.user.id as UserId);
+  const newLevel = computeHabitatState(factsAfter, now).level;
+
+  // Step C: detect level-up, mark milestones (per D-06, D-07)
+  let leveledUp: number | null = null;
+  if (newLevel > prevLevel) {
+    await markMilestonesSeen(session.user.id, prevLevel, newLevel);
+    leveledUp = newLevel; // D-07: return highest level only
+  }
+
   // 7. Return success
-  return Response.json({ success: true });
+  return Response.json({ success: true, leveledUp });
 }
