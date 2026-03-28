@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
 - [x] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route (completed 2026-03-28)
 - [x] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions (completed 2026-03-28)
-- [ ] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown
+- [x] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown (completed 2026-03-28)
 
 ## Phase Details
 
@@ -115,7 +115,7 @@ Plans:
 Plans:
 - [x] 06-01-PLAN.md — Milestone queries (markMilestonesSeen, getLanguageBreakdown) with TDD + study/complete API extension for level-up detection
 - [x] 06-02-PLAN.md — Level-up celebration overlay (confetti + level display), bird sprite at level 10, study-session and habitat-canvas integration
-- [ ] 06-03-PLAN.md — Dashboard language breakdown: per-language learned card query wired to DeckView text display
+- [x] 06-03-PLAN.md — Dashboard language breakdown: per-language learned card query wired to DeckView text display
 
 ## Progress
 
@@ -129,4 +129,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
-| 6. Milestone System and Dashboard Polish | 2/3 | In Progress|  |
+| 6. Milestone System and Dashboard Polish | 3/3 | Complete   | 2026-03-28 |
