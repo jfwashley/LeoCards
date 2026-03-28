@@ -84,7 +84,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Habitat engine pure functions with TDD: computeQuality (2-day grace, 5%/day linear decay, 10% floor), habitatLevel (10 thresholds), classifyMood (excited/happy/neutral/sad), computeHabitatState orchestrator; Vitest unit tests
+- [x] 04-01-PLAN.md — Habitat engine pure functions with TDD: computeQuality (2-day grace, 5%/day linear decay, 10% floor), habitatLevel (10 thresholds), classifyMood (excited/happy/neutral/sad), computeHabitatState orchestrator; Vitest unit tests
 - [ ] 04-02-PLAN.md — Habitat data fetcher (cross-deck learned card count via JOIN) + GET /api/habitat Route Handler (auth, fetch facts, compute state, return JSON)
 
 ### Phase 5: Habitat UI
@@ -127,6 +127,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation | 4/4 | Complete   | 2026-03-23 |
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
-| 4. Habitat Engine | 0/2 | Not started | - |
+| 4. Habitat Engine | 1/2 | In Progress|  |
 | 5. Habitat UI | 0/3 | Not started | - |
 | 6. Milestone System and Dashboard Polish | 0/3 | Not started | - |
