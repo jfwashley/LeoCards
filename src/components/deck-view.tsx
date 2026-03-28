@@ -34,6 +34,7 @@ interface DeckViewProps {
   earliestCooldownEnd: string | null;
   habitatState: HabitatState;
   celebratingLevel?: number | null;
+  languageBreakdown: Array<{ language: string; count: number }>;
 }
 
 function formatCountdown(ms: number): string {
@@ -59,6 +60,7 @@ export function DeckView({
   earliestCooldownEnd,
   habitatState,
   celebratingLevel = null,
+  languageBreakdown,
 }: DeckViewProps) {
   const router = useRouter();
   const activeDeck = decks.find((d) => d.id === activeDeckId) ?? decks[0];
@@ -149,7 +151,16 @@ export function DeckView({
           <HabitatWidget habitatState={habitatState} celebratingLevel={celebratingLevel} />
         </div>
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-semibold">My Deck</h1>
+          <div>
+            <h1 className="text-xl font-semibold">My Deck</h1>
+            {languageBreakdown.length > 0 && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {languageBreakdown
+                  .map((item) => `${LANGUAGE_LABELS[item.language] ?? item.language}: ${item.count} learned`)
+                  .join(" \u00B7 ")}
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             {renderStudyButton()}
             <Link

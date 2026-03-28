@@ -7,6 +7,7 @@ import { assembleSession, earliestCooldownEnd as getEarliestCooldownEnd } from "
 import type { CardForSession } from "@/lib/study-engine";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
+import { getLanguageBreakdown } from "@/lib/milestone-queries";
 import type { UserId } from "@/db/schema";
 import { FirstVisitPicker } from "@/components/first-visit-picker";
 import { DeckView } from "@/components/deck-view";
@@ -23,10 +24,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   if (!session) return null;
 
-  const [decks, nativeLang, habitatFacts] = await Promise.all([
+  const [decks, nativeLang, habitatFacts, languageBreakdown] = await Promise.all([
     getUserDecks(session.user.id),
     getUserNativeLanguage(session.user.id),
     getHabitatFacts(session.user.id as UserId),
+    getLanguageBreakdown(session.user.id as UserId),
   ]);
 
   const habitatState = computeHabitatState(habitatFacts, new Date());
@@ -106,6 +108,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       earliestCooldownEnd={earliestCooldownEndStr}
       habitatState={habitatState}
       celebratingLevel={celebratingLevel}
+      languageBreakdown={languageBreakdown}
     />
   );
 }
