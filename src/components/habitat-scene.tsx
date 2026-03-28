@@ -83,7 +83,7 @@ function MoodIndicator({ mood }: MoodIndicatorProps) {
 // HabitatScene
 // ============================================================
 
-export function HabitatScene({ habitatState }: { habitatState: HabitatState }) {
+export function HabitatScene({ habitatState, celebratingLevel = null }: { habitatState: HabitatState; celebratingLevel?: number | null }) {
   // Client-side state — initialized from server prop
   const [state, setState] = useState<HabitatState>(habitatState);
   const [error, setError] = useState(false);
@@ -169,7 +169,7 @@ export function HabitatScene({ habitatState }: { habitatState: HabitatState }) {
         {/* Mood indicator overlay (D-15, UI-SPEC) */}
         <MoodIndicator mood={state.mood} />
 
-        <HabitatCanvas habitatState={state} />
+        <HabitatCanvas habitatState={state} celebratingLevel={celebratingLevel} />
       </motion.div>
 
       {/* Offline indicator (D-24): shows when displaying cached data */}

@@ -51,7 +51,7 @@ export function HabitatWidget({ habitatState, celebratingLevel = null }: Habitat
   }
 
   return (
-    <Link href="/habitat" className="block">
+    <Link href={celebratingLevel ? `/habitat?celebrate=${celebratingLevel}` : "/habitat"} className="block">
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
         <CardContent className="p-4">
           <HabitatWidgetCanvas mood={mood} />
