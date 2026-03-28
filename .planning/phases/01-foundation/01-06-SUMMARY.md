@@ -105,3 +105,10 @@ None - no external service configuration required.
 ---
 *Phase: 01-foundation*
 *Completed: 2026-03-28*
+
+## Self-Check: PASSED
+
+- FOUND: .github/workflows/ci.yml
+- FOUND: .env.example
+- FOUND: commit 0ffa924 (chore(01-06): fix CI pipeline, add DEEPL_API_KEY, run npm audit fix)
+- FOUND: .planning/phases/01-foundation/01-06-SUMMARY.md
