@@ -99,7 +99,7 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — PixiJS + @pixi/react install, placeholder sprite atlases, SSR-safe canvas wrapper (next/dynamic ssr:false), /habitat page shell, ticker visibility controller
-- [ ] 05-02-PLAN.md — Tiger sprite (mood textures, random position/facing, bounce/crossfade transitions), habitat layers (additive by level, decay alpha, parallax), sparkle particles, utility functions with TDD
+- [x] 05-02-PLAN.md — Tiger sprite (mood textures, random position/facing, bounce/crossfade transitions), habitat layers (additive by level, decay alpha, parallax), sparkle particles, utility functions with TDD
 - [ ] 05-03-PLAN.md — Mini dashboard habitat widget (PixiJS canvas + progress bar), error/offline/level-up states, dashboard integration, human-verify checkpoint
 
 ### Phase 6: Milestone System and Dashboard Polish
@@ -128,5 +128,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
-| 5. Habitat UI | 1/3 | In Progress|  |
+| 5. Habitat UI | 2/3 | In Progress|  |
 | 6. Milestone System and Dashboard Polish | 0/3 | Not started | - |
