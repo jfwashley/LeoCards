@@ -39,11 +39,12 @@ function VisibilityController() {
 // useRendererSize: reads the actual PixiJS renderer dimensions and re-renders when they change.
 // This ensures sprites always match the canvas size, even when resizeTo resizes it asynchronously.
 function useRendererSize() {
-  const { app } = useApplication();
+  const appContext = useApplication();
+  const app = appContext?.app;
   const [size, setSize] = useState({ width: 960, height: 540 });
 
   useEffect(() => {
-    if (!app) return;
+    if (!app?.screen) return;
 
     const check = () => {
       const w = app.screen.width;
