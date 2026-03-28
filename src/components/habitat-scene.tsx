@@ -1,8 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
+import { Button } from "@/components/ui/button";
+
+// localStorage cache key for offline support (Pattern 8 from RESEARCH.md)
+const CACHE_KEY = "tiocards:habitat-state";
 
 // Loading spinner shown while PixiJS and sprite assets initialize (D-18)
 function HabitatLoadingSpinner() {
@@ -79,23 +84,120 @@ function MoodIndicator({ mood }: MoodIndicatorProps) {
 // ============================================================
 
 export function HabitatScene({ habitatState }: { habitatState: HabitatState }) {
-  return (
-    // D-19: scene fades in from loading state over ~0.5s
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="relative"
-    >
-      {/* Level badge overlay (D-15, UI-SPEC) */}
-      <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm font-semibold px-3 py-1 rounded-full z-10">
-        Level {habitatState.level}
+  // Client-side state — initialized from server prop
+  const [state, setState] = useState<HabitatState>(habitatState);
+  const [error, setError] = useState(false);
+  const [offline, setOffline] = useState(false);
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [prevLevel, setPrevLevel] = useState(habitatState.level);
+
+  // On mount: cache the server-provided state to localStorage (D-24 offline support)
+  useEffect(() => {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(habitatState));
+    } catch {
+      // localStorage may be unavailable in some environments — ignore silently
+    }
+  }, [habitatState]);
+
+  // Level-up detection: when state.level increases, show celebration for 2.5s (D-20)
+  useEffect(() => {
+    if (state.level > prevLevel) {
+      setShowLevelUp(true);
+      setPrevLevel(state.level);
+      const timer = setTimeout(() => setShowLevelUp(false), 2500);
+      return () => clearTimeout(timer);
+    }
+    setPrevLevel(state.level);
+  }, [state.level, prevLevel]);
+
+  // Retry function for error recovery — tries fresh API fetch, falls back to cache (D-23, D-24)
+  async function retry() {
+    setError(false);
+    try {
+      const res = await fetch("/api/habitat");
+      if (!res.ok) throw new Error("API error");
+      const data: HabitatState = await res.json();
+      setState(data);
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+      } catch {
+        // ignore
+      }
+      setOffline(false);
+    } catch {
+      // Try cached data
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          setState(JSON.parse(cached) as HabitatState);
+          setOffline(true);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
+      }
+    }
+  }
+
+  // Error state (D-23): shows when API fails and no cached data available
+  if (error) {
+    return (
+      <div
+        className="w-full flex flex-col items-center justify-center bg-card rounded-lg border"
+        style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
+      >
+        <p className="text-lg font-semibold mb-2">Something went wrong</p>
+        <p className="text-sm text-muted-foreground mb-4">
+          We couldn&apos;t load your habitat. Check your connection and try again.
+        </p>
+        <Button onClick={retry}>Try again</Button>
       </div>
+    );
+  }
 
-      {/* Mood indicator overlay (D-15, UI-SPEC) */}
-      <MoodIndicator mood={habitatState.mood} />
+  return (
+    <div className="relative w-full">
+      {/* D-19: scene fades in from loading state over ~0.5s */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        {/* Level badge overlay (D-15, UI-SPEC) */}
+        <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm font-semibold px-3 py-1 rounded-full z-10">
+          Level {state.level}
+        </div>
 
-      <HabitatCanvas habitatState={habitatState} />
-    </motion.div>
+        {/* Mood indicator overlay (D-15, UI-SPEC) */}
+        <MoodIndicator mood={state.mood} />
+
+        <HabitatCanvas habitatState={state} />
+      </motion.div>
+
+      {/* Offline indicator (D-24): shows when displaying cached data */}
+      {offline && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm text-sm text-muted-foreground px-4 py-2 rounded-full border"
+        >
+          You&apos;re offline — showing last known state
+        </motion.div>
+      )}
+
+      {/* Level-up celebration overlay (D-20): shown for 2.5s after leveling up */}
+      {showLevelUp && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        >
+          <span className="text-[28px] font-semibold text-primary drop-shadow-lg">
+            Level {state.level}!
+          </span>
+        </motion.div>
+      )}
+    </div>
   );
 }
