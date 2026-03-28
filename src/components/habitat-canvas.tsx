@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Application, extend, useApplication } from "@pixi/react";
 import { Assets, Container, Graphics, Sprite, type Spritesheet } from "pixi.js";
 import type { HabitatState } from "@/lib/habitat-engine";
+import { TigerSprite } from "@/components/tiger-sprite";
+import { HabitatLayers } from "@/components/habitat-layers";
+import { SparkleParticles } from "@/components/sparkle-particles";
+import { getTigerPosition } from "@/lib/habitat-ui-utils";
 
 // Register all PixiJS classes used in JSX — must be called at module scope
 // before any JSX referencing these classes renders (Pattern 2 from RESEARCH.md)
@@ -32,9 +36,17 @@ function VisibilityController() {
   return null;
 }
 
-// Scene: loads sprite atlases and renders the initial placeholder tiger sprite
+// Scene: loads sprite atlases and renders the full habitat composition
 // Lives inside <Application> so Assets.load() runs in the correct PixiJS context (Pitfall 5)
-function Scene({ habitatState }: { habitatState: HabitatState }) {
+function Scene({
+  habitatState,
+  sceneWidth,
+  sceneHeight,
+}: {
+  habitatState: HabitatState;
+  sceneWidth: number;
+  sceneHeight: number;
+}) {
   const [tigerSheet, setTigerSheet] = useState<Spritesheet | null>(null);
   const [habitatSheet, setHabitatSheet] = useState<Spritesheet | null>(null);
 
@@ -57,18 +69,38 @@ function Scene({ habitatState }: { habitatState: HabitatState }) {
   // While sheets are loading, render nothing — HabitatScene wrapper shows spinner
   if (!tigerSheet || !habitatSheet) return null;
 
-  const happyTexture = tigerSheet.textures["tiger/happy.png"];
+  // Tiger position for sparkle particle origin — use same lazy position as TigerSprite
+  // We compute a stable reference position for the sparkles
+  const tigerX = 0.5 * sceneWidth; // default center; TigerSprite chooses its own random position
+  const tigerY = sceneHeight * 0.75;
 
   return (
     <pixiContainer>
       <VisibilityController />
-      {happyTexture && (
-        <pixiSprite
-          texture={happyTexture}
-          x={50}
-          y={50}
-        />
-      )}
+
+      {/* 1. Habitat background layers (back to front, level-gated, with decay) */}
+      <HabitatLayers
+        level={habitatState.level}
+        quality={habitatState.quality}
+        sheet={habitatSheet}
+        sceneWidth={sceneWidth}
+        sceneHeight={sceneHeight}
+      />
+
+      {/* 2. Tiger sprite with mood-reactive textures, random position, and transitions */}
+      <TigerSprite
+        mood={habitatState.mood}
+        sheet={tigerSheet}
+        sceneWidth={sceneWidth}
+        sceneHeight={sceneHeight}
+      />
+
+      {/* 3. Sparkle particles for excited mood (D-07) */}
+      <SparkleParticles
+        tigerX={tigerX}
+        tigerY={tigerY}
+        active={habitatState.mood === "excited"}
+      />
     </pixiContainer>
   );
 }
@@ -77,6 +109,31 @@ function Scene({ habitatState }: { habitatState: HabitatState }) {
 // Loaded via next/dynamic with ssr:false from habitat-scene.tsx
 export default function HabitatCanvas({ habitatState }: { habitatState: HabitatState }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [sceneDimensions, setSceneDimensions] = useState({ width: 960, height: 540 });
+
+  // Track container dimensions for scene-relative sprite sizing
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) {
+        const { width, height } = entry.contentRect;
+        setSceneDimensions({ width, height });
+      }
+    });
+
+    observer.observe(el);
+
+    // Set initial dimensions
+    const { clientWidth, clientHeight } = el;
+    if (clientWidth > 0 && clientHeight > 0) {
+      setSceneDimensions({ width: clientWidth, height: clientHeight });
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
@@ -85,7 +142,11 @@ export default function HabitatCanvas({ habitatState }: { habitatState: HabitatS
       style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
     >
       <Application resizeTo={containerRef}>
-        <Scene habitatState={habitatState} />
+        <Scene
+          habitatState={habitatState}
+          sceneWidth={sceneDimensions.width}
+          sceneHeight={sceneDimensions.height}
+        />
       </Application>
     </div>
   );
