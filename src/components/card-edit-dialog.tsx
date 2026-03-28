@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Loader2, Trash2 } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { editCard, deleteCard } from "@/lib/deck-actions";
+import { deleteCard, editCard } from "@/lib/deck-actions";
 
 export interface CardRow {
   id: string;
@@ -28,13 +27,7 @@ interface CardEditDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function EditForm({
-  card,
-  onClose,
-}: {
-  card: CardRow;
-  onClose: () => void;
-}) {
+function EditForm({ card, onClose }: { card: CardRow; onClose: () => void }) {
   const [front, setFront] = useState(card.front);
   const [back, setBack] = useState(card.back);
   const [saving, setSaving] = useState(false);
@@ -49,7 +42,7 @@ function EditForm({
     setSaveError(null);
     setDeleteError(null);
     setShowDeleteConfirm(false);
-  }, [card.id, card.front, card.back]);
+  }, [card.front, card.back]);
 
   async function handleSave() {
     setSaving(true);
@@ -95,11 +88,7 @@ function EditForm({
           disabled={deleting}
           onClick={handleDelete}
         >
-          {deleting ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            "Delete"
-          )}
+          {deleting ? <Loader2 className="size-4 animate-spin" /> : "Delete"}
         </Button>
         <Button
           variant="outline"
@@ -139,20 +128,14 @@ function EditForm({
           className="h-11"
         />
       </div>
-      {saveError && (
-        <p className="text-sm text-destructive">{saveError}</p>
-      )}
+      {saveError && <p className="text-sm text-destructive">{saveError}</p>}
       <Button
         variant="default"
         className="w-full h-11"
         disabled={saving}
         onClick={handleSave}
       >
-        {saving ? (
-          <Loader2 className="size-4 animate-spin" />
-        ) : (
-          "Save changes"
-        )}
+        {saving ? <Loader2 className="size-4 animate-spin" /> : "Save changes"}
       </Button>
       <Button
         variant="outline"
@@ -188,9 +171,7 @@ export function CardEditDialog({
         <DialogHeader>
           <DialogTitle>Edit card</DialogTitle>
         </DialogHeader>
-        {card && (
-          <EditForm card={card} onClose={() => onOpenChange(false)} />
-        )}
+        {card && <EditForm card={card} onClose={() => onOpenChange(false)} />}
       </DialogContent>
     </Dialog>
   );

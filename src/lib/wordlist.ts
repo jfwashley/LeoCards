@@ -5,7 +5,7 @@ import type {
   WordList,
 } from "@/data/wordlists/schema";
 
-export type { WordEntry, WordList, CefrLevel, Category };
+export type { Category, CefrLevel, WordEntry, WordList };
 
 // Dynamic import map for all 6 language pairs
 const WORDLIST_MAP: Record<string, () => Promise<WordList>> = {

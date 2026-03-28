@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useRef } from "react";
 import { useTick } from "@pixi/react";
 import type { Graphics, Ticker } from "pixi.js";
+import { useCallback, useRef } from "react";
 
 // ============================================================
 // Sparkle particle type
@@ -22,7 +22,7 @@ interface Particle {
 // ============================================================
 
 const PARTICLE_COUNT = 10; // 8-12 particles per D-07
-const ORANGE_COLOR = 0xF97316; // --primary hsl(24 95% 53%) per UI-SPEC
+const ORANGE_COLOR = 0xf97316; // --primary hsl(24 95% 53%) per UI-SPEC
 const FADE_DURATION = 40; // frames to fade from 1.0 to 0.0
 
 function createParticle(tigerX: number, tigerY: number): Particle {
@@ -50,7 +50,11 @@ interface SparkleParticlesProps {
   active: boolean;
 }
 
-export function SparkleParticles({ tigerX, tigerY, active }: SparkleParticlesProps) {
+export function SparkleParticles({
+  tigerX,
+  tigerY,
+  active,
+}: SparkleParticlesProps) {
   // Particles stored in a ref to avoid state updates in useTick (Pitfall 3)
   const particlesRef = useRef<Particle[]>([]);
 
@@ -122,9 +126,5 @@ export function SparkleParticles({ tigerX, tigerY, active }: SparkleParticlesPro
 
   if (!active) return null;
 
-  return (
-    <pixiGraphics
-      draw={draw}
-    />
-  );
+  return <pixiGraphics draw={draw} />;
 }

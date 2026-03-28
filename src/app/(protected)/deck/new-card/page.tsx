@@ -1,9 +1,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
+import { TranslationForm } from "@/components/translation-form";
 import { auth } from "@/lib/auth";
 import { getUserDecks, getUserNativeLanguage } from "@/lib/deck-queries";
-import { TranslationForm } from "@/components/translation-form";
 
 interface NewCardPageProps {
   searchParams: Promise<{ deck?: string }>;
@@ -41,7 +40,8 @@ export default async function NewCardPage({ searchParams }: NewCardPageProps) {
   }
 
   const nativeLangLabel = LANGUAGE_LABELS[nativeLang] ?? nativeLang;
-  const targetLangLabel = LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
+  const targetLangLabel =
+    LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
 
   return (
     <div className="min-h-screen bg-background">

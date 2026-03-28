@@ -1,11 +1,11 @@
 "use server";
 
+import { and, count, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { and, count, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { cards, decks } from "@/db/schema";
 import type { CardId, DeckId, UserId } from "@/db/schema";
+import { cards, decks } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 // ============================================================
@@ -74,7 +74,9 @@ export async function saveCard(
   if (!deck || deck.userId !== userId) throw new Error("Forbidden");
 
   const id = crypto.randomUUID() as CardId;
-  await db.insert(cards).values({ id, deckId: deckId as DeckId, front, back, source });
+  await db
+    .insert(cards)
+    .values({ id, deckId: deckId as DeckId, front, back, source });
   revalidatePath("/dashboard");
   return { id };
 }
@@ -87,11 +89,7 @@ export async function saveCard(
  * Updates the front and back text of an existing card.
  * Verifies that the card's deck belongs to the authenticated user.
  */
-export async function editCard(
-  cardId: string,
-  front: string,
-  back: string,
-) {
+export async function editCard(cardId: string, front: string, back: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;

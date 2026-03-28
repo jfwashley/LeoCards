@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 
 // ============================================================
 // Constants
@@ -42,6 +42,7 @@ export function LevelUpOverlay({ level, onDismiss }: LevelUpOverlayProps) {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {Array.from({ length: CONFETTI_COUNT }, (_, index) => (
           <motion.div
+            // biome-ignore lint/suspicious/noArrayIndexKey: confetti items are positional visual decorations, never reordered
             key={index}
             className="absolute top-0 w-2 h-3 rounded-sm pointer-events-none"
             style={{
@@ -68,9 +69,13 @@ export function LevelUpOverlay({ level, onDismiss }: LevelUpOverlayProps) {
         <p className="text-sm text-muted-foreground">Habitat Level</p>
         <p className="text-[28px] font-semibold text-primary">{level}</p>
         <p className="text-base text-foreground">
-          {level === 10 ? "A bird arrived in your habitat!" : "Your habitat grew!"}
+          {level === 10
+            ? "A bird arrived in your habitat!"
+            : "Your habitat grew!"}
         </p>
-        <p className="text-sm text-muted-foreground mt-8">Tap anywhere to continue</p>
+        <p className="text-sm text-muted-foreground mt-8">
+          Tap anywhere to continue
+        </p>
       </div>
     </motion.div>
   );

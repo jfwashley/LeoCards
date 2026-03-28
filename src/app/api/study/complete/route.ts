@@ -1,15 +1,15 @@
-import { headers } from "next/headers";
 import { and, eq, inArray, sql } from "drizzle-orm";
+import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/db";
-import { cards, decks, recall_events, habitat_metadata } from "@/db/schema";
 import type { CardId, DeckId, RecallEventId, UserId } from "@/db/schema";
+import { cards, decks, habitat_metadata, recall_events } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { computeCardUpdate } from "@/lib/study-engine";
-import type { GradeEntry } from "@/lib/study-engine";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
+import type { GradeEntry } from "@/lib/study-engine";
+import { computeCardUpdate } from "@/lib/study-engine";
 
 // ============================================================
 // Validation schemas
@@ -68,7 +68,12 @@ export async function POST(request: Request) {
   const [ownedDeck] = await db
     .select({ id: decks.id })
     .from(decks)
-    .where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, session.user.id as string)));
+    .where(
+      and(
+        eq(decks.id, deckId as DeckId),
+        eq(decks.userId, session.user.id as string),
+      ),
+    );
 
   if (!ownedDeck) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
@@ -118,7 +123,12 @@ export async function POST(request: Request) {
       now,
     );
 
-    return { cardId: cardId as CardId, newRound, cooldownUntil, recallCountDelta };
+    return {
+      cardId: cardId as CardId,
+      newRound,
+      cooldownUntil,
+      recallCountDelta,
+    };
   });
 
   // 6. Execute all writes (neon-http driver does not support transactions)

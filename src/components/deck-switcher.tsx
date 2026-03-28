@@ -1,7 +1,7 @@
 "use client";
 
+import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
-import { Plus, Loader2 } from "lucide-react";
 
 import {
   Select,
@@ -103,15 +103,16 @@ export function DeckSwitcher({
           })}
           <SelectSeparator />
           <SelectItem value="__new__">
-            <Plus className="size-4" />
-            + New deck
+            <Plus className="size-4" />+ New deck
           </SelectItem>
         </SelectContent>
       </Select>
 
       {showPicker && (
         <div className="flex items-center gap-2 ml-2">
-          <span className="text-sm text-muted-foreground">Choose language:</span>
+          <span className="text-sm text-muted-foreground">
+            Choose language:
+          </span>
           {learningLanguages.map((lang) => (
             <button
               key={lang.code}

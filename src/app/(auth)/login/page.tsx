@@ -71,9 +71,7 @@ function LoginForm() {
               {...register("email")}
             />
             {isSubmitted && errors.email && (
-              <p className="text-sm text-destructive">
-                {errors.email.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
@@ -106,16 +104,8 @@ function LoginForm() {
             </Link>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full h-11"
-            disabled={isPending}
-          >
-            {isPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Sign in"
-            )}
+          <Button type="submit" className="w-full h-11" disabled={isPending}>
+            {isPending ? <Loader2 className="animate-spin" /> : "Sign in"}
           </Button>
         </div>
       </form>
@@ -136,10 +126,12 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Card className="w-full max-w-sm rounded-xl shadow-sm p-6">
-      <h2 className="text-xl font-semibold leading-[1.2] mb-4">
-        Welcome back
-      </h2>
-      <Suspense fallback={<div className="text-sm text-muted-foreground">Loading...</div>}>
+      <h2 className="text-xl font-semibold leading-[1.2] mb-4">Welcome back</h2>
+      <Suspense
+        fallback={
+          <div className="text-sm text-muted-foreground">Loading...</div>
+        }
+      >
         <LoginForm />
       </Suspense>
     </Card>

@@ -1,14 +1,13 @@
 "use client";
 
-import { useReducer, useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-
-import { Button } from "@/components/ui/button";
-import { StudyCard } from "@/components/study-card";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { CardStack } from "@/components/card-stack";
 import { LevelUpOverlay } from "@/components/level-up-overlay";
-import type { SessionCard, GradeEntry, SessionStats } from "@/lib/study-engine";
+import { StudyCard } from "@/components/study-card";
+import { Button } from "@/components/ui/button";
+import type { GradeEntry, SessionCard, SessionStats } from "@/lib/study-engine";
 
 // ============================================================
 // State types
@@ -146,8 +145,7 @@ function reducer(state: SessionPhase, action: Action): SessionPhase {
       return {
         phase: "error",
         message: action.message,
-        graded:
-          state.phase === "committing" ? state.graded : [],
+        graded: state.phase === "committing" ? state.graded : [],
       };
     }
 
@@ -175,9 +173,7 @@ function computeStats(
   // Newly learned: cards that started at masteryRound 2 and got a correct grade
   // (would advance to round 3 = learned)
   const round2CardIds = new Set(
-    initialCards
-      .filter((c) => c.masteryRound === 2)
-      .map((c) => c.id as string),
+    initialCards.filter((c) => c.masteryRound === 2).map((c) => c.id as string),
   );
   const newlyLearned = graded.filter(
     (g) => g.correct && round2CardIds.has(g.cardId as string),
@@ -266,20 +262,24 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
 
         const data = await response.json();
         const stats = computeStats(initialCards, graded);
-        dispatch({ type: "COMMIT_DONE", stats: { ...stats, leveledUp: data.leveledUp ?? null } });
+        dispatch({
+          type: "COMMIT_DONE",
+          stats: { ...stats, leveledUp: data.leveledUp ?? null },
+        });
         if (data.leveledUp !== null && data.leveledUp !== undefined) {
           setShowLevelUp(data.leveledUp);
         }
       } catch {
         dispatch({
           type: "COMMIT_ERROR",
-          message: "Couldn't save your progress. Check your connection and try again.",
+          message:
+            "Couldn't save your progress. Check your connection and try again.",
         });
       }
     }
 
     commit();
-  }, [state.phase]);
+  }, [state.phase, initialCards, deckId, state]);
 
   // ============================================================
   // Render: committing
@@ -300,10 +300,11 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
   if (state.phase === "error") {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-8">
-        <p className="text-base text-center text-foreground">
-          {state.message}
-        </p>
-        <Button variant="default" onClick={() => dispatch({ type: "RETRY_COMMIT" })}>
+        <p className="text-base text-center text-foreground">{state.message}</p>
+        <Button
+          variant="default"
+          onClick={() => dispatch({ type: "RETRY_COMMIT" })}
+        >
           Retry saving session
         </Button>
       </div>
@@ -323,7 +324,10 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
       <>
         <AnimatePresence>
           {showLevelUp !== null && (
-            <LevelUpOverlay level={showLevelUp} onDismiss={handleLevelUpDismiss} />
+            <LevelUpOverlay
+              level={showLevelUp}
+              onDismiss={handleLevelUpDismiss}
+            />
           )}
         </AnimatePresence>
         <div className="min-h-screen bg-background flex items-center justify-center">
@@ -375,8 +379,16 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
   // Render: studying
   // ============================================================
 
-  const { queue, currentIndex, flipped, swipeReady, lastGradeDirection, showQuitConfirm, hasFlippedFirst, hasSwiped } =
-    state;
+  const {
+    queue,
+    currentIndex,
+    flipped,
+    swipeReady,
+    lastGradeDirection,
+    showQuitConfirm,
+    hasFlippedFirst,
+    hasSwiped,
+  } = state;
   const current = queue[currentIndex];
   const remainingCount = queue.length - currentIndex - 1;
 
@@ -441,7 +453,9 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
               flipped={flipped}
               swipeReady={swipeReady}
               onFlip={() => dispatch({ type: "FLIP_CARD" })}
-              onGrade={(dir) => dispatch({ type: "SWIPE_GRADE", direction: dir })}
+              onGrade={(dir) =>
+                dispatch({ type: "SWIPE_GRADE", direction: dir })
+              }
               exitDirection={lastGradeDirection}
             />
           </AnimatePresence>

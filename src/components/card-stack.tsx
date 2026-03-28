@@ -15,6 +15,7 @@ export function CardStack({ remainingCount }: CardStackProps) {
     <>
       {Array.from({ length: visibleLayers }).map((_, i) => (
         <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: static positional layers, never reordered
           key={i}
           className="absolute inset-0 rounded-xl bg-card border border-border"
           style={{

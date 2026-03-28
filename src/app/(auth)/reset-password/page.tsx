@@ -129,11 +129,7 @@ function ResetPasswordForm() {
           </div>
         )}
 
-        <Button
-          type="submit"
-          className="w-full h-11"
-          disabled={isPending}
-        >
+        <Button type="submit" className="w-full h-11" disabled={isPending}>
           {isPending ? (
             <Loader2 className="animate-spin" />
           ) : (
@@ -151,7 +147,11 @@ export default function ResetPasswordPage() {
       <h2 className="text-xl font-semibold leading-[1.2] mb-4">
         Set a new password
       </h2>
-      <Suspense fallback={<div className="text-sm text-muted-foreground">Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="text-sm text-muted-foreground">Loading...</div>
+        }
+      >
         <ResetPasswordForm />
       </Suspense>
     </Card>

@@ -1,10 +1,13 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
-import { auth } from "@/lib/auth";
-import { getUserDecks, getDeckCardWords, getUserNativeLanguage } from "@/lib/deck-queries";
-import { getWordList } from "@/lib/wordlist";
 import { WordListBrowser } from "@/components/word-list-browser";
+import { auth } from "@/lib/auth";
+import {
+  getDeckCardWords,
+  getUserDecks,
+  getUserNativeLanguage,
+} from "@/lib/deck-queries";
+import { getWordList } from "@/lib/wordlist";
 
 interface BrowsePageProps {
   searchParams: Promise<{ deck?: string }>;
@@ -47,7 +50,8 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
   ]);
 
   const nativeLangLabel = LANGUAGE_LABELS[nativeLang] ?? nativeLang;
-  const targetLangLabel = LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
+  const targetLangLabel =
+    LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
 
   return (
     <div className="min-h-screen bg-background">

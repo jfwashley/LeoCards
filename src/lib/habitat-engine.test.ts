@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 import type { UserId } from "@/db/schema";
 import {
-  type HabitatFacts,
-  type HabitatState,
-  DECAY_FLOOR,
-  GRACE_PERIOD_MS,
-  LEVEL_THRESHOLDS,
   classifyMood,
   computeHabitatState,
   computeQuality,
+  DECAY_FLOOR,
+  GRACE_PERIOD_MS,
+  type HabitatFacts,
+  type HabitatState,
   habitatLevel,
+  LEVEL_THRESHOLDS,
 } from "./habitat-engine";
 
 // ============================================================
@@ -62,7 +62,7 @@ describe("computeQuality", () => {
   });
 
   it("returns 0.90 when activity was 4 days ago (2 days past grace)", () => {
-    expect(computeQuality(daysAgo(4), NOW)).toBeCloseTo(0.90, 5);
+    expect(computeQuality(daysAgo(4), NOW)).toBeCloseTo(0.9, 5);
   });
 
   it("returns 0.10 when activity was 100 days ago (floor at D-03)", () => {
@@ -75,7 +75,9 @@ describe("computeQuality", () => {
 
   it("handles sub-day precision correctly (2.5 days = still in grace)", () => {
     // 2.5 days = 60 hours; grace is 48h, so this is 12h past grace → 5% * (0.5 day) = 0.025 decay
-    const twoAndHalfDaysAgo = new Date(NOW.getTime() - 2.5 * 24 * 60 * 60 * 1000);
+    const twoAndHalfDaysAgo = new Date(
+      NOW.getTime() - 2.5 * 24 * 60 * 60 * 1000,
+    );
     const quality = computeQuality(twoAndHalfDaysAgo, NOW);
     // 0.5 days past grace: 1.0 - 0.5 * 0.05 = 0.975
     expect(quality).toBeCloseTo(0.975, 5);
@@ -188,11 +190,11 @@ describe("classifyMood", () => {
   });
 
   it("returns 'neutral' when quality = 0.40 and minutesSinceActivity > 60", () => {
-    expect(classifyMood(0.40, 200)).toBe("neutral");
+    expect(classifyMood(0.4, 200)).toBe("neutral");
   });
 
   it("returns 'neutral' when quality >= 0.40 and minutesSinceActivity is null", () => {
-    expect(classifyMood(0.50, null)).toBe("neutral");
+    expect(classifyMood(0.5, null)).toBe("neutral");
   });
 
   it("returns 'sad' when quality = 0.39 and minutesSinceActivity > 60", () => {
@@ -200,11 +202,11 @@ describe("classifyMood", () => {
   });
 
   it("returns 'sad' when quality = 0.10 (floor) and minutesSinceActivity > 60", () => {
-    expect(classifyMood(0.10, 500)).toBe("sad");
+    expect(classifyMood(0.1, 500)).toBe("sad");
   });
 
   it("returns 'sad' when quality < 0.40 and minutesSinceActivity is null", () => {
-    expect(classifyMood(0.30, null)).toBe("sad");
+    expect(classifyMood(0.3, null)).toBe("sad");
   });
 });
 
@@ -229,7 +231,10 @@ describe("computeHabitatState", () => {
 
   it("active user (just studied, 50 learned): mood excited, level 5", () => {
     // quality = 1.0 (just studied), effective = floor(1.0 * 50) = 50 -> level 5
-    const facts = makeFacts({ lastActivityAt: hoursAgo(0), learnedCardCount: 50 });
+    const facts = makeFacts({
+      lastActivityAt: hoursAgo(0),
+      learnedCardCount: 50,
+    });
     const state = computeHabitatState(facts, NOW);
 
     expect(state.quality).toBe(1.0);
@@ -242,10 +247,13 @@ describe("computeHabitatState", () => {
   it("decayed user (10 days inactive, 100 learned): quality 0.60, level 5, mood neutral", () => {
     // daysPastGrace = 10 - 2 = 8; quality = 1.0 - 8 * 0.05 = 0.60
     // effective = floor(0.60 * 100) = 60 -> level 5 (50 <= 60 < 80)
-    const facts = makeFacts({ lastActivityAt: daysAgo(10), learnedCardCount: 100 });
+    const facts = makeFacts({
+      lastActivityAt: daysAgo(10),
+      learnedCardCount: 100,
+    });
     const state = computeHabitatState(facts, NOW);
 
-    expect(state.quality).toBeCloseTo(0.60, 5);
+    expect(state.quality).toBeCloseTo(0.6, 5);
     expect(state.effectiveCardCount).toBe(60);
     expect(state.level).toBe(5);
     expect(state.mood).toBe("neutral"); // quality 0.60 >= 0.40, < 0.75
@@ -255,21 +263,30 @@ describe("computeHabitatState", () => {
 
   it("effectiveCardCount uses Math.floor (not round or ceil)", () => {
     // quality = 1.0 (recent), learnedCards = 14 -> effective = floor(1.0 * 14) = 14 -> level 2
-    const facts = makeFacts({ lastActivityAt: hoursAgo(1), learnedCardCount: 14 });
+    const facts = makeFacts({
+      lastActivityAt: hoursAgo(1),
+      learnedCardCount: 14,
+    });
     const state = computeHabitatState(facts, NOW);
     expect(state.effectiveCardCount).toBe(14);
     expect(state.level).toBe(2);
   });
 
   it("isDecaying is false when within grace period and lastActivityAt is not null", () => {
-    const facts = makeFacts({ lastActivityAt: daysAgo(1), learnedCardCount: 10 });
+    const facts = makeFacts({
+      lastActivityAt: daysAgo(1),
+      learnedCardCount: 10,
+    });
     const state = computeHabitatState(facts, NOW);
     expect(state.isDecaying).toBe(false);
     expect(state.quality).toBe(1.0);
   });
 
   it("isDecaying is true when past grace period", () => {
-    const facts = makeFacts({ lastActivityAt: daysAgo(5), learnedCardCount: 20 });
+    const facts = makeFacts({
+      lastActivityAt: daysAgo(5),
+      learnedCardCount: 20,
+    });
     const state = computeHabitatState(facts, NOW);
     expect(state.isDecaying).toBe(true);
   });
@@ -288,7 +305,10 @@ describe("computeHabitatState", () => {
 
   it("nextLevelThreshold is null when at level 10 (max, D-10)", () => {
     // Need 400+ effective cards to reach level 10
-    const facts = makeFacts({ lastActivityAt: hoursAgo(1), learnedCardCount: 500 });
+    const facts = makeFacts({
+      lastActivityAt: hoursAgo(1),
+      learnedCardCount: 500,
+    });
     const state = computeHabitatState(facts, NOW);
     expect(state.level).toBe(10);
     expect(state.nextLevelThreshold).toBeNull();
@@ -297,10 +317,13 @@ describe("computeHabitatState", () => {
   it("deeply decayed user (30 days, 400 learned): quality floored at 0.10, mood sad", () => {
     // daysPastGrace = 30 - 2 = 28; quality = 1.0 - 28 * 0.05 = -0.40 -> floor at 0.10
     // effective = floor(0.10 * 400) = 40 -> level 4 (30 <= 40 < 50)
-    const facts = makeFacts({ lastActivityAt: daysAgo(30), learnedCardCount: 400 });
+    const facts = makeFacts({
+      lastActivityAt: daysAgo(30),
+      learnedCardCount: 400,
+    });
     const state = computeHabitatState(facts, NOW);
 
-    expect(state.quality).toBe(0.10);
+    expect(state.quality).toBe(0.1);
     expect(state.effectiveCardCount).toBe(40);
     expect(state.level).toBe(4);
     expect(state.mood).toBe("sad"); // quality 0.10 < 0.40

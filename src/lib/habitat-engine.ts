@@ -11,14 +11,16 @@ export const GRACE_PERIOD_MS = 2 * 24 * 60 * 60 * 1000;
 export const DECAY_RATE_PER_DAY = 0.05;
 
 /** Decay floor: quality never drops below 10% (D-03) */
-export const DECAY_FLOOR = 0.10;
+export const DECAY_FLOOR = 0.1;
 
 /**
  * Card count thresholds for habitat levels 2-10 (D-07).
  * Index 0 = threshold to reach level 2 (5 learned cards)
  * Index 9 = threshold to reach level 10 (400 learned cards)
  */
-export const LEVEL_THRESHOLDS = [5, 15, 30, 50, 80, 120, 170, 230, 300, 400] as const;
+export const LEVEL_THRESHOLDS = [
+  5, 15, 30, 50, 80, 120, 170, 230, 300, 400,
+] as const;
 
 /** "Excited" mood window: 60 minutes after completing a study session (D-13) */
 export const EXCITED_WINDOW_MINUTES = 60;
@@ -153,13 +155,16 @@ export function classifyMood(
   minutesSinceActivity: number | null,
 ): TigerMood {
   // D-13: "excited" window — 60 minutes after completing a study session
-  if (minutesSinceActivity !== null && minutesSinceActivity <= EXCITED_WINDOW_MINUTES) {
+  if (
+    minutesSinceActivity !== null &&
+    minutesSinceActivity <= EXCITED_WINDOW_MINUTES
+  ) {
     return "excited";
   }
 
   // D-12: mood combines quality AND recency (recency handled above for excited)
   if (quality >= 0.75) return "happy";
-  if (quality >= 0.40) return "neutral";
+  if (quality >= 0.4) return "neutral";
   return "sad";
 }
 
@@ -176,7 +181,10 @@ export function classifyMood(
  * @param facts - Raw DB facts (lastActivityAt, learnedCardCount)
  * @param now - Current time (explicit parameter — no Date.now() inside)
  */
-export function computeHabitatState(facts: HabitatFacts, now: Date): HabitatState {
+export function computeHabitatState(
+  facts: HabitatFacts,
+  now: Date,
+): HabitatState {
   const { lastActivityAt, learnedCardCount } = facts;
 
   // Compute quality from decay rules

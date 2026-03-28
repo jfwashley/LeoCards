@@ -4,8 +4,8 @@
 
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { cards, decks, user } from "@/db/schema";
 import type { UserId } from "@/db/schema";
+import { cards, decks, user } from "@/db/schema";
 
 // ============================================================
 // getUserDecks

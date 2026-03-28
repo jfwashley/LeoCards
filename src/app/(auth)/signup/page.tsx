@@ -75,15 +75,11 @@ export default function SignupPage() {
               id="name"
               type="text"
               placeholder="Your name"
-              className={
-                isSubmitted && errors.name ? "border-destructive" : ""
-              }
+              className={isSubmitted && errors.name ? "border-destructive" : ""}
               {...register("name")}
             />
             {isSubmitted && errors.name && (
-              <p className="text-sm text-destructive">
-                {errors.name.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -101,9 +97,7 @@ export default function SignupPage() {
               {...register("email")}
             />
             {isSubmitted && errors.email && (
-              <p className="text-sm text-destructive">
-                {errors.email.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
             {emailError && (
               <p className="text-sm text-destructive">{emailError}</p>
@@ -146,11 +140,7 @@ export default function SignupPage() {
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full h-11"
-            disabled={isPending}
-          >
+          <Button type="submit" className="w-full h-11" disabled={isPending}>
             {isPending ? (
               <Loader2 className="animate-spin" />
             ) : (

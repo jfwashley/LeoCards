@@ -2,285 +2,1965 @@
   "sourceLang": "fr",
   "targetLang": "es",
   "words": [
-    { "id": "greetings-001", "category": "Greetings", "cefr": "A1", "native": "Bonjour", "target": "Hola" },
-    { "id": "greetings-002", "category": "Greetings", "cefr": "A1", "native": "Au revoir", "target": "Adiós" },
-    { "id": "greetings-003", "category": "Greetings", "cefr": "A1", "native": "S'il vous plaît", "target": "Por favor" },
-    { "id": "greetings-004", "category": "Greetings", "cefr": "A1", "native": "Merci", "target": "Gracias" },
-    { "id": "greetings-005", "category": "Greetings", "cefr": "A1", "native": "Oui", "target": "Sí" },
-    { "id": "greetings-006", "category": "Greetings", "cefr": "A1", "native": "Non", "target": "No" },
-    { "id": "greetings-007", "category": "Greetings", "cefr": "A1", "native": "Bonsoir", "target": "Buenas tardes" },
-    { "id": "greetings-008", "category": "Greetings", "cefr": "A1", "native": "Bonne nuit", "target": "Buenas noches" },
-    { "id": "greetings-009", "category": "Greetings", "cefr": "A1", "native": "Désolé", "target": "Lo siento" },
-    { "id": "greetings-010", "category": "Greetings", "cefr": "A1", "native": "Excusez-moi", "target": "Perdona" },
-    { "id": "greetings-011", "category": "Greetings", "cefr": "A1", "native": "Comment allez-vous ?", "target": "¿Cómo estás?" },
-    { "id": "greetings-012", "category": "Greetings", "cefr": "A1", "native": "Je m'appelle", "target": "Me llamo" },
-    { "id": "greetings-013", "category": "Greetings", "cefr": "A1", "native": "Enchanté", "target": "Encantado" },
-    { "id": "greetings-014", "category": "Greetings", "cefr": "A1", "native": "À bientôt", "target": "Hasta luego" },
-    { "id": "greetings-015", "category": "Greetings", "cefr": "A1", "native": "Bienvenue", "target": "Bienvenido" },
-    { "id": "numbers-001", "category": "Numbers", "cefr": "A1", "native": "Un", "target": "Uno" },
-    { "id": "numbers-002", "category": "Numbers", "cefr": "A1", "native": "Deux", "target": "Dos" },
-    { "id": "numbers-003", "category": "Numbers", "cefr": "A1", "native": "Trois", "target": "Tres" },
-    { "id": "numbers-004", "category": "Numbers", "cefr": "A1", "native": "Quatre", "target": "Cuatro" },
-    { "id": "numbers-005", "category": "Numbers", "cefr": "A1", "native": "Cinq", "target": "Cinco" },
-    { "id": "numbers-006", "category": "Numbers", "cefr": "A1", "native": "Six", "target": "Seis" },
-    { "id": "numbers-007", "category": "Numbers", "cefr": "A1", "native": "Sept", "target": "Siete" },
-    { "id": "numbers-008", "category": "Numbers", "cefr": "A1", "native": "Huit", "target": "Ocho" },
-    { "id": "numbers-009", "category": "Numbers", "cefr": "A1", "native": "Neuf", "target": "Nueve" },
-    { "id": "numbers-010", "category": "Numbers", "cefr": "A1", "native": "Dix", "target": "Diez" },
-    { "id": "numbers-011", "category": "Numbers", "cefr": "A1", "native": "Vingt", "target": "Veinte" },
-    { "id": "numbers-012", "category": "Numbers", "cefr": "A1", "native": "Cent", "target": "Cien" },
-    { "id": "numbers-013", "category": "Numbers", "cefr": "A1", "native": "Mille", "target": "Mil" },
-    { "id": "numbers-014", "category": "Numbers", "cefr": "A1", "native": "Zéro", "target": "Cero" },
-    { "id": "numbers-015", "category": "Numbers", "cefr": "A1", "native": "Cinquante", "target": "Cincuenta" },
-    { "id": "colors-001", "category": "Colors", "cefr": "A1", "native": "Rouge", "target": "Rojo" },
-    { "id": "colors-002", "category": "Colors", "cefr": "A1", "native": "Bleu", "target": "Azul" },
-    { "id": "colors-003", "category": "Colors", "cefr": "A1", "native": "Vert", "target": "Verde" },
-    { "id": "colors-004", "category": "Colors", "cefr": "A1", "native": "Jaune", "target": "Amarillo" },
-    { "id": "colors-005", "category": "Colors", "cefr": "A1", "native": "Blanc", "target": "Blanco" },
-    { "id": "colors-006", "category": "Colors", "cefr": "A1", "native": "Noir", "target": "Negro" },
-    { "id": "colors-007", "category": "Colors", "cefr": "A1", "native": "Orange", "target": "Naranja" },
-    { "id": "colors-008", "category": "Colors", "cefr": "A1", "native": "Rose", "target": "Rosa" },
-    { "id": "colors-009", "category": "Colors", "cefr": "A1", "native": "Violet", "target": "Morado" },
-    { "id": "colors-010", "category": "Colors", "cefr": "A1", "native": "Marron", "target": "Marrón" },
-    { "id": "colors-011", "category": "Colors", "cefr": "A1", "native": "Gris", "target": "Gris" },
-    { "id": "colors-012", "category": "Colors", "cefr": "A1", "native": "Bleu clair", "target": "Azul claro" },
-    { "id": "colors-013", "category": "Colors", "cefr": "A1", "native": "Bleu foncé", "target": "Azul oscuro" },
-    { "id": "colors-014", "category": "Colors", "cefr": "A1", "native": "Or", "target": "Oro" },
-    { "id": "colors-015", "category": "Colors", "cefr": "A1", "native": "Argent", "target": "Plata" },
-    { "id": "days-months-001", "category": "Days & Months", "cefr": "A1", "native": "Lundi", "target": "Lunes" },
-    { "id": "days-months-002", "category": "Days & Months", "cefr": "A1", "native": "Mardi", "target": "Martes" },
-    { "id": "days-months-003", "category": "Days & Months", "cefr": "A1", "native": "Mercredi", "target": "Miércoles" },
-    { "id": "days-months-004", "category": "Days & Months", "cefr": "A1", "native": "Jeudi", "target": "Jueves" },
-    { "id": "days-months-005", "category": "Days & Months", "cefr": "A1", "native": "Vendredi", "target": "Viernes" },
-    { "id": "days-months-006", "category": "Days & Months", "cefr": "A1", "native": "Samedi", "target": "Sábado" },
-    { "id": "days-months-007", "category": "Days & Months", "cefr": "A1", "native": "Dimanche", "target": "Domingo" },
-    { "id": "days-months-008", "category": "Days & Months", "cefr": "A1", "native": "Janvier", "target": "Enero" },
-    { "id": "days-months-009", "category": "Days & Months", "cefr": "A1", "native": "Février", "target": "Febrero" },
-    { "id": "days-months-010", "category": "Days & Months", "cefr": "A1", "native": "Mars", "target": "Marzo" },
-    { "id": "days-months-011", "category": "Days & Months", "cefr": "A1", "native": "Avril", "target": "Abril" },
-    { "id": "days-months-012", "category": "Days & Months", "cefr": "A1", "native": "Mai", "target": "Mayo" },
-    { "id": "days-months-013", "category": "Days & Months", "cefr": "A1", "native": "Juin", "target": "Junio" },
-    { "id": "days-months-014", "category": "Days & Months", "cefr": "A1", "native": "Juillet", "target": "Julio" },
-    { "id": "days-months-015", "category": "Days & Months", "cefr": "A1", "native": "Août", "target": "Agosto" },
-    { "id": "food-drink-001", "category": "Food & Drink", "cefr": "A2", "native": "Eau", "target": "Agua" },
-    { "id": "food-drink-002", "category": "Food & Drink", "cefr": "A2", "native": "Pain", "target": "Pan" },
-    { "id": "food-drink-003", "category": "Food & Drink", "cefr": "A2", "native": "Lait", "target": "Leche" },
-    { "id": "food-drink-004", "category": "Food & Drink", "cefr": "A2", "native": "Café", "target": "Café" },
-    { "id": "food-drink-005", "category": "Food & Drink", "cefr": "A2", "native": "Thé", "target": "Té" },
-    { "id": "food-drink-006", "category": "Food & Drink", "cefr": "A2", "native": "Vin", "target": "Vino" },
-    { "id": "food-drink-007", "category": "Food & Drink", "cefr": "A2", "native": "Bière", "target": "Cerveza" },
-    { "id": "food-drink-008", "category": "Food & Drink", "cefr": "A2", "native": "Viande", "target": "Carne" },
-    { "id": "food-drink-009", "category": "Food & Drink", "cefr": "A2", "native": "Poisson", "target": "Pescado" },
-    { "id": "food-drink-010", "category": "Food & Drink", "cefr": "A2", "native": "Légumes", "target": "Verduras" },
-    { "id": "food-drink-011", "category": "Food & Drink", "cefr": "A2", "native": "Fruit", "target": "Fruta" },
-    { "id": "food-drink-012", "category": "Food & Drink", "cefr": "A2", "native": "Fromage", "target": "Queso" },
-    { "id": "food-drink-013", "category": "Food & Drink", "cefr": "A2", "native": "Œuf", "target": "Huevo" },
-    { "id": "food-drink-014", "category": "Food & Drink", "cefr": "A2", "native": "Beurre", "target": "Mantequilla" },
-    { "id": "food-drink-015", "category": "Food & Drink", "cefr": "A2", "native": "Sucre", "target": "Azúcar" },
-    { "id": "food-drink-016", "category": "Food & Drink", "cefr": "A2", "native": "Sel", "target": "Sal" },
-    { "id": "food-drink-017", "category": "Food & Drink", "cefr": "A2", "native": "Riz", "target": "Arroz" },
-    { "id": "food-drink-018", "category": "Food & Drink", "cefr": "A2", "native": "Pâtes", "target": "Pasta" },
-    { "id": "food-drink-019", "category": "Food & Drink", "cefr": "A2", "native": "Soupe", "target": "Sopa" },
-    { "id": "food-drink-020", "category": "Food & Drink", "cefr": "A2", "native": "Dessert", "target": "Postre" },
-    { "id": "family-001", "category": "Family", "cefr": "A2", "native": "Mère", "target": "Madre" },
-    { "id": "family-002", "category": "Family", "cefr": "A2", "native": "Père", "target": "Padre" },
-    { "id": "family-003", "category": "Family", "cefr": "A2", "native": "Frère", "target": "Hermano" },
-    { "id": "family-004", "category": "Family", "cefr": "A2", "native": "Sœur", "target": "Hermana" },
-    { "id": "family-005", "category": "Family", "cefr": "A2", "native": "Fils", "target": "Hijo" },
-    { "id": "family-006", "category": "Family", "cefr": "A2", "native": "Fille", "target": "Hija" },
-    { "id": "family-007", "category": "Family", "cefr": "A2", "native": "Grand-père", "target": "Abuelo" },
-    { "id": "family-008", "category": "Family", "cefr": "A2", "native": "Grand-mère", "target": "Abuela" },
-    { "id": "family-009", "category": "Family", "cefr": "A2", "native": "Oncle", "target": "Tío" },
-    { "id": "family-010", "category": "Family", "cefr": "A2", "native": "Tante", "target": "Tía" },
-    { "id": "family-011", "category": "Family", "cefr": "A2", "native": "Cousin", "target": "Primo" },
-    { "id": "family-012", "category": "Family", "cefr": "A2", "native": "Mari", "target": "Esposo" },
-    { "id": "family-013", "category": "Family", "cefr": "A2", "native": "Femme", "target": "Esposa" },
-    { "id": "family-014", "category": "Family", "cefr": "A2", "native": "Bébé", "target": "Bebé" },
-    { "id": "family-015", "category": "Family", "cefr": "A2", "native": "Enfant", "target": "Niño" },
-    { "id": "family-016", "category": "Family", "cefr": "A2", "native": "Parents", "target": "Padres" },
-    { "id": "family-017", "category": "Family", "cefr": "A2", "native": "Famille", "target": "Familia" },
-    { "id": "family-018", "category": "Family", "cefr": "A2", "native": "Neveu", "target": "Sobrino" },
-    { "id": "family-019", "category": "Family", "cefr": "A2", "native": "Nièce", "target": "Sobrina" },
-    { "id": "family-020", "category": "Family", "cefr": "A2", "native": "Ami", "target": "Amigo" },
-    { "id": "body-001", "category": "Body", "cefr": "A2", "native": "Tête", "target": "Cabeza" },
-    { "id": "body-002", "category": "Body", "cefr": "A2", "native": "Œil", "target": "Ojo" },
-    { "id": "body-003", "category": "Body", "cefr": "A2", "native": "Oreille", "target": "Oreja" },
-    { "id": "body-004", "category": "Body", "cefr": "A2", "native": "Nez", "target": "Nariz" },
-    { "id": "body-005", "category": "Body", "cefr": "A2", "native": "Bouche", "target": "Boca" },
-    { "id": "body-006", "category": "Body", "cefr": "A2", "native": "Main", "target": "Mano" },
-    { "id": "body-007", "category": "Body", "cefr": "A2", "native": "Pied", "target": "Pie" },
-    { "id": "body-008", "category": "Body", "cefr": "A2", "native": "Bras", "target": "Brazo" },
-    { "id": "body-009", "category": "Body", "cefr": "A2", "native": "Jambe", "target": "Pierna" },
-    { "id": "body-010", "category": "Body", "cefr": "A2", "native": "Dos", "target": "Espalda" },
-    { "id": "body-011", "category": "Body", "cefr": "A2", "native": "Cœur", "target": "Corazón" },
-    { "id": "body-012", "category": "Body", "cefr": "A2", "native": "Estomac", "target": "Estómago" },
-    { "id": "body-013", "category": "Body", "cefr": "A2", "native": "Doigt", "target": "Dedo" },
-    { "id": "body-014", "category": "Body", "cefr": "A2", "native": "Genou", "target": "Rodilla" },
-    { "id": "body-015", "category": "Body", "cefr": "A2", "native": "Épaule", "target": "Hombro" },
-    { "id": "body-016", "category": "Body", "cefr": "A2", "native": "Cheveux", "target": "Pelo" },
-    { "id": "body-017", "category": "Body", "cefr": "A2", "native": "Dent", "target": "Diente" },
-    { "id": "body-018", "category": "Body", "cefr": "A2", "native": "Cou", "target": "Cuello" },
-    { "id": "body-019", "category": "Body", "cefr": "A2", "native": "Poitrine", "target": "Pecho" },
-    { "id": "body-020", "category": "Body", "cefr": "A2", "native": "Langue", "target": "Lengua" },
-    { "id": "animals-001", "category": "Animals", "cefr": "A2", "native": "Chien", "target": "Perro" },
-    { "id": "animals-002", "category": "Animals", "cefr": "A2", "native": "Chat", "target": "Gato" },
-    { "id": "animals-003", "category": "Animals", "cefr": "A2", "native": "Oiseau", "target": "Pájaro" },
-    { "id": "animals-004", "category": "Animals", "cefr": "A2", "native": "Poisson", "target": "Pez" },
-    { "id": "animals-005", "category": "Animals", "cefr": "A2", "native": "Cheval", "target": "Caballo" },
-    { "id": "animals-006", "category": "Animals", "cefr": "A2", "native": "Vache", "target": "Vaca" },
-    { "id": "animals-007", "category": "Animals", "cefr": "A2", "native": "Poulet", "target": "Pollo" },
-    { "id": "animals-008", "category": "Animals", "cefr": "A2", "native": "Lapin", "target": "Conejo" },
-    { "id": "animals-009", "category": "Animals", "cefr": "A2", "native": "Lion", "target": "León" },
-    { "id": "animals-010", "category": "Animals", "cefr": "A2", "native": "Tigre", "target": "Tigre" },
-    { "id": "animals-011", "category": "Animals", "cefr": "A2", "native": "Éléphant", "target": "Elefante" },
-    { "id": "animals-012", "category": "Animals", "cefr": "A2", "native": "Ours", "target": "Oso" },
-    { "id": "animals-013", "category": "Animals", "cefr": "A2", "native": "Loup", "target": "Lobo" },
-    { "id": "animals-014", "category": "Animals", "cefr": "A2", "native": "Renard", "target": "Zorro" },
-    { "id": "animals-015", "category": "Animals", "cefr": "A2", "native": "Souris", "target": "Ratón" },
-    { "id": "animals-016", "category": "Animals", "cefr": "A2", "native": "Serpent", "target": "Serpiente" },
-    { "id": "animals-017", "category": "Animals", "cefr": "A2", "native": "Grenouille", "target": "Rana" },
-    { "id": "animals-018", "category": "Animals", "cefr": "A2", "native": "Canard", "target": "Pato" },
-    { "id": "animals-019", "category": "Animals", "cefr": "A2", "native": "Cochon", "target": "Cerdo" },
-    { "id": "animals-020", "category": "Animals", "cefr": "A2", "native": "Mouton", "target": "Oveja" },
-    { "id": "clothing-001", "category": "Clothing", "cefr": "A2", "native": "Chemise", "target": "Camisa" },
-    { "id": "clothing-002", "category": "Clothing", "cefr": "A2", "native": "Pantalon", "target": "Pantalón" },
-    { "id": "clothing-003", "category": "Clothing", "cefr": "A2", "native": "Chaussures", "target": "Zapatos" },
-    { "id": "clothing-004", "category": "Clothing", "cefr": "A2", "native": "Robe", "target": "Vestido" },
-    { "id": "clothing-005", "category": "Clothing", "cefr": "A2", "native": "Veste", "target": "Chaqueta" },
-    { "id": "clothing-006", "category": "Clothing", "cefr": "A2", "native": "Chapeau", "target": "Sombrero" },
-    { "id": "clothing-007", "category": "Clothing", "cefr": "A2", "native": "Manteau", "target": "Abrigo" },
-    { "id": "clothing-008", "category": "Clothing", "cefr": "A2", "native": "Chaussettes", "target": "Calcetines" },
-    { "id": "clothing-009", "category": "Clothing", "cefr": "A2", "native": "Gants", "target": "Guantes" },
-    { "id": "clothing-010", "category": "Clothing", "cefr": "A2", "native": "Écharpe", "target": "Bufanda" },
-    { "id": "clothing-011", "category": "Clothing", "cefr": "A2", "native": "Pull", "target": "Suéter" },
-    { "id": "clothing-012", "category": "Clothing", "cefr": "A2", "native": "Jupe", "target": "Falda" },
-    { "id": "clothing-013", "category": "Clothing", "cefr": "A2", "native": "T-shirt", "target": "Camiseta" },
-    { "id": "clothing-014", "category": "Clothing", "cefr": "A2", "native": "Ceinture", "target": "Cinturón" },
-    { "id": "clothing-015", "category": "Clothing", "cefr": "A2", "native": "Sac", "target": "Bolsa" },
-    { "id": "clothing-016", "category": "Clothing", "cefr": "A2", "native": "Cravate", "target": "Corbata" },
-    { "id": "clothing-017", "category": "Clothing", "cefr": "A2", "native": "Jean", "target": "Vaqueros" },
-    { "id": "clothing-018", "category": "Clothing", "cefr": "A2", "native": "Bottes", "target": "Botas" },
-    { "id": "clothing-019", "category": "Clothing", "cefr": "A2", "native": "Sous-vêtements", "target": "Ropa interior" },
-    { "id": "clothing-020", "category": "Clothing", "cefr": "A2", "native": "Pyjama", "target": "Pijama" },
-    { "id": "home-001", "category": "Home", "cefr": "A2", "native": "Maison", "target": "Casa" },
-    { "id": "home-002", "category": "Home", "cefr": "A2", "native": "Chambre", "target": "Habitación" },
-    { "id": "home-003", "category": "Home", "cefr": "A2", "native": "Cuisine", "target": "Cocina" },
-    { "id": "home-004", "category": "Home", "cefr": "A2", "native": "Salle de bain", "target": "Baño" },
-    { "id": "home-005", "category": "Home", "cefr": "A2", "native": "Salon", "target": "Sala de estar" },
-    { "id": "home-006", "category": "Home", "cefr": "A2", "native": "Chambre à coucher", "target": "Dormitorio" },
-    { "id": "home-007", "category": "Home", "cefr": "A2", "native": "Porte", "target": "Puerta" },
-    { "id": "home-008", "category": "Home", "cefr": "A2", "native": "Fenêtre", "target": "Ventana" },
-    { "id": "home-009", "category": "Home", "cefr": "A2", "native": "Table", "target": "Mesa" },
-    { "id": "home-010", "category": "Home", "cefr": "A2", "native": "Chaise", "target": "Silla" },
-    { "id": "home-011", "category": "Home", "cefr": "A2", "native": "Lit", "target": "Cama" },
-    { "id": "home-012", "category": "Home", "cefr": "A2", "native": "Canapé", "target": "Sofá" },
-    { "id": "home-013", "category": "Home", "cefr": "A2", "native": "Jardin", "target": "Jardín" },
-    { "id": "home-014", "category": "Home", "cefr": "A2", "native": "Escaliers", "target": "Escaleras" },
-    { "id": "home-015", "category": "Home", "cefr": "A2", "native": "Sol", "target": "Suelo" },
-    { "id": "home-016", "category": "Home", "cefr": "A2", "native": "Plafond", "target": "Techo" },
-    { "id": "home-017", "category": "Home", "cefr": "A2", "native": "Toit", "target": "Tejado" },
-    { "id": "home-018", "category": "Home", "cefr": "A2", "native": "Mur", "target": "Pared" },
-    { "id": "home-019", "category": "Home", "cefr": "A2", "native": "Garage", "target": "Garaje" },
-    { "id": "home-020", "category": "Home", "cefr": "A2", "native": "Balcon", "target": "Balcón" },
-    { "id": "weather-001", "category": "Weather", "cefr": "B1", "native": "Soleil", "target": "Sol" },
-    { "id": "weather-002", "category": "Weather", "cefr": "B1", "native": "Pluie", "target": "Lluvia" },
-    { "id": "weather-003", "category": "Weather", "cefr": "B1", "native": "Neige", "target": "Nieve" },
-    { "id": "weather-004", "category": "Weather", "cefr": "B1", "native": "Vent", "target": "Viento" },
-    { "id": "weather-005", "category": "Weather", "cefr": "B1", "native": "Nuage", "target": "Nube" },
-    { "id": "weather-006", "category": "Weather", "cefr": "B1", "native": "Tempête", "target": "Tormenta" },
-    { "id": "weather-007", "category": "Weather", "cefr": "B1", "native": "Tonnerre", "target": "Trueno" },
-    { "id": "weather-008", "category": "Weather", "cefr": "B1", "native": "Éclair", "target": "Relámpago" },
-    { "id": "weather-009", "category": "Weather", "cefr": "B1", "native": "Brouillard", "target": "Niebla" },
-    { "id": "weather-010", "category": "Weather", "cefr": "B1", "native": "Glace", "target": "Hielo" },
-    { "id": "weather-011", "category": "Weather", "cefr": "B1", "native": "Chaud", "target": "Caliente" },
-    { "id": "weather-012", "category": "Weather", "cefr": "B1", "native": "Froid", "target": "Frío" },
-    { "id": "weather-013", "category": "Weather", "cefr": "B1", "native": "Température", "target": "Temperatura" },
-    { "id": "weather-014", "category": "Weather", "cefr": "B1", "native": "Humidité", "target": "Humedad" },
-    { "id": "weather-015", "category": "Weather", "cefr": "B1", "native": "Prévisions", "target": "Pronóstico" },
-    { "id": "weather-016", "category": "Weather", "cefr": "B1", "native": "Ensoleillé", "target": "Soleado" },
-    { "id": "weather-017", "category": "Weather", "cefr": "B1", "native": "Nuageux", "target": "Nublado" },
-    { "id": "weather-018", "category": "Weather", "cefr": "B1", "native": "Venteux", "target": "Ventoso" },
-    { "id": "weather-019", "category": "Weather", "cefr": "B1", "native": "Pluvieux", "target": "Lluvioso" },
-    { "id": "weather-020", "category": "Weather", "cefr": "B1", "native": "Sec", "target": "Seco" },
-    { "id": "weather-021", "category": "Weather", "cefr": "B1", "native": "Tiède", "target": "Tibio" },
-    { "id": "weather-022", "category": "Weather", "cefr": "B1", "native": "Glacial", "target": "Helado" },
-    { "id": "weather-023", "category": "Weather", "cefr": "B1", "native": "Arc-en-ciel", "target": "Arco iris" },
-    { "id": "weather-024", "category": "Weather", "cefr": "B1", "native": "Grêle", "target": "Granizo" },
-    { "id": "weather-025", "category": "Weather", "cefr": "B1", "native": "Bruine", "target": "Llovizna" },
-    { "id": "shopping-001", "category": "Shopping", "cefr": "B1", "native": "Magasin", "target": "Tienda" },
-    { "id": "shopping-002", "category": "Shopping", "cefr": "B1", "native": "Prix", "target": "Precio" },
-    { "id": "shopping-003", "category": "Shopping", "cefr": "B1", "native": "Acheter", "target": "Comprar" },
-    { "id": "shopping-004", "category": "Shopping", "cefr": "B1", "native": "Vendre", "target": "Vender" },
-    { "id": "shopping-005", "category": "Shopping", "cefr": "B1", "native": "Payer", "target": "Pagar" },
-    { "id": "shopping-006", "category": "Shopping", "cefr": "B1", "native": "Reçu", "target": "Recibo" },
-    { "id": "shopping-007", "category": "Shopping", "cefr": "B1", "native": "Remise", "target": "Descuento" },
-    { "id": "shopping-008", "category": "Shopping", "cefr": "B1", "native": "Soldes", "target": "Rebajas" },
-    { "id": "shopping-009", "category": "Shopping", "cefr": "B1", "native": "Marché", "target": "Mercado" },
-    { "id": "shopping-010", "category": "Shopping", "cefr": "B1", "native": "Supermarché", "target": "Supermercado" },
-    { "id": "shopping-011", "category": "Shopping", "cefr": "B1", "native": "File d'attente", "target": "Cola" },
-    { "id": "shopping-012", "category": "Shopping", "cefr": "B1", "native": "Espèces", "target": "Efectivo" },
-    { "id": "shopping-013", "category": "Shopping", "cefr": "B1", "native": "Carte bancaire", "target": "Tarjeta de crédito" },
-    { "id": "shopping-014", "category": "Shopping", "cefr": "B1", "native": "Monnaie", "target": "Cambio" },
-    { "id": "shopping-015", "category": "Shopping", "cefr": "B1", "native": "Cher", "target": "Caro" },
-    { "id": "shopping-016", "category": "Shopping", "cefr": "B1", "native": "Bon marché", "target": "Barato" },
-    { "id": "shopping-017", "category": "Shopping", "cefr": "B1", "native": "Taille", "target": "Talla" },
-    { "id": "shopping-018", "category": "Shopping", "cefr": "B1", "native": "Retour", "target": "Devolución" },
-    { "id": "shopping-019", "category": "Shopping", "cefr": "B1", "native": "Échange", "target": "Intercambio" },
-    { "id": "shopping-020", "category": "Shopping", "cefr": "B1", "native": "Panier", "target": "Cesta" },
-    { "id": "shopping-021", "category": "Shopping", "cefr": "B1", "native": "Livraison", "target": "Entrega" },
-    { "id": "shopping-022", "category": "Shopping", "cefr": "B1", "native": "Commande", "target": "Pedido" },
-    { "id": "shopping-023", "category": "Shopping", "cefr": "B1", "native": "Garantie", "target": "Garantía" },
-    { "id": "shopping-024", "category": "Shopping", "cefr": "B1", "native": "Marque", "target": "Marca" },
-    { "id": "shopping-025", "category": "Shopping", "cefr": "B1", "native": "Qualité", "target": "Calidad" },
-    { "id": "travel-001", "category": "Travel", "cefr": "B1", "native": "Aéroport", "target": "Aeropuerto" },
-    { "id": "travel-002", "category": "Travel", "cefr": "B1", "native": "Train", "target": "Tren" },
-    { "id": "travel-003", "category": "Travel", "cefr": "B1", "native": "Bus", "target": "Autobús" },
-    { "id": "travel-004", "category": "Travel", "cefr": "B1", "native": "Hôtel", "target": "Hotel" },
-    { "id": "travel-005", "category": "Travel", "cefr": "B1", "native": "Billet", "target": "Billete" },
-    { "id": "travel-006", "category": "Travel", "cefr": "B1", "native": "Passeport", "target": "Pasaporte" },
-    { "id": "travel-007", "category": "Travel", "cefr": "B1", "native": "Bagages", "target": "Equipaje" },
-    { "id": "travel-008", "category": "Travel", "cefr": "B1", "native": "Carte", "target": "Mapa" },
-    { "id": "travel-009", "category": "Travel", "cefr": "B1", "native": "Touriste", "target": "Turista" },
-    { "id": "travel-010", "category": "Travel", "cefr": "B1", "native": "Vacances", "target": "Vacaciones" },
-    { "id": "travel-011", "category": "Travel", "cefr": "B1", "native": "Voyage", "target": "Viaje" },
-    { "id": "travel-012", "category": "Travel", "cefr": "B1", "native": "Destination", "target": "Destino" },
-    { "id": "travel-013", "category": "Travel", "cefr": "B1", "native": "Réservation", "target": "Reserva" },
-    { "id": "travel-014", "category": "Travel", "cefr": "B1", "native": "Départ", "target": "Salida" },
-    { "id": "travel-015", "category": "Travel", "cefr": "B1", "native": "Arrivée", "target": "Llegada" },
-    { "id": "travel-016", "category": "Travel", "cefr": "B1", "native": "Frontière", "target": "Frontera" },
-    { "id": "travel-017", "category": "Travel", "cefr": "B1", "native": "Douane", "target": "Aduana" },
-    { "id": "travel-018", "category": "Travel", "cefr": "B1", "native": "Taux de change", "target": "Tipo de cambio" },
-    { "id": "travel-019", "category": "Travel", "cefr": "B1", "native": "Guide", "target": "Guía" },
-    { "id": "travel-020", "category": "Travel", "cefr": "B1", "native": "Musée", "target": "Museo" },
-    { "id": "travel-021", "category": "Travel", "cefr": "B1", "native": "Monument", "target": "Monumento" },
-    { "id": "travel-022", "category": "Travel", "cefr": "B1", "native": "Plage", "target": "Playa" },
-    { "id": "travel-023", "category": "Travel", "cefr": "B1", "native": "Montagne", "target": "Montaña" },
-    { "id": "travel-024", "category": "Travel", "cefr": "B1", "native": "Location de voiture", "target": "Alquiler de coche" },
-    { "id": "travel-025", "category": "Travel", "cefr": "B1", "native": "Enregistrement", "target": "Registro" },
-    { "id": "work-001", "category": "Work", "cefr": "B1", "native": "Travail", "target": "Trabajo" },
-    { "id": "work-002", "category": "Work", "cefr": "B1", "native": "Bureau", "target": "Oficina" },
-    { "id": "work-003", "category": "Work", "cefr": "B1", "native": "Réunion", "target": "Reunión" },
-    { "id": "work-004", "category": "Work", "cefr": "B1", "native": "Chef", "target": "Jefe" },
-    { "id": "work-005", "category": "Work", "cefr": "B1", "native": "Collègue", "target": "Compañero" },
-    { "id": "work-006", "category": "Work", "cefr": "B1", "native": "Salaire", "target": "Salario" },
-    { "id": "work-007", "category": "Work", "cefr": "B1", "native": "Contrat", "target": "Contrato" },
-    { "id": "work-008", "category": "Work", "cefr": "B1", "native": "Entretien", "target": "Entrevista" },
-    { "id": "work-009", "category": "Work", "cefr": "B1", "native": "Entreprise", "target": "Empresa" },
-    { "id": "work-010", "category": "Work", "cefr": "B1", "native": "Email", "target": "Correo electrónico" },
-    { "id": "work-011", "category": "Work", "cefr": "B1", "native": "Rapport", "target": "Informe" },
-    { "id": "work-012", "category": "Work", "cefr": "B1", "native": "Projet", "target": "Proyecto" },
-    { "id": "work-013", "category": "Work", "cefr": "B1", "native": "Date limite", "target": "Fecha límite" },
-    { "id": "work-014", "category": "Work", "cefr": "B1", "native": "Client", "target": "Cliente" },
-    { "id": "work-015", "category": "Work", "cefr": "B1", "native": "Équipe", "target": "Equipo" },
-    { "id": "work-016", "category": "Work", "cefr": "B1", "native": "Responsable", "target": "Gerente" },
-    { "id": "work-017", "category": "Work", "cefr": "B1", "native": "Planning", "target": "Horario" },
-    { "id": "work-018", "category": "Work", "cefr": "B1", "native": "Budget", "target": "Presupuesto" },
-    { "id": "work-019", "category": "Work", "cefr": "B1", "native": "Formation", "target": "Formación" },
-    { "id": "work-020", "category": "Work", "cefr": "B1", "native": "Promotion", "target": "Ascenso" },
-    { "id": "work-021", "category": "Work", "cefr": "B1", "native": "Démissionner", "target": "Dimitir" },
-    { "id": "work-022", "category": "Work", "cefr": "B1", "native": "Embaucher", "target": "Contratar" },
-    { "id": "work-023", "category": "Work", "cefr": "B1", "native": "Heures supplémentaires", "target": "Horas extra" },
-    { "id": "work-024", "category": "Work", "cefr": "B1", "native": "Congé", "target": "Permiso" },
-    { "id": "work-025", "category": "Work", "cefr": "B1", "native": "Présentation", "target": "Presentación" }
+    {
+      "id": "greetings-001",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Bonjour",
+      "target": "Hola"
+    },
+    {
+      "id": "greetings-002",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Au revoir",
+      "target": "Adiós"
+    },
+    {
+      "id": "greetings-003",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "S'il vous plaît",
+      "target": "Por favor"
+    },
+    {
+      "id": "greetings-004",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Merci",
+      "target": "Gracias"
+    },
+    {
+      "id": "greetings-005",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Oui",
+      "target": "Sí"
+    },
+    {
+      "id": "greetings-006",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Non",
+      "target": "No"
+    },
+    {
+      "id": "greetings-007",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Bonsoir",
+      "target": "Buenas tardes"
+    },
+    {
+      "id": "greetings-008",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Bonne nuit",
+      "target": "Buenas noches"
+    },
+    {
+      "id": "greetings-009",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Désolé",
+      "target": "Lo siento"
+    },
+    {
+      "id": "greetings-010",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Excusez-moi",
+      "target": "Perdona"
+    },
+    {
+      "id": "greetings-011",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Comment allez-vous ?",
+      "target": "¿Cómo estás?"
+    },
+    {
+      "id": "greetings-012",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Je m'appelle",
+      "target": "Me llamo"
+    },
+    {
+      "id": "greetings-013",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Enchanté",
+      "target": "Encantado"
+    },
+    {
+      "id": "greetings-014",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "À bientôt",
+      "target": "Hasta luego"
+    },
+    {
+      "id": "greetings-015",
+      "category": "Greetings",
+      "cefr": "A1",
+      "native": "Bienvenue",
+      "target": "Bienvenido"
+    },
+    {
+      "id": "numbers-001",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Un",
+      "target": "Uno"
+    },
+    {
+      "id": "numbers-002",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Deux",
+      "target": "Dos"
+    },
+    {
+      "id": "numbers-003",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Trois",
+      "target": "Tres"
+    },
+    {
+      "id": "numbers-004",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Quatre",
+      "target": "Cuatro"
+    },
+    {
+      "id": "numbers-005",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Cinq",
+      "target": "Cinco"
+    },
+    {
+      "id": "numbers-006",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Six",
+      "target": "Seis"
+    },
+    {
+      "id": "numbers-007",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Sept",
+      "target": "Siete"
+    },
+    {
+      "id": "numbers-008",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Huit",
+      "target": "Ocho"
+    },
+    {
+      "id": "numbers-009",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Neuf",
+      "target": "Nueve"
+    },
+    {
+      "id": "numbers-010",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Dix",
+      "target": "Diez"
+    },
+    {
+      "id": "numbers-011",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Vingt",
+      "target": "Veinte"
+    },
+    {
+      "id": "numbers-012",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Cent",
+      "target": "Cien"
+    },
+    {
+      "id": "numbers-013",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Mille",
+      "target": "Mil"
+    },
+    {
+      "id": "numbers-014",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Zéro",
+      "target": "Cero"
+    },
+    {
+      "id": "numbers-015",
+      "category": "Numbers",
+      "cefr": "A1",
+      "native": "Cinquante",
+      "target": "Cincuenta"
+    },
+    {
+      "id": "colors-001",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Rouge",
+      "target": "Rojo"
+    },
+    {
+      "id": "colors-002",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Bleu",
+      "target": "Azul"
+    },
+    {
+      "id": "colors-003",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Vert",
+      "target": "Verde"
+    },
+    {
+      "id": "colors-004",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Jaune",
+      "target": "Amarillo"
+    },
+    {
+      "id": "colors-005",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Blanc",
+      "target": "Blanco"
+    },
+    {
+      "id": "colors-006",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Noir",
+      "target": "Negro"
+    },
+    {
+      "id": "colors-007",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Orange",
+      "target": "Naranja"
+    },
+    {
+      "id": "colors-008",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Rose",
+      "target": "Rosa"
+    },
+    {
+      "id": "colors-009",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Violet",
+      "target": "Morado"
+    },
+    {
+      "id": "colors-010",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Marron",
+      "target": "Marrón"
+    },
+    {
+      "id": "colors-011",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Gris",
+      "target": "Gris"
+    },
+    {
+      "id": "colors-012",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Bleu clair",
+      "target": "Azul claro"
+    },
+    {
+      "id": "colors-013",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Bleu foncé",
+      "target": "Azul oscuro"
+    },
+    {
+      "id": "colors-014",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Or",
+      "target": "Oro"
+    },
+    {
+      "id": "colors-015",
+      "category": "Colors",
+      "cefr": "A1",
+      "native": "Argent",
+      "target": "Plata"
+    },
+    {
+      "id": "days-months-001",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Lundi",
+      "target": "Lunes"
+    },
+    {
+      "id": "days-months-002",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Mardi",
+      "target": "Martes"
+    },
+    {
+      "id": "days-months-003",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Mercredi",
+      "target": "Miércoles"
+    },
+    {
+      "id": "days-months-004",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Jeudi",
+      "target": "Jueves"
+    },
+    {
+      "id": "days-months-005",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Vendredi",
+      "target": "Viernes"
+    },
+    {
+      "id": "days-months-006",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Samedi",
+      "target": "Sábado"
+    },
+    {
+      "id": "days-months-007",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Dimanche",
+      "target": "Domingo"
+    },
+    {
+      "id": "days-months-008",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Janvier",
+      "target": "Enero"
+    },
+    {
+      "id": "days-months-009",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Février",
+      "target": "Febrero"
+    },
+    {
+      "id": "days-months-010",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Mars",
+      "target": "Marzo"
+    },
+    {
+      "id": "days-months-011",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Avril",
+      "target": "Abril"
+    },
+    {
+      "id": "days-months-012",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Mai",
+      "target": "Mayo"
+    },
+    {
+      "id": "days-months-013",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Juin",
+      "target": "Junio"
+    },
+    {
+      "id": "days-months-014",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Juillet",
+      "target": "Julio"
+    },
+    {
+      "id": "days-months-015",
+      "category": "Days & Months",
+      "cefr": "A1",
+      "native": "Août",
+      "target": "Agosto"
+    },
+    {
+      "id": "food-drink-001",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Eau",
+      "target": "Agua"
+    },
+    {
+      "id": "food-drink-002",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Pain",
+      "target": "Pan"
+    },
+    {
+      "id": "food-drink-003",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Lait",
+      "target": "Leche"
+    },
+    {
+      "id": "food-drink-004",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Café",
+      "target": "Café"
+    },
+    {
+      "id": "food-drink-005",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Thé",
+      "target": "Té"
+    },
+    {
+      "id": "food-drink-006",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Vin",
+      "target": "Vino"
+    },
+    {
+      "id": "food-drink-007",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Bière",
+      "target": "Cerveza"
+    },
+    {
+      "id": "food-drink-008",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Viande",
+      "target": "Carne"
+    },
+    {
+      "id": "food-drink-009",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Poisson",
+      "target": "Pescado"
+    },
+    {
+      "id": "food-drink-010",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Légumes",
+      "target": "Verduras"
+    },
+    {
+      "id": "food-drink-011",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Fruit",
+      "target": "Fruta"
+    },
+    {
+      "id": "food-drink-012",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Fromage",
+      "target": "Queso"
+    },
+    {
+      "id": "food-drink-013",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Œuf",
+      "target": "Huevo"
+    },
+    {
+      "id": "food-drink-014",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Beurre",
+      "target": "Mantequilla"
+    },
+    {
+      "id": "food-drink-015",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Sucre",
+      "target": "Azúcar"
+    },
+    {
+      "id": "food-drink-016",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Sel",
+      "target": "Sal"
+    },
+    {
+      "id": "food-drink-017",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Riz",
+      "target": "Arroz"
+    },
+    {
+      "id": "food-drink-018",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Pâtes",
+      "target": "Pasta"
+    },
+    {
+      "id": "food-drink-019",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Soupe",
+      "target": "Sopa"
+    },
+    {
+      "id": "food-drink-020",
+      "category": "Food & Drink",
+      "cefr": "A2",
+      "native": "Dessert",
+      "target": "Postre"
+    },
+    {
+      "id": "family-001",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Mère",
+      "target": "Madre"
+    },
+    {
+      "id": "family-002",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Père",
+      "target": "Padre"
+    },
+    {
+      "id": "family-003",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Frère",
+      "target": "Hermano"
+    },
+    {
+      "id": "family-004",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Sœur",
+      "target": "Hermana"
+    },
+    {
+      "id": "family-005",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Fils",
+      "target": "Hijo"
+    },
+    {
+      "id": "family-006",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Fille",
+      "target": "Hija"
+    },
+    {
+      "id": "family-007",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Grand-père",
+      "target": "Abuelo"
+    },
+    {
+      "id": "family-008",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Grand-mère",
+      "target": "Abuela"
+    },
+    {
+      "id": "family-009",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Oncle",
+      "target": "Tío"
+    },
+    {
+      "id": "family-010",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Tante",
+      "target": "Tía"
+    },
+    {
+      "id": "family-011",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Cousin",
+      "target": "Primo"
+    },
+    {
+      "id": "family-012",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Mari",
+      "target": "Esposo"
+    },
+    {
+      "id": "family-013",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Femme",
+      "target": "Esposa"
+    },
+    {
+      "id": "family-014",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Bébé",
+      "target": "Bebé"
+    },
+    {
+      "id": "family-015",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Enfant",
+      "target": "Niño"
+    },
+    {
+      "id": "family-016",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Parents",
+      "target": "Padres"
+    },
+    {
+      "id": "family-017",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Famille",
+      "target": "Familia"
+    },
+    {
+      "id": "family-018",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Neveu",
+      "target": "Sobrino"
+    },
+    {
+      "id": "family-019",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Nièce",
+      "target": "Sobrina"
+    },
+    {
+      "id": "family-020",
+      "category": "Family",
+      "cefr": "A2",
+      "native": "Ami",
+      "target": "Amigo"
+    },
+    {
+      "id": "body-001",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Tête",
+      "target": "Cabeza"
+    },
+    {
+      "id": "body-002",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Œil",
+      "target": "Ojo"
+    },
+    {
+      "id": "body-003",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Oreille",
+      "target": "Oreja"
+    },
+    {
+      "id": "body-004",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Nez",
+      "target": "Nariz"
+    },
+    {
+      "id": "body-005",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Bouche",
+      "target": "Boca"
+    },
+    {
+      "id": "body-006",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Main",
+      "target": "Mano"
+    },
+    {
+      "id": "body-007",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Pied",
+      "target": "Pie"
+    },
+    {
+      "id": "body-008",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Bras",
+      "target": "Brazo"
+    },
+    {
+      "id": "body-009",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Jambe",
+      "target": "Pierna"
+    },
+    {
+      "id": "body-010",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Dos",
+      "target": "Espalda"
+    },
+    {
+      "id": "body-011",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Cœur",
+      "target": "Corazón"
+    },
+    {
+      "id": "body-012",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Estomac",
+      "target": "Estómago"
+    },
+    {
+      "id": "body-013",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Doigt",
+      "target": "Dedo"
+    },
+    {
+      "id": "body-014",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Genou",
+      "target": "Rodilla"
+    },
+    {
+      "id": "body-015",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Épaule",
+      "target": "Hombro"
+    },
+    {
+      "id": "body-016",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Cheveux",
+      "target": "Pelo"
+    },
+    {
+      "id": "body-017",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Dent",
+      "target": "Diente"
+    },
+    {
+      "id": "body-018",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Cou",
+      "target": "Cuello"
+    },
+    {
+      "id": "body-019",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Poitrine",
+      "target": "Pecho"
+    },
+    {
+      "id": "body-020",
+      "category": "Body",
+      "cefr": "A2",
+      "native": "Langue",
+      "target": "Lengua"
+    },
+    {
+      "id": "animals-001",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Chien",
+      "target": "Perro"
+    },
+    {
+      "id": "animals-002",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Chat",
+      "target": "Gato"
+    },
+    {
+      "id": "animals-003",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Oiseau",
+      "target": "Pájaro"
+    },
+    {
+      "id": "animals-004",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Poisson",
+      "target": "Pez"
+    },
+    {
+      "id": "animals-005",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Cheval",
+      "target": "Caballo"
+    },
+    {
+      "id": "animals-006",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Vache",
+      "target": "Vaca"
+    },
+    {
+      "id": "animals-007",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Poulet",
+      "target": "Pollo"
+    },
+    {
+      "id": "animals-008",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Lapin",
+      "target": "Conejo"
+    },
+    {
+      "id": "animals-009",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Lion",
+      "target": "León"
+    },
+    {
+      "id": "animals-010",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Tigre",
+      "target": "Tigre"
+    },
+    {
+      "id": "animals-011",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Éléphant",
+      "target": "Elefante"
+    },
+    {
+      "id": "animals-012",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Ours",
+      "target": "Oso"
+    },
+    {
+      "id": "animals-013",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Loup",
+      "target": "Lobo"
+    },
+    {
+      "id": "animals-014",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Renard",
+      "target": "Zorro"
+    },
+    {
+      "id": "animals-015",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Souris",
+      "target": "Ratón"
+    },
+    {
+      "id": "animals-016",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Serpent",
+      "target": "Serpiente"
+    },
+    {
+      "id": "animals-017",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Grenouille",
+      "target": "Rana"
+    },
+    {
+      "id": "animals-018",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Canard",
+      "target": "Pato"
+    },
+    {
+      "id": "animals-019",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Cochon",
+      "target": "Cerdo"
+    },
+    {
+      "id": "animals-020",
+      "category": "Animals",
+      "cefr": "A2",
+      "native": "Mouton",
+      "target": "Oveja"
+    },
+    {
+      "id": "clothing-001",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Chemise",
+      "target": "Camisa"
+    },
+    {
+      "id": "clothing-002",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Pantalon",
+      "target": "Pantalón"
+    },
+    {
+      "id": "clothing-003",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Chaussures",
+      "target": "Zapatos"
+    },
+    {
+      "id": "clothing-004",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Robe",
+      "target": "Vestido"
+    },
+    {
+      "id": "clothing-005",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Veste",
+      "target": "Chaqueta"
+    },
+    {
+      "id": "clothing-006",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Chapeau",
+      "target": "Sombrero"
+    },
+    {
+      "id": "clothing-007",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Manteau",
+      "target": "Abrigo"
+    },
+    {
+      "id": "clothing-008",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Chaussettes",
+      "target": "Calcetines"
+    },
+    {
+      "id": "clothing-009",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Gants",
+      "target": "Guantes"
+    },
+    {
+      "id": "clothing-010",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Écharpe",
+      "target": "Bufanda"
+    },
+    {
+      "id": "clothing-011",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Pull",
+      "target": "Suéter"
+    },
+    {
+      "id": "clothing-012",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Jupe",
+      "target": "Falda"
+    },
+    {
+      "id": "clothing-013",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "T-shirt",
+      "target": "Camiseta"
+    },
+    {
+      "id": "clothing-014",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Ceinture",
+      "target": "Cinturón"
+    },
+    {
+      "id": "clothing-015",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Sac",
+      "target": "Bolsa"
+    },
+    {
+      "id": "clothing-016",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Cravate",
+      "target": "Corbata"
+    },
+    {
+      "id": "clothing-017",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Jean",
+      "target": "Vaqueros"
+    },
+    {
+      "id": "clothing-018",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Bottes",
+      "target": "Botas"
+    },
+    {
+      "id": "clothing-019",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Sous-vêtements",
+      "target": "Ropa interior"
+    },
+    {
+      "id": "clothing-020",
+      "category": "Clothing",
+      "cefr": "A2",
+      "native": "Pyjama",
+      "target": "Pijama"
+    },
+    {
+      "id": "home-001",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Maison",
+      "target": "Casa"
+    },
+    {
+      "id": "home-002",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Chambre",
+      "target": "Habitación"
+    },
+    {
+      "id": "home-003",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Cuisine",
+      "target": "Cocina"
+    },
+    {
+      "id": "home-004",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Salle de bain",
+      "target": "Baño"
+    },
+    {
+      "id": "home-005",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Salon",
+      "target": "Sala de estar"
+    },
+    {
+      "id": "home-006",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Chambre à coucher",
+      "target": "Dormitorio"
+    },
+    {
+      "id": "home-007",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Porte",
+      "target": "Puerta"
+    },
+    {
+      "id": "home-008",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Fenêtre",
+      "target": "Ventana"
+    },
+    {
+      "id": "home-009",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Table",
+      "target": "Mesa"
+    },
+    {
+      "id": "home-010",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Chaise",
+      "target": "Silla"
+    },
+    {
+      "id": "home-011",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Lit",
+      "target": "Cama"
+    },
+    {
+      "id": "home-012",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Canapé",
+      "target": "Sofá"
+    },
+    {
+      "id": "home-013",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Jardin",
+      "target": "Jardín"
+    },
+    {
+      "id": "home-014",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Escaliers",
+      "target": "Escaleras"
+    },
+    {
+      "id": "home-015",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Sol",
+      "target": "Suelo"
+    },
+    {
+      "id": "home-016",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Plafond",
+      "target": "Techo"
+    },
+    {
+      "id": "home-017",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Toit",
+      "target": "Tejado"
+    },
+    {
+      "id": "home-018",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Mur",
+      "target": "Pared"
+    },
+    {
+      "id": "home-019",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Garage",
+      "target": "Garaje"
+    },
+    {
+      "id": "home-020",
+      "category": "Home",
+      "cefr": "A2",
+      "native": "Balcon",
+      "target": "Balcón"
+    },
+    {
+      "id": "weather-001",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Soleil",
+      "target": "Sol"
+    },
+    {
+      "id": "weather-002",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Pluie",
+      "target": "Lluvia"
+    },
+    {
+      "id": "weather-003",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Neige",
+      "target": "Nieve"
+    },
+    {
+      "id": "weather-004",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Vent",
+      "target": "Viento"
+    },
+    {
+      "id": "weather-005",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Nuage",
+      "target": "Nube"
+    },
+    {
+      "id": "weather-006",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Tempête",
+      "target": "Tormenta"
+    },
+    {
+      "id": "weather-007",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Tonnerre",
+      "target": "Trueno"
+    },
+    {
+      "id": "weather-008",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Éclair",
+      "target": "Relámpago"
+    },
+    {
+      "id": "weather-009",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Brouillard",
+      "target": "Niebla"
+    },
+    {
+      "id": "weather-010",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Glace",
+      "target": "Hielo"
+    },
+    {
+      "id": "weather-011",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Chaud",
+      "target": "Caliente"
+    },
+    {
+      "id": "weather-012",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Froid",
+      "target": "Frío"
+    },
+    {
+      "id": "weather-013",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Température",
+      "target": "Temperatura"
+    },
+    {
+      "id": "weather-014",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Humidité",
+      "target": "Humedad"
+    },
+    {
+      "id": "weather-015",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Prévisions",
+      "target": "Pronóstico"
+    },
+    {
+      "id": "weather-016",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Ensoleillé",
+      "target": "Soleado"
+    },
+    {
+      "id": "weather-017",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Nuageux",
+      "target": "Nublado"
+    },
+    {
+      "id": "weather-018",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Venteux",
+      "target": "Ventoso"
+    },
+    {
+      "id": "weather-019",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Pluvieux",
+      "target": "Lluvioso"
+    },
+    {
+      "id": "weather-020",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Sec",
+      "target": "Seco"
+    },
+    {
+      "id": "weather-021",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Tiède",
+      "target": "Tibio"
+    },
+    {
+      "id": "weather-022",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Glacial",
+      "target": "Helado"
+    },
+    {
+      "id": "weather-023",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Arc-en-ciel",
+      "target": "Arco iris"
+    },
+    {
+      "id": "weather-024",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Grêle",
+      "target": "Granizo"
+    },
+    {
+      "id": "weather-025",
+      "category": "Weather",
+      "cefr": "B1",
+      "native": "Bruine",
+      "target": "Llovizna"
+    },
+    {
+      "id": "shopping-001",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Magasin",
+      "target": "Tienda"
+    },
+    {
+      "id": "shopping-002",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Prix",
+      "target": "Precio"
+    },
+    {
+      "id": "shopping-003",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Acheter",
+      "target": "Comprar"
+    },
+    {
+      "id": "shopping-004",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Vendre",
+      "target": "Vender"
+    },
+    {
+      "id": "shopping-005",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Payer",
+      "target": "Pagar"
+    },
+    {
+      "id": "shopping-006",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Reçu",
+      "target": "Recibo"
+    },
+    {
+      "id": "shopping-007",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Remise",
+      "target": "Descuento"
+    },
+    {
+      "id": "shopping-008",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Soldes",
+      "target": "Rebajas"
+    },
+    {
+      "id": "shopping-009",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Marché",
+      "target": "Mercado"
+    },
+    {
+      "id": "shopping-010",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Supermarché",
+      "target": "Supermercado"
+    },
+    {
+      "id": "shopping-011",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "File d'attente",
+      "target": "Cola"
+    },
+    {
+      "id": "shopping-012",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Espèces",
+      "target": "Efectivo"
+    },
+    {
+      "id": "shopping-013",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Carte bancaire",
+      "target": "Tarjeta de crédito"
+    },
+    {
+      "id": "shopping-014",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Monnaie",
+      "target": "Cambio"
+    },
+    {
+      "id": "shopping-015",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Cher",
+      "target": "Caro"
+    },
+    {
+      "id": "shopping-016",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Bon marché",
+      "target": "Barato"
+    },
+    {
+      "id": "shopping-017",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Taille",
+      "target": "Talla"
+    },
+    {
+      "id": "shopping-018",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Retour",
+      "target": "Devolución"
+    },
+    {
+      "id": "shopping-019",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Échange",
+      "target": "Intercambio"
+    },
+    {
+      "id": "shopping-020",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Panier",
+      "target": "Cesta"
+    },
+    {
+      "id": "shopping-021",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Livraison",
+      "target": "Entrega"
+    },
+    {
+      "id": "shopping-022",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Commande",
+      "target": "Pedido"
+    },
+    {
+      "id": "shopping-023",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Garantie",
+      "target": "Garantía"
+    },
+    {
+      "id": "shopping-024",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Marque",
+      "target": "Marca"
+    },
+    {
+      "id": "shopping-025",
+      "category": "Shopping",
+      "cefr": "B1",
+      "native": "Qualité",
+      "target": "Calidad"
+    },
+    {
+      "id": "travel-001",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Aéroport",
+      "target": "Aeropuerto"
+    },
+    {
+      "id": "travel-002",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Train",
+      "target": "Tren"
+    },
+    {
+      "id": "travel-003",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Bus",
+      "target": "Autobús"
+    },
+    {
+      "id": "travel-004",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Hôtel",
+      "target": "Hotel"
+    },
+    {
+      "id": "travel-005",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Billet",
+      "target": "Billete"
+    },
+    {
+      "id": "travel-006",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Passeport",
+      "target": "Pasaporte"
+    },
+    {
+      "id": "travel-007",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Bagages",
+      "target": "Equipaje"
+    },
+    {
+      "id": "travel-008",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Carte",
+      "target": "Mapa"
+    },
+    {
+      "id": "travel-009",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Touriste",
+      "target": "Turista"
+    },
+    {
+      "id": "travel-010",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Vacances",
+      "target": "Vacaciones"
+    },
+    {
+      "id": "travel-011",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Voyage",
+      "target": "Viaje"
+    },
+    {
+      "id": "travel-012",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Destination",
+      "target": "Destino"
+    },
+    {
+      "id": "travel-013",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Réservation",
+      "target": "Reserva"
+    },
+    {
+      "id": "travel-014",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Départ",
+      "target": "Salida"
+    },
+    {
+      "id": "travel-015",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Arrivée",
+      "target": "Llegada"
+    },
+    {
+      "id": "travel-016",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Frontière",
+      "target": "Frontera"
+    },
+    {
+      "id": "travel-017",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Douane",
+      "target": "Aduana"
+    },
+    {
+      "id": "travel-018",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Taux de change",
+      "target": "Tipo de cambio"
+    },
+    {
+      "id": "travel-019",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Guide",
+      "target": "Guía"
+    },
+    {
+      "id": "travel-020",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Musée",
+      "target": "Museo"
+    },
+    {
+      "id": "travel-021",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Monument",
+      "target": "Monumento"
+    },
+    {
+      "id": "travel-022",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Plage",
+      "target": "Playa"
+    },
+    {
+      "id": "travel-023",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Montagne",
+      "target": "Montaña"
+    },
+    {
+      "id": "travel-024",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Location de voiture",
+      "target": "Alquiler de coche"
+    },
+    {
+      "id": "travel-025",
+      "category": "Travel",
+      "cefr": "B1",
+      "native": "Enregistrement",
+      "target": "Registro"
+    },
+    {
+      "id": "work-001",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Travail",
+      "target": "Trabajo"
+    },
+    {
+      "id": "work-002",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Bureau",
+      "target": "Oficina"
+    },
+    {
+      "id": "work-003",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Réunion",
+      "target": "Reunión"
+    },
+    {
+      "id": "work-004",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Chef",
+      "target": "Jefe"
+    },
+    {
+      "id": "work-005",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Collègue",
+      "target": "Compañero"
+    },
+    {
+      "id": "work-006",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Salaire",
+      "target": "Salario"
+    },
+    {
+      "id": "work-007",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Contrat",
+      "target": "Contrato"
+    },
+    {
+      "id": "work-008",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Entretien",
+      "target": "Entrevista"
+    },
+    {
+      "id": "work-009",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Entreprise",
+      "target": "Empresa"
+    },
+    {
+      "id": "work-010",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Email",
+      "target": "Correo electrónico"
+    },
+    {
+      "id": "work-011",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Rapport",
+      "target": "Informe"
+    },
+    {
+      "id": "work-012",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Projet",
+      "target": "Proyecto"
+    },
+    {
+      "id": "work-013",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Date limite",
+      "target": "Fecha límite"
+    },
+    {
+      "id": "work-014",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Client",
+      "target": "Cliente"
+    },
+    {
+      "id": "work-015",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Équipe",
+      "target": "Equipo"
+    },
+    {
+      "id": "work-016",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Responsable",
+      "target": "Gerente"
+    },
+    {
+      "id": "work-017",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Planning",
+      "target": "Horario"
+    },
+    {
+      "id": "work-018",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Budget",
+      "target": "Presupuesto"
+    },
+    {
+      "id": "work-019",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Formation",
+      "target": "Formación"
+    },
+    {
+      "id": "work-020",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Promotion",
+      "target": "Ascenso"
+    },
+    {
+      "id": "work-021",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Démissionner",
+      "target": "Dimitir"
+    },
+    {
+      "id": "work-022",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Embaucher",
+      "target": "Contratar"
+    },
+    {
+      "id": "work-023",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Heures supplémentaires",
+      "target": "Horas extra"
+    },
+    {
+      "id": "work-024",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Congé",
+      "target": "Permiso"
+    },
+    {
+      "id": "work-025",
+      "category": "Work",
+      "cefr": "B1",
+      "native": "Présentation",
+      "target": "Presentación"
+    }
   ]
 }

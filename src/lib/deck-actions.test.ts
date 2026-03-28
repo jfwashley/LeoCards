@@ -24,7 +24,13 @@ const { mockGetSession, selectChain, insertChain, updateChain, deleteChain } =
 
     const mockGetSession = vi.fn();
 
-    return { mockGetSession, selectChain, insertChain, updateChain, deleteChain };
+    return {
+      mockGetSession,
+      selectChain,
+      insertChain,
+      updateChain,
+      deleteChain,
+    };
   });
 
 // --- Mocks using hoisted variables ---
@@ -53,8 +59,8 @@ vi.mock("@/db", () => ({
   },
 }));
 
-import { db } from "@/db";
 import { revalidatePath } from "next/cache";
+import { db } from "@/db";
 import {
   addWordToCard,
   createDeck,
@@ -81,13 +87,21 @@ beforeEach(() => {
 
   // Re-wire chain return values after clearAllMocks
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  vi.mocked(db.select).mockReturnValue(selectChain as unknown as ReturnType<typeof db.select>);
+  vi.mocked(db.select).mockReturnValue(
+    selectChain as unknown as ReturnType<typeof db.select>,
+  );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  vi.mocked(db.insert).mockReturnValue(insertChain as unknown as ReturnType<typeof db.insert>);
+  vi.mocked(db.insert).mockReturnValue(
+    insertChain as unknown as ReturnType<typeof db.insert>,
+  );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  vi.mocked(db.update).mockReturnValue(updateChain as unknown as ReturnType<typeof db.update>);
+  vi.mocked(db.update).mockReturnValue(
+    updateChain as unknown as ReturnType<typeof db.update>,
+  );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  vi.mocked(db.delete).mockReturnValue(deleteChain as unknown as ReturnType<typeof db.delete>);
+  vi.mocked(db.delete).mockReturnValue(
+    deleteChain as unknown as ReturnType<typeof db.delete>,
+  );
 
   selectChain.from.mockReturnValue(selectChain);
   selectChain.where.mockReturnValue(selectChain);
@@ -207,9 +221,9 @@ describe("saveCard", () => {
 describe("editCard", () => {
   it("throws Unauthorized when no session", async () => {
     mockNoSession();
-    await expect(editCard(FAKE_CARD_ID, "new front", "new back")).rejects.toThrow(
-      "Unauthorized",
-    );
+    await expect(
+      editCard(FAKE_CARD_ID, "new front", "new back"),
+    ).rejects.toThrow("Unauthorized");
   });
 
   it("throws Forbidden if card's deck does not belong to user", async () => {

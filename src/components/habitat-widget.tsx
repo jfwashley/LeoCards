@@ -14,7 +14,7 @@ const HabitatWidgetCanvas = dynamic(
     loading: () => (
       <div className="w-full h-[80px] animate-pulse bg-amber-50 rounded" />
     ),
-  }
+  },
 );
 
 interface HabitatWidgetProps {
@@ -28,7 +28,10 @@ interface HabitatWidgetProps {
  *
  * Uses next/dynamic with ssr:false so PixiJS never touches server rendering.
  */
-export function HabitatWidget({ habitatState, celebratingLevel = null }: HabitatWidgetProps) {
+export function HabitatWidget({
+  habitatState,
+  celebratingLevel = null,
+}: HabitatWidgetProps) {
   const { level, learnedCardCount, nextLevelThreshold, mood } = habitatState;
 
   // Calculate progress percentage toward next level
@@ -38,20 +41,26 @@ export function HabitatWidget({ habitatState, celebratingLevel = null }: Habitat
     progressPct = 100;
   } else {
     // Previous threshold: for level 1, it's 0; for level N (N >= 2), it's LEVEL_THRESHOLDS[N-2]
-    const prevThreshold = level >= 2 ? (LEVEL_THRESHOLDS[level - 2] as number) : 0;
+    const prevThreshold =
+      level >= 2 ? (LEVEL_THRESHOLDS[level - 2] as number) : 0;
     const range = nextLevelThreshold - prevThreshold;
     if (range <= 0) {
       progressPct = 100;
     } else {
       progressPct = Math.min(
         100,
-        Math.max(0, ((learnedCardCount - prevThreshold) / range) * 100)
+        Math.max(0, ((learnedCardCount - prevThreshold) / range) * 100),
       );
     }
   }
 
   return (
-    <Link href={celebratingLevel ? `/habitat?celebrate=${celebratingLevel}` : "/habitat"} className="block">
+    <Link
+      href={
+        celebratingLevel ? `/habitat?celebrate=${celebratingLevel}` : "/habitat"
+      }
+      className="block"
+    >
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
         <CardContent className="p-4">
           <HabitatWidgetCanvas mood={mood} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, AnimatePresence } from "motion/react";
+import { motion, useMotionValue, useTransform } from "motion/react";
 
 import type { SessionCard } from "@/lib/study-engine";
 
@@ -94,12 +94,17 @@ export function StudyCard({
       />
 
       {/* Card container with 3D perspective */}
+      {/* biome-ignore lint/a11y/useSemanticElements: div required for preserve-3d CSS; <button> does not reliably support transformStyle:preserve-3d across browsers */}
       <div
         className="relative w-full"
         style={{ transformStyle: "preserve-3d", minHeight: 200 }}
         role="button"
         tabIndex={0}
-        aria-label={flipped ? `Answer: ${backText}` : `Question: ${frontText}. Press Enter to reveal.`}
+        aria-label={
+          flipped
+            ? `Answer: ${backText}`
+            : `Question: ${frontText}. Press Enter to reveal.`
+        }
         onKeyDown={handleKeyDown}
         onClick={!flipped ? onFlip : undefined}
       >

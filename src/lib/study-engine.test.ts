@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { CardId } from "@/db/schema";
 import {
-  type CardForSession,
-  type GradeEntry,
   assembleSession,
+  type CardForSession,
   computeCardUpdate,
   earliestCooldownEnd,
+  type GradeEntry,
   getCardStage,
   interleave,
 } from "./study-engine";
@@ -18,9 +18,7 @@ const NOW = new Date("2026-01-15T12:00:00Z");
 const PAST = new Date("2026-01-15T00:00:00Z"); // 12h ago
 const FUTURE = new Date("2026-01-16T00:00:00Z"); // 12h from now
 
-function makeCard(
-  overrides: Partial<CardForSession>,
-): CardForSession {
+function makeCard(overrides: Partial<CardForSession>): CardForSession {
   return {
     id: (overrides.id ?? "card-1") as CardId,
     front: "hello",
@@ -32,7 +30,10 @@ function makeCard(
   };
 }
 
-function makeCards(count: number, overrides: Partial<CardForSession> = {}): CardForSession[] {
+function makeCards(
+  count: number,
+  overrides: Partial<CardForSession> = {},
+): CardForSession[] {
   return Array.from({ length: count }, (_, i) =>
     makeCard({ ...overrides, id: `card-${i + 1}` as CardId }),
   );
@@ -51,9 +52,18 @@ describe("assembleSession", () => {
 
   it("returns all unlearned due cards sorted newest-first (by createdAt descending)", () => {
     const cards = [
-      makeCard({ id: "card-1" as CardId, createdAt: new Date("2026-01-01T00:00:00Z") }),
-      makeCard({ id: "card-2" as CardId, createdAt: new Date("2026-01-03T00:00:00Z") }),
-      makeCard({ id: "card-3" as CardId, createdAt: new Date("2026-01-02T00:00:00Z") }),
+      makeCard({
+        id: "card-1" as CardId,
+        createdAt: new Date("2026-01-01T00:00:00Z"),
+      }),
+      makeCard({
+        id: "card-2" as CardId,
+        createdAt: new Date("2026-01-03T00:00:00Z"),
+      }),
+      makeCard({
+        id: "card-3" as CardId,
+        createdAt: new Date("2026-01-02T00:00:00Z"),
+      }),
     ];
     const result = assembleSession(cards, NOW);
     expect(result.map((c) => c.id)).toEqual(["card-2", "card-3", "card-1"]);
@@ -125,9 +135,9 @@ describe("interleave", () => {
     }));
     const result = interleave(learning, resurface, 3);
     // Positions 3, 7, 11 should be resurface (0-indexed: after every 3 learning)
-    expect(result[3]!.isResurface).toBe(true);
-    expect(result[7]!.isResurface).toBe(true);
-    expect(result[11]!.isResurface).toBe(true);
+    expect(result[3]?.isResurface).toBe(true);
+    expect(result[7]?.isResurface).toBe(true);
+    expect(result[11]?.isResurface).toBe(true);
   });
 
   it("returns only learning cards when no resurface cards", () => {
@@ -220,8 +230,8 @@ describe("computeCardUpdate", () => {
     expect(result.newRound).toBe(1);
     expect(result.cooldownUntil).not.toBeNull();
     // 12h = 43200000ms
-    const diffMs =
-      result.cooldownUntil!.getTime() - NOW.getTime();
+    // biome-ignore lint/style/noNonNullAssertion: test assertion — index is known valid after expect(...).not.toBeNull()
+    const diffMs = result.cooldownUntil!.getTime() - NOW.getTime();
     expect(diffMs).toBe(12 * 3600 * 1000);
   });
 
@@ -245,8 +255,8 @@ describe("computeCardUpdate", () => {
     expect(result.newRound).toBe(2);
     expect(result.cooldownUntil).not.toBeNull();
     // 24h = 86400000ms
-    const diffMs =
-      result.cooldownUntil!.getTime() - NOW.getTime();
+    // biome-ignore lint/style/noNonNullAssertion: test assertion — index is known valid after expect(...).not.toBeNull()
+    const diffMs = result.cooldownUntil!.getTime() - NOW.getTime();
     expect(diffMs).toBe(24 * 3600 * 1000);
   });
 
