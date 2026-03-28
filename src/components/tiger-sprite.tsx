@@ -1,10 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
 import { useTick } from "@pixi/react";
-import type { Spritesheet, Ticker, Texture } from "pixi.js";
-import { getMoodTransitionType, getTigerFacing, getTigerPosition } from "@/lib/habitat-ui-utils";
+import type { Spritesheet, Texture, Ticker } from "pixi.js";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { TigerMood } from "@/lib/habitat-engine";
+import {
+  getMoodTransitionType,
+  getTigerFacing,
+  getTigerPosition,
+} from "@/lib/habitat-ui-utils";
 
 // ============================================================
 // Helpers
@@ -56,7 +60,12 @@ interface TigerSpriteProps {
   sceneHeight: number;
 }
 
-export function TigerSprite({ mood, sheet, sceneWidth, sceneHeight }: TigerSpriteProps) {
+export function TigerSprite({
+  mood,
+  sheet,
+  sceneWidth,
+  sceneHeight,
+}: TigerSpriteProps) {
   // Random position and facing chosen once on mount (D-04, D-05)
   // Lazy initializers prevent SSR/hydration mismatch (Pitfall 7)
   const [position] = useState(() => getTigerPosition());
@@ -68,8 +77,8 @@ export function TigerSprite({ mood, sheet, sceneWidth, sceneHeight }: TigerSprit
   const tigerY = sceneHeight * 0.75;
 
   // Current and previous textures for crossfade
-  const [currentTexture, setCurrentTexture] = useState<Texture | null>(
-    () => getMoodTexture(mood, sheet),
+  const [currentTexture, setCurrentTexture] = useState<Texture | null>(() =>
+    getMoodTexture(mood, sheet),
   );
   const [prevTexture, setPrevTexture] = useState<Texture | null>(null);
   const prevMoodRef = useRef<TigerMood>(mood);
@@ -127,46 +136,40 @@ export function TigerSprite({ mood, sheet, sceneWidth, sceneHeight }: TigerSprit
   }, [mood, sheet, currentTexture]);
 
   // Bounce tick handler (D-06: 0.4s = ~24 frames at 60fps)
-  const handleBounceTick = useCallback(
-    (ticker: Ticker) => {
-      bounceFrameRef.current += ticker.deltaTime;
-      const t = bounceFrameRef.current;
-      // Spring-like bounce using sine: amplitude 8px, decays over 24 frames
-      const decay = Math.max(0, 1 - t / 24);
-      const yOffset = Math.sin(t * 0.15 * Math.PI) * 8 * decay;
-      bounceYRef.current = yOffset;
-      setBounceY(yOffset);
+  const handleBounceTick = useCallback((ticker: Ticker) => {
+    bounceFrameRef.current += ticker.deltaTime;
+    const t = bounceFrameRef.current;
+    // Spring-like bounce using sine: amplitude 8px, decays over 24 frames
+    const decay = Math.max(0, 1 - t / 24);
+    const yOffset = Math.sin(t * 0.15 * Math.PI) * 8 * decay;
+    bounceYRef.current = yOffset;
+    setBounceY(yOffset);
 
-      if (bounceFrameRef.current >= 24) {
-        bounceFrameRef.current = 0;
-        setIsBouncing(false);
-        setBounceY(0);
-      }
-    },
-    [],
-  );
+    if (bounceFrameRef.current >= 24) {
+      bounceFrameRef.current = 0;
+      setIsBouncing(false);
+      setBounceY(0);
+    }
+  }, []);
 
   // Crossfade tick handler (D-06: ~0.5s = 30 frames at 60fps)
-  const handleCrossfadeTick = useCallback(
-    (ticker: Ticker) => {
-      crossfadeFrameRef.current += ticker.deltaTime;
-      const progress = Math.min(1, crossfadeFrameRef.current / 30);
+  const handleCrossfadeTick = useCallback((ticker: Ticker) => {
+    crossfadeFrameRef.current += ticker.deltaTime;
+    const progress = Math.min(1, crossfadeFrameRef.current / 30);
 
-      oldAlphaRef.current = 1 - progress;
-      newAlphaRef.current = progress;
-      setOldAlpha(1 - progress);
-      setNewAlpha(progress);
+    oldAlphaRef.current = 1 - progress;
+    newAlphaRef.current = progress;
+    setOldAlpha(1 - progress);
+    setNewAlpha(progress);
 
-      if (progress >= 1) {
-        crossfadeFrameRef.current = 0;
-        setIsCrossfading(false);
-        setPrevTexture(null);
-        setOldAlpha(1);
-        setNewAlpha(1);
-      }
-    },
-    [],
-  );
+    if (progress >= 1) {
+      crossfadeFrameRef.current = 0;
+      setIsCrossfading(false);
+      setPrevTexture(null);
+      setOldAlpha(1);
+      setNewAlpha(1);
+    }
+  }, []);
 
   if (!currentTexture) return null;
 

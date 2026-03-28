@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Application, extend } from "@pixi/react";
 import { Assets, Container, Sprite, type Spritesheet } from "pixi.js";
+import { useEffect, useRef, useState } from "react";
 import type { TigerMood } from "@/lib/habitat-engine";
 
 // Register PixiJS classes used in JSX — must be at module scope

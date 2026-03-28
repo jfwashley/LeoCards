@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Application, extend, useApplication } from "@pixi/react";
 import { Assets, Container, Graphics, Sprite, type Spritesheet } from "pixi.js";
-import type { HabitatState } from "@/lib/habitat-engine";
-import { TigerSprite } from "@/components/tiger-sprite";
+import { useEffect, useRef, useState } from "react";
+import { BirdSprite } from "@/components/bird-sprite";
 import { HabitatLayers } from "@/components/habitat-layers";
 import { SparkleParticles } from "@/components/sparkle-particles";
-import { BirdSprite } from "@/components/bird-sprite";
-import { getTigerPosition } from "@/lib/habitat-ui-utils";
+import { TigerSprite } from "@/components/tiger-sprite";
+import type { HabitatState } from "@/lib/habitat-engine";
 
 // Register all PixiJS classes used in JSX — must be called at module scope
 // before any JSX referencing these classes renders (Pattern 2 from RESEARCH.md)
@@ -50,12 +49,16 @@ function useRendererSize() {
     const check = () => {
       const w = app.screen.width;
       const h = app.screen.height;
-      setSize((prev) => (prev.width !== w || prev.height !== h ? { width: w, height: h } : prev));
+      setSize((prev) =>
+        prev.width !== w || prev.height !== h ? { width: w, height: h } : prev,
+      );
     };
 
     check();
     app.ticker.add(check);
-    return () => { app.ticker.remove(check); };
+    return () => {
+      app.ticker.remove(check);
+    };
   }, [app]);
 
   return size;
@@ -157,7 +160,10 @@ export default function HabitatCanvas({
       style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
     >
       <Application resizeTo={containerRef} backgroundAlpha={0}>
-        <Scene habitatState={habitatState} celebratingLevel={celebratingLevel} />
+        <Scene
+          habitatState={habitatState}
+          celebratingLevel={celebratingLevel}
+        />
       </Application>
     </div>
   );

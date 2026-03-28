@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Pencil, Search, X } from "lucide-react";
 import Link from "next/link";
-import { Search, X, Pencil } from "lucide-react";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface CardListProps {
   cards: CardRow[];
@@ -119,7 +118,7 @@ export function CardList({
                 <td className="py-3 pr-4">
                   <div
                     className="flex items-center gap-1"
-                    aria-label={`${card.masteryRound ?? 0} of 3 rounds complete`}
+                    title={`${card.masteryRound ?? 0} of 3 rounds complete`}
                   >
                     {[0, 1, 2].map((round) => (
                       <span

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -21,7 +21,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, setIsPending] = useState(false);
@@ -56,10 +56,7 @@ export default function LoginPage() {
   }
 
   return (
-    <Card className="w-full max-w-sm rounded-xl shadow-sm p-6">
-      <h2 className="text-xl font-semibold leading-[1.2] mb-4">
-        Welcome back
-      </h2>
+    <>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="space-y-4">
           <div className="grid gap-1.5">
@@ -74,9 +71,7 @@ export default function LoginPage() {
               {...register("email")}
             />
             {isSubmitted && errors.email && (
-              <p className="text-sm text-destructive">
-                {errors.email.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
@@ -109,16 +104,8 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full h-11"
-            disabled={isPending}
-          >
-            {isPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Sign in"
-            )}
+          <Button type="submit" className="w-full h-11" disabled={isPending}>
+            {isPending ? <Loader2 className="animate-spin" /> : "Sign in"}
           </Button>
         </div>
       </form>
@@ -132,6 +119,21 @@ export default function LoginPage() {
           Sign up
         </Link>
       </p>
+    </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Card className="w-full max-w-sm rounded-xl shadow-sm p-6">
+      <h2 className="text-xl font-semibold leading-[1.2] mb-4">Welcome back</h2>
+      <Suspense
+        fallback={
+          <div className="text-sm text-muted-foreground">Loading...</div>
+        }
+      >
+        <LoginForm />
+      </Suspense>
     </Card>
   );
 }

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { UserId } from "@/db/schema";
 
 // ============================================================
@@ -7,14 +7,20 @@ import type { UserId } from "@/db/schema";
 
 const { mockDb } = vi.hoisted(() => {
   const mockOnConflictDoNothing = vi.fn().mockResolvedValue(undefined);
-  const mockValues = vi.fn().mockReturnValue({ onConflictDoNothing: mockOnConflictDoNothing });
+  const mockValues = vi
+    .fn()
+    .mockReturnValue({ onConflictDoNothing: mockOnConflictDoNothing });
   const mockInsert = vi.fn().mockReturnValue({ values: mockValues });
 
   const mockLimit = vi.fn().mockResolvedValue([]);
   const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
   const mockGroupBy = vi.fn().mockResolvedValue([]);
-  const mockInnerJoin = vi.fn().mockReturnValue({ where: (mockWhere2: unknown) => ({ groupBy: mockGroupBy }) });
-  const mockFrom = vi.fn().mockReturnValue({ innerJoin: mockInnerJoin, where: mockWhere });
+  const mockInnerJoin = vi.fn().mockReturnValue({
+    where: (_mockWhere2: unknown) => ({ groupBy: mockGroupBy }),
+  });
+  const mockFrom = vi
+    .fn()
+    .mockReturnValue({ innerJoin: mockInnerJoin, where: mockWhere });
   const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
 
   return {
@@ -43,7 +49,7 @@ vi.mock("@/db/schema", async (importOriginal) => {
   return actual;
 });
 
-import { markMilestonesSeen, getLanguageBreakdown } from "./milestone-queries";
+import { getLanguageBreakdown, markMilestonesSeen } from "./milestone-queries";
 
 // ============================================================
 // Helpers
@@ -60,7 +66,9 @@ describe("markMilestonesSeen", () => {
     vi.clearAllMocks();
     // Re-setup the chain after clearing
     const mockOnConflictDoNothing = vi.fn().mockResolvedValue(undefined);
-    const mockValues = vi.fn().mockReturnValue({ onConflictDoNothing: mockOnConflictDoNothing });
+    const mockValues = vi
+      .fn()
+      .mockReturnValue({ onConflictDoNothing: mockOnConflictDoNothing });
     mockDb.insert.mockReturnValue({ values: mockValues });
   });
 
@@ -103,7 +111,9 @@ describe("markMilestonesSeen", () => {
 
   it("uses onConflictDoNothing for idempotent inserts", async () => {
     const mockOnConflictDoNothing = vi.fn().mockResolvedValue(undefined);
-    const mockValues = vi.fn().mockReturnValue({ onConflictDoNothing: mockOnConflictDoNothing });
+    const mockValues = vi
+      .fn()
+      .mockReturnValue({ onConflictDoNothing: mockOnConflictDoNothing });
     mockDb.insert.mockReturnValue({ values: mockValues });
 
     await markMilestonesSeen(TEST_USER_ID, 1, 2);

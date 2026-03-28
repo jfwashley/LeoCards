@@ -81,11 +81,7 @@ export default function ForgotPasswordPage() {
               )}
             </div>
 
-            <Button
-              type="submit"
-              className="w-full h-11"
-              disabled={isPending}
-            >
+            <Button type="submit" className="w-full h-11" disabled={isPending}>
               {isPending ? (
                 <Loader2 className="animate-spin" />
               ) : (

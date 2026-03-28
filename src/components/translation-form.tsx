@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import Link from "next/link";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useRef, useState } from "react";
 import { useDebouncedCallback as useDebounceCallback } from "use-debounce";
-
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { saveCard } from "@/lib/deck-actions";
 
@@ -45,7 +44,9 @@ export function TranslationForm({
 
       try {
         const [sourceLang, destLang] =
-          direction === "native" ? [nativeLang, targetLang] : [targetLang, nativeLang];
+          direction === "native"
+            ? [nativeLang, targetLang]
+            : [targetLang, nativeLang];
 
         const response = await fetch("/api/translate", {
           method: "POST",

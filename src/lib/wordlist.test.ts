@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { getWordList, filterWords, getCategories } from "@/lib/wordlist";
+import { describe, expect, it } from "vitest";
 import { CATEGORIES } from "@/data/wordlists/schema";
+import { filterWords, getCategories, getWordList } from "@/lib/wordlist";
 
 const LANGUAGE_PAIRS = [
   ["en", "fr"],
@@ -23,7 +23,9 @@ describe("getWordList", () => {
   }
 
   it("throws for unknown language pair", async () => {
-    await expect(getWordList("en", "de")).rejects.toThrow("No word list for en-de");
+    await expect(getWordList("en", "de")).rejects.toThrow(
+      "No word list for en-de",
+    );
   });
 });
 
@@ -97,7 +99,10 @@ describe("filterWords", () => {
 
   it("filters by both category and cefr", async () => {
     const list = await getWordList("en", "es");
-    const filtered = filterWords(list.words, { category: "Weather", cefr: "B1" });
+    const filtered = filterWords(list.words, {
+      category: "Weather",
+      cefr: "B1",
+    });
     expect(filtered.length).toBeGreaterThan(0);
     for (const word of filtered) {
       expect(word.category).toBe("Weather");

@@ -1,11 +1,10 @@
-import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-
-import { auth } from "@/lib/auth";
-import { getStudyCards } from "@/lib/study-queries";
-import { assembleSession, earliestCooldownEnd } from "@/lib/study-engine";
-import type { CardForSession } from "@/lib/study-engine";
+import { redirect } from "next/navigation";
 import { StudySession } from "@/components/study-session";
+import { auth } from "@/lib/auth";
+import type { CardForSession } from "@/lib/study-engine";
+import { assembleSession } from "@/lib/study-engine";
+import { getStudyCards } from "@/lib/study-queries";
 
 export default async function StudyPage(props: {
   searchParams: Promise<{ deck?: string }>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { DeckSwitcher, type DeckOption } from "@/components/deck-switcher";
+import { type DeckOption, DeckSwitcher } from "@/components/deck-switcher";
 import { LogoutButton } from "@/components/logout-button";
 
 interface AppHeaderProps {

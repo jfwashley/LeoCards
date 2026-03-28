@@ -87,9 +87,10 @@ export function assembleSession(
   }
 
   // Pick resurface cards
-  const resurfaceCards: CardForSession[] = shuffleTake(learned, resurfaceCount).map(
-    (c) => ({ ...c, isResurface: true }),
-  );
+  const resurfaceCards: CardForSession[] = shuffleTake(
+    learned,
+    resurfaceCount,
+  ).map((c) => ({ ...c, isResurface: true }));
 
   // Interleave and assign stage
   const interleaved = interleave(dueUnlearned, resurfaceCards, 3);
@@ -223,8 +224,7 @@ export function computeCardUpdate(
   const cappedN2t = Math.min(n2tCorrect, threshold.n2t);
   const cappedT2n = Math.min(t2nCorrect, threshold.t2n);
 
-  const thresholdMet =
-    cappedN2t >= threshold.n2t && cappedT2n >= threshold.t2n;
+  const thresholdMet = cappedN2t >= threshold.n2t && cappedT2n >= threshold.t2n;
 
   if (!thresholdMet) {
     return { newRound: currentRound, cooldownUntil: null, recallCountDelta };

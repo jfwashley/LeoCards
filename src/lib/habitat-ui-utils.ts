@@ -45,11 +45,7 @@ export function getMoodTransitionType(
  * Per D-09: Levels 2-10 progressively add trees, rocks, water, flowers, animals.
  */
 export function getLayersForLevel(level: number): string[] {
-  const layers: string[] = [
-    "layer-sky",
-    "layer-hills",
-    "layer-grass-base",
-  ];
+  const layers: string[] = ["layer-sky", "layer-hills", "layer-grass-base"];
 
   // Level 1+: single tree (D-12)
   if (level >= 1) layers.push("layer-tree-1");
@@ -106,11 +102,7 @@ export function getDecayAlpha(quality: number): number {
  *
  * Per D-04: center-bottom, 30% from left, 25% from right (x=0.75).
  */
-export const TIGER_POSITIONS = [
-  { x: 0.5 },
-  { x: 0.3 },
-  { x: 0.75 },
-] as const;
+export const TIGER_POSITIONS = [{ x: 0.5 }, { x: 0.3 }, { x: 0.75 }] as const;
 
 /**
  * Returns a random tiger position from the three defined positions (D-04).

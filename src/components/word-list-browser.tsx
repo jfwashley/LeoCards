@@ -1,15 +1,20 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  CheckCheck,
+  Loader2,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
-import { ArrowLeft, Plus, CheckCheck, Loader2, AlertCircle } from "lucide-react";
-
-import type { WordEntry, CefrLevel } from "@/data/wordlists/schema";
-import { CATEGORIES } from "@/data/wordlists/schema";
-import { filterWords } from "@/lib/wordlist";
-import { addWordToCard, removeWordFromDeck } from "@/lib/deck-actions";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import type { CefrLevel, WordEntry } from "@/data/wordlists/schema";
+import { CATEGORIES } from "@/data/wordlists/schema";
+import { addWordToCard, removeWordFromDeck } from "@/lib/deck-actions";
 import { cn } from "@/lib/utils";
+import { filterWords } from "@/lib/wordlist";
 
 type DifficultyFilter = "All" | CefrLevel;
 
@@ -29,9 +34,12 @@ export function WordListBrowser({
   targetLangLabel,
 }: WordListBrowserProps) {
   const [activeCategory, setActiveCategory] = useState<string>(CATEGORIES[0]);
-  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>("All");
+  const [difficultyFilter, setDifficultyFilter] =
+    useState<DifficultyFilter>("All");
   // Client-side tracking of which words are in the deck (optimistic UI)
-  const [deckWords, setDeckWords] = useState<Set<string>>(() => new Set(existingWords));
+  const [deckWords, setDeckWords] = useState<Set<string>>(
+    () => new Set(existingWords),
+  );
   // Per-row loading state: key is "native::target"
   const [loadingWords, setLoadingWords] = useState<Set<string>>(new Set());
   // Per-row error state: key is "native::target"
@@ -86,7 +94,9 @@ export function WordListBrowser({
           return next;
         });
         // Show error
-        setErrorWords((prev) => new Map([...prev, [key, "Failed. Try again."]]));
+        setErrorWords(
+          (prev) => new Map([...prev, [key, "Failed. Try again."]]),
+        );
         // Auto-dismiss after 3s
         setTimeout(() => clearError(word), 3000);
       } finally {
@@ -118,7 +128,9 @@ export function WordListBrowser({
         // Revert optimistic update
         setDeckWords((prev) => new Set([...prev, key]));
         // Show error
-        setErrorWords((prev) => new Map([...prev, [key, "Failed. Try again."]]));
+        setErrorWords(
+          (prev) => new Map([...prev, [key, "Failed. Try again."]]),
+        );
         // Auto-dismiss after 3s
         setTimeout(() => clearError(word), 3000);
       } finally {
@@ -219,8 +231,10 @@ export function WordListBrowser({
                   className={cn(
                     "w-12 text-center text-xs px-2 py-0.5 rounded-full",
                     word.cefr === "A1" && "bg-muted text-muted-foreground",
-                    word.cefr === "A2" && "bg-secondary text-secondary-foreground",
-                    word.cefr === "B1" && "bg-secondary text-foreground font-medium",
+                    word.cefr === "A2" &&
+                      "bg-secondary text-secondary-foreground",
+                    word.cefr === "B1" &&
+                      "bg-secondary text-foreground font-medium",
                   )}
                 >
                   {word.cefr}
@@ -264,7 +278,9 @@ export function WordListBrowser({
 
                 {/* Inline error text */}
                 {error && (
-                  <span className="absolute text-xs text-destructive mt-12">{error}</span>
+                  <span className="absolute text-xs text-destructive mt-12">
+                    {error}
+                  </span>
                 )}
               </div>
             );

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
-  getMoodTransitionType,
-  getLayersForLevel,
   getDecayAlpha,
-  getTigerPosition,
+  getLayersForLevel,
+  getMoodTransitionType,
   getTigerFacing,
+  getTigerPosition,
   TIGER_POSITIONS,
 } from "@/lib/habitat-ui-utils";
 

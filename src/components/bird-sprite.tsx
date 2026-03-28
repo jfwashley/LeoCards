@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
 import { useTick } from "@pixi/react";
 import type { Spritesheet, Ticker } from "pixi.js";
+import { useCallback, useRef, useState } from "react";
 
 // ============================================================
 // Props
@@ -28,10 +28,12 @@ export function BirdSprite({
   isFirstAppearance,
 }: BirdSpriteProps) {
   const restX = sceneWidth * 0.75;
-  const restY = sceneHeight * 0.30;
+  const restY = sceneHeight * 0.3;
 
   // Lazy initializer prevents SSR hydration mismatch (Pitfall 7)
-  const [x, setX] = useState(() => (isFirstAppearance ? sceneWidth + 100 : restX));
+  const [x, setX] = useState(() =>
+    isFirstAppearance ? sceneWidth + 100 : restX,
+  );
   const [y] = useState(() => restY);
 
   // Capture isFirstAppearance on mount — never re-read from props (Pitfall 3)
@@ -47,7 +49,7 @@ export function BirdSprite({
       const t = Math.min(frameRef.current / 60, 1);
 
       // Cubic ease-out: 1 - (1 - t)^3
-      const eased = 1 - Math.pow(1 - t, 3);
+      const eased = 1 - (1 - t) ** 3;
       const startX = sceneWidth + 100;
       const currentX = startX + (restX - startX) * eased;
       setX(currentX);

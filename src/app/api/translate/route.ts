@@ -1,9 +1,8 @@
+import * as deepl from "deepl-node";
 import { headers } from "next/headers";
 import { z } from "zod";
-import * as deepl from "deepl-node";
-
-import { auth } from "@/lib/auth";
 import { env } from "@/env";
+import { auth } from "@/lib/auth";
 
 const RequestSchema = z.object({
   text: z.string().min(1).max(500),
@@ -51,7 +50,9 @@ export async function POST(request: Request) {
   // Instantiate DeepL client inside handler — never at module scope
   const client = new deepl.DeepLClient(env.DEEPL_API_KEY);
 
-  const targetLangCode = TARGET_LANG_MAP[targetLang] as deepl.TargetLanguageCode;
+  const targetLangCode = TARGET_LANG_MAP[
+    targetLang
+  ] as deepl.TargetLanguageCode;
 
   try {
     const result = await client.translateText(text, sourceLang, targetLangCode);

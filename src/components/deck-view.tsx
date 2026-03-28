@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { AppHeader } from "@/components/app-header";
 import { CardList } from "@/components/card-list";
@@ -148,7 +148,10 @@ export function DeckView({
       <main className="flex-1 px-8 py-8 max-w-4xl mx-auto w-full">
         {/* Mini habitat widget — links to /habitat */}
         <div className="mb-6">
-          <HabitatWidget habitatState={habitatState} celebratingLevel={celebratingLevel} />
+          <HabitatWidget
+            habitatState={habitatState}
+            celebratingLevel={celebratingLevel}
+          />
         </div>
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -156,7 +159,10 @@ export function DeckView({
             {languageBreakdown.length > 0 && (
               <p className="text-sm text-muted-foreground mt-1">
                 {languageBreakdown
-                  .map((item) => `${LANGUAGE_LABELS[item.language] ?? item.language}: ${item.count} learned`)
+                  .map(
+                    (item) =>
+                      `${LANGUAGE_LABELS[item.language] ?? item.language}: ${item.count} learned`,
+                  )
                   .join(" \u00B7 ")}
               </p>
             )}

@@ -1,35 +1,44 @@
 import { headers } from "next/headers";
-
+import { DeckView } from "@/components/deck-view";
+import { FirstVisitPicker } from "@/components/first-visit-picker";
+import { HabitatWidget } from "@/components/habitat-widget";
+import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { getUserDecks, getDeckCards, getUserNativeLanguage } from "@/lib/deck-queries";
-import { getStudyCards } from "@/lib/study-queries";
-import { assembleSession, earliestCooldownEnd as getEarliestCooldownEnd } from "@/lib/study-engine";
-import type { CardForSession } from "@/lib/study-engine";
+import {
+  getDeckCards,
+  getUserDecks,
+  getUserNativeLanguage,
+} from "@/lib/deck-queries";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { getLanguageBreakdown } from "@/lib/milestone-queries";
-import type { UserId } from "@/db/schema";
-import { FirstVisitPicker } from "@/components/first-visit-picker";
-import { DeckView } from "@/components/deck-view";
-import { HabitatWidget } from "@/components/habitat-widget";
+import type { CardForSession } from "@/lib/study-engine";
+import {
+  assembleSession,
+  earliestCooldownEnd as getEarliestCooldownEnd,
+} from "@/lib/study-engine";
+import { getStudyCards } from "@/lib/study-queries";
 
 interface DashboardPageProps {
   searchParams: Promise<{ deck?: string; celebrate?: string }>;
 }
 
-export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session) return null;
 
-  const [decks, nativeLang, habitatFacts, languageBreakdown] = await Promise.all([
-    getUserDecks(session.user.id),
-    getUserNativeLanguage(session.user.id),
-    getHabitatFacts(session.user.id as UserId),
-    getLanguageBreakdown(session.user.id as UserId),
-  ]);
+  const [decks, nativeLang, habitatFacts, languageBreakdown] =
+    await Promise.all([
+      getUserDecks(session.user.id),
+      getUserNativeLanguage(session.user.id),
+      getHabitatFacts(session.user.id as UserId),
+      getLanguageBreakdown(session.user.id as UserId),
+    ]);
 
   const habitatState = computeHabitatState(habitatFacts, new Date());
 
@@ -48,7 +57,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   const params = await searchParams;
   const requestedDeckId = params.deck;
-  const celebratingLevel = params.celebrate ? parseInt(params.celebrate, 10) : null;
+  const celebratingLevel = params.celebrate
+    ? parseInt(params.celebrate, 10)
+    : null;
   const activeDeck = decks.find((d) => d.id === requestedDeckId) ?? decks[0];
 
   // decks.length > 0 is guaranteed by the early return above
