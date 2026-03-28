@@ -18,13 +18,13 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 - [x] Users can browse built-in word lists and select cards to add to their deck — Validated in Phase 2: Deck and Card Management
 - [x] Flashcard practice uses classic show-and-self-grade mechanic — Validated in Phase 3: Study Engine and Study UI
 - [x] A card is considered "learned" after 3–4 successful self-graded recalls — Validated in Phase 3: Study Engine and Study UI (evolved to 3-round spaced mastery with directional tracking)
+- [x] All learned cards across all languages feed into one shared tiger habitat — Validated in Phase 4: Habitat Engine (cross-deck learned card count via JOIN, shared habitat state)
+- [x] The habitat improves gradually as cards are learned (grass, environment quality) — Validated in Phase 4: Habitat Engine (10-level system with quality-weighted effective card count)
+- [x] The tiger and habitat visually reflect neglect — hard decay if inactive — Validated in Phase 4: Habitat Engine (2-day grace, 5%/day linear decay, 10% floor, mood classification)
 
 ### Active
 
-- [ ] All learned cards across all languages feed into one shared tiger habitat
-- [ ] The habitat improves gradually as cards are learned (grass, environment quality)
 - [ ] Milestone unlocks trigger special moments at key card-count thresholds
-- [ ] The tiger and habitat visually reflect neglect — hard decay if inactive
 - [ ] New animals appear in the habitat as visual rewards for major milestones
 - [ ] Visual style is cute 2D illustrated
 
@@ -54,10 +54,10 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| One shared habitat across all languages | Rewards breadth of learning, simpler emotional narrative | — Pending |
-| Hard decay on inactivity | Creates real stakes and daily motivation | — Pending |
+| One shared habitat across all languages | Rewards breadth of learning, simpler emotional narrative | Shipped (Phase 4) |
+| Hard decay on inactivity | Creates real stakes and daily motivation | Shipped (Phase 4) |
 | Show & self-grade flashcard mechanic | Lowest friction, classic and proven | Shipped (Phase 3) |
 | 3-round spaced mastery with directional tracking | Evolved from simple 3-4 recalls to 3-round system with 12h/24h cooldowns and bidirectional testing | Shipped (Phase 3) |
 
 ---
-*Last updated: 2026-03-27 after Phase 3 completion — study engine with spaced mastery, session commit route, full-screen study UI with swipe-to-grade and card stack visual all shipped*
+*Last updated: 2026-03-28 after Phase 4 completion — habitat engine with compute-on-read architecture, 2-day grace + 5%/day decay, 10-level system, mood classification, and GET /api/habitat endpoint all shipped*
