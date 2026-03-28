@@ -7,7 +7,7 @@ wave_0_complete: false
 created: 2026-03-28
 ---
 
-# Phase 6 — Validation Strategy
+# Phase 6 -- Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
 
@@ -38,22 +38,22 @@ created: 2026-03-28
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 06-01-01 | 01 | 1 | HAB-04 | unit | `npx vitest run src/lib/habitat-engine.test.ts` | ❌ W0 | ⬜ pending |
-| 06-01-02 | 01 | 1 | HAB-04 | unit | `npx vitest run src/lib/habitat-engine.test.ts` | ❌ W0 | ⬜ pending |
-| 06-02-01 | 02 | 1 | HAB-04 | manual | N/A — visual overlay | N/A | ⬜ pending |
-| 06-02-02 | 02 | 1 | HAB-05 | manual | N/A — PixiJS animation | N/A | ⬜ pending |
-| 06-03-01 | 03 | 1 | HAB-07 | unit | `npx vitest run src/lib/habitat-queries.test.ts` | ❌ W0 | ⬜ pending |
+| 06-01-01 | 01 | 1 | HAB-04 | unit | `npx vitest run src/lib/milestone-queries.test.ts` | created by task | pending |
+| 06-01-02 | 01 | 1 | HAB-04 | unit | `npx vitest run --reporter=verbose` | N/A (integration) | pending |
+| 06-02-01 | 02 | 2 | HAB-04 | manual | N/A -- visual overlay | N/A | pending |
+| 06-02-02 | 02 | 2 | HAB-04, HAB-05 | manual | N/A -- PixiJS animation + celebrate param wiring | N/A | pending |
+| 06-02-03 | 02 | 2 | HAB-04, HAB-05 | checkpoint | N/A -- human-verify | N/A | pending |
+| 06-03-01 | 03 | 2 | HAB-07 | unit | `npx vitest run --reporter=verbose` | N/A (uses existing) | pending |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: pending / green / red / flaky*
 
 ---
 
 ## Wave 0 Requirements
 
-- [ ] Add level-up detection tests to `src/lib/habitat-engine.test.ts`
-- [ ] Create `src/lib/habitat-queries.test.ts` for language breakdown query tests
+- [ ] Task 06-01-01 creates `src/lib/milestone-queries.test.ts` as part of its TDD flow
 
-*Existing infrastructure covers test framework — no new dependencies needed.*
+*Existing infrastructure covers test framework -- no new dependencies needed.*
 
 ---
 
@@ -61,9 +61,9 @@ created: 2026-03-28
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| Fullscreen celebration overlay | HAB-04 | Visual UI with animation | Complete study session that causes level-up, verify overlay appears with confetti and level number, dismiss it, verify it doesn't replay on refresh |
-| Bird fly-in animation | HAB-05 | PixiJS canvas animation | Reach level 10, verify bird flies in from off-screen and remains in habitat on subsequent visits |
-| Celebration exactly-once | HAB-04 | Stateful UI behavior | Level up, see celebration, refresh page, verify celebration doesn't replay |
+| Fullscreen celebration overlay | HAB-04 | Visual UI with animation | Complete study session that causes level-up, verify overlay appears with confetti and level number, dismiss it |
+| Bird fly-in animation | HAB-05 | PixiJS canvas animation | Reach level 10, dismiss overlay, verify ?celebrate=10 in URL, verify bird flies in from off-screen and remains in habitat on subsequent visits |
+| Celebration exactly-once (server) | HAB-04 | Stateful UI behavior | Level up, see celebration, then complete another session without leveling up -- verify NO overlay appears. Also refresh page and verify no replay. |
 
 ---
 
