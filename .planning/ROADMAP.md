@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
 - [x] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route (completed 2026-03-28)
 - [x] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions (completed 2026-03-28)
-- [x] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown (completed 2026-03-28)
+- [x] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown (completed 2026-03-28)
 
 ## Phase Details
 
@@ -27,16 +27,18 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04
 **Success Criteria** (what must be TRUE):
   1. User can create an account with email and password and land on their dashboard
-  2. User can close the browser and return to find themselves still logged in
+  2. User can close the browser and return to find themselves still logging in
   3. User can log out from any page and be redirected to the login screen
   4. User who has forgotten their password can receive a reset link by email and set a new one
-**Plans**: 4 plans
+**Plans**: 6 plans
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold: Next.js 16, TypeScript strict, Tailwind 4, Biome, shadcn/ui, Drizzle + Neon, full DB schema (all 6 phases), Vitest, CI pipeline, env validation
 - [x] 01-02-PLAN.md — Auth backend: Better Auth server with Drizzle adapter, Resend email transport, auth API route, Next.js 16 proxy route protection
 - [x] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
 - [x] 01-04-PLAN.md — Gap closure: wire orphaned env.ts into app module graph, add RESEND_API_KEY to CI env block
+- [ ] 01-05-PLAN.md — Gap closure: fix login Suspense boundary (build blocker), TypeScript errors, Biome lint/format violations, LF line endings
+- [ ] 01-06-PLAN.md — Gap closure: fix CI pipeline step ordering and missing DEEPL_API_KEY, update .env.example
 
 ### Phase 2: Deck and Card Management
 **Goal**: Users can populate their decks — browsing pre-made word lists, manually entering words with auto-translation, and managing their saved cards.
@@ -124,7 +126,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 4/4 | Complete   | 2026-03-23 |
+| 1. Foundation | 4/6 | In Progress | - |
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
