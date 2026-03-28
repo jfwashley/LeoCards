@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on (completed 2026-03-23)
 - [x] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow (completed 2026-03-24)
 - [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
-- [x] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route (completed 2026-03-28)
+- [x] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route (completed 2026-03-28)
 - [ ] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions
 - [ ] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown
 
@@ -95,12 +95,12 @@ Plans:
   1. User sees a rendered tiger sprite whose visible mood (idle/happy/sad) matches what the engine computed for their activity level
   2. The habitat background and environment layers visually change as the user's total learned card count crosses level thresholds — a user with 50 learned cards sees a richer environment than a user with 5
   3. The PixiJS scene loads without a server-side rendering crash; the tiger animation runs at a consistent frame rate on mid-range devices and pauses when the browser tab is hidden
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: PixiJS setup — `next/dynamic` with `{ ssr: false }`, sprite atlas preparation, ticker pause on `visibilitychange`, 60fps mobile budget as acceptance criterion
-- [ ] 05-02: Tiger sprite layer — idle/happy/sad/sleep animations from atlas, mood transition triggered by habitat state prop
-- [ ] 05-03: Habitat background layers — level-gated environment sprites, smooth layer crossfade between levels, wired to `/api/habitat` response
+- [ ] 05-01-PLAN.md — PixiJS + @pixi/react install, placeholder sprite atlases, SSR-safe canvas wrapper (next/dynamic ssr:false), /habitat page shell, ticker visibility controller
+- [ ] 05-02-PLAN.md — Tiger sprite (mood textures, random position/facing, bounce/crossfade transitions), habitat layers (additive by level, decay alpha, parallax), sparkle particles, utility functions with TDD
+- [ ] 05-03-PLAN.md — Mini dashboard habitat widget (PixiJS canvas + progress bar), error/offline/level-up states, dashboard integration, human-verify checkpoint
 
 ### Phase 6: Milestone System and Dashboard Polish
 **Goal**: Reaching key card-count thresholds triggers a memorable unlock moment in the habitat, new animals appear as collectibles, and the dashboard clearly shows how each language contributes to the shared habitat.
