@@ -19,6 +19,7 @@ const HabitatWidgetCanvas = dynamic(
 
 interface HabitatWidgetProps {
   habitatState: HabitatState;
+  celebratingLevel?: number | null;
 }
 
 /**
@@ -27,7 +28,7 @@ interface HabitatWidgetProps {
  *
  * Uses next/dynamic with ssr:false so PixiJS never touches server rendering.
  */
-export function HabitatWidget({ habitatState }: HabitatWidgetProps) {
+export function HabitatWidget({ habitatState, celebratingLevel = null }: HabitatWidgetProps) {
   const { level, learnedCardCount, nextLevelThreshold, mood } = habitatState;
 
   // Calculate progress percentage toward next level

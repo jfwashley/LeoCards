@@ -7,6 +7,7 @@ import type { HabitatState } from "@/lib/habitat-engine";
 import { TigerSprite } from "@/components/tiger-sprite";
 import { HabitatLayers } from "@/components/habitat-layers";
 import { SparkleParticles } from "@/components/sparkle-particles";
+import { BirdSprite } from "@/components/bird-sprite";
 import { getTigerPosition } from "@/lib/habitat-ui-utils";
 
 // Register all PixiJS classes used in JSX — must be called at module scope
@@ -64,8 +65,10 @@ function useRendererSize() {
 // Lives inside <Application> so Assets.load() runs in the correct PixiJS context (Pitfall 5)
 function Scene({
   habitatState,
+  celebratingLevel = null,
 }: {
   habitatState: HabitatState;
+  celebratingLevel?: number | null;
 }) {
   const { width: sceneWidth, height: sceneHeight } = useRendererSize();
   const [tigerSheet, setTigerSheet] = useState<Spritesheet | null>(null);
@@ -122,13 +125,29 @@ function Scene({
         tigerY={tigerY}
         active={habitatState.mood === "excited"}
       />
+
+      {/* 4. Bird sprite at level 10 (D-08, D-09, D-10) */}
+      {habitatState.level >= 10 && habitatSheet && (
+        <BirdSprite
+          sheet={habitatSheet}
+          sceneWidth={sceneWidth}
+          sceneHeight={sceneHeight}
+          isFirstAppearance={celebratingLevel === 10}
+        />
+      )}
     </pixiContainer>
   );
 }
 
 // HabitatCanvas: @pixi/react Application wrapping the full scene tree
 // Loaded via next/dynamic with ssr:false from habitat-scene.tsx
-export default function HabitatCanvas({ habitatState }: { habitatState: HabitatState }) {
+export default function HabitatCanvas({
+  habitatState,
+  celebratingLevel = null,
+}: {
+  habitatState: HabitatState;
+  celebratingLevel?: number | null;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -138,7 +157,7 @@ export default function HabitatCanvas({ habitatState }: { habitatState: HabitatS
       style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
     >
       <Application resizeTo={containerRef} backgroundAlpha={0}>
-        <Scene habitatState={habitatState} />
+        <Scene habitatState={habitatState} celebratingLevel={celebratingLevel} />
       </Application>
     </div>
   );

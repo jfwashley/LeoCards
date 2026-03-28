@@ -1,12 +1,13 @@
 "use client";
 
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
 import { StudyCard } from "@/components/study-card";
 import { CardStack } from "@/components/card-stack";
+import { LevelUpOverlay } from "@/components/level-up-overlay";
 import type { SessionCard, GradeEntry, SessionStats } from "@/lib/study-engine";
 
 // ============================================================
@@ -182,7 +183,7 @@ function computeStats(
     (g) => g.correct && round2CardIds.has(g.cardId as string),
   ).length;
 
-  return { cardsStudied, correctCount, newlyLearned };
+  return { cardsStudied, correctCount, newlyLearned, leveledUp: null };
 }
 
 // ============================================================
@@ -201,6 +202,8 @@ interface StudySessionProps {
 export function StudySession({ initialCards, deckId }: StudySessionProps) {
   const router = useRouter();
 
+  const [showLevelUp, setShowLevelUp] = useState<number | null>(null);
+
   const [state, dispatch] = useReducer(reducer, {
     phase: "studying",
     queue: initialCards,
@@ -213,6 +216,15 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
     hasFlippedFirst: false,
     hasSwiped: false,
   } satisfies StudyingState);
+
+  // Level-up overlay dismiss: navigate with ?celebrate=10 when reaching level 10 (D-09)
+  const handleLevelUpDismiss = useCallback(() => {
+    const leveledUp = showLevelUp;
+    setShowLevelUp(null);
+    if (leveledUp === 10) {
+      router.push(`/dashboard?deck=${deckId}&celebrate=10`);
+    }
+  }, [showLevelUp, router, deckId]);
 
   // 300ms swipe enable after flip
   const isFlipped = state.phase === "studying" ? state.flipped : false;
@@ -252,8 +264,12 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
           throw new Error(`HTTP ${response.status}`);
         }
 
+        const data = await response.json();
         const stats = computeStats(initialCards, graded);
-        dispatch({ type: "COMMIT_DONE", stats });
+        dispatch({ type: "COMMIT_DONE", stats: { ...stats, leveledUp: data.leveledUp ?? null } });
+        if (data.leveledUp !== null && data.leveledUp !== undefined) {
+          setShowLevelUp(data.leveledUp);
+        }
       } catch {
         dispatch({
           type: "COMMIT_ERROR",
@@ -304,47 +320,54 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
       cardsStudied > 0 ? Math.round((correctCount / cardsStudied) * 100) : 0;
 
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <motion.div
-          className="flex flex-col items-center gap-8 px-8 text-center"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        >
-          <span className="text-6xl" role="img" aria-label="Tiger">
-            🐯
-          </span>
-          <h1 className="text-[20px] font-semibold text-foreground">
-            Great work, keep it up!
-          </h1>
-          <div className="flex gap-8">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[28px] font-semibold text-foreground">
-                {cardsStudied}
-              </span>
-              <span className="text-sm text-muted-foreground">studied</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[28px] font-semibold text-foreground">
-                {correctPct}%
-              </span>
-              <span className="text-sm text-muted-foreground">correct</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[28px] font-semibold text-primary">
-                {newlyLearned}
-              </span>
-              <span className="text-sm text-muted-foreground">learned</span>
-            </div>
-          </div>
-          <Button
-            variant="default"
-            onClick={() => router.push(`/dashboard?deck=${deckId}`)}
+      <>
+        <AnimatePresence>
+          {showLevelUp !== null && (
+            <LevelUpOverlay level={showLevelUp} onDismiss={handleLevelUpDismiss} />
+          )}
+        </AnimatePresence>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <motion.div
+            className="flex flex-col items-center gap-8 px-8 text-center"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            Back to deck
-          </Button>
-        </motion.div>
-      </div>
+            <span className="text-6xl" role="img" aria-label="Tiger">
+              🐯
+            </span>
+            <h1 className="text-[20px] font-semibold text-foreground">
+              Great work, keep it up!
+            </h1>
+            <div className="flex gap-8">
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-[28px] font-semibold text-foreground">
+                  {cardsStudied}
+                </span>
+                <span className="text-sm text-muted-foreground">studied</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-[28px] font-semibold text-foreground">
+                  {correctPct}%
+                </span>
+                <span className="text-sm text-muted-foreground">correct</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-[28px] font-semibold text-primary">
+                  {newlyLearned}
+                </span>
+                <span className="text-sm text-muted-foreground">learned</span>
+              </div>
+            </div>
+            <Button
+              variant="default"
+              onClick={() => router.push(`/dashboard?deck=${deckId}`)}
+            >
+              Back to deck
+            </Button>
+          </motion.div>
+        </div>
+      </>
     );
   }
 

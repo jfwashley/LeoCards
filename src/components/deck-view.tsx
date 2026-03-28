@@ -33,6 +33,7 @@ interface DeckViewProps {
   hasDueCards: boolean;
   earliestCooldownEnd: string | null;
   habitatState: HabitatState;
+  celebratingLevel?: number | null;
 }
 
 function formatCountdown(ms: number): string {
@@ -57,6 +58,7 @@ export function DeckView({
   hasDueCards,
   earliestCooldownEnd,
   habitatState,
+  celebratingLevel = null,
 }: DeckViewProps) {
   const router = useRouter();
   const activeDeck = decks.find((d) => d.id === activeDeckId) ?? decks[0];
@@ -144,7 +146,7 @@ export function DeckView({
       <main className="flex-1 px-8 py-8 max-w-4xl mx-auto w-full">
         {/* Mini habitat widget — links to /habitat */}
         <div className="mb-6">
-          <HabitatWidget habitatState={habitatState} />
+          <HabitatWidget habitatState={habitatState} celebratingLevel={celebratingLevel} />
         </div>
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-semibold">My Deck</h1>

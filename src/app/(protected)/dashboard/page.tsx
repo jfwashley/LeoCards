@@ -13,7 +13,7 @@ import { DeckView } from "@/components/deck-view";
 import { HabitatWidget } from "@/components/habitat-widget";
 
 interface DashboardPageProps {
-  searchParams: Promise<{ deck?: string }>;
+  searchParams: Promise<{ deck?: string; celebrate?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
@@ -46,6 +46,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   const params = await searchParams;
   const requestedDeckId = params.deck;
+  const celebratingLevel = params.celebrate ? parseInt(params.celebrate, 10) : null;
   const activeDeck = decks.find((d) => d.id === requestedDeckId) ?? decks[0];
 
   // decks.length > 0 is guaranteed by the early return above
@@ -104,6 +105,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       hasDueCards={hasDueCards}
       earliestCooldownEnd={earliestCooldownEndStr}
       habitatState={habitatState}
+      celebratingLevel={celebratingLevel}
     />
   );
 }
