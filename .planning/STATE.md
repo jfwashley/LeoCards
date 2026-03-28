@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Phase 6 UI-SPEC approved
-last_updated: "2026-03-28T18:57:44.968Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-28T20:22:08.701Z"
 progress:
   total_phases: 6
   completed_phases: 5
-  total_plans: 16
+  total_plans: 19
   completed_plans: 16
 ---
 
@@ -61,6 +61,7 @@ Plan: Not started
 | Phase 05-habitat-ui P01 | 25 | 2 tasks | 7 files |
 | Phase 05-habitat-ui P02 | 16 | 2 tasks | 7 files |
 | Phase 05-habitat-ui P03 | 7 | 3 tasks | 5 files |
+| Phase 06-milestone-system-and-dashboard-polish P01 | 24 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,8 @@ Recent decisions affecting current work:
 - [Phase 05-habitat-ui]: ResizeObserver on canvas container passes sceneWidth/sceneHeight to PixiJS components for percentage-based layout
 - [Phase 05-habitat-ui]: HabitatWidget shown above FirstVisitPicker for new users — tiger visible before first deck is created
 - [Phase 05-habitat-ui]: retry() in HabitatScene prefers cached data over error state — offline banner beats error page for UX
+- [Phase 06-milestone-system-and-dashboard-polish]: markMilestonesSeen inserts per-level rows with level-N format, onConflictDoNothing for idempotence
+- [Phase 06-milestone-system-and-dashboard-polish]: leveledUp returns highest new level only (D-07); post-session level read placed AFTER habitat_metadata upsert
 
 ### Pending Todos
 
@@ -127,6 +130,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T18:57:44.954Z
-Stopped at: Phase 6 UI-SPEC approved
-Resume file: .planning/phases/06-milestone-system-and-dashboard-polish/06-UI-SPEC.md
+Last session: 2026-03-28T20:22:08.698Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None

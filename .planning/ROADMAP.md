@@ -129,4 +129,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
-| 6. Milestone System and Dashboard Polish | 0/3 | Not started | - |
+| 6. Milestone System and Dashboard Polish | 0/3 | Planned    |  |
