@@ -10,7 +10,7 @@ extend({ Container, Sprite });
 
 // Mood to texture name mapping (same as TigerSprite in main canvas)
 const MOOD_TEXTURE: Record<TigerMood, string> = {
-  excited: "tiger/excited.png",
+  excited: "tiger/excited/01.png",
   happy: "tiger/happy.png",
   neutral: "tiger/neutral.png",
   sad: "tiger/sad.png",
