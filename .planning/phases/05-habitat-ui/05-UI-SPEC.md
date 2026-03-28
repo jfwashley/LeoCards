@@ -55,9 +55,11 @@ Exceptions:
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Body | 16px | 400 | 1.5 | General UI text, habitat page descriptors |
-| Label | 14px | 500 | 1.4 | Level badge text, mood indicator label, progress bar label |
+| Label | 14px | 400 | 1.4 | Level badge text, mood indicator label, progress bar label |
 | Heading | 20px | 600 | 1.2 | /habitat page section heading ("Your Habitat") |
-| Display | 28px | 700 | 1.1 | Level-up celebration overlay text ("Level 3!") |
+| Display | 28px | 600 | 1.1 | Level-up celebration overlay text ("Level 3!") |
+
+Declared weights: 400 (Body, Label) and 600 (Heading, Display). Maximum 2 weights in use.
 
 All sizes use the existing CSS `--font-sans` variable. No additional font family is introduced in this phase.
 
@@ -82,6 +84,12 @@ Accent (`--primary` orange) is reserved for:
 - Mood indicator active highlight ring
 
 The canvas interior (savanna scene) uses warm golden savanna tones (yellows, greens, earth tones) defined in sprite assets — these are not CSS design tokens but must harmonize with the warm orange brand palette.
+
+---
+
+## Visual Hierarchy
+
+Primary focal point: the HabitatCanvas occupying 60–70% viewport height is the visual anchor; overlays (level badge, mood indicator) are secondary elements positioned at canvas corners and must not compete with the scene composition.
 
 ---
 
