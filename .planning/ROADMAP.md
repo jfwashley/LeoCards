@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Project scaffold, auth, and typed DB schema — the bedrock every other phase builds on (completed 2026-03-23)
 - [x] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow (completed 2026-03-24)
 - [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
-- [ ] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route
+- [x] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route (completed 2026-03-28)
 - [ ] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions
 - [ ] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown
 
@@ -85,7 +85,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Habitat engine pure functions with TDD: computeQuality (2-day grace, 5%/day linear decay, 10% floor), habitatLevel (10 thresholds), classifyMood (excited/happy/neutral/sad), computeHabitatState orchestrator; Vitest unit tests
-- [ ] 04-02-PLAN.md — Habitat data fetcher (cross-deck learned card count via JOIN) + GET /api/habitat Route Handler (auth, fetch facts, compute state, return JSON)
+- [x] 04-02-PLAN.md — Habitat data fetcher (cross-deck learned card count via JOIN) + GET /api/habitat Route Handler (auth, fetch facts, compute state, return JSON)
 
 ### Phase 5: Habitat UI
 **Goal**: Users can see their tiger and his habitat rendered and animated in the browser — mood state visible, habitat background matching progression level, scene performance acceptable on mid-range devices.
@@ -127,6 +127,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation | 4/4 | Complete   | 2026-03-23 |
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
-| 4. Habitat Engine | 1/2 | In Progress|  |
+| 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 0/3 | Not started | - |
 | 6. Milestone System and Dashboard Polish | 0/3 | Not started | - |

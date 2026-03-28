@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-stopped_at: Completed 04-habitat-engine-01-PLAN.md
-last_updated: "2026-03-28T00:05:33.085Z"
+stopped_at: Completed 04-habitat-engine-02-PLAN.md
+last_updated: "2026-03-28T00:08:59.223Z"
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -57,6 +57,7 @@ Plan: Not started
 | Phase 03-study-engine-and-study-ui P02 | 2 | 2 tasks | 2 files |
 | Phase 03-study-engine-and-study-ui P03 | 13 | 2 tasks | 11 files |
 | Phase 04-habitat-engine P01 | 3 | 1 tasks | 2 files |
+| Phase 04-habitat-engine P02 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,8 @@ Recent decisions affecting current work:
 - [Phase 03-study-engine-and-study-ui]: DeckView hasDueCards/earliestCooldownEnd computed server-side in dashboard page — no client DB calls needed
 - [Phase 04-habitat-engine]: computeQuality uses millisecond arithmetic only to avoid DST issues
 - [Phase 04-habitat-engine]: effectiveCardCount uses Math.floor to prevent float boundary issues at level thresholds
+- [Phase 04-habitat-engine]: Promise.all for parallel habitat_metadata + learned card count queries — single round-trip per request
+- [Phase 04-habitat-engine]: No try/catch in GET /api/habitat — unexpected DB errors bubble to Next.js error boundary, consistent with existing routes
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T00:05:33.082Z
-Stopped at: Completed 04-habitat-engine-01-PLAN.md
+Last session: 2026-03-28T00:08:59.219Z
+Stopped at: Completed 04-habitat-engine-02-PLAN.md
 Resume file: None
