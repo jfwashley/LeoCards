@@ -5,8 +5,12 @@ import { getUserDecks, getDeckCards, getUserNativeLanguage } from "@/lib/deck-qu
 import { getStudyCards } from "@/lib/study-queries";
 import { assembleSession, earliestCooldownEnd as getEarliestCooldownEnd } from "@/lib/study-engine";
 import type { CardForSession } from "@/lib/study-engine";
+import { computeHabitatState } from "@/lib/habitat-engine";
+import { getHabitatFacts } from "@/lib/habitat-queries";
+import type { UserId } from "@/db/schema";
 import { FirstVisitPicker } from "@/components/first-visit-picker";
 import { DeckView } from "@/components/deck-view";
+import { HabitatWidget } from "@/components/habitat-widget";
 
 interface DashboardPageProps {
   searchParams: Promise<{ deck?: string }>;
@@ -19,13 +23,25 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   if (!session) return null;
 
-  const [decks, nativeLang] = await Promise.all([
+  const [decks, nativeLang, habitatFacts] = await Promise.all([
     getUserDecks(session.user.id),
     getUserNativeLanguage(session.user.id),
+    getHabitatFacts(session.user.id as UserId),
   ]);
 
+  const habitatState = computeHabitatState(habitatFacts, new Date());
+
   if (decks.length === 0) {
-    return <FirstVisitPicker nativeLang={nativeLang} />;
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <div className="flex-1 px-8 py-8 max-w-4xl mx-auto w-full">
+          <div className="mb-6">
+            <HabitatWidget habitatState={habitatState} />
+          </div>
+          <FirstVisitPicker nativeLang={nativeLang} />
+        </div>
+      </div>
+    );
   }
 
   const params = await searchParams;
@@ -87,6 +103,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       activeDeckId={activeDeck.id}
       hasDueCards={hasDueCards}
       earliestCooldownEnd={earliestCooldownEndStr}
+      habitatState={habitatState}
     />
   );
 }
