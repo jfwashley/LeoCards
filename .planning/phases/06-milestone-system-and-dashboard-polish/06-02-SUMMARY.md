@@ -29,7 +29,7 @@ decisions:
 metrics:
   duration: ~25 minutes
   completed_date: "2026-03-28"
-  tasks_completed: 2
+  tasks_completed: 3
   tasks_total: 3
   files_modified: 8
 ---
@@ -81,10 +81,10 @@ None deferred.
 
 ## Checkpoint Status
 
-Task 3 (human verification) is pending — awaiting user confirmation that:
+Task 3 (human verification) APPROVED by user on 2026-03-28.
 - Level-up overlay displays correctly with confetti and dismisses on tap
 - Bird fly-in animation works at level 10 via ?celebrate=10
-- Neither replays on subsequent visits/sessions
+- Confirmed neither replays on subsequent visits/sessions
 
 ## Self-Check
 
