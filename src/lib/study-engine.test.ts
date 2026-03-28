@@ -19,7 +19,7 @@ const PAST = new Date("2026-01-15T00:00:00Z"); // 12h ago
 const FUTURE = new Date("2026-01-16T00:00:00Z"); // 12h from now
 
 function makeCard(
-  overrides: Partial<CardForSession> & { id?: string },
+  overrides: Partial<CardForSession>,
 ): CardForSession {
   return {
     id: (overrides.id ?? "card-1") as CardId,
@@ -34,7 +34,7 @@ function makeCard(
 
 function makeCards(count: number, overrides: Partial<CardForSession> = {}): CardForSession[] {
   return Array.from({ length: count }, (_, i) =>
-    makeCard({ ...overrides, id: `card-${i + 1}` }),
+    makeCard({ ...overrides, id: `card-${i + 1}` as CardId }),
   );
 }
 
@@ -51,9 +51,9 @@ describe("assembleSession", () => {
 
   it("returns all unlearned due cards sorted newest-first (by createdAt descending)", () => {
     const cards = [
-      makeCard({ id: "card-1", createdAt: new Date("2026-01-01T00:00:00Z") }),
-      makeCard({ id: "card-2", createdAt: new Date("2026-01-03T00:00:00Z") }),
-      makeCard({ id: "card-3", createdAt: new Date("2026-01-02T00:00:00Z") }),
+      makeCard({ id: "card-1" as CardId, createdAt: new Date("2026-01-01T00:00:00Z") }),
+      makeCard({ id: "card-2" as CardId, createdAt: new Date("2026-01-03T00:00:00Z") }),
+      makeCard({ id: "card-3" as CardId, createdAt: new Date("2026-01-02T00:00:00Z") }),
     ];
     const result = assembleSession(cards, NOW);
     expect(result.map((c) => c.id)).toEqual(["card-2", "card-3", "card-1"]);
@@ -61,7 +61,7 @@ describe("assembleSession", () => {
 
   it("includes approximately 10% learned cards as resurface (isResurface=true)", () => {
     const learning = makeCards(10, { masteryRound: 0 });
-    const learned = makeCards(5, { masteryRound: 3, id: "learned" });
+    const learned = makeCards(5, { masteryRound: 3, id: "learned" as CardId });
     // rename learned cards
     const learnedCards = learned.map((c, i) => ({
       ...c,
@@ -75,7 +75,7 @@ describe("assembleSession", () => {
 
   it("resurface count is min 1 when at least 1 learned card exists and learning cards exist", () => {
     const learning = makeCards(2, { masteryRound: 0 });
-    const learned = [makeCard({ id: "learned-1", masteryRound: 3 })];
+    const learned = [makeCard({ id: "learned-1" as CardId, masteryRound: 3 })];
     const result = assembleSession([...learning, ...learned], NOW);
     const resurface = result.filter((c) => c.isResurface);
     expect(resurface.length).toBeGreaterThanOrEqual(1);
@@ -125,9 +125,9 @@ describe("interleave", () => {
     }));
     const result = interleave(learning, resurface, 3);
     // Positions 3, 7, 11 should be resurface (0-indexed: after every 3 learning)
-    expect(result[3].isResurface).toBe(true);
-    expect(result[7].isResurface).toBe(true);
-    expect(result[11].isResurface).toBe(true);
+    expect(result[3]!.isResurface).toBe(true);
+    expect(result[7]!.isResurface).toBe(true);
+    expect(result[11]!.isResurface).toBe(true);
   });
 
   it("returns only learning cards when no resurface cards", () => {
@@ -295,7 +295,7 @@ describe("earliestCooldownEnd", () => {
   it("returns null when no cards have future cooldowns", () => {
     const cards = [
       makeCard({ cooldownUntil: null }),
-      makeCard({ id: "card-2", cooldownUntil: PAST }),
+      makeCard({ id: "card-2" as CardId, cooldownUntil: PAST }),
     ];
     expect(earliestCooldownEnd(cards, NOW)).toBeNull();
   });
@@ -305,7 +305,7 @@ describe("earliestCooldownEnd", () => {
     const later = new Date("2026-01-16T12:00:00Z"); // 24h from now
     const cards = [
       makeCard({ cooldownUntil: later }),
-      makeCard({ id: "card-2", cooldownUntil: soon }),
+      makeCard({ id: "card-2" as CardId, cooldownUntil: soon }),
     ];
     expect(earliestCooldownEnd(cards, NOW)).toEqual(soon);
   });
@@ -313,7 +313,7 @@ describe("earliestCooldownEnd", () => {
   it("ignores past cooldown dates", () => {
     const cards = [
       makeCard({ cooldownUntil: PAST }),
-      makeCard({ id: "card-2", cooldownUntil: FUTURE }),
+      makeCard({ id: "card-2" as CardId, cooldownUntil: FUTURE }),
     ];
     expect(earliestCooldownEnd(cards, NOW)).toEqual(FUTURE);
   });
