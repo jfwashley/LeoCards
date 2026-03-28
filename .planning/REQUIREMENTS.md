@@ -35,8 +35,8 @@
 ### Habitat
 
 - [x] **HAB-01**: User has one shared tiger habitat that reflects learning progress across all languages
-- [ ] **HAB-02**: The tiger displays different mood states (happy, neutral, sad) based on recent activity
-- [ ] **HAB-03**: The habitat environment gradually improves as total learned cards increase
+- [x] **HAB-02**: The tiger displays different mood states (happy, neutral, sad) based on recent activity
+- [x] **HAB-03**: The habitat environment gradually improves as total learned cards increase
 - [ ] **HAB-04**: Milestone thresholds trigger special unlock moments (new toy, tree, play area, etc.)
 - [ ] **HAB-05**: New animals appear in the habitat as visual milestone rewards
 - [x] **HAB-06**: After a 2-day grace period of inactivity, habitat begins to decay (hard decay)
@@ -106,8 +106,8 @@
 | STUDY-06 | Phase 3: Study Engine and Study UI | Complete |
 | HAB-01 | Phase 4: Habitat Engine | Complete |
 | HAB-06 | Phase 4: Habitat Engine | Complete |
-| HAB-02 | Phase 5: Habitat UI | Pending |
-| HAB-03 | Phase 5: Habitat UI | Pending |
+| HAB-02 | Phase 5: Habitat UI | Complete |
+| HAB-03 | Phase 5: Habitat UI | Complete |
 | HAB-04 | Phase 6: Milestone System and Dashboard Polish | Pending |
 | HAB-05 | Phase 6: Milestone System and Dashboard Polish | Pending |
 | HAB-07 | Phase 6: Milestone System and Dashboard Polish | Pending |

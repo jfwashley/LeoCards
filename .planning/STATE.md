@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-03-28T13:38:14.441Z"
+status: Ready to execute
+stopped_at: Completed 05-habitat-ui 05-01-PLAN.md
+last_updated: "2026-03-28T14:27:38.832Z"
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 16
+  completed_plans: 14
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 03 — study-engine-and-study-ui
+**Current focus:** Phase 05 — habitat-ui
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 05 (habitat-ui) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Plan: Not started
 | Phase 03-study-engine-and-study-ui P03 | 13 | 2 tasks | 11 files |
 | Phase 04-habitat-engine P01 | 3 | 1 tasks | 2 files |
 | Phase 04-habitat-engine P02 | 2 | 2 tasks | 2 files |
+| Phase 05-habitat-ui P01 | 25 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,9 @@ Recent decisions affecting current work:
 - [Phase 04-habitat-engine]: effectiveCardCount uses Math.floor to prevent float boundary issues at level thresholds
 - [Phase 04-habitat-engine]: Promise.all for parallel habitat_metadata + learned card count queries — single round-trip per request
 - [Phase 04-habitat-engine]: No try/catch in GET /api/habitat — unexpected DB errors bubble to Next.js error boundary, consistent with existing routes
+- [Phase 05-habitat-ui]: ssr:false must be inside a 'use client' module — Next.js 16 disallows it in Server Components; habitat-scene.tsx is the use client boundary
+- [Phase 05-habitat-ui]: Assets.load() called inside Application tree (Scene useEffect), not before render — avoids Pitfall 5 (no PixiJS context)
+- [Phase 05-habitat-ui]: VisibilityController is a render-nothing component inside Application tree using useApplication() hook for ticker pause/resume (D-22)
 
 ### Pending Todos
 
@@ -116,6 +120,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T13:38:14.431Z
-Stopped at: Phase 5 UI-SPEC approved
-Resume file: .planning/phases/05-habitat-ui/05-UI-SPEC.md
+Last session: 2026-03-28T14:27:38.830Z
+Stopped at: Completed 05-habitat-ui 05-01-PLAN.md
+Resume file: None
