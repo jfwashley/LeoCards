@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Deck and Card Management** - Full card CRUD for three languages, pre-made word list browser, and auto-translate review flow (completed 2026-03-24)
 - [x] **Phase 3: Study Engine and Study UI** - Core flashcard loop with mastery tracking, session commit, and anti-inflation guards (completed 2026-03-27)
 - [x] **Phase 4: Habitat Engine** - Pure-function habitat state computation: decay, mood, level, and the `/api/habitat` route (completed 2026-03-28)
-- [ ] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions
+- [x] **Phase 5: Habitat UI** - PixiJS tiger scene rendering the engine's output — tiger sprites, background layers, mood transitions (completed 2026-03-28)
 - [ ] **Phase 6: Milestone System and Dashboard Polish** - Unlock moments, animal appearances, and per-language card count breakdown
 
 ## Phase Details
@@ -100,7 +100,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md — PixiJS + @pixi/react install, placeholder sprite atlases, SSR-safe canvas wrapper (next/dynamic ssr:false), /habitat page shell, ticker visibility controller
 - [x] 05-02-PLAN.md — Tiger sprite (mood textures, random position/facing, bounce/crossfade transitions), habitat layers (additive by level, decay alpha, parallax), sparkle particles, utility functions with TDD
-- [ ] 05-03-PLAN.md — Mini dashboard habitat widget (PixiJS canvas + progress bar), error/offline/level-up states, dashboard integration, human-verify checkpoint
+- [x] 05-03-PLAN.md — Mini dashboard habitat widget (PixiJS canvas + progress bar), error/offline/level-up states, dashboard integration, human-verify checkpoint
 
 ### Phase 6: Milestone System and Dashboard Polish
 **Goal**: Reaching key card-count thresholds triggers a memorable unlock moment in the habitat, new animals appear as collectibles, and the dashboard clearly shows how each language contributes to the shared habitat.
@@ -128,5 +128,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
-| 5. Habitat UI | 2/3 | In Progress|  |
+| 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
 | 6. Milestone System and Dashboard Polish | 0/3 | Not started | - |

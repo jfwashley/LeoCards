@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 05-habitat-ui 05-02-PLAN.md
-last_updated: "2026-03-28T14:46:53.254Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 05-habitat-ui 05-03-PLAN.md
+last_updated: "2026-03-28T14:56:36.735Z"
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 16
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -60,6 +60,7 @@ Plan: 3 of 3
 | Phase 04-habitat-engine P02 | 2 | 2 tasks | 2 files |
 | Phase 05-habitat-ui P01 | 25 | 2 tasks | 7 files |
 | Phase 05-habitat-ui P02 | 16 | 2 tasks | 7 files |
+| Phase 05-habitat-ui P03 | 7 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,8 @@ Recent decisions affecting current work:
 - [Phase 05-habitat-ui]: useTick callbacks wrapped in useCallback per Pitfall 3 — prevents re-registration on every render
 - [Phase 05-habitat-ui]: Lazy useState initializer for tiger position/facing prevents SSR hydration mismatch (Pitfall 7)
 - [Phase 05-habitat-ui]: ResizeObserver on canvas container passes sceneWidth/sceneHeight to PixiJS components for percentage-based layout
+- [Phase 05-habitat-ui]: HabitatWidget shown above FirstVisitPicker for new users — tiger visible before first deck is created
+- [Phase 05-habitat-ui]: retry() in HabitatScene prefers cached data over error state — offline banner beats error page for UX
 
 ### Pending Todos
 
@@ -124,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T14:46:53.251Z
-Stopped at: Completed 05-habitat-ui 05-02-PLAN.md
+Last session: 2026-03-28T14:56:36.732Z
+Stopped at: Completed 05-habitat-ui 05-03-PLAN.md
 Resume file: None
