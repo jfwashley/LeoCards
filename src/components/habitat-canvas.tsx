@@ -40,15 +40,18 @@ function VisibilityController() {
 // This ensures sprites always match the canvas size, even when resizeTo resizes it asynchronously.
 function useRendererSize() {
   const { app } = useApplication();
-  const [size, setSize] = useState({ width: app.screen.width, height: app.screen.height });
+  const [size, setSize] = useState({ width: 960, height: 540 });
 
   useEffect(() => {
+    if (!app) return;
+
     const check = () => {
       const w = app.screen.width;
       const h = app.screen.height;
       setSize((prev) => (prev.width !== w || prev.height !== h ? { width: w, height: h } : prev));
     };
 
+    check();
     app.ticker.add(check);
     return () => { app.ticker.remove(check); };
   }, [app]);

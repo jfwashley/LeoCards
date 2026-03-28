@@ -114,46 +114,45 @@ export async function POST(request: Request) {
     return { cardId: cardId as CardId, newRound, cooldownUntil, recallCountDelta };
   });
 
-  // 6. Execute all writes in a single transaction
+  // 6. Execute all writes (neon-http driver does not support transactions)
   try {
-    await db.transaction(async (tx) => {
-      // a. Batch insert all recall_events
-      await tx.insert(recall_events).values(
-        grades.map((g) => ({
-          id: crypto.randomUUID() as RecallEventId,
-          cardId: g.cardId as CardId,
-          direction: g.direction,
-          correct: g.correct,
-        })),
-      );
+    // a. Batch insert all recall_events
+    await db.insert(recall_events).values(
+      grades.map((g) => ({
+        id: crypto.randomUUID() as RecallEventId,
+        cardId: g.cardId as CardId,
+        direction: g.direction,
+        correct: g.correct,
+      })),
+    );
 
-      // b. Update each card with new mastery state
-      for (const update of cardUpdates) {
-        await tx
-          .update(cards)
-          .set({
-            masteryRound: update.newRound,
-            cooldownUntil: update.cooldownUntil,
-            recallCount: sql`"recallCount" + ${update.recallCountDelta}`,
-            lastStudiedAt: now,
-          })
-          .where(eq(cards.id, update.cardId));
-      }
-
-      // c. Upsert habitat_metadata — row may not exist yet (Pitfall 5)
-      await tx
-        .insert(habitat_metadata)
-        .values({
-          id: crypto.randomUUID(),
-          userId: session.user.id,
-          lastActivityAt: now,
+    // b. Update each card with new mastery state
+    for (const update of cardUpdates) {
+      await db
+        .update(cards)
+        .set({
+          masteryRound: update.newRound,
+          cooldownUntil: update.cooldownUntil,
+          recallCount: sql`"recallCount" + ${update.recallCountDelta}`,
+          lastStudiedAt: now,
         })
-        .onConflictDoUpdate({
-          target: habitat_metadata.userId,
-          set: { lastActivityAt: now },
-        });
-    });
-  } catch {
+        .where(eq(cards.id, update.cardId));
+    }
+
+    // c. Upsert habitat_metadata — row may not exist yet
+    await db
+      .insert(habitat_metadata)
+      .values({
+        id: crypto.randomUUID(),
+        userId: session.user.id,
+        lastActivityAt: now,
+      })
+      .onConflictDoUpdate({
+        target: habitat_metadata.userId,
+        set: { lastActivityAt: now },
+      });
+  } catch (err) {
+    console.error("[study/complete] Failed to save session:", err);
     return Response.json({ error: "Failed to save session" }, { status: 500 });
   }
 
