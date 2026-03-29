@@ -119,10 +119,28 @@ Plans:
 - [x] 06-02-PLAN.md — Level-up celebration overlay (confetti + level display), bird sprite at level 10, study-session and habitat-canvas integration
 - [x] 06-03-PLAN.md — Dashboard language breakdown: per-language learned card query wired to DeckView text display
 
+### Phase 7: Backend Security and Quality Fixes
+**Goal:** Fix all backend security vulnerabilities, input validation gaps, and performance issues identified by audit — authorization bypasses, N+1 queries, missing validation, rate limiting, and error logging.
+**Depends on:** Phase 6
+**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-07, SEC-08, SEC-09, SEC-10
+**Success Criteria** (what must be TRUE):
+  1. A user cannot grade cards they do not own via the study/complete endpoint
+  2. A user cannot start a study session for a deck they do not own
+  3. All submitted card IDs must belong to the declared deck
+  4. Milestone marking uses a single batch database operation
+  5. All user-facing numeric inputs are validated and clamped to valid ranges
+  6. API endpoints that consume paid external services are rate-limited
+**Plans**: 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Critical auth fixes: card ownership verification in study/complete, deck ownership check in study page
+- [ ] 07-02-PLAN.md — Performance and validation: batch milestone INSERT, float boundary fix, language allow-list, celebrate param clamping
+- [ ] 07-03-PLAN.md — Hardening: email failure logging, in-memory rate limiting for translate and study/complete, DB driver documentation
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -132,13 +150,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
 | 6. Milestone System and Dashboard Polish | 3/3 | Complete   | 2026-03-28 |
-
-### Phase 7: Backend Security and Quality Fixes
-
-**Goal:** [To be planned]
-**Requirements**: TBD
-**Depends on:** Phase 6
-**Plans:** 0 plans
-
-Plans:
-- [ ] TBD (run /gsd:plan-phase 7 to break down)
+| 7. Backend Security and Quality Fixes | 0/3 | Planned | - |
