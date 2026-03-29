@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-03-29T00:29:55.779Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-29T00:35:58.229Z"
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 24
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 07 (backend-security-and-quality-fixes) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Plan: 2 of 3
 | Phase 06-milestone-system-and-dashboard-polish P03 | 4 | 1 tasks | 2 files |
 | Phase 01-foundation P06 | 2min | 1 tasks | 3 files |
 | Phase 07-backend-security-and-quality-fixes P01 | 2 | 2 tasks | 2 files |
+| Phase 07-backend-security-and-quality-fixes P02 | 3 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,10 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: npm audit fix without --force — esbuild vulnerability in drizzle-kit requires breaking downgrade, deferred
 - [Phase 07-backend-security-and-quality-fixes]: Card ownership verified transitively via deck JOIN — cards.deckId = declaredDeckId, deck.userId = session.user.id
 - [Phase 07-backend-security-and-quality-fixes]: Study page redirects to /dashboard (not error page) for unauthorized deck access — consistent with existing deckId-missing redirect
+- [Phase 07-backend-security-and-quality-fixes]: Batch INSERT uses rows[] array passed to single .values() call — one DB round-trip regardless of levels crossed (SEC-04)
+- [Phase 07-backend-security-and-quality-fixes]: Math.floor on minutesSinceActivity prevents float boundary misclassification at 60-minute excited window (SEC-05)
+- [Phase 07-backend-security-and-quality-fixes]: ALLOWED_LANGUAGES Set validates language before session auth in createDeck — fail fast on invalid input (SEC-06)
+- [Phase 07-backend-security-and-quality-fixes]: celebrate query param clamped to 1-10 with NaN guard — non-numeric becomes null, out-of-range silently clamped (SEC-07)
 
 ### Pending Todos
 
@@ -145,6 +150,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T00:29:55.776Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-29T00:35:58.225Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
