@@ -68,6 +68,10 @@ Plan: 2 of 6
 
 ## Accumulated Context
 
+### Roadmap Evolution
+
+- Phase 7 added: Backend Security and Quality Fixes — Authorization bypasses, input validation, N+1 queries, and rate limiting
+
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
