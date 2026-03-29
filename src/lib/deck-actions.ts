@@ -18,6 +18,9 @@ const LANGUAGE_LABELS: Record<string, string> = {
   es: "Spanish",
 };
 
+/** Allow-list of valid language codes (SEC-06) */
+const ALLOWED_LANGUAGES = new Set(["fr", "es", "en"]);
+
 // ============================================================
 // createDeck
 // ============================================================
@@ -27,6 +30,10 @@ const LANGUAGE_LABELS: Record<string, string> = {
  * "{Language} #{n}" where n = count of existing decks for that user+language + 1.
  */
 export async function createDeck(language: string) {
+  if (!ALLOWED_LANGUAGES.has(language)) {
+    throw new Error("Invalid language");
+  }
+
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;

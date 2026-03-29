@@ -57,9 +57,11 @@ export default async function DashboardPage({
 
   const params = await searchParams;
   const requestedDeckId = params.deck;
-  const celebratingLevel = params.celebrate
-    ? parseInt(params.celebrate, 10)
-    : null;
+  const rawCelebrate = params.celebrate ? parseInt(params.celebrate, 10) : null;
+  const celebratingLevel =
+    rawCelebrate !== null && !Number.isNaN(rawCelebrate)
+      ? Math.max(1, Math.min(10, rawCelebrate))
+      : null;
   const activeDeck = decks.find((d) => d.id === requestedDeckId) ?? decks[0];
 
   // decks.length > 0 is guaranteed by the early return above
