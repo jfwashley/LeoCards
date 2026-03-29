@@ -30,17 +30,18 @@ export async function markMilestonesSeen(
   // Early return: no level-up occurred
   if (newLevel <= prevLevel) return;
 
-  // Insert a row for each level crossed (prevLevel+1 through newLevel inclusive)
+  // Build all milestone rows at once, then insert in a single batch (SEC-04)
+  const rows = [];
   for (let lvl = prevLevel + 1; lvl <= newLevel; lvl++) {
-    await db
-      .insert(milestones_seen)
-      .values({
-        id: crypto.randomUUID(),
-        userId,
-        milestone: `level-${lvl}`,
-      })
-      .onConflictDoNothing();
+    rows.push({
+      id: crypto.randomUUID(),
+      userId,
+      milestone: `level-${lvl}`,
+    });
   }
+
+  // Single batch INSERT with ON CONFLICT DO NOTHING (idempotent, D-06)
+  await db.insert(milestones_seen).values(rows).onConflictDoNothing();
 }
 
 // ============================================================

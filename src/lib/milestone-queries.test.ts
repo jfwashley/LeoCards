@@ -84,29 +84,29 @@ describe("markMilestonesSeen", () => {
 
   it("inserts one milestone when leveling up by 1 (prev=2, new=3)", async () => {
     await markMilestonesSeen(TEST_USER_ID, 2, 3);
+    // Single batch INSERT — only 1 db.insert call regardless of level count
     expect(mockDb.insert).toHaveBeenCalledTimes(1);
-    // Verify the values call includes the right milestone key
+    // Verify values is called with an array containing the correct row
     const valuesCall = mockDb.insert.mock.results[0]?.value?.values;
     expect(valuesCall).toHaveBeenCalledWith(
-      expect.objectContaining({ milestone: "level-3", userId: TEST_USER_ID }),
+      expect.arrayContaining([
+        expect.objectContaining({ milestone: "level-3", userId: TEST_USER_ID }),
+      ]),
     );
   });
 
   it("inserts two milestones when leveling up by 2 (prev=2, new=4) with keys level-3 and level-4", async () => {
-    // Setup fresh mock for each call
-    const results: string[] = [];
-    const mockOnConflictDoNothing = vi.fn().mockResolvedValue(undefined);
-    const mockValues = vi.fn().mockImplementation((vals) => {
-      results.push(vals.milestone);
-      return { onConflictDoNothing: mockOnConflictDoNothing };
-    });
-    mockDb.insert.mockReturnValue({ values: mockValues });
-
     await markMilestonesSeen(TEST_USER_ID, 2, 4);
 
-    expect(mockDb.insert).toHaveBeenCalledTimes(2);
-    expect(results).toContain("level-3");
-    expect(results).toContain("level-4");
+    // Single batch INSERT — 1 db.insert call with array of 2 rows
+    expect(mockDb.insert).toHaveBeenCalledTimes(1);
+    const valuesCall = mockDb.insert.mock.results[0]?.value?.values;
+    expect(valuesCall).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ milestone: "level-3", userId: TEST_USER_ID }),
+        expect.objectContaining({ milestone: "level-4", userId: TEST_USER_ID }),
+      ]),
+    );
   });
 
   it("uses onConflictDoNothing for idempotent inserts", async () => {
