@@ -5,6 +5,10 @@ import { db } from "@/db";
 import type { CardId, DeckId, RecallEventId, UserId } from "@/db/schema";
 import { cards, decks, habitat_metadata, recall_events } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+// 10 requests per minute per user — one session completion per minute is generous
+const studyCompleteLimiter = createRateLimiter({ windowMs: 60_000, maxRequests: 10 });
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
@@ -47,6 +51,14 @@ export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const limit = studyCompleteLimiter.check(session.user.id);
+  if (!limit.allowed) {
+    return Response.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)) } },
+    );
   }
 
   // 2. Parse and validate request body
