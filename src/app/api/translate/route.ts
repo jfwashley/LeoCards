@@ -3,6 +3,10 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { env } from "@/env";
 import { auth } from "@/lib/auth";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+// 30 requests per minute per user — generous for auto-translate, prevents key abuse
+const translateLimiter = createRateLimiter({ windowMs: 60_000, maxRequests: 30 });
 
 const RequestSchema = z.object({
   text: z.string().min(1).max(500),
@@ -22,6 +26,14 @@ export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const limit = translateLimiter.check(session.user.id);
+  if (!limit.allowed) {
+    return Response.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)) } },
+    );
   }
 
   // Parse and validate request body
