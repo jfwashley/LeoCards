@@ -199,7 +199,7 @@ export function computeHabitatState(
   // Compute minutes since last activity for mood and UI
   const minutesSinceActivity =
     lastActivityAt !== null
-      ? (now.getTime() - lastActivityAt.getTime()) / (60 * 1000)
+      ? Math.floor((now.getTime() - lastActivityAt.getTime()) / (60 * 1000))
       : null;
 
   // Classify tiger's mood
