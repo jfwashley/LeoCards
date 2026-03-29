@@ -133,7 +133,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Critical auth fixes: card ownership verification in study/complete, deck ownership check in study page
+- [x] 07-01-PLAN.md — Critical auth fixes: card ownership verification in study/complete, deck ownership check in study page
 - [ ] 07-02-PLAN.md — Performance and validation: batch milestone INSERT, float boundary fix, language allow-list, celebrate param clamping
 - [ ] 07-03-PLAN.md — Hardening: email failure logging, in-memory rate limiting for translate and study/complete, DB driver documentation
 
@@ -150,4 +150,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
 | 6. Milestone System and Dashboard Polish | 3/3 | Complete   | 2026-03-28 |
-| 7. Backend Security and Quality Fixes | 0/3 | Planned | - |
+| 7. Backend Security and Quality Fixes | 1/3 | In Progress|  |
