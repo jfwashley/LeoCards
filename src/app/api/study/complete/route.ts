@@ -85,7 +85,12 @@ export async function POST(request: Request) {
   const cardRows = await db
     .select({ id: cards.id, masteryRound: cards.masteryRound })
     .from(cards)
-    .where(inArray(cards.id, uniqueCardIds as CardId[]));
+    .where(
+      and(
+        inArray(cards.id, uniqueCardIds as CardId[]),
+        eq(cards.deckId, deckId as DeckId),
+      ),
+    );
 
   // Build a Map for quick lookup
   const cardMap = new Map(cardRows.map((c) => [c.id as string, c]));
