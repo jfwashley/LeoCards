@@ -15,12 +15,13 @@ export const auth = betterAuth({
       // Import Resend inside the function to avoid top-level side effects
       const { Resend } = await import("resend");
       const resend = new Resend(process.env.RESEND_API_KEY);
-      // void to prevent timing attacks
-      void resend.emails.send({
+      resend.emails.send({
         from: "TioCards <noreply@tiocards.com>",
         to: user.email,
         subject: "Reset your TioCards password",
         text: `Reset your password: ${url}`,
+      }).catch((err) => {
+        console.error("[auth] Failed to send password reset email:", err);
       });
     },
     revokeSessionsOnPasswordReset: true,
