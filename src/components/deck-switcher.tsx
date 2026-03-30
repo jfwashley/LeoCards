@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, Plus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   Select,
@@ -46,21 +46,29 @@ export function DeckSwitcher({
 }: DeckSwitcherProps) {
   const [creatingLang, setCreatingLang] = useState<string | null>(null);
   const [showPicker, setShowPicker] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const learningLanguages = ALL_LANGUAGES.filter((l) => l.code !== nativeLang);
+  const learningLanguages = useMemo(
+    () => ALL_LANGUAGES.filter((l) => l.code !== nativeLang),
+    [nativeLang],
+  );
 
-  async function handleCreateDeck(langCode: string) {
-    setCreatingLang(langCode);
-    try {
-      const result = await createDeck(langCode);
-      onDeckChange(result.id);
-      setShowPicker(false);
-    } catch {
-      // silently fail — page will reflect state on next interaction
-    } finally {
-      setCreatingLang(null);
-    }
-  }
+  const handleCreateDeck = useCallback(
+    async (langCode: string) => {
+      setCreatingLang(langCode);
+      setError(null);
+      try {
+        const result = await createDeck(langCode);
+        onDeckChange(result.id);
+        setShowPicker(false);
+      } catch {
+        setError("Failed to create deck. Try again.");
+      } finally {
+        setCreatingLang(null);
+      }
+    },
+    [onDeckChange],
+  );
 
   function handleValueChange(value: string | null) {
     if (!value) return;
@@ -81,7 +89,7 @@ export function DeckSwitcher({
         value={activeDeckId ?? undefined}
         onValueChange={handleValueChange}
       >
-        <SelectTrigger className="min-w-[160px]">
+        <SelectTrigger className="min-w-[140px] sm:min-w-[160px]">
           <SelectValue>
             {activeDeck ? (
               <span>
@@ -109,8 +117,8 @@ export function DeckSwitcher({
       </Select>
 
       {showPicker && (
-        <div className="flex items-center gap-2 ml-2">
-          <span className="text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 ml-2 flex-wrap">
+          <span className="text-sm text-muted-foreground hidden sm:inline">
             Choose language:
           </span>
           {learningLanguages.map((lang) => (
@@ -119,7 +127,7 @@ export function DeckSwitcher({
               type="button"
               disabled={creatingLang !== null}
               onClick={() => handleCreateDeck(lang.code)}
-              className="inline-flex items-center gap-1 rounded-lg border border-input bg-background px-2.5 py-1 text-sm hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1 rounded-lg border border-input bg-background px-2.5 py-1.5 text-sm hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
               {creatingLang === lang.code ? (
                 <Loader2 className="size-3 animate-spin" />
@@ -131,13 +139,18 @@ export function DeckSwitcher({
           ))}
           <button
             type="button"
-            onClick={() => setShowPicker(false)}
-            className="text-sm text-muted-foreground hover:underline"
+            onClick={() => {
+              setShowPicker(false);
+              setError(null);
+            }}
+            className="text-sm text-muted-foreground hover:underline min-h-[44px] px-2"
           >
             Cancel
           </button>
         </div>
       )}
+
+      {error && <span className="text-xs text-destructive">{error}</span>}
     </div>
   );
 }

@@ -14,7 +14,9 @@ import { cards, decks, user } from "@/db/schema";
 /**
  * Returns all decks for a user, ordered by creation date (oldest first).
  */
-export async function getUserDecks(userId: string) {
+export async function getUserDecks(
+  userId: string,
+): Promise<(typeof decks.$inferSelect)[]> {
   return db
     .select()
     .from(decks)
@@ -30,7 +32,9 @@ export async function getUserDecks(userId: string) {
  * Returns all cards in a deck, sorted by createdAt ascending (oldest first).
  * Phase 2 sort: createdAt ASC — Phase 3 will replace with review queue ordering.
  */
-export async function getDeckCards(deckId: string) {
+export async function getDeckCards(
+  deckId: string,
+): Promise<(typeof cards.$inferSelect)[]> {
   return db
     .select()
     .from(cards)

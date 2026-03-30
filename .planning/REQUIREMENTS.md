@@ -1,4 +1,4 @@
-# Requirements: TioCards
+# Requirements: LeoCards
 
 **Defined:** 2026-03-17
 **Core Value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.

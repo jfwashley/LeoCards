@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TioCards",
+  title: "LeoCards",
   description: "Learn languages with your tiger.",
 };
 

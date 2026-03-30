@@ -95,7 +95,7 @@ The previous verification found 7 failed and 1 partial truths, all rooted in pla
 | `src/lib/deck-queries.ts`                         | 02-02 | VERIFIED   | 4 read queries, no "use server" directive                                                     |
 | `src/lib/deck-actions.test.ts`                    | 02-02 | VERIFIED   | Unit tests present with 21+ test cases                                                        |
 | `src/app/(protected)/dashboard/page.tsx`          | 02-03 | VERIFIED   | Server component, loads decks/cards, renders FirstVisitPicker or DeckView                    |
-| `src/components/app-header.tsx`                   | 02-03 | VERIFIED   | "use client", TioCards wordmark, DeckSwitcher, LogoutButton                                  |
+| `src/components/app-header.tsx`                   | 02-03 | VERIFIED   | "use client", LeoCards wordmark, DeckSwitcher, LogoutButton                                  |
 | `src/components/deck-switcher.tsx`                | 02-03 | VERIFIED   | "use client", shadcn Select, __new__ deck creation, flag emojis                              |
 | `src/components/first-visit-picker.tsx`           | 02-03 | VERIFIED   | "use client", language picker, createDeck call, loading/error states                         |
 | `src/components/deck-view.tsx`                    | 02-03 | VERIFIED   | "use client", AppHeader + CardList, URL-param deck switching, correct ?deck= params on links |

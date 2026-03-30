@@ -2,7 +2,7 @@
 
 import { Pencil, Search, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ interface CardListProps {
   targetLangLabel: string;
 }
 
-export function CardList({
+export const CardList = React.memo(function CardList({
   cards,
   nativeLangLabel,
   targetLangLabel,
@@ -21,14 +21,16 @@ export function CardList({
   const [query, setQuery] = useState("");
   const [editCard, setEditCard] = useState<CardRow | null>(null);
 
-  const filtered =
-    query.trim() === ""
-      ? cards
-      : cards.filter(
-          (c) =>
-            c.front.toLowerCase().includes(query.toLowerCase()) ||
-            c.back.toLowerCase().includes(query.toLowerCase()),
-        );
+  const filtered = useMemo(() => {
+    const trimmed = query.trim();
+    if (trimmed === "") return cards;
+    const lower = trimmed.toLowerCase();
+    return cards.filter(
+      (c) =>
+        c.front.toLowerCase().includes(lower) ||
+        c.back.toLowerCase().includes(lower),
+    );
+  }, [query, cards]);
 
   if (cards.length === 0) {
     return (
@@ -39,7 +41,7 @@ export function CardList({
         </p>
         <Link
           href="/deck/browse"
-          className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-8 text-sm hover:bg-muted transition-colors"
+          className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-10 text-sm hover:bg-muted transition-colors"
         >
           Browse words
         </Link>
@@ -82,75 +84,123 @@ export function CardList({
         </div>
       )}
 
-      {/* Card table */}
+      {/* Card list — table on desktop, cards on mobile */}
       {filtered.length > 0 && (
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4">
-                {nativeLangLabel}
-              </th>
-              <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4">
-                {targetLangLabel}
-              </th>
-              <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4 w-20">
-                Source
-              </th>
-              <th className="text-left text-sm text-muted-foreground font-normal pb-2 w-20">
-                Round
-              </th>
-              <th className="pb-2 w-11" />
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((card) => (
-              <tr
-                key={card.id}
-                className="border-b border-border min-h-[48px] hover:bg-secondary transition-colors"
-              >
-                <td className="text-base py-3 pr-4">{card.front}</td>
-                <td className="text-base py-3 pr-4">{card.back}</td>
-                <td className="py-3 pr-4">
-                  <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                    {card.source === "wordlist" ? "word list" : "manual"}
-                  </span>
-                </td>
-                <td className="py-3 pr-4">
-                  <div
-                    className="flex items-center gap-1"
-                    title={`${card.masteryRound ?? 0} of 3 rounds complete`}
-                  >
-                    {[0, 1, 2].map((round) => (
-                      <span
-                        key={round}
-                        className={`inline-block w-2 h-2 rounded-full ${
-                          (card.masteryRound ?? 0) > round
-                            ? "bg-primary"
-                            : "border border-border"
-                        }`}
-                        title={
-                          (card.masteryRound ?? 0) > round
-                            ? `Round ${round + 1} of 3 complete`
-                            : `Round ${round + 1} of 3 not yet complete`
-                        }
-                      />
-                    ))}
-                  </div>
-                </td>
-                <td className="py-3">
-                  <Button
-                    variant="ghost"
-                    className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
-                    aria-label="Edit card"
-                    onClick={() => setEditCard(card)}
-                  >
-                    <Pencil className="size-4" />
-                  </Button>
-                </td>
+        <>
+          {/* Desktop table (hidden on mobile) */}
+          <table className="w-full hidden md:table">
+            <thead>
+              <tr>
+                <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4">
+                  {nativeLangLabel}
+                </th>
+                <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4">
+                  {targetLangLabel}
+                </th>
+                <th className="text-left text-sm text-muted-foreground font-normal pb-2 pr-4 w-20">
+                  Source
+                </th>
+                <th className="text-left text-sm text-muted-foreground font-normal pb-2 w-20">
+                  Round
+                </th>
+                <th className="pb-2 w-11" />
               </tr>
+            </thead>
+            <tbody>
+              {filtered.map((card) => (
+                <tr
+                  key={card.id}
+                  className="border-b border-border min-h-[48px] hover:bg-secondary transition-colors"
+                >
+                  <td className="text-base py-3 pr-4">{card.front}</td>
+                  <td className="text-base py-3 pr-4">{card.back}</td>
+                  <td className="py-3 pr-4">
+                    <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
+                      {card.source === "wordlist" ? "word list" : "manual"}
+                    </span>
+                  </td>
+                  <td className="py-3 pr-4">
+                    <div
+                      className="flex items-center gap-1"
+                      title={`${card.masteryRound ?? 0} of 3 rounds complete`}
+                    >
+                      {[0, 1, 2].map((round) => (
+                        <span
+                          key={round}
+                          className={`inline-block w-2 h-2 rounded-full ${
+                            (card.masteryRound ?? 0) > round
+                              ? "bg-primary"
+                              : "border border-border"
+                          }`}
+                          title={
+                            (card.masteryRound ?? 0) > round
+                              ? `Round ${round + 1} of 3 complete`
+                              : `Round ${round + 1} of 3 not yet complete`
+                          }
+                        />
+                      ))}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <Button
+                      variant="ghost"
+                      className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
+                      aria-label="Edit card"
+                      onClick={() => setEditCard(card)}
+                    >
+                      <Pencil className="size-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Mobile card layout (hidden on desktop) */}
+          <div className="flex flex-col gap-2 md:hidden">
+            {filtered.map((card) => (
+              <div
+                key={card.id}
+                className="border border-border rounded-lg p-3 flex items-center gap-3"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{card.front}</p>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {card.back}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
+                      {card.source === "wordlist" ? "word list" : "manual"}
+                    </span>
+                    <div
+                      className="flex items-center gap-1"
+                      title={`${card.masteryRound ?? 0} of 3 rounds complete`}
+                    >
+                      {[0, 1, 2].map((round) => (
+                        <span
+                          key={round}
+                          className={`inline-block w-2 h-2 rounded-full ${
+                            (card.masteryRound ?? 0) > round
+                              ? "bg-primary"
+                              : "border border-border"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
+                  aria-label="Edit card"
+                  onClick={() => setEditCard(card)}
+                >
+                  <Pencil className="size-4" />
+                </Button>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
 
       <CardEditDialog
@@ -162,4 +212,4 @@ export function CardList({
       />
     </div>
   );
-}
+});

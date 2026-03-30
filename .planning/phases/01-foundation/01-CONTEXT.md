@@ -21,7 +21,7 @@ Project scaffold, auth flows, and full DB schema — the prerequisite layer ever
 
 ### Auth page look & feel
 - Brand-forward tone: warm, friendly, tiger personality from first contact
-- Login page: tiger emoji (🐯), "TioCards" wordmark, tagline "Your tiger is waiting."
+- Login page: tiger emoji (🐯), "LeoCards" wordmark, tagline "Your tiger is waiting."
 - Signup/login as separate pages (`/login`, `/signup`) — not a single toggle form
 - Inline form errors rendered below each specific field that failed (not top-of-form banners, not toasts)
 - Forgot password flow on its own page (`/forgot-password`) linked from login

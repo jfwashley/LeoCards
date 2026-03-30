@@ -13,7 +13,7 @@
 - Root route `/` → redirect to `/login` for unauthenticated users (no landing page in v1)
 - Empty dashboard (Phase 1 stub) shows a "coming soon" style placeholder with the user's name — "Your habitat is being built, [name]." Simple text, no static assets required.
 - Brand-forward tone: warm, friendly, tiger personality from first contact
-- Login page: tiger emoji (🐯), "TioCards" wordmark, tagline "Your tiger is waiting."
+- Login page: tiger emoji (🐯), "LeoCards" wordmark, tagline "Your tiger is waiting."
 - Signup/login as separate pages (`/login`, `/signup`) — not a single toggle form
 - Inline form errors rendered below each specific field that failed (not top-of-form banners, not toasts)
 - Forgot password flow on its own page (`/forgot-password`) linked from login
@@ -366,7 +366,7 @@ export const users = pgTable("user", {
 ### Pitfall 6: Turbopack default breaking custom webpack configs
 **What goes wrong:** `next build` fails with "Webpack config found but Turbopack is default in Next.js 16."
 **Why it happens:** If a dependency installs its own `webpack` configuration (e.g., some older plugins), Turbopack rejects it.
-**How to avoid:** For greenfield TioCards, no custom webpack config is needed. If a dependency adds one, use `next build --webpack` to opt out of Turbopack for production builds.
+**How to avoid:** For greenfield LeoCards, no custom webpack config is needed. If a dependency adds one, use `next build --webpack` to opt out of Turbopack for production builds.
 **Warning signs:** Build fails immediately with error about conflicting webpack configuration.
 
 ### Pitfall 7: Full-schema DB migration without Phase 1 tables defined
@@ -410,9 +410,9 @@ emailAndPassword: {
     // url contains the reset link with token embedded
     // void (don't await) to prevent timing attacks
     void resend.emails.send({
-      from: "TioCards <noreply@tiocards.com>",
+      from: "LeoCards <noreply@leocards.com>",
       to: user.email,
-      subject: "Reset your TioCards password",
+      subject: "Reset your LeoCards password",
       text: `Reset your password: ${url}`,
     });
   },

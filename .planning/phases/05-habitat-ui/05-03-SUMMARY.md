@@ -27,7 +27,7 @@ tech-stack:
   added: []
   patterns:
     - SSR-safe mini widget via next/dynamic with ssr:false inside "use client" habitat-widget.tsx
-    - localStorage caching pattern for offline resilience (CACHE_KEY = tiocards:habitat-state)
+    - localStorage caching pattern for offline resilience (CACHE_KEY = leocards:habitat-state)
     - Client-side retry() with fetch /api/habitat, localStorage fallback, and offline banner
     - Level-up detection via prevLevel state comparison with 2.5s celebration timer
 
@@ -73,7 +73,7 @@ metrics:
 - Updated `dashboard/page.tsx` to fetch `getHabitatFacts()` + `computeHabitatState()` server-side and pass `habitatState` to `DeckView`; new users (no decks) see `HabitatWidget` above `FirstVisitPicker`
 - Updated `DeckView` to accept `habitatState` prop and render `HabitatWidget` above the card list
 - Rewrote `HabitatScene` with:
-  - `localStorage` caching on mount (key: `tiocards:habitat-state`) for offline resilience
+  - `localStorage` caching on mount (key: `leocards:habitat-state`) for offline resilience
   - `retry()` function: fetches `/api/habitat`, updates state + cache on success; shows offline banner with cached data on failure; shows error state if no cache
   - Error state: "Something went wrong" + "We couldn't load your habitat." + `<Button>Try again</Button>`
   - Offline indicator: motion-animated bottom-center banner "You're offline — showing last known state"

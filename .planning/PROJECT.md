@@ -1,8 +1,8 @@
-# TioCards
+# LeoCards
 
 ## What This Is
 
-TioCards is a language learning flashcard website where progress is tied to the wellbeing of a baby tiger and his habitat. The more words a user masters, the richer and more vibrant the tiger's environment becomes — unlocking new toys, trees, play areas, and eventually other animals. It's designed for learners of French, Spanish, and English who want a reason to come back every day beyond raw willpower.
+LeoCards is a language learning flashcard website where progress is tied to the wellbeing of a baby tiger and his habitat. The more words a user masters, the richer and more vibrant the tiger's environment becomes — unlocking new toys, trees, play areas, and eventually other animals. It's designed for learners of French, Spanish, and English who want a reason to come back every day beyond raw willpower.
 
 ## Core Value
 
@@ -38,7 +38,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Context
 
-- The name "TioCards" blends "tío" (Spanish for uncle/dude) with flashcards — casual, friendly tone
+- The name "LeoCards" blends "tío" (Spanish for uncle/dude) with flashcards — casual, friendly tone
 - The tiger is the emotional anchor of the product; his happiness is the primary motivator
 - Hard decay (habitat degrades with inactivity) creates stakes without being punishing if implemented with a grace period
 - Pre-made word lists for French, Spanish, English should include common vocabulary (A1–B1 range)

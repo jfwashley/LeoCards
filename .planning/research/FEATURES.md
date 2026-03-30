@@ -1,4 +1,4 @@
-# Features Research: TioCards
+# Features Research: LeoCards
 
 **Domain:** Language learning flashcard web app with gamification (virtual tiger habitat)
 **Date:** 2026-03-17
@@ -23,7 +23,7 @@ Features users expect in any flashcard / language learning app. Missing these ca
 
 ## Differentiators
 
-Features that make TioCards distinct and worth recommending.
+Features that make LeoCards distinct and worth recommending.
 
 | Feature | Complexity | Notes |
 |---------|------------|-------|
@@ -40,7 +40,7 @@ Features that make TioCards distinct and worth recommending.
 
 ## Anti-Features
 
-Things deliberately NOT in TioCards, with reasoning.
+Things deliberately NOT in LeoCards, with reasoning.
 
 | Feature | Why Excluded |
 |---------|-------------|
@@ -56,7 +56,7 @@ Things deliberately NOT in TioCards, with reasoning.
 
 ## Gamification Patterns (Evidence-Based)
 
-| Pattern | Mechanism | Application in TioCards |
+| Pattern | Mechanism | Application in LeoCards |
 |---------|-----------|------------------------|
 | Tamagotchi effect | Virtual care → daily return habit | Tiger's mood and habitat condition depend on regular learning |
 | Variable reward | Non-linear milestones more motivating than linear XP | Surprise milestone unlocks at 10, 25, 50, 100+ cards |

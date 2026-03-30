@@ -42,7 +42,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Warm orange/amber theme — TioCards brand */
+/* Warm orange/amber theme — LeoCards brand */
 :root {
   --background: hsl(30 20% 98%);
   --foreground: hsl(0 0% 9%);

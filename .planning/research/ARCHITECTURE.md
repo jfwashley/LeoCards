@@ -1,4 +1,4 @@
-# Architecture Research: TioCards
+# Architecture Research: LeoCards
 
 **Domain:** Language learning flashcard web app with gamification (virtual tiger habitat)
 **Date:** 2026-03-17

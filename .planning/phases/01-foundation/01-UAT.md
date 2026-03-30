@@ -41,7 +41,7 @@ expected: Submit login/signup forms with empty fields. Inline errors appear belo
 result: [pending]
 
 ### 8. Auth Layout Branding (Frontend)
-expected: All auth pages show tiger emoji, "TioCards" wordmark, and tagline. Card layout is consistent: max-w-sm, rounded-xl, shadow-sm. Warm orange/amber theme visible in primary buttons.
+expected: All auth pages show tiger emoji, "LeoCards" wordmark, and tagline. Card layout is consistent: max-w-sm, rounded-xl, shadow-sm. Warm orange/amber theme visible in primary buttons.
 result: [pending]
 
 ### 9. Route Protection (Backend)

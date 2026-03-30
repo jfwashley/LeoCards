@@ -143,7 +143,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Card className="w-full max-w-sm rounded-xl shadow-sm p-6">
+    <Card className="w-full max-w-sm rounded-xl shadow-sm p-4 sm:p-6">
       <h2 className="text-xl font-semibold leading-[1.2] mb-4">
         Set a new password
       </h2>

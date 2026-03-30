@@ -4,6 +4,7 @@
 
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
+import type { CardId } from "@/db/schema";
 import { cards } from "@/db/schema";
 
 // ============================================================
@@ -15,7 +16,17 @@ import { cards } from "@/db/schema";
  * The session assembly logic (filtering by cooldownUntil, splitting learned vs
  * unlearned) happens in the study-engine pure functions on the calling side.
  */
-export async function getStudyCards(deckId: string) {
+export async function getStudyCards(deckId: string): Promise<
+  Array<{
+    id: CardId;
+    front: string;
+    back: string;
+    masteryRound: number;
+    cooldownUntil: Date | null;
+    createdAt: Date;
+    recallCount: number;
+  }>
+> {
   return db
     .select({
       id: cards.id,

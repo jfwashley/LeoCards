@@ -17,10 +17,10 @@ export function AppHeader({
   nativeLang,
 }: AppHeaderProps) {
   return (
-    <header className="h-14 bg-background border-b border-border flex items-center px-8 justify-between sticky top-0 z-40">
+    <header className="h-14 bg-background border-b border-border flex items-center px-4 sm:px-6 md:px-8 justify-between sticky top-0 z-40">
       <div className="flex items-center gap-2">
         <span className="text-lg">🐯</span>
-        <span className="text-sm font-semibold text-foreground">TioCards</span>
+        <span className="text-sm font-semibold text-foreground">LeoCards</span>
       </div>
 
       <div className="flex items-center gap-4">

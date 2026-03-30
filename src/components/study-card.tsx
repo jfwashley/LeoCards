@@ -118,10 +118,10 @@ export function StudyCard({
           animate={{ rotateY: flipped ? 180 : 0 }}
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
-          <p className="text-[28px] font-semibold text-foreground text-center">
+          <p className="text-xl sm:text-2xl md:text-[28px] font-semibold text-foreground text-center">
             {frontText}
           </p>
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-xs sm:text-sm text-muted-foreground text-center">
             {frontPrompt}
           </p>
           {!flipped && (
@@ -140,7 +140,7 @@ export function StudyCard({
           animate={{ rotateY: flipped ? 0 : -180 }}
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
-          <p className="text-[28px] font-semibold text-foreground text-center">
+          <p className="text-xl sm:text-2xl md:text-[28px] font-semibold text-foreground text-center">
             {backText}
           </p>
           {swipeReady && (
@@ -152,7 +152,9 @@ export function StudyCard({
 
         {/* Invisible spacer to give the relative container height */}
         <div className="invisible px-8 py-6" style={{ minHeight: 200 }}>
-          <p className="text-[28px] font-semibold">{frontText}</p>
+          <p className="text-xl sm:text-2xl md:text-[28px] font-semibold">
+            {frontText}
+          </p>
         </div>
       </div>
     </motion.div>

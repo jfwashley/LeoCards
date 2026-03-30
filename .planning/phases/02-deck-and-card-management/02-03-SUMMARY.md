@@ -11,7 +11,7 @@ requires:
 
 provides:
   - Dashboard page replaced with full deck management view
-  - AppHeader with TioCards wordmark, deck switcher, and logout
+  - AppHeader with LeoCards wordmark, deck switcher, and logout
   - DeckSwitcher component using shadcn Select with flag emojis and new deck creation
   - FirstVisitPicker for first-time users with no decks
   - DeckView client component managing active deck via URL params
@@ -77,7 +77,7 @@ completed: 2026-03-24
 ## Accomplishments
 
 - Replaced Phase 1 dashboard stub with full deck management view
-- App header with TioCards wordmark + tiger emoji, deck switcher, and logout button
+- App header with LeoCards wordmark + tiger emoji, deck switcher, and logout button
 - Deck switcher using shadcn Select with flag emojis (🇬🇧🇫🇷🇪🇸), active deck shown, "+ New deck" inline language picker
 - FirstVisitPicker: full-page centered card for users with no decks, language buttons, loading/error states
 - CardList: search bar with clear button, empty deck state, no-results state, card table with source pills and edit buttons
@@ -93,7 +93,7 @@ completed: 2026-03-24
 
 - `src/app/(protected)/dashboard/page.tsx` — Rewritten: server component loads decks/cards, renders FirstVisitPicker or DeckView
 - `src/app/(protected)/layout.tsx` — Kept session guard, no layout-level header (header lives in DeckView)
-- `src/components/app-header.tsx` — Client component: TioCards wordmark, DeckSwitcher, LogoutButton
+- `src/components/app-header.tsx` — Client component: LeoCards wordmark, DeckSwitcher, LogoutButton
 - `src/components/deck-switcher.tsx` — Client component: shadcn Select with flag emojis, new deck creation inline
 - `src/components/deck-view.tsx` — Client component: wraps AppHeader + CardList, handles deck switching via router.push
 - `src/components/first-visit-picker.tsx` — Client component: language picker for first-time users

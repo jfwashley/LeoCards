@@ -2,19 +2,32 @@
 
 import { motion } from "motion/react";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
 
 // localStorage cache key for offline support (Pattern 8 from RESEARCH.md)
-const CACHE_KEY = "tiocards:habitat-state";
+const CACHE_KEY = "leocards:habitat-state";
+
+// Zod schema for validating cached habitat state from localStorage
+const HabitatStateSchema = z.object({
+  level: z.number().int().min(1).max(10),
+  quality: z.number().min(0.1).max(1),
+  mood: z.enum(["excited", "happy", "neutral", "sad"]),
+  learnedCardCount: z.number().int().nonnegative(),
+  effectiveCardCount: z.number().int().nonnegative(),
+  isDecaying: z.boolean(),
+  minutesSinceActivity: z.number().nullable(),
+  nextLevelThreshold: z.number().nullable(),
+});
 
 // Loading spinner shown while PixiJS and sprite assets initialize (D-18)
 function HabitatLoadingSpinner() {
   return (
     <div
       className="w-full flex items-center justify-center"
-      style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
+      style={{ aspectRatio: "16/9", maxHeight: "min(70vh, 400px)" }}
     >
       <svg
         className="animate-spin h-10 w-10 text-orange-500"
@@ -58,12 +71,11 @@ const MOOD_LABELS: Record<TigerMood, string> = {
   sad: "Sad",
 };
 
-// Tailwind color classes for each mood dot (UI-SPEC)
 const MOOD_DOT_CLASSES: Record<TigerMood, string> = {
-  excited: "bg-primary", // orange — --primary hsl(24 95% 53%)
-  happy: "bg-emerald-500", // green
-  neutral: "bg-amber-400", // amber
-  sad: "bg-slate-400", // slate
+  excited: "bg-primary",
+  happy: "bg-emerald-500",
+  neutral: "bg-amber-400",
+  sad: "bg-slate-400",
 };
 
 interface MoodIndicatorProps {
@@ -90,32 +102,36 @@ export function HabitatScene({
   habitatState: HabitatState;
   celebratingLevel?: number | null;
 }) {
-  // Client-side state — initialized from server prop
   const [state, setState] = useState<HabitatState>(habitatState);
   const [error, setError] = useState(false);
   const [offline, setOffline] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
-  const [prevLevel, setPrevLevel] = useState(habitatState.level);
+  const prevLevelRef = useRef(habitatState.level);
+
+  // Sync state when prop changes (BP3)
+  useEffect(() => {
+    setState(habitatState);
+  }, [habitatState]);
 
   // On mount: cache the server-provided state to localStorage (D-24 offline support)
   useEffect(() => {
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(habitatState));
     } catch {
-      // localStorage may be unavailable in some environments — ignore silently
+      // localStorage may be unavailable in some environments
     }
   }, [habitatState]);
 
   // Level-up detection: when state.level increases, show celebration for 2.5s (D-20)
   useEffect(() => {
-    if (state.level > prevLevel) {
+    if (state.level > prevLevelRef.current) {
       setShowLevelUp(true);
-      setPrevLevel(state.level);
+      prevLevelRef.current = state.level;
       const timer = setTimeout(() => setShowLevelUp(false), 2500);
       return () => clearTimeout(timer);
     }
-    setPrevLevel(state.level);
-  }, [state.level, prevLevel]);
+    prevLevelRef.current = state.level;
+  }, [state.level]);
 
   // Retry function for error recovery — tries fresh API fetch, falls back to cache (D-23, D-24)
   async function retry() {
@@ -132,11 +148,12 @@ export function HabitatScene({
       }
       setOffline(false);
     } catch {
-      // Try cached data
+      // Try cached data with Zod validation
       try {
         const cached = localStorage.getItem(CACHE_KEY);
         if (cached) {
-          setState(JSON.parse(cached) as HabitatState);
+          const parsed = HabitatStateSchema.parse(JSON.parse(cached));
+          setState(parsed as HabitatState);
           setOffline(true);
         } else {
           setError(true);
@@ -152,7 +169,7 @@ export function HabitatScene({
     return (
       <div
         className="w-full flex flex-col items-center justify-center bg-card rounded-lg border"
-        style={{ aspectRatio: "16/9", maxHeight: "70vh" }}
+        style={{ aspectRatio: "16/9", maxHeight: "min(70vh, 400px)" }}
       >
         <p className="text-lg font-semibold mb-2">Something went wrong</p>
         <p className="text-sm text-muted-foreground mb-4">
@@ -207,7 +224,7 @@ export function HabitatScene({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
         >
-          <span className="text-[28px] font-semibold text-primary drop-shadow-lg">
+          <span className="text-xl sm:text-[28px] font-semibold text-primary drop-shadow-lg">
             Level {state.level}!
           </span>
         </motion.div>

@@ -1,4 +1,4 @@
-# Stack Research: TioCards
+# Stack Research: LeoCards
 
 **Domain:** Language learning flashcard web app with gamification (virtual tiger habitat)
 **Date:** 2026-03-17
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
 
 Apply these during development — not premature optimization, but architectural decisions:
 
-| Pattern | Where in TioCards |
+| Pattern | Where in LeoCards |
 |---------|-----------------|
 | `dynamic()` with `ssr: false` | HabitatScene (PixiJS), any canvas component |
 | `Promise.all()` for parallel fetches | Dashboard load: fetch user + decks + habitat state in parallel |
@@ -153,7 +153,7 @@ type HabitatLevel = Brand<number, 'HabitatLevel'>
 ## Project Structure
 
 ```
-TioCards/
+LeoCards/
 ├── app/
 │   ├── (auth)/              # login, signup pages
 │   ├── (app)/               # protected app routes

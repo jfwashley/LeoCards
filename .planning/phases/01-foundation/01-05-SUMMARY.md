@@ -103,7 +103,7 @@ completed: 2026-03-28
 **1. [Rule 3 - Blocking] Copied .env.local to worktree to unblock npm run build**
 - **Found during:** Task 1 (build verification)
 - **Issue:** Worktree doesn't inherit `.env.local` from main project; build failed with "Invalid environment variables"
-- **Fix:** Copied `C:/Users/jfwas/.claude/projects/C--Users-jfwas/TioCards/.env.local` to worktree directory
+- **Fix:** Copied `C:/Users/jfwas/.claude/projects/C--Users-jfwas/LeoCards/.env.local` to worktree directory
 - **Files modified:** `.env.local` (untracked, not committed)
 - **Verification:** Build completed successfully
 - **Committed in:** Not committed (runtime env file, gitignored)
@@ -139,3 +139,11 @@ None - this plan is a code quality fix plan with no UI or data stubs.
 ---
 *Phase: 01-foundation*
 *Completed: 2026-03-28*
+
+## Self-Check: PASSED
+
+- FOUND: `.gitattributes` at worktree root
+- FOUND: `src/app/(auth)/login/page.tsx`
+- FOUND: `src/lib/study-engine.test.ts`
+- FOUND: commit `2f86572` (fix(01-05): add Suspense boundary...)
+- FOUND: commit `4a3016c` (fix(01-05): fix Biome lint/format...)

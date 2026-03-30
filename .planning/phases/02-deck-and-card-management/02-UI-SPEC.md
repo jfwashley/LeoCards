@@ -213,7 +213,7 @@ Route: `/deck/browse`
 ### Header Layout
 
 - Fixed top header, `h-14` (56px), `bg-background border-b border-border`
-- Left slot: TioCards wordmark (`text-sm font-semibold text-foreground`) + tiger emoji 🐯 (rendered as text, `text-lg`)
+- Left slot: LeoCards wordmark (`text-sm font-semibold text-foreground`) + tiger emoji 🐯 (rendered as text, `text-lg`)
 - Center/right slot: Deck switcher (shadcn Select, `min-w-[160px]`)
 - Far right: Logout button (inherited from Phase 1, `variant="ghost"` text size label)
 - No additional nav links in Phase 2

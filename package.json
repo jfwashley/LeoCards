@@ -1,5 +1,5 @@
 {
-  "name": "tiocards",
+  "name": "leocards",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,9 @@
     "lint": "biome ci .",
     "format": "biome format --write .",
     "test": "vitest run",
+    "test:e2e": "npx playwright test",
+    "test:e2e:headed": "npx playwright test --headed",
+    "test:e2e:ui": "npx playwright test --ui",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push"

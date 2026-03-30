@@ -63,7 +63,7 @@ export default function SignupPage() {
   }
 
   return (
-    <Card className="w-full max-w-sm rounded-xl shadow-sm p-6">
+    <Card className="w-full max-w-sm rounded-xl shadow-sm p-4 sm:p-6">
       <h2 className="text-xl font-semibold leading-[1.2] mb-4">
         Create your account
       </h2>

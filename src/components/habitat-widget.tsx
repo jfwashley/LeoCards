@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { HabitatState } from "@/lib/habitat-engine";
 import { LEVEL_THRESHOLDS } from "@/lib/habitat-engine";
@@ -22,13 +23,7 @@ interface HabitatWidgetProps {
   celebratingLevel?: number | null;
 }
 
-/**
- * Mini dashboard habitat widget — shows a small PixiJS canvas with the tiger
- * and a progress bar toward the next level. Clicking navigates to /habitat.
- *
- * Uses next/dynamic with ssr:false so PixiJS never touches server rendering.
- */
-export function HabitatWidget({
+export const HabitatWidget = React.memo(function HabitatWidget({
   habitatState,
   celebratingLevel = null,
 }: HabitatWidgetProps) {
@@ -37,12 +32,9 @@ export function HabitatWidget({
   // Calculate progress percentage toward next level
   let progressPct: number;
   if (nextLevelThreshold === null) {
-    // Max level — progress bar is full
     progressPct = 100;
   } else {
-    // Previous threshold: for level 1, it's 0; for level N (N >= 2), it's LEVEL_THRESHOLDS[N-2]
-    const prevThreshold =
-      level >= 2 ? (LEVEL_THRESHOLDS[level - 2] as number) : 0;
+    const prevThreshold = level >= 2 ? (LEVEL_THRESHOLDS[level - 2] ?? 0) : 0;
     const range = nextLevelThreshold - prevThreshold;
     if (range <= 0) {
       progressPct = 100;
@@ -65,14 +57,12 @@ export function HabitatWidget({
         <CardContent className="p-4">
           <HabitatWidgetCanvas mood={mood} />
           <div className="mt-3">
-            {/* Progress bar label */}
             <div className="flex justify-between text-sm text-muted-foreground mb-1">
               <span>Level {level}</span>
               <span>
                 {learnedCardCount}/{nextLevelThreshold ?? "MAX"} cards
               </span>
             </div>
-            {/* Progress bar */}
             <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
               <div
                 className="h-full bg-primary rounded-full transition-all"
@@ -84,4 +74,4 @@ export function HabitatWidget({
       </Card>
     </Link>
   );
-}
+});

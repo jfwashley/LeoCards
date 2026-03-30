@@ -36,7 +36,9 @@ export function createRateLimiter(opts: {
      * Check if a request is allowed for the given key.
      * Returns { allowed: true } or { allowed: false, retryAfterMs }.
      */
-    check(key: string): { allowed: true } | { allowed: false; retryAfterMs: number } {
+    check(
+      key: string,
+    ): { allowed: true } | { allowed: false; retryAfterMs: number } {
       const now = Date.now();
       cleanup(now);
 
@@ -52,7 +54,7 @@ export function createRateLimiter(opts: {
       );
 
       if (entry.timestamps.length >= opts.maxRequests) {
-        const oldest = entry.timestamps[0]!;
+        const oldest = entry.timestamps[0] ?? now;
         const retryAfterMs = opts.windowMs - (now - oldest);
         return { allowed: false, retryAfterMs };
       }

@@ -1,0 +1,117 @@
+import { expect, test } from "playwright/test";
+import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
+
+const MOBILE = { width: 375, height: 812 };
+
+test.describe("Mobile responsiveness", () => {
+  test.use({ viewport: MOBILE });
+
+  test("login page is usable on mobile", async ({ page }) => {
+    await page.goto("/login");
+
+    await expect(page.getByLabel("Email")).toBeVisible();
+    await expect(page.getByLabel("Password")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
+
+    const scrollWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
+    expect(scrollWidth).toBeLessThanOrEqual(MOBILE.width + 1);
+  });
+
+  test("signup page fits mobile viewport", async ({ page }) => {
+    await page.goto("/signup");
+
+    await expect(page.getByLabel("Name")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Create account" }),
+    ).toBeVisible();
+
+    const scrollWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
+    expect(scrollWidth).toBeLessThanOrEqual(MOBILE.width + 1);
+  });
+
+  test("dashboard header does not overflow on mobile", async ({ page }) => {
+    await signUpWithDeck(page, "French");
+
+    await expect(page.getByText("LeoCards")).toBeVisible();
+    await expect(page.getByText("Sign out")).toBeVisible();
+
+    const scrollWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
+    expect(scrollWidth).toBeLessThanOrEqual(MOBILE.width + 1);
+  });
+
+  test("card list renders as stacked cards on mobile (not table)", async ({
+    page,
+  }) => {
+    await signUpWithDeck(page, "French");
+    await addWordsFromBrowser(page, 3);
+
+    const table = page.locator("table");
+    await expect(table).not.toBeVisible();
+
+    const mobileCards = page.locator(".border.border-border.rounded-lg");
+    const count = await mobileCards.count();
+    expect(count).toBeGreaterThanOrEqual(3);
+  });
+
+  test("study session is usable on mobile", async ({ page }) => {
+    await signUpWithDeck(page, "French");
+    await addWordsFromBrowser(page, 3);
+
+    await page.getByRole("link", { name: "Start studying" }).click();
+    await page.waitForURL(/\/study/);
+
+    await expect(page.getByText("Tap to reveal")).toBeVisible({
+      timeout: 5_000,
+    });
+    await expect(page.getByText("Quit session")).toBeVisible();
+
+    const scrollWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
+    expect(scrollWidth).toBeLessThanOrEqual(MOBILE.width + 1);
+  });
+
+  test("word list browser works on mobile", async ({ page }) => {
+    await signUpWithDeck(page, "French");
+
+    await page.getByRole("link", { name: "Browse words" }).first().click();
+    await page.waitForURL(/\/deck\/browse/);
+
+    await expect(page.getByRole("button", { name: "Animals" })).toBeVisible();
+
+    const addButton = page.locator('[aria-label*="Add"]').first();
+    await addButton.waitFor({ timeout: 10_000 });
+    const box = await addButton.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+
+    const scrollWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
+    expect(scrollWidth).toBeLessThanOrEqual(MOBILE.width + 1);
+  });
+
+  test("add card form stacks vertically on mobile", async ({ page }) => {
+    await signUpWithDeck(page, "French");
+
+    await page.getByRole("link", { name: "Add a card" }).click();
+    await page.waitForURL(/\/deck\/new-card/);
+
+    const englishField = page.getByLabel("English");
+    const frenchField = page.getByLabel("French");
+    await expect(englishField).toBeVisible();
+    await expect(frenchField).toBeVisible();
+
+    const engBox = await englishField.boundingBox();
+    const frBox = await frenchField.boundingBox();
+    expect(engBox).not.toBeNull();
+    expect(frBox).not.toBeNull();
+    expect(frBox!.y).toBeGreaterThan(engBox!.y);
+  });
+});

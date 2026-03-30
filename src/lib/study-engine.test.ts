@@ -230,8 +230,7 @@ describe("computeCardUpdate", () => {
     expect(result.newRound).toBe(1);
     expect(result.cooldownUntil).not.toBeNull();
     // 12h = 43200000ms
-    // biome-ignore lint/style/noNonNullAssertion: test assertion — index is known valid after expect(...).not.toBeNull()
-    const diffMs = result.cooldownUntil!.getTime() - NOW.getTime();
+    const diffMs = (result.cooldownUntil as Date).getTime() - NOW.getTime();
     expect(diffMs).toBe(12 * 3600 * 1000);
   });
 
@@ -255,8 +254,7 @@ describe("computeCardUpdate", () => {
     expect(result.newRound).toBe(2);
     expect(result.cooldownUntil).not.toBeNull();
     // 24h = 86400000ms
-    // biome-ignore lint/style/noNonNullAssertion: test assertion — index is known valid after expect(...).not.toBeNull()
-    const diffMs = result.cooldownUntil!.getTime() - NOW.getTime();
+    const diffMs = (result.cooldownUntil as Date).getTime() - NOW.getTime();
     expect(diffMs).toBe(24 * 3600 * 1000);
   });
 

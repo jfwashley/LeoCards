@@ -15,7 +15,7 @@ provides:
   - Reset-password page with token validation and new password form
   - Protected layout with server-side session validation via auth.api.getSession
   - Dashboard stub with personalized greeting and logout button
-  - Auth layout with tiger emoji, TioCards wordmark, and tagline
+  - Auth layout with tiger emoji, LeoCards wordmark, and tagline
 affects: [phase-02-flashcards, phase-03-habitat, phase-04-study, phase-05-tiger, phase-06-milestones]
 
 # Tech tracking
@@ -90,7 +90,7 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 - `src/app/page.tsx` - Root redirect to /login
-- `src/app/(auth)/layout.tsx` - Shared auth layout with tiger emoji, TioCards wordmark, tagline
+- `src/app/(auth)/layout.tsx` - Shared auth layout with tiger emoji, LeoCards wordmark, tagline
 - `src/app/(auth)/login/page.tsx` - Login form with callbackUrl support and inline auth error
 - `src/app/(auth)/signup/page.tsx` - Signup form with name/email/password fields
 - `src/app/(auth)/forgot-password/page.tsx` - Forgot password with sent confirmation state

@@ -67,7 +67,7 @@ All sizes use the existing CSS `--font-sans` variable. No additional font family
 
 ## Color
 
-Tokens are drawn from the established TioCards warm orange/amber theme in globals.css. No new colors are introduced.
+Tokens are drawn from the established LeoCards warm orange/amber theme in globals.css. No new colors are introduced.
 
 | Role | Token | Resolved Value | Usage |
 |------|-------|----------------|-------|
@@ -140,7 +140,7 @@ No destructive actions exist in Phase 5. No confirmation dialogs are required.
 3. PixiJS initializes, `Assets.load()` fetches sprite atlases, `GET /api/habitat` fetches habitat state.
 4. On success: canvas fades in over 0.5s using Motion `animate` on opacity (D-19). Spinner exits.
 5. On API error: error state card shown with retry button (D-23).
-6. On offline (navigator.onLine false, fetch fails): read `localStorage` key `tiocards_habitat_cache`, render stale data with offline banner (D-24).
+6. On offline (navigator.onLine false, fetch fails): read `localStorage` key `leocards_habitat_cache`, render stale data with offline banner (D-24).
 
 ### Tiger Mood Transitions
 

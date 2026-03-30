@@ -1,8 +1,8 @@
-# Roadmap: TioCards
+# Roadmap: LeoCards
 
 ## Overview
 
-TioCards ships in six phases, each delivering a coherent, verifiable capability. The sequence is dependency-ordered: authenticated users exist before they own cards, cards exist before they can be studied, study results exist before a habitat can reflect them, habitat logic is correct before it is rendered, and the rendered scene is stable before milestone moments are layered on top. Every phase ends with something a user can observe and interact with — not an internal milestone.
+LeoCards ships in six phases, each delivering a coherent, verifiable capability. The sequence is dependency-ordered: authenticated users exist before they own cards, cards exist before they can be studied, study results exist before a habitat can reflect them, habitat logic is correct before it is rendered, and the rendered scene is stable before milestone moments are layered on top. Every phase ends with something a user can observe and interact with — not an internal milestone.
 
 ## Phases
 

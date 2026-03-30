@@ -356,7 +356,7 @@ function HabitatLayers({ level }: { level: number }) {
 ### Pattern 8: Offline cache (D-24)
 
 ```typescript
-const CACHE_KEY = "tiocards:habitat-state";
+const CACHE_KEY = "leocards:habitat-state";
 
 async function fetchHabitatState(): Promise<HabitatState | null> {
   try {

@@ -145,20 +145,25 @@ export function HabitatLayers({
   sceneHeight,
 }: HabitatLayersProps) {
   // Normalized mouse x (0-1) for parallax offset (D-11)
+  // Uses ref + rAF to batch updates at screen refresh rate instead of 60+ setState/sec
   const mouseXRef = useRef(0.5);
+  const rafRef = useRef(0);
   const [mouseX, setMouseX] = useState(0.5);
 
-  // Add mousemove listener for parallax (D-11)
   useEffect(() => {
     function handleMouseMove(e: MouseEvent) {
-      const normalized = e.clientX / window.innerWidth;
-      mouseXRef.current = normalized;
-      setMouseX(normalized);
+      mouseXRef.current = e.clientX / window.innerWidth;
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(() => {
+          setMouseX(mouseXRef.current);
+          rafRef.current = 0;
+        });
+      }
     }
-
     document.addEventListener("mousemove", handleMouseMove);
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 

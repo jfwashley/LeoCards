@@ -68,7 +68,7 @@ Exceptions:
 | Display | 28px | 600 (semibold) | 1.15 |
 
 Notes:
-- Display is used for the "TioCards" wordmark and the auth page tagline "Your tiger is waiting." only
+- Display is used for the "LeoCards" wordmark and the auth page tagline "Your tiger is waiting." only
 - Heading (20px/600) is used for the form heading — e.g., "Create your account" / "Welcome back"
 - Body (16px/400) is used for all form inputs, inline error messages, and supporting text
 - Label (14px/400) is used for field labels, helper text below fields, and "Forgot password?" link
@@ -183,7 +183,7 @@ This phase delivers four pages and one stub. Each has defined states below.
 | Element | Copy |
 |---------|------|
 | Auth page tiger emoji | 🐯 |
-| Auth page wordmark | TioCards |
+| Auth page wordmark | LeoCards |
 | Auth page tagline | "Your tiger is waiting." |
 | Login heading | "Welcome back" |
 | Signup heading | "Create your account" |
@@ -240,7 +240,7 @@ No third-party registries declared for this phase.
 | Post-auth redirect to /dashboard | CONTEXT.md §Implementation Decisions |
 | Inline field errors (not banners) | CONTEXT.md §Auth page look & feel |
 | Separate /login, /signup, /forgot-password pages | CONTEXT.md §Auth page look & feel |
-| Tiger emoji + "TioCards" + "Your tiger is waiting." | CONTEXT.md §Auth page look & feel |
+| Tiger emoji + "LeoCards" + "Your tiger is waiting." | CONTEXT.md §Auth page look & feel |
 | Dashboard stub copy "Your habitat is being built, [name]." | CONTEXT.md §Post-auth destination |
 | Warm/friendly/tiger-adjacent tone | CONTEXT.md §Auth page look & feel; user input |
 | shadcn/ui with orange/amber primary | User input (this session) |

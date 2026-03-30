@@ -1,17 +1,17 @@
 # Project Research Summary
 
-**Project:** TioCards
+**Project:** LeoCards
 **Domain:** Language learning flashcard web app with gamification (virtual tiger habitat)
 **Researched:** 2026-03-17
 **Confidence:** HIGH
 
 ## Executive Summary
 
-TioCards is a language-learning flashcard app distinguished from competitors by a living virtual tiger habitat that grows with vocabulary mastery. Unlike Duolingo's surface-level mascot, TioCards makes the habitat the progress visualization — the tiger's world IS the XP bar. Research confirms this is a well-scoped v1: the core study loop (show/reveal/self-grade with recall tracking), deck management with auto-translate, and habitat progression can be built with a small, highly composable stack. The recommended approach is Next.js 15 App Router + Neon Postgres + Drizzle ORM + Better Auth + PixiJS, deployed to Vercel — a stack with zero vendor lock-in risk and excellent free-tier coverage for a product at launch scale.
+LeoCards is a language-learning flashcard app distinguished from competitors by a living virtual tiger habitat that grows with vocabulary mastery. Unlike Duolingo's surface-level mascot, LeoCards makes the habitat the progress visualization — the tiger's world IS the XP bar. Research confirms this is a well-scoped v1: the core study loop (show/reveal/self-grade with recall tracking), deck management with auto-translate, and habitat progression can be built with a small, highly composable stack. The recommended approach is Next.js 15 App Router + Neon Postgres + Drizzle ORM + Better Auth + PixiJS, deployed to Vercel — a stack with zero vendor lock-in risk and excellent free-tier coverage for a product at launch scale.
 
 The architectural key insight from research is to never store derived state. Habitat level, decay factor, and pending milestones are all computed at request time from raw facts in the DB (`last_activity_at`, `recall_count`, `milestones_seen`). This eliminates cron jobs, scheduled updates, and stale-data bugs entirely. The study session follows the same principle: all card grades accumulate client-side and commit in a single batch POST at session end, avoiding per-card API waterfalls.
 
-The two highest-risk areas are motivational design and performance. Decay mechanics that feel punitive (no grace period, large instant degradation) will kill daily return rates faster than any technical bug. PixiJS habitat animations that drop frames on mid-range mobile destroy the emotional impact that makes TioCards distinctive. Both risks have clear preventions: a 2-day grace period + linear 5%/day decay for the first; sprite atlases + `ssr: false` dynamic import + paused ticker when tab is hidden for the second. Address these constraints at the phase they first appear, not as afterthoughts.
+The two highest-risk areas are motivational design and performance. Decay mechanics that feel punitive (no grace period, large instant degradation) will kill daily return rates faster than any technical bug. PixiJS habitat animations that drop frames on mid-range mobile destroy the emotional impact that makes LeoCards distinctive. Both risks have clear preventions: a 2-day grace period + linear 5%/day decay for the first; sprite atlases + `ssr: false` dynamic import + paused ticker when tab is hidden for the second. Address these constraints at the phase they first appear, not as afterthoughts.
 
 ---
 
@@ -47,9 +47,9 @@ For the habitat, PixiJS 8.x is the correct choice — hardware-accelerated 2D ca
 - Pre-made word lists (A1–B1) for French, Spanish, English
 - Custom card CRUD (add, edit, delete) with auto-translate + user confirmation step
 - Responsive web layout (desktop and mobile browser)
-- Visual progress feedback — in TioCards this IS the habitat
+- Visual progress feedback — in LeoCards this IS the habitat
 
-**Should have (differentiators that define TioCards):**
+**Should have (differentiators that define LeoCards):**
 - Living tiger habitat with gradual visual improvement tied to learned card count
 - Tiger mood states (Tamagotchi effect) — drives daily return habit
 - Habitat decay with 2-day grace period — emotional stakes without punishment
@@ -184,7 +184,7 @@ Phases with standard, well-documented patterns (can skip research-phase):
 - PITFALLS.md (2026-03-17) — 7 pitfalls with prevention strategies and phase mappings; all 11 skills applied
 
 ### Secondary (MEDIUM confidence)
-- Gamification pattern research (FEATURES.md) — Tamagotchi effect, variable reward, loss aversion, Zeigarnik effect applied to TioCards context; established behavioral psychology but TioCards-specific application is inferred
+- Gamification pattern research (FEATURES.md) — Tamagotchi effect, variable reward, loss aversion, Zeigarnik effect applied to LeoCards context; established behavioral psychology but LeoCards-specific application is inferred
 
 ### Tertiary (LOW confidence)
 - Specific PixiJS 8.x sprite atlas format — tooling details not fully verified; validate at Phase 5 start

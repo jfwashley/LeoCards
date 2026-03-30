@@ -123,8 +123,8 @@ export function habitatLevel(effectiveCardCount: number): number {
   let level = 1;
 
   for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
-    const threshold = LEVEL_THRESHOLDS[i] as number;
-    if (effectiveCardCount >= threshold) {
+    const threshold = LEVEL_THRESHOLDS[i];
+    if (threshold !== undefined && effectiveCardCount >= threshold) {
       level = i + 2; // threshold[0]=5 means level 2, threshold[1]=15 means level 3, etc.
     } else {
       break; // Thresholds are monotonically increasing — no need to check further
@@ -216,7 +216,7 @@ export function computeHabitatState(
   let nextLevelThreshold: number | null = null;
   if (level < 10) {
     // level is 1-9, so the threshold for the next level is LEVEL_THRESHOLDS[level-1]
-    nextLevelThreshold = LEVEL_THRESHOLDS[level - 1] as number;
+    nextLevelThreshold = LEVEL_THRESHOLDS[level - 1] ?? null;
   }
 
   return {

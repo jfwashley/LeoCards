@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CardStack } from "@/components/card-stack";
 import { LevelUpOverlay } from "@/components/level-up-overlay";
 import { StudyCard } from "@/components/study-card";
@@ -81,23 +81,18 @@ function reducer(state: SessionPhase, action: Action): SessionPhase {
       const newGraded = [...state.graded, newGrade];
       const nextIndex = state.currentIndex + 1;
 
-      // Check if we've gone through all cards
       if (nextIndex >= state.queue.length) {
-        // Find still-learning cards (graded false at least once, never graded true as last grade)
-        // Build a map of the last grade per card
         const lastGradeByCard = new Map<string, boolean>();
         for (const g of newGraded) {
-          lastGradeByCard.set(g.cardId as string, g.correct);
+          lastGradeByCard.set(String(g.cardId), g.correct);
         }
 
-        // Still-learning: cards whose last grade was incorrect
         const stillLearningCards = state.queue.filter((c) => {
-          const lastCorrect = lastGradeByCard.get(c.id as string);
+          const lastCorrect = lastGradeByCard.get(String(c.id));
           return lastCorrect === false;
         });
 
         if (stillLearningCards.length > 0) {
-          // Loop back: re-queue still-learning cards as a new round
           return {
             phase: "studying",
             queue: stillLearningCards,
@@ -112,7 +107,6 @@ function reducer(state: SessionPhase, action: Action): SessionPhase {
           };
         }
 
-        // No still-learning cards — commit
         return { phase: "committing", graded: newGraded };
       }
 
@@ -167,16 +161,14 @@ function computeStats(
   initialCards: SessionCard[],
   graded: GradeEntry[],
 ): SessionStats {
-  const cardsStudied = new Set(graded.map((g) => g.cardId as string)).size;
+  const cardsStudied = new Set(graded.map((g) => String(g.cardId))).size;
   const correctCount = graded.filter((g) => g.correct).length;
 
-  // Newly learned: cards that started at masteryRound 2 and got a correct grade
-  // (would advance to round 3 = learned)
   const round2CardIds = new Set(
-    initialCards.filter((c) => c.masteryRound === 2).map((c) => c.id as string),
+    initialCards.filter((c) => c.masteryRound === 2).map((c) => String(c.id)),
   );
   const newlyLearned = graded.filter(
-    (g) => g.correct && round2CardIds.has(g.cardId as string),
+    (g) => g.correct && round2CardIds.has(String(g.cardId)),
   ).length;
 
   return { cardsStudied, correctCount, newlyLearned, leveledUp: null };
@@ -213,7 +205,6 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
     hasSwiped: false,
   } satisfies StudyingState);
 
-  // Level-up overlay dismiss: navigate with ?celebrate=10 when reaching level 10 (D-09)
   const handleLevelUpDismiss = useCallback(() => {
     const leveledUp = showLevelUp;
     setShowLevelUp(null);
@@ -235,11 +226,17 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
     }
   }, [state.phase, isFlipped, isSwipeReady]);
 
-  // Commit grades when in "committing" phase
+  // Commit grades when entering "committing" phase
+  // Uses ref to capture graded data, avoiding dependency on entire state object
+  const gradedRef = useRef<GradeEntry[]>([]);
+  if (state.phase === "committing") {
+    gradedRef.current = state.graded;
+  }
+
   useEffect(() => {
     if (state.phase !== "committing") return;
 
-    const { graded } = state;
+    const graded = gradedRef.current;
 
     async function commit() {
       try {
@@ -249,7 +246,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
           body: JSON.stringify({
             deckId,
             grades: graded.map((g) => ({
-              cardId: g.cardId as string,
+              cardId: String(g.cardId),
               direction: g.direction,
               correct: g.correct,
             })),
@@ -279,7 +276,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
     }
 
     commit();
-  }, [state.phase, initialCards, deckId, state]);
+  }, [state.phase, initialCards, deckId]);
 
   // ============================================================
   // Render: committing
@@ -299,7 +296,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
 
   if (state.phase === "error") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-8">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-4 sm:px-8">
         <p className="text-base text-center text-foreground">{state.message}</p>
         <Button
           variant="default"
@@ -332,7 +329,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
         </AnimatePresence>
         <div className="min-h-screen bg-background flex items-center justify-center">
           <motion.div
-            className="flex flex-col items-center gap-8 px-8 text-center"
+            className="flex flex-col items-center gap-6 sm:gap-8 px-4 sm:px-8 text-center"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -340,24 +337,24 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
             <span className="text-6xl" role="img" aria-label="Tiger">
               🐯
             </span>
-            <h1 className="text-[20px] font-semibold text-foreground">
+            <h1 className="text-lg sm:text-[20px] font-semibold text-foreground">
               Great work, keep it up!
             </h1>
-            <div className="flex gap-8">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
               <div className="flex flex-col items-center gap-1">
-                <span className="text-[28px] font-semibold text-foreground">
+                <span className="text-2xl sm:text-[28px] font-semibold text-foreground">
                   {cardsStudied}
                 </span>
                 <span className="text-sm text-muted-foreground">studied</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-[28px] font-semibold text-foreground">
+                <span className="text-2xl sm:text-[28px] font-semibold text-foreground">
                   {correctPct}%
                 </span>
                 <span className="text-sm text-muted-foreground">correct</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-[28px] font-semibold text-primary">
+                <span className="text-2xl sm:text-[28px] font-semibold text-primary">
                   {newlyLearned}
                 </span>
                 <span className="text-sm text-muted-foreground">learned</span>
@@ -392,27 +389,25 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
   const current = queue[currentIndex];
   const remainingCount = queue.length - currentIndex - 1;
 
-  // Show swipe hint: only on first card of the session, after flip, before first swipe
   const showSwipeHint = hasFlippedFirst && !hasSwiped && currentIndex === 0;
 
   if (!current) return null;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-8 py-4">
+      {/* Top bar — responsive padding */}
+      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4">
         <span className="text-sm text-muted-foreground">Study session</span>
         <div className="flex flex-col items-end gap-2">
           <Button
             variant="ghost"
-            className="h-8 px-3 text-sm"
+            className="h-10 px-3 text-sm"
             aria-label="Quit study session"
             onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
           >
             Quit session
           </Button>
 
-          {/* Quit confirmation */}
           {showQuitConfirm && (
             <div className="flex flex-col items-end gap-2 p-3 rounded-lg border border-border bg-card shadow-sm">
               <p className="text-sm text-foreground">
@@ -421,14 +416,14 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="h-8 px-3 text-sm"
+                  className="h-10 px-3 text-sm"
                   onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
                 >
                   Keep studying
                 </Button>
                 <Button
                   variant="default"
-                  className="h-8 px-3 text-sm"
+                  className="h-10 px-3 text-sm"
                   onClick={() => dispatch({ type: "QUIT_SESSION" })}
                 >
                   Save and quit
@@ -440,7 +435,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
       </div>
 
       {/* Card area */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-4 px-8">
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4 sm:px-8">
         <div
           className="relative w-full max-w-sm mx-auto"
           style={{ perspective: 1000 }}
@@ -448,7 +443,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
           <CardStack remainingCount={remainingCount} />
           <AnimatePresence mode="popLayout">
             <StudyCard
-              key={`${current.id as string}-${currentIndex}`}
+              key={`${String(current.id)}-${currentIndex}`}
               card={current}
               flipped={flipped}
               swipeReady={swipeReady}
@@ -461,7 +456,6 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
           </AnimatePresence>
         </div>
 
-        {/* Swipe hint */}
         {showSwipeHint && (
           <p className="text-sm text-muted-foreground text-center">
             Swipe right if correct, left if still learning
