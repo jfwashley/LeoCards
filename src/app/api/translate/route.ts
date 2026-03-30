@@ -60,6 +60,9 @@ export async function POST(request: Request) {
   }
 
   // Instantiate DeepL client inside handler — never at module scope
+  if (!env.DEEPL_API_KEY) {
+    return Response.json({ error: "Translation service not configured" }, { status: 503 });
+  }
   const client = new deepl.DeepLClient(env.DEEPL_API_KEY);
 
   const targetLangCode = TARGET_LANG_MAP[
