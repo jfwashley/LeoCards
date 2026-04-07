@@ -138,17 +138,17 @@ Plans:
 - [x] 07-03-PLAN.md — Hardening: email failure logging, in-memory rate limiting for translate and study/complete, DB driver documentation
 
 ### Phase 8: Tech Debt Cleanup
-**Goal:** Close remaining audit gaps — persist nativeLanguage at signup, activate Edge middleware for auth redirects, fix misleading JSDoc.
+**Goal:** Close remaining audit gaps — persist nativeLanguage at signup, verify proxy.ts auth redirects are active, fix misleading JSDoc.
 **Depends on:** Phase 7
 **Requirements**: DECK-06
 **Success Criteria** (what must be TRUE):
   1. A user who selects French or Spanish as their native language during signup has that value persisted in the database (not defaulting to "en")
   2. An authenticated user who navigates to /login or /signup is redirected to /dashboard
   3. The JSDoc comment on the study/complete route accurately describes the non-transactional write behavior
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01-PLAN.md — Persist nativeLanguage at signup, create middleware.ts wrapping proxy.ts, fix study/complete JSDoc
+- [ ] 08-01-PLAN.md — Persist nativeLanguage at signup via Better Auth additionalFields, verify proxy.ts auth redirects active, fix study/complete JSDoc
 
 ## Progress
 
