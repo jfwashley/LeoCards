@@ -21,7 +21,7 @@
 - [x] **DECK-03**: User can review and edit the auto-translated result before saving a manually-entered card
 - [x] **DECK-04**: User can edit the translation on any saved card
 - [x] **DECK-05**: User can delete a card from their deck
-- [x] **DECK-06**: User can manage decks for French, Spanish, and English independently
+- [ ] **DECK-06**: User can manage decks for French, Spanish, and English independently
 
 ### Study
 
@@ -97,7 +97,7 @@
 | DECK-03 | Phase 2: Deck and Card Management | Complete |
 | DECK-04 | Phase 2: Deck and Card Management | Complete |
 | DECK-05 | Phase 2: Deck and Card Management | Complete |
-| DECK-06 | Phase 2: Deck and Card Management | Complete |
+| DECK-06 | Phase 8: Tech Debt Cleanup | Pending |
 | STUDY-01 | Phase 3: Study Engine and Study UI | Complete |
 | STUDY-02 | Phase 3: Study Engine and Study UI | Complete |
 | STUDY-03 | Phase 3: Study Engine and Study UI | Complete |
@@ -114,7 +114,8 @@
 
 **Coverage:**
 - v1 requirements: 23 total
-- Mapped to phases: 23
+- Satisfied: 22
+- Pending (gap closure): 1 (DECK-06)
 - Unmapped: 0 ✓
 
 ---

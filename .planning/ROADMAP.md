@@ -38,7 +38,7 @@ Plans:
 - [x] 01-03-PLAN.md — Auth UI: login, signup, forgot-password, reset-password pages with shadcn forms, dashboard stub with logout, human-verify checkpoint
 - [x] 01-04-PLAN.md — Gap closure: wire orphaned env.ts into app module graph, add RESEND_API_KEY to CI env block
 - [x] 01-05-PLAN.md — Gap closure: fix login Suspense boundary (build blocker), TypeScript errors, Biome lint/format violations, LF line endings
-- [ ] 01-06-PLAN.md — Gap closure: fix CI pipeline step ordering and missing DEEPL_API_KEY, update .env.example
+- [x] 01-06-PLAN.md — Gap closure: fix CI pipeline step ordering and missing DEEPL_API_KEY, update .env.example
 
 ### Phase 2: Deck and Card Management
 **Goal**: Users can populate their decks — browsing pre-made word lists, manually entering words with auto-translation, and managing their saved cards.
@@ -135,19 +135,33 @@ Plans:
 Plans:
 - [x] 07-01-PLAN.md — Critical auth fixes: card ownership verification in study/complete, deck ownership check in study page
 - [x] 07-02-PLAN.md — Performance and validation: batch milestone INSERT, float boundary fix, language allow-list, celebrate param clamping
-- [ ] 07-03-PLAN.md — Hardening: email failure logging, in-memory rate limiting for translate and study/complete, DB driver documentation
+- [x] 07-03-PLAN.md — Hardening: email failure logging, in-memory rate limiting for translate and study/complete, DB driver documentation
+
+### Phase 8: Tech Debt Cleanup
+**Goal:** Close remaining audit gaps — persist nativeLanguage at signup, activate Edge middleware for auth redirects, fix misleading JSDoc.
+**Depends on:** Phase 7
+**Requirements**: DECK-06
+**Success Criteria** (what must be TRUE):
+  1. A user who selects French or Spanish as their native language during signup has that value persisted in the database (not defaulting to "en")
+  2. An authenticated user who navigates to /login or /signup is redirected to /dashboard
+  3. The JSDoc comment on the study/complete route accurately describes the non-transactional write behavior
+**Plans**: TBD
+
+Plans:
+- [ ] 08-01-PLAN.md — Persist nativeLanguage at signup, create middleware.ts wrapping proxy.ts, fix study/complete JSDoc
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 4/6 | In Progress | - |
+| 1. Foundation | 6/6 | Complete | 2026-03-23 |
 | 2. Deck and Card Management | 4/4 | Complete   | 2026-03-24 |
 | 3. Study Engine and Study UI | 3/3 | Complete   | 2026-03-27 |
 | 4. Habitat Engine | 2/2 | Complete   | 2026-03-28 |
 | 5. Habitat UI | 3/3 | Complete   | 2026-03-28 |
 | 6. Milestone System and Dashboard Polish | 3/3 | Complete   | 2026-03-28 |
-| 7. Backend Security and Quality Fixes | 2/3 | In Progress|  |
+| 7. Backend Security and Quality Fixes | 3/3 | Complete   | 2026-03-29 |
+| 8. Tech Debt Cleanup | 0/1 | Not started | - |
