@@ -148,7 +148,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 08-01-PLAN.md — Persist nativeLanguage at signup via Better Auth additionalFields, verify proxy.ts auth redirects active, fix study/complete JSDoc
+- [x] 08-01-PLAN.md — Persist nativeLanguage at signup via Better Auth additionalFields, verify proxy.ts auth redirects active, fix study/complete JSDoc
 
 ## Progress
 
