@@ -47,8 +47,7 @@ export default function SignupPage() {
       email: values.email,
       password: values.password,
       name: values.name,
-      // nativeLanguage is stored in onboarding flow after signup
-      // Better Auth's signUp.email does not accept arbitrary fields
+      nativeLanguage: values.nativeLanguage,
     });
 
     setIsPending(false);

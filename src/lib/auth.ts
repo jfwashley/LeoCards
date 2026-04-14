@@ -9,6 +9,16 @@ export const auth = betterAuth({
     provider: "pg",
     schema, // MUST pass full schema — passing a subset causes runtime error
   }),
+  user: {
+    additionalFields: {
+      nativeLanguage: {
+        type: "string",
+        required: false,
+        defaultValue: "en",
+        input: true,
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
