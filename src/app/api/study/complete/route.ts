@@ -43,8 +43,9 @@ const CommitSchema = z.object({
  * 3. Verify deck ownership
  * 4. Load current card states
  * 5. Compute mastery updates via study engine
- * 6. Execute all writes in a single transaction (D-04 partial save guarantee)
- * 7. Return success
+ * 6. Execute writes sequentially (Neon HTTP driver does not support transactions;
+ *    a mid-sequence failure may result in partial writes)
+ * 7. Return success with level-up info
  */
 export async function POST(request: Request) {
   // 1. Auth check
