@@ -59,5 +59,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 | Show & self-grade flashcard mechanic | Lowest friction, classic and proven | Shipped (Phase 3) |
 | 3-round spaced mastery with directional tracking | Evolved from simple 3-4 recalls to 3-round system with 12h/24h cooldowns and bidirectional testing | Shipped (Phase 3) |
 
+| Better Auth additionalFields for custom user columns | Allows nativeLanguage to be passed and persisted at signup without a separate onboarding flow | Shipped (Phase 8) |
+
 ---
-*Last updated: 2026-03-28 after Phase 4 completion — habitat engine with compute-on-read architecture, 2-day grace + 5%/day decay, 10-level system, mood classification, and GET /api/habitat endpoint all shipped*
+*Last updated: 2026-04-14 after Phase 8 completion — all v1.0 requirements satisfied, deployed to Vercel*
