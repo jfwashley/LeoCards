@@ -616,7 +616,7 @@ useEffect(() => {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Mode toggle UI style (Claude's Discretion)**
    - What we know: Three UI primitives available (Button, no native Tab component in ui/). Existing project uses Radix Select for DeckSwitcher.
