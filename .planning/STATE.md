@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: 09-02 Task 4 checkpoint:human-verify — awaiting browser verification
-last_updated: "2026-05-18T20:02:00Z"
-last_activity: 2026-05-18 -- 09-02 Tasks 1-3 complete; checkpoint reached
+stopped_at: "09-02 complete — all tasks done, human-verify checkpoint approved"
+last_updated: "2026-05-18T20:30:00Z"
+last_activity: 2026-05-18 -- 09-02 all 4 tasks complete; Phase 9 finished (2/2 plans done)
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-18)
 
 ## Current Position
 
-Phase: 9 (09-image-upload-deck-selection) — EXECUTING
-Plan: 2 of 2
-Status: Plan 09-02 Tasks 1-3 complete; Task 4 checkpoint:human-verify blocking
-Last activity: 2026-05-18 — 09-02 ImageDropZone + ImageUploadFlow + NewCardModeToggle built; build green
+Phase: 9 (09-image-upload-deck-selection) — COMPLETE (2/2 plans done)
+Plan: 2 of 2 — COMPLETE
+Status: Plan 09-02 all 4 tasks done; human-verify checkpoint approved by user 2026-05-18
+Last activity: 2026-05-18 — 09-02 complete; OS drag/paste manually verified; remaining steps e2e verified via Playwright
 
 ## Performance Metrics
 
@@ -42,7 +42,7 @@ Last activity: 2026-05-18 — 09-02 ImageDropZone + ImageUploadFlow + NewCardMod
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 9 (v2.0) | 1/2 | 2 min | 2 min |
+| 9 (v2.0) | 2/2 | ~12 min | ~6 min |
 | 10-11 (v2.0) | - | - | - |
 
 **Recent Trend:**
@@ -159,8 +159,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T20:02:00Z
-Stopped at: 09-02 Task 4 checkpoint:human-verify — dev server started; user must manually verify image upload flow at http://localhost:3000/deck/new-card
+Last session: 2026-05-18T20:30:00Z
+Stopped at: 09-02 complete — Phase 9 complete (2/2 plans done); ready for Phase 10 planning
 Resume file: None
 
 **Planned Phase:** 9 (Image Upload & Deck Selection) — 2 plans — 2026-05-18T19:40:28.506Z

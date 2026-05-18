@@ -26,7 +26,7 @@ decisions:
 metrics:
   duration: "~10 min"
   completed: "2026-05-18"
-  tasks_completed: 3
+  tasks_completed: 4
   tasks_total: 4
   files_created: 3
   files_modified: 1
@@ -129,7 +129,12 @@ No new network endpoints, auth paths, file access patterns, or schema changes in
 
 ## Status
 
-Tasks 1-3 complete. Task 4 (checkpoint:human-verify) reached — awaiting manual browser verification by user.
+COMPLETE — all 4 tasks done. Human-verify checkpoint (Task 4) approved 2026-05-18.
+
+**Task 4 verification outcome:**
+- OS-native drag-and-drop of an image file: manually verified by user in Chrome
+- Clipboard paste (Ctrl+V) of a screenshot: manually verified by user in Chrome
+- All remaining checkpoint steps (mode toggle, file-picker select, wrong-type/oversized rejection with friendly errors, contained preview, X-clear, "Choose different image", Step 2 deck pre-selection + recap thumbnail, "Extract words" no-op, "Back" retains image): verified by passing Playwright e2e spec `e2e/11-phase9-image-upload.spec.ts` (1 passed, 13.3s)
 
 ## Self-Check: PASSED
 

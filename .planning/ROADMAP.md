@@ -27,7 +27,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 **Milestone Goal:** Let users upload a photo, have Claude vision extract the vocabulary words, review/edit the results, and add the kept words (auto-translated via the existing DeepL pipeline) into a chosen deck — image feature only, no art pass.
 
-- [ ] **Phase 9: Image Upload & Deck Selection** - Choose, validate, preview an image and pick the target deck from the add-card flow
+- [x] **Phase 9: Image Upload & Deck Selection** - Choose, validate, preview an image and pick the target deck from the add-card flow
 - [ ] **Phase 10: Vision Extraction Endpoint** - Rate-limited Claude vision endpoint that turns an uploaded image into a word list, with robust loading/error handling
 - [ ] **Phase 11: Review & Commit** - Editable review screen that funnels kept words through the existing add-card + DeepL pipeline into the selected deck
 
@@ -45,7 +45,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   5. User can pick which deck the words will be added to, pre-selected to the active deck, before extraction
 **Plans**: 2 plans
   - [x] 09-01-PLAN.md — Pure image-validation module + Vitest suite (IMG-02, IMG-03)
-  - [~] 09-02-PLAN.md — Image picker (click/drag/paste) + preview + Step 2 deck selection wired into add-card page (IMG-01, IMG-04, IMG-05) [Tasks 1-3 complete; Task 4 checkpoint pending]
+  - [x] 09-02-PLAN.md — Image picker (click/drag/paste) + preview + Step 2 deck selection wired into add-card page (IMG-01, IMG-04, IMG-05)
 **UI hint**: yes
 
 ### Phase 10: Vision Extraction Endpoint
@@ -89,7 +89,7 @@ Phases execute in numeric order: 9 → 10 → 11
 | 6. Milestone System and Dashboard Polish | v1.0 | 3/3 | Complete | 2026-03-28 |
 | 7. Backend Security and Quality Fixes | v1.0 | 3/3 | Complete | 2026-03-29 |
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
-| 9. Image Upload & Deck Selection | v2.0 | 1/2 | Executing | - |
+| 9. Image Upload & Deck Selection | v2.0 | 2/2 | Complete | 2026-05-18 |
 | 10. Vision Extraction Endpoint | v2.0 | 0/TBD | Not started | - |
 | 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
 
