@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: Phase 9 UI-SPEC approved
-last_updated: "2026-05-18T19:49:52.549Z"
-last_activity: 2026-05-18 -- Phase --phase execution started
+stopped_at: 09-02 Task 4 checkpoint:human-verify — awaiting browser verification
+last_updated: "2026-05-18T20:02:00Z"
+last_activity: 2026-05-18 -- 09-02 Tasks 1-3 complete; checkpoint reached
 progress:
   total_phases: 3
   completed_phases: 0
@@ -27,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-05-18)
 
 Phase: 9 (09-image-upload-deck-selection) — EXECUTING
 Plan: 2 of 2
-Status: Plan 09-01 complete; Plan 09-02 pending
-Last activity: 2026-05-18 — 09-01 image-validation pure module + Vitest suite complete
+Status: Plan 09-02 Tasks 1-3 complete; Task 4 checkpoint:human-verify blocking
+Last activity: 2026-05-18 — 09-02 ImageDropZone + ImageUploadFlow + NewCardModeToggle built; build green
 
 ## Performance Metrics
 
@@ -159,8 +159,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T19:49:52Z
-Stopped at: Completed 09-01-PLAN.md — image-validation pure module + Vitest TDD suite
+Last session: 2026-05-18T20:02:00Z
+Stopped at: 09-02 Task 4 checkpoint:human-verify — dev server started; user must manually verify image upload flow at http://localhost:3000/deck/new-card
 Resume file: None
 
 **Planned Phase:** 9 (Image Upload & Deck Selection) — 2 plans — 2026-05-18T19:40:28.506Z
