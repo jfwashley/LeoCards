@@ -2,9 +2,10 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: Roadmap created
-stopped_at: Roadmap created — awaiting phase planning
-last_updated: "2026-05-18T00:00:00.000Z"
+status: planning
+stopped_at: Phase 9 context gathered
+last_updated: "2026-05-18T19:06:07.100Z"
+last_activity: 2026-05-18 — v2.0 roadmap created (Phases 9, 10, 11)
 progress:
   total_phases: 3
   completed_phases: 0
@@ -156,6 +157,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T00:00:00.000Z
-Stopped at: v2.0 roadmap created (Phases 9-11)
-Resume file: None
+Last session: --stopped-at
+Stopped at: Phase 9 context gathered
+Resume file: --resume-file
