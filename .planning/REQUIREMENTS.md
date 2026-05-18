@@ -10,8 +10,10 @@ Requirements for the Image-to-Flashcards milestone. Each maps to a roadmap phase
 ### Image Upload (IMG)
 
 - [ ] **IMG-01**: User can choose an image file from the add-card flow and see an "extract words from image" entry point
-- [ ] **IMG-02**: User can upload one image at a time in JPG, PNG, or WebP format
-- [ ] **IMG-03**: User is shown a clear, friendly error when a file is the wrong type or exceeds the ~5MB size limit (rejected before upload)
+- [x] **IMG-02
+**: User can upload one image at a time in JPG, PNG, or WebP format
+- [x] **IMG-03
+**: User is shown a clear, friendly error when a file is the wrong type or exceeds the ~5MB size limit (rejected before upload)
 - [ ] **IMG-04**: User selects which deck the extracted words will be added to before extraction (defaults to the active deck)
 - [ ] **IMG-05**: User sees a preview/thumbnail of the chosen image and can replace or cancel it before extraction
 
