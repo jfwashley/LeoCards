@@ -3,6 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** — Phases 1-8 (shipped 2026-04-15)
+- 🚧 **v2.0 Image-to-Flashcards** — Phases 9-11 (in progress)
 
 ## Phases
 
@@ -22,7 +23,59 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 </details>
 
+### 🚧 v2.0 Image-to-Flashcards (In Progress)
+
+**Milestone Goal:** Let users upload a photo, have Claude vision extract the vocabulary words, review/edit the results, and add the kept words (auto-translated via the existing DeepL pipeline) into a chosen deck — image feature only, no art pass.
+
+- [ ] **Phase 9: Image Upload & Deck Selection** - Choose, validate, preview an image and pick the target deck from the add-card flow
+- [ ] **Phase 10: Vision Extraction Endpoint** - Rate-limited Claude vision endpoint that turns an uploaded image into a word list, with robust loading/error handling
+- [ ] **Phase 11: Review & Commit** - Editable review screen that funnels kept words through the existing add-card + DeepL pipeline into the selected deck
+
+## Phase Details
+
+### Phase 9: Image Upload & Deck Selection
+**Goal**: From the add-card flow, a user can pick a single valid image, preview it, and choose which deck the extracted words will land in — all before any extraction happens.
+**Depends on**: Phase 2 (existing add-card / deck management flow), Phase 8
+**Requirements**: IMG-01, IMG-02, IMG-03, IMG-04, IMG-05
+**Success Criteria** (what must be TRUE):
+  1. User sees an "extract words from image" entry point inside the add-card flow and can open a file picker from it
+  2. User can select one JPG, PNG, or WebP image and is shown a thumbnail/preview of it
+  3. User is shown a clear, friendly error and the file is rejected before upload when it is the wrong type or exceeds the ~5MB limit
+  4. User can replace the chosen image or cancel out of the flow before triggering extraction
+  5. User can pick which deck the words will be added to, pre-selected to the active deck, before extraction
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 10: Vision Extraction Endpoint
+**Goal**: A user can trigger extraction on their chosen image and reliably get back the vocabulary words Claude vision found, with a protected server endpoint and graceful handling of every failure path.
+**Depends on**: Phase 9
+**Requirements**: EXT-01, EXT-02, EXT-03, EXT-04, EXT-05
+**Success Criteria** (what must be TRUE):
+  1. User triggers extraction and receives the list of vocabulary words Claude vision found in the image
+  2. User sees a loading state during extraction and cannot double-submit the same request
+  3. User sees a clear "no words found" message with the option to try another image when the image yields nothing
+  4. User sees a graceful, recoverable error on vision failure or timeout without losing their deck selection or image
+  5. The extraction endpoint is guarded by the existing in-memory rate limiter and rejects oversized or invalid payloads server-side
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 11: Review & Commit
+**Goal**: Before anything touches the deck, a user reviews and edits the extracted words, then commits the kept ones through the existing DeepL-backed add-card pipeline into the selected deck.
+**Depends on**: Phase 10
+**Requirements**: RVW-01, RVW-02, RVW-03, RVW-04, RVW-05
+**Success Criteria** (what must be TRUE):
+  1. User sees the extracted words in an editable review list before any card is added to the deck
+  2. User can edit the text of any word and remove or toggle off words they don't want to keep
+  3. Each kept word is auto-translated via the existing DeepL pipeline with the translation editable, exactly like a manual card add
+  4. User confirms and the kept words are added to the selected deck, then sees a success summary with the count added
+  5. User can cancel the review without adding any cards, and words already present in the deck are flagged or skipped
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 9 → 10 → 11
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -34,3 +87,6 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 6. Milestone System and Dashboard Polish | v1.0 | 3/3 | Complete | 2026-03-28 |
 | 7. Backend Security and Quality Fixes | v1.0 | 3/3 | Complete | 2026-03-29 |
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
+| 9. Image Upload & Deck Selection | v2.0 | 0/TBD | Not started | - |
+| 10. Vision Extraction Endpoint | v2.0 | 0/TBD | Not started | - |
+| 11. Review & Commit | v2.0 | 0/TBD | Not started | - |

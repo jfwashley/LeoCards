@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: Defining requirements
-stopped_at: Milestone v2.0 started
+status: Roadmap created
+stopped_at: Roadmap created — awaiting phase planning
 last_updated: "2026-05-18T00:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -16,38 +16,41 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-17)
+See: .planning/PROJECT.md (updated 2026-05-18)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** v2.0 Image-to-Flashcards — defining requirements
+**Current focus:** v2.0 Image-to-Flashcards — roadmap created (Phases 9-11), ready for phase planning
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 9 — Image Upload & Deck Selection (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-18 — Milestone v2.0 started
+Status: Roadmap created — ready to plan Phase 9
+Last activity: 2026-05-18 — v2.0 roadmap created (Phases 9, 10, 11)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
+- Total plans completed: 0 (v2.0); 25 (v1.0, shipped)
 - Average duration: -
-- Total execution time: 0 hours
+- Total execution time: 0 hours (v2.0)
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 9-11 (v2.0) | - | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: none yet
+- Last 5 plans: none yet for v2.0
 - Trend: -
 
 *Updated after each plan completion*
+
+### v1.0 Historical (shipped 2026-04-15)
+
 | Phase 01-foundation P01 | 29 | 2 tasks | 22 files |
 | Phase 01-foundation P02 | 2 | 2 tasks | 4 files |
 | Phase 01-foundation P03 | 18 | 3 tasks | 9 files |
@@ -75,6 +78,7 @@ Last activity: 2026-05-18 — Milestone v2.0 started
 
 ### Roadmap Evolution
 
+- v2.0 Image-to-Flashcards roadmap created 2026-05-18: Phases 9 (Image Upload & Deck Selection), 10 (Vision Extraction Endpoint), 11 (Review & Commit). All 15 v2.0 requirements (IMG/EXT/RVW) mapped, 100% coverage. Continuous numbering from v1.0 (no reset).
 - Phase 7 added: Backend Security and Quality Fixes — Authorization bypasses, input validation, N+1 queries, and rate limiting
 
 ### Decisions
@@ -82,7 +86,11 @@ Last activity: 2026-05-18 — Milestone v2.0 started
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Stack: Next.js 15 + Better Auth + Drizzle + Neon + PixiJS 8.x + Motion 11.x + DeepL + Vitest + Biome (see research/SUMMARY.md)
+- [v2.0] Vision provider: Anthropic Claude (multimodal). Add Anthropic SDK as new dependency + new server endpoint for image word extraction.
+- [v2.0] Scope: image-to-flashcards ONLY; the cute 2D illustrated art pass remains deferred.
+- [v2.0] Reuse existing add-card + DeepL pipeline and existing in-memory rate limiter — do not rebuild.
+- [v2.0] Uploaded images processed transiently, never persisted (privacy + scope).
+- Stack: Next.js 16 + Better Auth + Drizzle + Neon + PixiJS 8.x + Motion 12 + DeepL + Vitest + Biome
 - Architecture: Compute-on-read — habitat level, decay, mood, and milestones derived at request time from raw DB facts; never stored as computed columns
 - Study: Client-local session state via `useReducer`; single batch POST to `/api/study/complete` at session end
 - [Phase 01-foundation]: Biome CSS linting disabled — Tailwind 4 directives incompatible with Biome CSS parser; CSS files excluded via includes pattern
@@ -90,9 +98,6 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: proxy.ts used instead of middleware.ts — Next.js 16 breaking change renames the file and function
 - [Phase 01-foundation]: nextCookies() placed last in Better Auth plugins array — required for server actions to set cookies correctly
 - [Phase 01-foundation]: Full schema (import * as schema) passed to drizzleAdapter — partial schema causes runtime TypeError in Better Auth
-- [Phase 01-foundation]: useSearchParams in reset-password wrapped in Suspense boundary — required by Next.js 16 for pages that prerender
-- [Phase 01-foundation]: Better Auth client uses requestPasswordReset not forgetPassword — plan interface contract was inaccurate about client method name
-- [Phase 01-foundation]: LogoutButton extracted as separate client component to keep dashboard page a server component
 - [Phase 01-foundation]: useSearchParams in reset-password wrapped in Suspense boundary — required by Next.js 16 for pages that prerender
 - [Phase 01-foundation]: Better Auth client uses requestPasswordReset not forgetPassword — plan interface contract was inaccurate about client method name
 - [Phase 01-foundation]: LogoutButton extracted as separate client component to keep dashboard page a server component
@@ -128,8 +133,6 @@ Recent decisions affecting current work:
 - [Phase 05-habitat-ui]: retry() in HabitatScene prefers cached data over error state — offline banner beats error page for UX
 - [Phase 06-milestone-system-and-dashboard-polish]: computeStats returns leveledUp: null as base value; overwritten by API response data in dispatch
 - [Phase 06-milestone-system-and-dashboard-polish]: celebratingLevel threaded through DeckView and HabitatWidget to reach HabitatCanvas
-- [Phase 06-milestone-system-and-dashboard-polish]: celebratingLevel threaded through DeckView and HabitatWidget to reach HabitatCanvas
-- [Phase 06-milestone-system-and-dashboard-polish]: computeStats returns leveledUp: null as base value; overwritten by API response data in dispatch call
 - [Phase 06-milestone-system-and-dashboard-polish]: Wrap h1 and breakdown paragraph in a div inside flex container to preserve justify-between layout while stacking heading and breakdown text vertically on left side
 - [Phase 01-foundation]: Build before Type check in CI — next-env.d.ts and .next/types/ generated by build are required by tsc
 - [Phase 01-foundation]: npm audit fix without --force — esbuild vulnerability in drizzle-kit requires breaking downgrade, deferred
@@ -148,13 +151,11 @@ None yet.
 
 ### Blockers/Concerns
 
-- Pre-made word list data source not yet identified — must resolve before Phase 2 planning (A1-B1 French/Spanish/English frequency list needed)
-- Milestone thresholds (exact schedule beyond 10/25/50/100 examples) are a product design decision — resolve during Phase 6 planning
-- Sprite assets (tiger/idle/happy/sad/sleep, habitat layers, animal sprites) must be in hand before Phase 5 — art production or licensing not yet arranged
-- PixiJS 8.x sprite atlas toolchain specifics need validation at Phase 5 start (recommend `/gsd:research-phase` before Phase 5)
+- [v2.0] Anthropic API key must be added to env schema + CI env block before Phase 10 planning (mirror existing DEEPL_API_KEY pattern).
+- [v2.0] Claude vision prompt/response contract (how words are returned, language handling for mixed-language images) to resolve during Phase 10 planning.
 
 ## Session Continuity
 
-Last session: 2026-03-29T00:40:57.406Z
-Stopped at: Completed 07-03-PLAN.md
+Last session: 2026-05-18T00:00:00.000Z
+Stopped at: v2.0 roadmap created (Phases 9-11)
 Resume file: None

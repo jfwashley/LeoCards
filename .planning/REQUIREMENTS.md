@@ -62,6 +62,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01..05 | TBD | Pending |
-| EXT-01..05 | TBD | Pending |
-| RVW-01..05 | TBD | Pending |
+| IMG-01 | Phase 9 | Pending |
+| IMG-02 | Phase 9 | Pending |
+| IMG-03 | Phase 9 | Pending |
+| IMG-04 | Phase 9 | Pending |
+| IMG-05 | Phase 9 | Pending |
+| EXT-01 | Phase 10 | Pending |
+| EXT-02 | Phase 10 | Pending |
+| EXT-03 | Phase 10 | Pending |
+| EXT-04 | Phase 10 | Pending |
+| EXT-05 | Phase 10 | Pending |
+| RVW-01 | Phase 11 | Pending |
+| RVW-02 | Phase 11 | Pending |
+| RVW-03 | Phase 11 | Pending |
+| RVW-04 | Phase 11 | Pending |
+| RVW-05 | Phase 11 | Pending |
