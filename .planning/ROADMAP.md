@@ -92,3 +92,23 @@ Phases execute in numeric order: 9 → 10 → 11
 | 9. Image Upload & Deck Selection | v2.0 | 1/2 | Executing | - |
 | 10. Vision Extraction Endpoint | v2.0 | 0/TBD | Not started | - |
 | 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
+
+## Backlog
+
+### Phase 999.1: Perf initiative — near-instant navigation (BACKLOG)
+
+**Goal:** Cross-cutting app performance work to make navigations near-instant. NOT part of the v2.0 image milestone — its own evidence-driven discuss→research→plan→execute cycle.
+
+**Scope (captured for future planning):**
+- *Phase A — Measure:* `next build && next start` baseline; Lighthouse + Core Web Vitals on key routes (dashboard, deck view, /deck/new-card, study session); `next build` bundle report; server TTFB / RSC route timings. Identify whether slowness is bundle size, RSC data-fetch waterfalls, or hydration.
+- *Phase B — Optimize against baseline:* route-level code splitting, RSC/data-fetch parallelization, prefetch-on-intent, image/asset optimization, bundle trimming — every change tied to a measured before/after.
+
+**Success criterion:** warm navigations <~100ms perceived in a production build, with defined LCP/TTI targets per key route.
+
+**Context:** Raised 2026-05-18 during Phase 9 execution. Observed dev slowness was `next dev` cold-compile + a freshly cleared `.next` cache, NOT proven production slowness — so a real production baseline (Phase A) must precede any optimization.
+
+**Requirements:** TBD
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)
