@@ -44,7 +44,7 @@ All values are Tailwind utility classes mapped to the 4-point base. The existing
 | 3xl | 64px | — | Not used in this phase |
 
 **Exceptions:**
-- Touch targets: interactive elements without explicit size (create-deck language buttons) must have `min-h-[44px]` — matches existing `deck-switcher.tsx` pattern.
+- Touch targets: interactive elements without explicit size (create-deck language buttons) must have `min-h-[44px]` — this is a permanent inherited touch-target value from `deck-switcher.tsx`, not a new spacing token, and 44px is a justified exception to the 4-point scale per WCAG 2.5.5.
 - Drop zone: minimum height 128px (`min-h-32`) to provide an adequate drag-and-drop surface.
 - Preview thumbnail: max height 256px (`max-h-64`) — locked by CONTEXT.md D-05.
 
@@ -56,16 +56,16 @@ All values are Tailwind utility classes mapped to the 4-point base. The existing
 
 All sizes and weights are read directly from the component primitives and CSS variables. The codebase uses Tailwind utility classes without a custom type scale configuration.
 
+**Weight rationale:** `button.tsx` and `label.tsx` are hardcoded to `font-medium` (500); body copy uses Tailwind's default `font-normal` (400). The pre-existing page heading (`translation-form.tsx` h1) uses `font-semibold` (600) but this is an inherited value from a component this phase does not modify — it is not a new token introduced here. This phase's new components standardise on exactly **2 weights: 400 (regular) and 500 (medium)**, faithful to the Button and Label primitives that all new components reuse.
+
 | Role | Size | Weight | Line Height | Tailwind Class | Used For |
 |------|------|--------|-------------|----------------|----------|
 | Body | 14px (`text-sm`) | 400 (regular) | 1.5 (normal) | `text-sm` | Drop zone helper text, deck selector label, step descriptions, error messages |
-| Label | 14px (`text-sm`) | 500 (medium) | 1 (`leading-none`) | `text-sm font-medium` | Form field labels — matches existing `Label` component |
-| Heading | 20px (`text-xl`) | 600 (semibold) | snug (~1.35) | `text-xl font-semibold` | "Add a Card" page heading — matches existing `translation-form.tsx` h1 |
-| CTA / Button | 14px (`text-sm`) | 500 (medium) | — | `text-sm font-medium` | All `Button` components — built into `buttonVariants` base class |
+| Label / CTA / Button | 14px (`text-sm`) | 500 (medium) | 1 or — | `text-sm font-medium` | Form field labels (`label.tsx`), all `Button` components (`button.tsx` base class) — same weight, distinct roles |
 
-**Note:** The codebase does not use a Display size in this flow. Four type roles are sufficient for Phase 9.
+**Note:** The codebase does not use a Display size in this flow. Two type roles cover all Phase 9 UI.
 
-**Source:** `src/components/translation-form.tsx` (h1 `text-xl font-semibold`), `src/components/ui/label.tsx` (`text-sm font-medium leading-none`), `src/components/ui/button.tsx` (`text-sm font-medium`), `src/components/ui/card.tsx` (`CardTitle: text-base font-medium`)
+**Source:** `src/components/ui/label.tsx` (`text-sm font-medium leading-none`), `src/components/ui/button.tsx` (`text-sm font-medium`), `src/components/translation-form.tsx` (h1 `text-xl font-semibold` — pre-existing, not modified in this phase)
 
 ---
 
@@ -160,7 +160,7 @@ Two buttons side by side: "Type a word" | "From image"
 |---------|------|
 | Thumbnail container | `relative` positioned wrapper; `max-h-64` constraint; `w-auto`; `object-contain` |
 | Preview image | Plain `<img>` (not `next/image`); `rounded-lg`; `max-h-64 w-auto object-contain` |
-| X clear button | `Button variant="ghost" size="icon"` positioned `absolute top-2 right-2`; `aria-label="Remove selected image"` |
+| X clear button | `Button variant="ghost" size="icon"` positioned `absolute top-2 right-2`; `aria-label="Remove selected image"`. A visually-hidden span or Tooltip is acceptable as a supplementary label — `aria-label` alone satisfies the minimum accessibility contract for this icon-only control. |
 | "Choose different image" | `Button variant="outline"` below thumbnail; re-triggers `inputRef.current.click()` |
 | Advance to Step 2 | `Button variant="default" className="w-full"` — "Next: choose deck" — enabled when `state.file !== null` |
 
@@ -274,7 +274,7 @@ Match `TranslationForm`'s established inline error pattern exactly:
 | Keyboard operability | Drop zone has `role="button" tabIndex={0} onKeyDown` — Enter/Space opens file picker |
 | File input label | `<input type="file" className="sr-only" aria-label="Upload image">` |
 | Drop zone ARIA | `aria-label="Select image file — click, drag and drop, or paste from clipboard"` |
-| Clear button ARIA | `aria-label="Remove selected image"` |
+| Clear button ARIA | `aria-label="Remove selected image"` (icon-only button; `aria-label` is the minimum contract; a visually-hidden span is acceptable supplementary reinforcement) |
 | Error announcement | Inline `<p>` is in natural reading order — screen reader reads on next focus/navigation; no `aria-live` required for this low-frequency interaction |
 | Focus management | No programmatic focus moves between steps — user navigates naturally via Tab; this is appropriate for an in-page flow, not a modal |
 | Drag-and-drop fallback | Click-to-browse and paste are always available; drag is progressive enhancement |
@@ -307,6 +307,7 @@ Decisions made during this UI-SPEC (auto mode — derived from upstream artifact
 | Step 2 recap thumbnail size | `max-h-32` (half of Step 1 max-h-64) | Communicates "this is a recap, not the primary focus" without hiding the choice |
 | No destructive confirmation for clear | Immediate clear | File not uploaded; action reversible; low stakes |
 | Extract button height | `h-11` (matches TranslationForm Save button explicit height) | Visual consistency with the form it sits beside |
+| Font weight pair | 400 (regular) + 500 (medium) — not 400/600 | `button.tsx` and `label.tsx` are hardcoded to `font-medium` (500); dropping 600 from this phase's new components is faithful to the actual primitives. The pre-existing h1 `font-semibold` is inherited and not modified. |
 
 ---
 
