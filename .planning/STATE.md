@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: v1.0 milestone complete
-stopped_at: Completed 07-03-PLAN.md
-last_updated: "2026-04-15T12:44:12.037Z"
+milestone: v2.0
+milestone_name: Image-to-Flashcards
+status: Defining requirements
+stopped_at: Milestone v2.0 started
+last_updated: "2026-05-18T00:00:00.000Z"
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 25
-  completed_plans: 25
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -19,12 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 08 — tech-debt-cleanup
+**Current focus:** v2.0 Image-to-Flashcards — defining requirements
 
 ## Current Position
 
-Phase: 08
-Plan: Not started
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-18 — Milestone v2.0 started
 
 ## Performance Metrics
 

@@ -17,6 +17,19 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 All 23 v1 requirements satisfied across 8 phases (25 plans).
 
+## Current Milestone: v2.0 Image-to-Flashcards
+
+**Goal:** Let users upload a photo and have Claude vision extract the words, then review/edit and add them (auto-translated) to a chosen deck.
+
+**Target features:**
+- Upload an image (JPG/PNG/WebP, one at a time, ~5MB cap) from the add-card flow
+- Claude vision (Anthropic multimodal) extracts vocabulary words from the image
+- Review & edit screen: user ticks/edits/removes extracted words before committing
+- Extracted words flow through the existing add-card pipeline (DeepL auto-translate, editable) into a user-selected deck
+- Reuse existing in-memory rate limiter to protect the vision endpoint
+
+**Key context:** Scope is the image feature only — the outstanding "cute 2D illustrated visual style" remains deferred. Extracted words are treated exactly like manually added cards (same DeepL translation, same edit affordances).
+
 ## Requirements
 
 ### Validated
@@ -81,5 +94,22 @@ All 23 v1 requirements satisfied across 8 phases (25 plans).
 - Placeholder sprite assets (tiger, habitat layers, bird) — not production art
 - Nyquist validation incomplete across most phases
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-04-15 after v1.0 milestone*
+*Last updated: 2026-05-18 — v2.0 Image-to-Flashcards milestone started*
