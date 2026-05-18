@@ -9,13 +9,13 @@ Requirements for the Image-to-Flashcards milestone. Each maps to a roadmap phase
 
 ### Image Upload (IMG)
 
-- [ ] **IMG-01**: User can choose an image file from the add-card flow and see an "extract words from image" entry point
+- [x] **IMG-01**: User can choose an image file from the add-card flow and see an "extract words from image" entry point
 - [x] **IMG-02
 **: User can upload one image at a time in JPG, PNG, or WebP format
 - [x] **IMG-03
 **: User is shown a clear, friendly error when a file is the wrong type or exceeds the ~5MB size limit (rejected before upload)
-- [ ] **IMG-04**: User selects which deck the extracted words will be added to before extraction (defaults to the active deck)
-- [ ] **IMG-05**: User sees a preview/thumbnail of the chosen image and can replace or cancel it before extraction
+- [x] **IMG-04**: User selects which deck the extracted words will be added to before extraction (defaults to the active deck)
+- [x] **IMG-05**: User sees a preview/thumbnail of the chosen image and can replace or cancel it before extraction
 
 ### Word Extraction (EXT)
 
@@ -64,11 +64,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01 | Phase 9 | Pending |
-| IMG-02 | Phase 9 | Pending |
-| IMG-03 | Phase 9 | Pending |
-| IMG-04 | Phase 9 | Pending |
-| IMG-05 | Phase 9 | Pending |
+| IMG-01 | Phase 9 | Complete |
+| IMG-02 | Phase 9 | Complete |
+| IMG-03 | Phase 9 | Complete |
+| IMG-04 | Phase 9 | Complete |
+| IMG-05 | Phase 9 | Complete |
 | EXT-01 | Phase 10 | Pending |
 | EXT-02 | Phase 10 | Pending |
 | EXT-03 | Phase 10 | Pending |

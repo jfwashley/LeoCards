@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: executing
+status: ready_to_plan
 stopped_at: "09-02 complete — all tasks done, human-verify checkpoint approved"
 last_updated: "2026-05-18T20:30:00Z"
 last_activity: 2026-05-18 -- 09-02 all 4 tasks complete; Phase 9 finished (2/2 plans done)
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 2
   completed_plans: 2
-  percent: 100
+  percent: 67
 ---
 
 # Project State
@@ -21,20 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-18)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase --phase — 9
+**Current focus:** Phase 9 complete — next: Phase 10 (Vision Extraction Endpoint)
 
 ## Current Position
 
-Phase: 9 (09-image-upload-deck-selection) — COMPLETE (2/2 plans done)
-Plan: 2 of 2 — COMPLETE
-Status: Plan 09-02 all 4 tasks done; human-verify checkpoint approved by user 2026-05-18
-Last activity: 2026-05-18 — 09-02 complete; OS drag/paste manually verified; remaining steps e2e verified via Playwright
+Phase: 10 (Vision Extraction Endpoint) — not started
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-05-18 — Phase 9 complete (2/2 plans, verification passed)
+
+> Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase; corrected here. Real milestone order: 9 → 10 → 11.
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1 (v2.0); 25 (v1.0, shipped)
+- Total plans completed: 3 (v2.0); 25 (v1.0, shipped)
 - Average duration: 2 min
 - Total execution time: 2 min (v2.0)
 
@@ -44,6 +46,7 @@ Last activity: 2026-05-18 — 09-02 complete; OS drag/paste manually verified; r
 |-------|-------|-------|----------|
 | 9 (v2.0) | 2/2 | ~12 min | ~6 min |
 | 10-11 (v2.0) | - | - | - |
+| 9 | 2 | - | - |
 
 **Recent Trend:**
 
