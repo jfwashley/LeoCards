@@ -43,7 +43,9 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. User is shown a clear, friendly error and the file is rejected before upload when it is the wrong type or exceeds the ~5MB limit
   4. User can replace the chosen image or cancel out of the flow before triggering extraction
   5. User can pick which deck the words will be added to, pre-selected to the active deck, before extraction
-**Plans**: TBD
+**Plans**: 2 plans
+  - [ ] 09-01-PLAN.md — Pure image-validation module + Vitest suite (IMG-02, IMG-03)
+  - [ ] 09-02-PLAN.md — Image picker (click/drag/paste) + preview + Step 2 deck selection wired into add-card page (IMG-01, IMG-04, IMG-05)
 **UI hint**: yes
 
 ### Phase 10: Vision Extraction Endpoint
@@ -87,6 +89,6 @@ Phases execute in numeric order: 9 → 10 → 11
 | 6. Milestone System and Dashboard Polish | v1.0 | 3/3 | Complete | 2026-03-28 |
 | 7. Backend Security and Quality Fixes | v1.0 | 3/3 | Complete | 2026-03-29 |
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
-| 9. Image Upload & Deck Selection | v2.0 | 0/TBD | Not started | - |
+| 9. Image Upload & Deck Selection | v2.0 | 0/2 | Planned | - |
 | 10. Vision Extraction Endpoint | v2.0 | 0/TBD | Not started | - |
 | 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
