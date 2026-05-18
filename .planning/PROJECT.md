@@ -17,6 +17,8 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 All 23 v1 requirements satisfied across 8 phases (25 plans).
 
+**v2.0 progress:** Phase 9 (Image Upload & Deck Selection) complete — IMG-01–IMG-05 satisfied (image picker, type/size validation, preview/replace, deck pre-selection; verification passed). Next: Phase 10 (Vision Extraction Endpoint).
+
 ## Current Milestone: v2.0 Image-to-Flashcards
 
 **Goal:** Let users upload a photo and have Claude vision extract the words, then review/edit and add them (auto-translated) to a chosen deck.
@@ -112,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-18 — v2.0 Image-to-Flashcards milestone started*
+*Last updated: 2026-05-18 — Phase 9 (Image Upload & Deck Selection) complete*
