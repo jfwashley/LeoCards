@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { TranslationForm } from "@/components/translation-form";
+import { NewCardModeToggle } from "@/components/new-card-mode-toggle";
 import { auth } from "@/lib/auth";
 import { getUserDecks, getUserNativeLanguage } from "@/lib/deck-queries";
 
@@ -46,12 +46,14 @@ export default async function NewCardPage({ searchParams }: NewCardPageProps) {
   return (
     <div className="min-h-screen bg-background">
       <main className="px-8 py-8 max-w-4xl mx-auto w-full">
-        <TranslationForm
-          deckId={activeDeck.id}
+        <NewCardModeToggle
+          decks={decks}
+          activeDeckId={activeDeck.id}
           nativeLang={nativeLang}
-          targetLang={activeDeck.language}
           nativeLangLabel={nativeLangLabel}
           targetLangLabel={targetLangLabel}
+          deckId={activeDeck.id}
+          targetLang={activeDeck.language}
         />
       </main>
     </div>
