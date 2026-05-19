@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, Loader2, ImageOff, AlertCircle, X } from "lucide-react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { type DeckOption, DeckSwitcher } from "@/components/deck-switcher";
 import {
@@ -23,6 +23,9 @@ interface ImageFlowState {
   previewUrl: string | null;
   pickError: string | null;
   selectedDeckId: string;
+  extracting: boolean;
+  extractError: { status: number; message: string } | null;
+  extractWords: string[] | null;
 }
 
 type ImageFlowAction =
@@ -31,9 +34,14 @@ type ImageFlowAction =
   | { type: "CLEAR_FILE" }
   | { type: "ADVANCE_STEP" }
   | { type: "BACK_TO_PICK" }
-  | { type: "SET_DECK"; deckId: string };
+  | { type: "SET_DECK"; deckId: string }
+  | { type: "EXTRACT_START" }
+  | { type: "EXTRACT_SUCCESS"; words: string[] }
+  | { type: "EXTRACT_NO_WORDS" }
+  | { type: "EXTRACT_ERROR"; status: number; message: string }
+  | { type: "EXTRACT_RETRY" };
 
-function imageFlowReducer(
+export function imageFlowReducer(
   state: ImageFlowState,
   action: ImageFlowAction,
 ): ImageFlowState {
@@ -66,6 +74,17 @@ function imageFlowReducer(
       return { ...state, step: "pick" };
     case "SET_DECK":
       return { ...state, selectedDeckId: action.deckId };
+    case "EXTRACT_START":
+      return { ...state, extracting: true, extractError: null, extractWords: null };
+    case "EXTRACT_SUCCESS":
+      return { ...state, extracting: false, extractWords: action.words };
+    case "EXTRACT_NO_WORDS":
+      return { ...state, extracting: false, extractWords: [] };
+    case "EXTRACT_ERROR":
+      return { ...state, extracting: false, extractError: { status: action.status, message: action.message } };
+      // file / previewUrl / selectedDeckId are NOT touched — D-16 preservation
+    case "EXTRACT_RETRY":
+      return { ...state, extracting: true, extractError: null, extractWords: null };
     default:
       return state;
   }
@@ -82,6 +101,9 @@ export function ImageUploadFlow({
     previewUrl: null,
     pickError: null,
     selectedDeckId: defaultDeckId,
+    extracting: false,
+    extractError: null,
+    extractWords: null,
   });
 
   // Track latest previewUrl in a ref so cleanup always revokes the current URL
