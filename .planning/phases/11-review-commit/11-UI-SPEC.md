@@ -42,7 +42,7 @@ Inherited from Phase 9 unchanged. No new spacing tokens.
 |-------|-------|----------------|----------------------|
 | xs | 4px | `gap-1` / `p-1` | Checkbox-to-label gap inside a word row; icon gaps in row controls |
 | sm | 8px | `gap-2` / `p-2` | Space between row controls (checkbox, input, X button) |
-| md | 16px | `gap-4` / `p-4` | Gap between rows in the word list; gap between list sections |
+| md | 16px | `gap-4` / `p-4` | Gap between rows in the word list; gap between list sections; gap between translation pairs in Step B |
 | lg | 24px | `gap-6` / `p-6` | Vertical separation between Step A list and "Already learned" section |
 | xl | 32px | `gap-8` / `px-8` | Page outer padding — inherited, not modified |
 
@@ -59,11 +59,11 @@ Inherited from Phase 9/10 unchanged. Phase 11 adds one new copy role (section he
 
 | Role | Size | Weight | Line Height | Tailwind Class | Phase 11 Usage |
 |------|------|--------|-------------|----------------|----------------|
-| Body | 14px (`text-sm`) | 400 (regular) | 1.5 | `text-sm` | Word row text (editable input placeholder), "Already learned" word text, inline error copy, success summary body, helper hints |
+| Body | 14px (`text-sm`) | 400 (regular) | 1.5 | `text-sm` | Word row text (editable input placeholder), "Already learned" word text, "already learned" suffix tag, inline error copy, success summary body, helper hints |
 | Label / CTA / Button | 14px (`text-sm`) | 500 (medium) | 1 | `text-sm font-medium` | All `Button` labels; step headings (rendered as `<p className="text-sm font-medium">`); "Already learned" section label; select-all/select-none controls |
 | Heading (pre-existing, not new) | 20px (`text-xl`) | 600 (semibold) | 1.2 | `text-xl font-semibold` | "Add a Card" page h1 — pre-existing in `translation-form.tsx`; NOT modified in this phase |
 
-**No new type roles introduced.** The two-weight system (400 regular + 500 medium) inherited from Phase 9/10 covers all Phase 11 copy.
+**No new type roles introduced.** The two-weight system (400 regular + 500 medium) inherited from Phase 9/10 covers all Phase 11 copy. The "already learned" suffix tag uses `text-sm text-muted-foreground` (body role, muted color — no `text-xs` or other non-standard size).
 
 **Note on `text-xl font-semibold`:** This pre-existing heading is inherited and not modified. New Phase 11 components standardise on weight 400 (body) and 500 (medium) only.
 
@@ -79,7 +79,7 @@ Inherited from Phase 9/10 unchanged.
 | Secondary (30%) | `--card` / `--muted` | `hsl(30 15% 96%)` / `hsl(30 10% 92%)` | "Already learned" section background (`bg-muted`); translation-loading skeleton shimmer (`bg-muted animate-pulse`) |
 | Accent (10%) | `--primary` | `hsl(24 95% 53%)` | "Add N cards" primary commit CTA; Loader2 spinner during commit in-flight; checked checkbox (browser default inherits accent) |
 | Destructive | `--destructive` | `hsl(0 84% 60%)` | Per-row translation failure inline error; per-row commit failure inline error |
-| Muted foreground | `--muted-foreground` | `hsl(0 0% 45%)` | "Already learned" word text; step sub-copy; commit in-flight hint text; success summary secondary line |
+| Muted foreground | `--muted-foreground` | `hsl(0 0% 45%)` | "Already learned" word text; "already learned" suffix tag; step sub-copy; commit in-flight hint text; success summary secondary line |
 | Foreground | `--foreground` | `hsl(0 0% 9%)` | Word row editable input text; step heading text; success summary primary line |
 | Border | `--border` | `hsl(30 10% 88%)` | Word row separator (optional `border-b border-border` per row); section divider |
 
@@ -210,9 +210,9 @@ flex items-center gap-2 py-2 border-b border-border last:border-0
 **AlreadyLearnedRow layout (not interactive):**
 
 ```
-flex items-center gap-2 py-1.5
+flex items-center gap-2 py-2
   <span className="text-sm text-muted-foreground line-through">{word}</span>
-  <span className="text-xs text-muted-foreground ml-auto">already learned</span>
+  <span className="text-sm text-muted-foreground ml-auto">already learned</span>
 ```
 
 **None-kept disabled state:**
@@ -257,7 +257,7 @@ flex flex-col gap-4
   [Step B heading row]
     <p className="text-sm font-medium text-foreground">Check translations</p>
     <p className="text-sm text-muted-foreground">Edit any translation before adding to your deck.</p>
-  [translation list — flex flex-col gap-3]
+  [translation list — flex flex-col gap-4]
     [ReviewTranslationRow × kept-words-count]
   [action row]
     <Button variant="ghost" onClick={() => setStep("A")}> ← Back </Button>
@@ -272,7 +272,7 @@ flex flex-col gap-4
 **ReviewTranslationRow layout (Step B) — mirrors TranslationForm exactly per RVW-03/D-09:**
 
 ```
-flex flex-col gap-1.5
+flex flex-col gap-2
   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
     <div className="flex flex-col gap-1">
       <Label htmlFor={`native-${i}`}>{nativeLangLabel}</Label>
@@ -402,7 +402,7 @@ flex flex-col gap-4
   [word list — flex flex-col divide-y divide-border]
     [ReviewWordRow × N (kept words)]
   [already-learned section — conditional, if duplicates exist]
-    <div className="mt-2 pt-4 border-t border-border flex flex-col gap-1.5">
+    <div className="mt-2 pt-4 border-t border-border flex flex-col gap-2">
       <p className="text-sm font-medium text-muted-foreground">Already learned</p>
       [AlreadyLearnedRow × M]
     </div>
@@ -421,7 +421,7 @@ flex flex-col gap-4
   [heading block]
     <p className="text-sm font-medium text-foreground">Check translations</p>
     <p className="text-sm text-muted-foreground">Edit any translation before adding to your deck.</p>
-  [translation list — flex flex-col gap-3]
+  [translation list — flex flex-col gap-4]
     [ReviewTranslationRow × kept-words-count]
   [action row — flex flex-col gap-2]
     <Button variant="default" className="w-full h-11" disabled={isCommitting}>
@@ -624,6 +624,9 @@ Decisions made during this UI-SPEC (auto mode — derived from 11-CONTEXT.md, 09
 | Zero-added failure state | `variant="outline"` CTA + different copy | Primary accent is reserved for success-path actions. All-failed is a recoverable failure, not a success — outline correctly signals secondary action |
 | `handleGoToDeck` navigation target | `/dashboard?deck={deckId}` | Phase 02 decision: URL params `?deck=id` for active deck state. This pre-selects the deck the user just added to, showing their new cards immediately |
 | Font weight pair | 400 (regular) + 500 (medium) — not 400/600 | Inherits the Phase 9/10 locked decision. Pre-existing `text-xl font-semibold` heading is not modified |
+| Spacing normalisation: `gap-3` → `gap-4` (checker revision 2026-05-19) | `gap-4` (16px) for translation list gaps | `gap-3` (12px) is not in the standard set {4,8,16,24,32,48,64}px. Normalised to nearest compliant value `gap-4` (16px), which gives appropriate breathing room between translation pairs and matches the outer word-list gap. Row-internal gaps remain `gap-2` (8px). |
+| Spacing normalisation: `gap-1.5` / `py-1.5` → `gap-2` / `py-2` (checker revision 2026-05-19) | `gap-2` / `py-2` (8px) for AlreadyLearnedRow and section container | 6px values (`*-1.5`) are not multiples of 4 and not in the standard set. Normalised to `gap-2` / `py-2` (8px). |
+| Typography normalisation: `text-xs` → `text-sm` (checker revision 2026-05-19) | `text-sm text-muted-foreground` for the "already learned" suffix tag | `text-xs` (12px) is not a declared type role. Normalised to `text-sm` (14px, body role) with `text-muted-foreground` to retain the visual de-emphasis. Keeps the strict 2-size (14px/20px) inherited system with zero new roles. |
 
 ---
 
