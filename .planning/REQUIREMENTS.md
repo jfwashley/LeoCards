@@ -19,11 +19,16 @@ Requirements for the Image-to-Flashcards milestone. Each maps to a roadmap phase
 
 ### Word Extraction (EXT)
 
-- [ ] **EXT-01**: User can trigger extraction and Claude vision returns the vocabulary words found in the image
-- [ ] **EXT-02**: User sees a loading state while extraction is in progress and the request cannot be double-submitted
-- [ ] **EXT-03**: User sees a clear message when no words could be found in the image, with the option to try another image
-- [ ] **EXT-04**: User sees a graceful, recoverable error if the vision request fails or times out (no lost deck selection)
-- [ ] **EXT-05**: The vision extraction endpoint is protected by the existing in-memory rate limiter and rejects oversized/invalid payloads server-side
+- [x] **EXT-01
+**: User can trigger extraction and Claude vision returns the vocabulary words found in the image
+- [x] **EXT-02
+**: User sees a loading state while extraction is in progress and the request cannot be double-submitted
+- [x] **EXT-03
+**: User sees a clear message when no words could be found in the image, with the option to try another image
+- [x] **EXT-04
+**: User sees a graceful, recoverable error if the vision request fails or times out (no lost deck selection)
+- [x] **EXT-05
+**: The vision extraction endpoint is protected by the existing in-memory rate limiter and rejects oversized/invalid payloads server-side
 
 ### Review & Commit (RVW)
 

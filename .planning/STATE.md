@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: "Completed 10-01: Wave 0 foundations (AI SDK + shared constants + test scaffolds)"
-last_updated: "2026-05-19T11:49:27.120Z"
+stopped_at: "Completed 10-02: /api/extract route with guard sequence + v6 AI SDK vision call"
+last_updated: "2026-05-19T12:02:12.340Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 6
-  completed_plans: 3
-  percent: 50
+  completed_plans: 4
+  percent: 67
 ---
 
 # Project State
@@ -55,6 +55,7 @@ Last activity: 2026-05-19 -- Phase --phase execution started
 
 *Updated after each plan completion*
 | Phase 10-vision-extraction-endpoint P01 | 5 | 3 tasks | 8 files |
+| Phase 10-vision-extraction-endpoint P02 | 10 | 2 tasks | 1 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -154,6 +155,8 @@ Recent decisions affecting current work:
 - ai@6.0.185 and @ai-sdk/anthropic@3.0.78 installed at exact pinned versions; ANTHROPIC_API_KEY wired as optional server env (D-03/D-04)
 - D-12 constants refactor: new image-constants.ts module is single source of truth for ALLOWED_IMAGE_TYPES + MAX_IMAGE_BYTES; consumed by both client validator and server route
 - Nyquist Wave 0 scaffolds: extract.unit.test.ts and extract-reducer.test.ts intentionally RED awaiting 10-02/10-03; eval test gated by RUN_EXTRACTION_EVALS
+- anthropic() in @ai-sdk/anthropic@3.x takes only modelId — no second options arg; apiKey read from process.env automatically
+- vi.doMock without vi.resetModules() cannot cascade-invalidate cached route modules in Vitest 4 node env — 503 test scaffold needs resetModules
 
 ### Pending Todos
 
@@ -166,8 +169,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-19T11:49:23.197Z
-Stopped at: Completed 10-01: Wave 0 foundations (AI SDK + shared constants + test scaffolds)
+Last session: 2026-05-19T12:02:12.335Z
+Stopped at: Completed 10-02: /api/extract route with guard sequence + v6 AI SDK vision call
 Resume file: None
 
 **Planned Phase:** 10 (Vision Extraction Endpoint) — 4 plans — 2026-05-19T10:49:36.116Z
