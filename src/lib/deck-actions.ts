@@ -225,6 +225,61 @@ export async function getSameLanguageDeckBackWords(
 }
 
 // ============================================================
+// saveImageCards
+// ============================================================
+
+/**
+ * Batch-inserts image-extracted card pairs into a deck.
+ * Single auth + ownership check before the insert loop.
+ * Continues on per-card failure (Neon HTTP has no transactions — no rollback).
+ * Returns an outcomes array aligned by index with cardInputs.
+ * revalidatePath called once after all inserts.
+ * No card text or image data is logged (T-11-06).
+ */
+export async function saveImageCards(
+  deckId: string,
+  cardInputs: Array<{ front: string; back: string }>,
+): Promise<Array<{ ok: boolean; error?: string }>> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) throw new Error("Unauthorized");
+  const userId = session.user.id as UserId;
+
+  // Verify deck ownership once (T-11-04)
+  const deckRows = await db
+    .select()
+    .from(decks)
+    .where(eq(decks.id, deckId as DeckId));
+  const deck = deckRows[0];
+  if (!deck || deck.userId !== userId) throw new Error("Forbidden");
+
+  // Sequential inserts, continue-on-failure (D-12: Neon HTTP has no transactions)
+  const outcomes: Array<{ ok: boolean; error?: string }> = [];
+  for (const input of cardInputs) {
+    try {
+      const id = crypto.randomUUID() as CardId;
+      await db
+        .insert(cards)
+        .values({
+          id,
+          deckId: deckId as DeckId,
+          front: input.front,
+          back: input.back,
+          source: "image",
+        });
+      outcomes.push({ ok: true });
+    } catch (err) {
+      outcomes.push({
+        ok: false,
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+    }
+  }
+
+  revalidatePath("/dashboard"); // Once, after all inserts (D-12)
+  return outcomes;
+}
+
+// ============================================================
 // removeWordFromDeck
 // ============================================================
 
