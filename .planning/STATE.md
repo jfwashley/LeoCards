@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: planning
-stopped_at: Phase 10 AI-SPEC + UI-SPEC approved
-last_updated: "2026-05-19T10:49:36.127Z"
-last_activity: 2026-05-18 — Phase 9 complete (2/2 plans, verification passed)
+status: executing
+stopped_at: "Completed 10-01: Wave 0 foundations (AI SDK + shared constants + test scaffolds)"
+last_updated: "2026-05-19T11:49:27.120Z"
+last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 6
-  completed_plans: 2
-  percent: 33
+  completed_plans: 3
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-18)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 9 complete — next: Phase 10 (Vision Extraction Endpoint)
+**Current focus:** Phase --phase — 10
 
 ## Current Position
 
-Phase: 10 (Vision Extraction Endpoint) — not started
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-18 — Phase 9 complete (2/2 plans, verification passed)
+Phase: --phase (10) — EXECUTING
+Plan: 1 of --name
+Status: Executing Phase --phase
+Last activity: 2026-05-19 -- Phase --phase execution started
 
 > Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase; corrected here. Real milestone order: 9 → 10 → 11.
 
@@ -54,6 +54,7 @@ Last activity: 2026-05-18 — Phase 9 complete (2/2 plans, verification passed)
 - Trend: on track
 
 *Updated after each plan completion*
+| Phase 10-vision-extraction-endpoint P01 | 5 | 3 tasks | 8 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -150,6 +151,9 @@ Recent decisions affecting current work:
 - [Phase 07-backend-security-and-quality-fixes]: celebrate query param clamped to 1-10 with NaN guard — non-numeric becomes null, out-of-range silently clamped (SEC-07)
 - [Phase 07-backend-security-and-quality-fixes]: Email failure logging uses .catch() not try/catch — preserves no-await timing-attack protection while surfacing errors
 - [Phase 07-backend-security-and-quality-fixes]: Rate limiter is in-memory (not Redis) — appropriate for single-server v1 deployment
+- ai@6.0.185 and @ai-sdk/anthropic@3.0.78 installed at exact pinned versions; ANTHROPIC_API_KEY wired as optional server env (D-03/D-04)
+- D-12 constants refactor: new image-constants.ts module is single source of truth for ALLOWED_IMAGE_TYPES + MAX_IMAGE_BYTES; consumed by both client validator and server route
+- Nyquist Wave 0 scaffolds: extract.unit.test.ts and extract-reducer.test.ts intentionally RED awaiting 10-02/10-03; eval test gated by RUN_EXTRACTION_EVALS
 
 ### Pending Todos
 
@@ -162,8 +166,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: --stopped-at
-Stopped at: Phase 10 AI-SPEC + UI-SPEC approved
-Resume file: --resume-file
+Last session: 2026-05-19T11:49:23.197Z
+Stopped at: Completed 10-01: Wave 0 foundations (AI SDK + shared constants + test scaffolds)
+Resume file: None
 
 **Planned Phase:** 10 (Vision Extraction Endpoint) — 4 plans — 2026-05-19T10:49:36.116Z
