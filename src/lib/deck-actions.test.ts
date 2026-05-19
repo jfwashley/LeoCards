@@ -66,6 +66,7 @@ import {
   createDeck,
   deleteCard,
   editCard,
+  getSameLanguageDeckBackWords,
   removeWordFromDeck,
   saveCard,
 } from "./deck-actions";
@@ -362,5 +363,44 @@ describe("removeWordFromDeck", () => {
 
     expect(db.delete).toHaveBeenCalled();
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
+  });
+});
+
+// ============================================================
+// getSameLanguageDeckBackWords
+// ============================================================
+// RED by design — awaiting Wave 2 implementation in deck-actions.ts.
+// Sequencing note for the two selectChain.where mockResolvedValueOnce calls:
+//   (1) target deck language + ownership lookup → [{language: "fr"}]
+//   (2) innerJoin same-language cards back values → [{back: "Chien"}, {back: "  chat  "}]
+
+describe("getSameLanguageDeckBackWords", () => {
+  it("throws Unauthorized when no session", async () => {
+    mockNoSession();
+    await expect(getSameLanguageDeckBackWords(FAKE_DECK_ID)).rejects.toThrow(
+      "Unauthorized",
+    );
+  });
+
+  it("throws Forbidden when deck not owned by user (ownership lookup returns no row)", async () => {
+    mockSession();
+    // First query: target deck language + ownership lookup — returns empty = forbidden
+    selectChain.where.mockResolvedValueOnce([]);
+    await expect(getSameLanguageDeckBackWords(FAKE_DECK_ID)).rejects.toThrow(
+      "Forbidden",
+    );
+  });
+
+  it("returns Set of trimmed lowercase back values for same-language decks", async () => {
+    mockSession();
+    // First query: target deck language + ownership lookup
+    selectChain.where.mockResolvedValueOnce([{ language: "fr" }]);
+    // Second query: innerJoin same-language card back values
+    selectChain.where.mockResolvedValueOnce([
+      { back: "Chien" },
+      { back: "  chat  " },
+    ]);
+    const result = await getSameLanguageDeckBackWords(FAKE_DECK_ID);
+    expect(result).toEqual(new Set(["chien", "chat"]));
   });
 });
