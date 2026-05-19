@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-05-19T14:41:31.096Z"
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-05-19T14:47:29.077Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 7
-  percent: 70
+  completed_plans: 8
+  percent: 80
 ---
 
 # Project State
@@ -78,6 +78,7 @@ proceed without it.
 | Phase 10-vision-extraction-endpoint P03 | 7 | 2 tasks | 3 files |
 | Phase 10-vision-extraction-endpoint P04 | 15 | 1 tasks | 4 files |
 | Phase 11-review-commit P01 | 8 | 3 tasks | 3 files |
+| Phase 11-review-commit P02 | 3 | 2 tasks | 1 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -186,6 +187,9 @@ Recent decisions affecting current work:
 - eval reference-dataset curation DEFERRED (2026-05-19): requires real photos + FR/ES tutor; tracked in 10-HUMAN-UAT.md; non-blocking for Phase 11
 - Wave 0 scaffolds are intentionally RED until Wave 2 ships review-list.tsx and getSameLanguageDeckBackWords
 - Wave 2 must export: reviewListReducer, isDuplicate, runTranslationFanOut, commitReviewRows, and getSameLanguageDeckBackWords
+- Combined ownership+language gate in getSameLanguageDeckBackWords: first query uses and(eq(decks.id, deckId), eq(decks.userId, userId)) — one round-trip checks both ownership and language (T-11-03)
+- saveImageCards returns Array<{ok, error?}> indexed by input (not aggregate counts) — Wave 3 derives added/failed from outcomes; richer data for per-card error reporting
+- No logging of cardInputs, back values, or image data in saveImageCards (T-11-06 privacy mitigation)
 
 ### Pending Todos
 
@@ -198,8 +202,8 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-19T14:41:31.065Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-05-19T14:47:29.071Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None
 
 **Planned Phase:** 11 (Review & Commit) — 4 plans — 2026-05-19T14:30:58.149Z
