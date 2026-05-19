@@ -58,7 +58,11 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. User sees a clear "no words found" message with the option to try another image when the image yields nothing
   4. User sees a graceful, recoverable error on vision failure or timeout without losing their deck selection or image
   5. The extraction endpoint is guarded by the existing in-memory rate limiter and rejects oversized or invalid payloads server-side
-**Plans**: TBD
+**Plans**: 4 plans
+  - [ ] 10-01-PLAN.md — Wave 0: deps + ANTHROPIC_API_KEY env + D-12 shared constants refactor + route/reducer/eval test scaffolds
+  - [ ] 10-02-PLAN.md — Protected Claude vision route handler (guards + v6 AI SDK call) — EXT-01/03/05
+  - [ ] 10-03-PLAN.md — Client reducer + handleExtract wiring + 5 extraction states — EXT-02/03/04
+  - [ ] 10-04-PLAN.md — Model-id verification + manual reference dataset + live/rubric eval — EXT-01/03
 **UI hint**: yes
 
 ### Phase 11: Review & Commit
@@ -90,7 +94,7 @@ Phases execute in numeric order: 9 → 10 → 11
 | 7. Backend Security and Quality Fixes | v1.0 | 3/3 | Complete | 2026-03-29 |
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
 | 9. Image Upload & Deck Selection | v2.0 | 2/2 | Complete    | 2026-05-18 |
-| 10. Vision Extraction Endpoint | v2.0 | 0/TBD | Not started | - |
+| 10. Vision Extraction Endpoint | v2.0 | 0/4 | Not started | - |
 | 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
 
 ## Backlog
