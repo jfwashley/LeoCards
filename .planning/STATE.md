@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: planning
-stopped_at: Phase 11 context gathered
-last_updated: "2026-05-19T13:00:30.555Z"
+stopped_at: Phase 11 UI-SPEC approved
+last_updated: "2026-05-19T14:07:56.977Z"
 last_activity: 2026-05-19 — Phase 10 functional complete (4/4 plans, verification 11/11 passed); eval dataset deferred (10-HUMAN-UAT.md)
 progress:
   total_phases: 4
@@ -196,7 +196,7 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: --stopped-at
-Stopped at: Phase 11 context gathered
+Stopped at: Phase 11 UI-SPEC approved
 Resume file: --resume-file
 
 **Planned Phase:** 10 (Vision Extraction Endpoint) — 4 plans — 2026-05-19T10:49:36.116Z
