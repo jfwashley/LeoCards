@@ -7,9 +7,16 @@ import {
   ImageDropZone,
   type ImageDropZoneHandle,
 } from "@/components/image-drop-zone";
+import { ReviewList } from "@/components/review-list";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { validateImageFile } from "@/lib/image-validation";
+
+const LANGUAGE_LABELS: Record<string, string> = {
+  en: "English",
+  fr: "French",
+  es: "Spanish",
+};
 
 interface ImageUploadFlowProps {
   decks: DeckOption[];
@@ -377,25 +384,20 @@ export function ImageUploadFlow({
       );
     }
 
-    // State 2 — Success (EXT-01 hand-off stub): extractWords is non-empty array
+    // State 2 — Success (RVW-01): extractWords is non-empty array — hand off to ReviewList
     if (Array.isArray(state.extractWords) && state.extractWords.length > 0) {
-      const N = state.extractWords.length;
+      const deck = decks.find((d) => d.id === state.selectedDeckId);
+      const targetLang = deck?.language ?? "fr";
       return (
-        <div className="flex flex-col gap-4">
-          {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
-          <img
-            src={state.previewUrl ?? ""}
-            alt="Selected file"
-            className="max-h-32 w-auto object-contain rounded-md"
-          />
-          <p className="text-sm text-muted-foreground">
-            Found {N} word{N !== 1 ? "s" : ""} — ready to review.
-          </p>
-          {/* Phase 11 wires the handler — leave disabled, do NOT navigate */}
-          <Button className="w-full h-11" variant="default" disabled>
-            Review words →
-          </Button>
-        </div>
+        <ReviewList
+          words={state.extractWords}
+          deckId={state.selectedDeckId}
+          nativeLang={nativeLang}
+          targetLang={targetLang}
+          onCancel={() => dispatch({ type: "BACK_TO_PICK" })}
+          nativeLangLabel={LANGUAGE_LABELS[nativeLang] ?? nativeLang}
+          targetLangLabel={LANGUAGE_LABELS[targetLang] ?? targetLang}
+        />
       );
     }
 
