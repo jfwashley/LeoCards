@@ -612,17 +612,19 @@ router.push(`/dashboard?deck=${deckId}`);
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Batched commit action vs N-loop saveCard calls**
    - What we know: both satisfy D-12; batched action has one revalidatePath vs N
    - What's unclear: whether the planner wants to introduce a new `saveImageCards` action or keep the simpler N-loop
    - Recommendation: planner decides; research favors batched action for cleanliness; either is correct
+   - **RESOLVED:** batched `saveImageCards` server action chosen (implemented in plan 11-02).
 
 2. **`loading-dedupe` step visibility**
    - What we know: dedupe must complete before Step A renders (to segregate duplicates correctly per D-04)
    - What's unclear: should ReviewList show a spinner while dedupe loads, or should the parent pass pre-fetched data?
    - Recommendation: show a brief loading state inside ReviewList (spinner) — keeps ReviewList self-contained and avoids async props from image-upload-flow
+   - **RESOLVED:** brief `loading-dedupe` spinner inside ReviewList (implemented in plan 11-03 Task 1; ReviewList self-contained, no async props from image-upload-flow).
 
 ---
 
