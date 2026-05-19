@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: "Reached checkpoint 10-04 Task 2: reference dataset curation awaiting Joshua"
-last_updated: "2026-05-19T12:21:14.998Z"
-last_activity: 2026-05-19 -- Phase --phase execution started
+stopped_at: "Phase 10 functional plans complete; eval dataset deferred (10-HUMAN-UAT.md)"
+last_updated: "2026-05-19T14:00:00Z"
+last_activity: 2026-05-19 -- Phase 10 plan 10-04 finalized (deferred eval tracked)
 progress:
   total_phases: 4
   completed_phases: 2
@@ -25,10 +25,25 @@ See: .planning/PROJECT.md (updated 2026-05-18)
 
 ## Current Position
 
-Phase: --phase (10) — EXECUTING
-Plan: 1 of --name
-Status: Executing Phase --phase
-Last activity: 2026-05-19 -- Phase --phase execution started
+Phase: 10 (Vision Extraction Endpoint) — FUNCTIONAL COMPLETE, eval deferred
+Plan: 4 of 4 (10-04 finalized)
+Status: Phase 10 functional work complete; eval reference-dataset deferred (see below)
+Last activity: 2026-05-19 -- Phase 10 plan 10-04 finalized with deferred eval tracked
+
+### Deferred: Eval Reference-Dataset (10-04 Task 2 + Task 3)
+
+The extraction eval (10-AI-SPEC.md §5) requires real photos + FR/ES tutor that cannot be
+produced in-session. Deferred by Joshua's decision 2026-05-19. Tracked in:
+
+  .planning/phases/10-vision-extraction-endpoint/10-HUMAN-UAT.md
+
+Three pending items:
+1. Curate 20 reference images into src/app/api/extract/__tests__/fixtures/ (per README.md)
+2. Author real ground-truth labels in reference-labels.json with FR/ES tutor
+3. Run RUN_EXTRACTION_EVALS=true npx vitest run ... and complete D1/D2/D5b manual rubric
+
+This is offline quality-assurance (not a functional EXT-01..05 dependency). Phase 11 can
+proceed without it.
 
 > Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase; corrected here. Real milestone order: 9 → 10 → 11.
 
@@ -163,10 +178,11 @@ Recent decisions affecting current work:
 - vitest setupFiles with dummy DATABASE_URL prevents neon() crash on module import in test env
 - claude-sonnet-4-6 verified current 2026-05-19 via ai-sdk.dev — no model id change required for production deploy
 - eval D3/D4 uses membership check not set equality — extra returned words are D2 tutor dimension, not code failures
+- eval reference-dataset curation DEFERRED (2026-05-19): requires real photos + FR/ES tutor; tracked in 10-HUMAN-UAT.md; non-blocking for Phase 11
 
 ### Pending Todos
 
-None yet.
+- [eval-debt] Curate 20 reference images + tutor labels for extract-eval suite — tracked in .planning/phases/10-vision-extraction-endpoint/10-HUMAN-UAT.md
 
 ### Blockers/Concerns
 

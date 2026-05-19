@@ -28,7 +28,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 **Milestone Goal:** Let users upload a photo, have Claude vision extract the vocabulary words, review/edit the results, and add the kept words (auto-translated via the existing DeepL pipeline) into a chosen deck — image feature only, no art pass.
 
 - [x] **Phase 9: Image Upload & Deck Selection** - Choose, validate, preview an image and pick the target deck from the add-card flow
-- [ ] **Phase 10: Vision Extraction Endpoint** - Rate-limited Claude vision endpoint that turns an uploaded image into a word list, with robust loading/error handling
+- [x] **Phase 10: Vision Extraction Endpoint** - Rate-limited Claude vision endpoint that turns an uploaded image into a word list, with robust loading/error handling (functional complete 2026-05-19; eval reference-dataset deferred — 10-HUMAN-UAT.md)
 - [ ] **Phase 11: Review & Commit** - Editable review screen that funnels kept words through the existing add-card + DeepL pipeline into the selected deck
 
 ## Phase Details
@@ -59,10 +59,10 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   4. User sees a graceful, recoverable error on vision failure or timeout without losing their deck selection or image
   5. The extraction endpoint is guarded by the existing in-memory rate limiter and rejects oversized or invalid payloads server-side
 **Plans**: 4 plans
-  - [ ] 10-01-PLAN.md — Wave 0: deps + ANTHROPIC_API_KEY env + D-12 shared constants refactor + route/reducer/eval test scaffolds
-  - [ ] 10-02-PLAN.md — Protected Claude vision route handler (guards + v6 AI SDK call) — EXT-01/03/05
-  - [ ] 10-03-PLAN.md — Client reducer + handleExtract wiring + 5 extraction states — EXT-02/03/04
-  - [ ] 10-04-PLAN.md — Model-id verification + manual reference dataset + live/rubric eval — EXT-01/03
+  - [x] 10-01-PLAN.md — Wave 0: deps + ANTHROPIC_API_KEY env + D-12 shared constants refactor + route/reducer/eval test scaffolds
+  - [x] 10-02-PLAN.md — Protected Claude vision route handler (guards + v6 AI SDK call) — EXT-01/03/05
+  - [x] 10-03-PLAN.md — Client reducer + handleExtract wiring + 5 extraction states — EXT-02/03/04
+  - [x] 10-04-PLAN.md — Model-id verified (Task 1 complete); eval scaffolding committed (Task 2); live eval deferred — reference images + tutor labels outstanding (10-HUMAN-UAT.md)
 **UI hint**: yes
 
 ### Phase 11: Review & Commit
@@ -94,7 +94,7 @@ Phases execute in numeric order: 9 → 10 → 11
 | 7. Backend Security and Quality Fixes | v1.0 | 3/3 | Complete | 2026-03-29 |
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
 | 9. Image Upload & Deck Selection | v2.0 | 2/2 | Complete    | 2026-05-18 |
-| 10. Vision Extraction Endpoint | v2.0 | 0/4 | Not started | - |
+| 10. Vision Extraction Endpoint | v2.0 | 4/4 | Functional complete; eval deferred (10-HUMAN-UAT.md) | 2026-05-19 |
 | 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
 
 ## Backlog
