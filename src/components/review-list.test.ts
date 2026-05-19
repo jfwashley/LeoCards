@@ -310,8 +310,8 @@ describe("reviewListReducer", () => {
   });
 
   it("default/unknown action: returns state unchanged (referential equality)", () => {
-    // @ts-expect-error — testing unknown action type at runtime
-    const next = reviewListReducer(emptyInitialState, { type: "UNKNOWN_ACTION" });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const next = reviewListReducer(emptyInitialState, { type: "UNKNOWN_ACTION" } as any);
     expect(next).toBe(emptyInitialState);
   });
 });
