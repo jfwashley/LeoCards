@@ -4,14 +4,14 @@ milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: planning
 stopped_at: Phase 10 AI-SPEC + UI-SPEC approved
-last_updated: "2026-05-19T10:24:17.977Z"
+last_updated: "2026-05-19T10:49:36.127Z"
 last_activity: 2026-05-18 — Phase 9 complete (2/2 plans, verification passed)
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
+  total_plans: 6
   completed_plans: 2
-  percent: 100
+  percent: 33
 ---
 
 # Project State
@@ -166,4 +166,4 @@ Last session: --stopped-at
 Stopped at: Phase 10 AI-SPEC + UI-SPEC approved
 Resume file: --resume-file
 
-**Planned Phase:** 9 (Image Upload & Deck Selection) — 2 plans — 2026-05-18T19:40:28.506Z
+**Planned Phase:** 10 (Vision Extraction Endpoint) — 4 plans — 2026-05-19T10:49:36.116Z
