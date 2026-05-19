@@ -177,17 +177,23 @@ describe("POST /api/extract", () => {
   });
 
   it("returns 503 when ANTHROPIC_API_KEY is absent", async () => {
-    // Re-mock @/env with no key for this specific test
+    // The route statically imports `env`, so the top-level vi.mock("@/env")
+    // value ("test-key") is already baked into the cached module. To exercise
+    // the key-absent path we must drop the module cache, re-mock @/env with no
+    // key, then dynamically re-import the route so it re-evaluates against the
+    // new env. Hoisted vi.mock factories (auth/rate-limit/ai/anthropic/headers)
+    // persist across resetModules; only @/env is overridden here.
+    vi.resetModules();
     vi.doMock("@/env", () => ({ env: { ANTHROPIC_API_KEY: undefined } }));
     mockSession();
     mockAllowed();
-    // Re-import the route with the new mock — dynamic import
     const { POST: POST_NO_KEY } = await import("@/app/api/extract/route");
     const res = await POST_NO_KEY(makeRequest(VALID_BODY));
     expect(res.status).toBe(503);
     const body = await res.json();
     expect(body).toMatchObject({ error: expect.any(String) });
     vi.doUnmock("@/env");
+    vi.resetModules();
   });
 
   it("returns 200 { words } for valid request", async () => {
