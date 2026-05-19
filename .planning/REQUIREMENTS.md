@@ -32,11 +32,16 @@ Requirements for the Image-to-Flashcards milestone. Each maps to a roadmap phase
 
 ### Review & Commit (RVW)
 
-- [ ] **RVW-01**: User sees the extracted words in an editable review list before anything is added to the deck
-- [ ] **RVW-02**: User can edit the text of any extracted word and remove or toggle off words they don't want
-- [ ] **RVW-03**: Each kept word is auto-translated via the existing DeepL pipeline and the translation is editable, exactly like manual card add
-- [ ] **RVW-04**: User confirms and the kept words are added as cards to the selected deck, then sees a success summary (count added)
-- [ ] **RVW-05**: User can cancel the review without adding any cards, and duplicate words already in the deck are flagged or skipped
+- [x] **RVW-01
+**: User sees the extracted words in an editable review list before anything is added to the deck
+- [x] **RVW-02
+**: User can edit the text of any extracted word and remove or toggle off words they don't want
+- [x] **RVW-03
+**: Each kept word is auto-translated via the existing DeepL pipeline and the translation is editable, exactly like manual card add
+- [x] **RVW-04
+**: User confirms and the kept words are added as cards to the selected deck, then sees a success summary (count added)
+- [x] **RVW-05
+**: User can cancel the review without adding any cards, and duplicate words already in the deck are flagged or skipped
 
 ## Future Requirements
 

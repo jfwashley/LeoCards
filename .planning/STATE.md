@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: planning
-stopped_at: Phase 11 UI-SPEC approved
-last_updated: "2026-05-19T14:30:58.209Z"
-last_activity: 2026-05-19 — Phase 10 functional complete (4/4 plans, verification 11/11 passed); eval dataset deferred (10-HUMAN-UAT.md)
+status: executing
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-05-19T14:41:31.096Z"
+last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 6
-  percent: 60
+  completed_plans: 7
+  percent: 70
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-18)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 10 complete (functional; eval deferred) — next: Phase 11 (Review & Commit)
+**Current focus:** Phase --phase — 11
 
 ## Current Position
 
-Phase: 11 (Review & Commit) — not started
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-19 — Phase 10 functional complete (4/4 plans, verification 11/11 passed); eval dataset deferred (10-HUMAN-UAT.md)
+Phase: --phase (11) — EXECUTING
+Plan: 1 of --name
+Status: Executing Phase --phase
+Last activity: 2026-05-19 -- Phase --phase execution started
 
 > Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase again; corrected here. Real milestone order: 9 ✓ → 10 ✓ → 11 (next).
 
@@ -77,6 +77,7 @@ proceed without it.
 | Phase 10-vision-extraction-endpoint P02 | 10 | 2 tasks | 1 files |
 | Phase 10-vision-extraction-endpoint P03 | 7 | 2 tasks | 3 files |
 | Phase 10-vision-extraction-endpoint P04 | 15 | 1 tasks | 4 files |
+| Phase 11-review-commit P01 | 8 | 3 tasks | 3 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -183,6 +184,8 @@ Recent decisions affecting current work:
 - claude-sonnet-4-6 verified current 2026-05-19 via ai-sdk.dev — no model id change required for production deploy
 - eval D3/D4 uses membership check not set equality — extra returned words are D2 tutor dimension, not code failures
 - eval reference-dataset curation DEFERRED (2026-05-19): requires real photos + FR/ES tutor; tracked in 10-HUMAN-UAT.md; non-blocking for Phase 11
+- Wave 0 scaffolds are intentionally RED until Wave 2 ships review-list.tsx and getSameLanguageDeckBackWords
+- Wave 2 must export: reviewListReducer, isDuplicate, runTranslationFanOut, commitReviewRows, and getSameLanguageDeckBackWords
 
 ### Pending Todos
 
@@ -195,8 +198,8 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: --stopped-at
-Stopped at: Phase 11 UI-SPEC approved
-Resume file: --resume-file
+Last session: 2026-05-19T14:41:31.065Z
+Stopped at: Completed 11-01-PLAN.md
+Resume file: None
 
 **Planned Phase:** 11 (Review & Commit) — 4 plans — 2026-05-19T14:30:58.149Z
