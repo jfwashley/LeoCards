@@ -703,7 +703,7 @@ function verifyMagicBytes(dataUrl: string, declaredMime: string): boolean {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Does `DeckOption` include `targetLanguage`?**
    - What we know: `image-upload-flow.tsx` imports `DeckOption` from `@/components/deck-switcher`. The component needs `targetLanguage` for D-05.

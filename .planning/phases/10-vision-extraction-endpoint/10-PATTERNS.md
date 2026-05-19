@@ -320,7 +320,7 @@ function handleExtract() {}
 **Replace with full async implementation** (per RESEARCH.md Section 4 — `handleExtract` pattern):
 - Dispatch `EXTRACT_START`
 - Read file as data-URL via `FileReader`
-- Find `deck.targetLanguage` from `decks` prop (see DeckOption section below)
+- Find `deck.language` from `decks` prop — it is already BCP-47 (`"en"`/`"fr"`/`"es"`); use directly as the `targetLanguage` value. NO `DeckOption` schema change (see DeckOption resolution below)
 - `AbortController` with 35s client timeout (5s buffer over server's 30s)
 - `fetch("/api/extract", { method: "POST", body: JSON.stringify({ image, mimeType, deckId, targetLanguage }) })`
 - On `res.ok`: check `data.words.length` → `EXTRACT_SUCCESS` or `EXTRACT_NO_WORDS`
