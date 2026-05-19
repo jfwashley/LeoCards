@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: "Completed 10-03: handleExtract + friendlyErrorCopy + 5 extraction states in image-upload-flow.tsx"
-last_updated: "2026-05-19T12:13:58.754Z"
+stopped_at: "Reached checkpoint 10-04 Task 2: reference dataset curation awaiting Joshua"
+last_updated: "2026-05-19T12:21:14.998Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
-  percent: 83
+  completed_plans: 6
+  percent: 100
 ---
 
 # Project State
@@ -57,6 +57,7 @@ Last activity: 2026-05-19 -- Phase --phase execution started
 | Phase 10-vision-extraction-endpoint P01 | 5 | 3 tasks | 8 files |
 | Phase 10-vision-extraction-endpoint P02 | 10 | 2 tasks | 1 files |
 | Phase 10-vision-extraction-endpoint P03 | 7 | 2 tasks | 3 files |
+| Phase 10-vision-extraction-endpoint P04 | 15 | 1 tasks | 4 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -160,6 +161,8 @@ Recent decisions affecting current work:
 - vi.doMock without vi.resetModules() cannot cascade-invalidate cached route modules in Vitest 4 node env — 503 test scaffold needs resetModules
 - DeckSwitcher has no disabled prop — used pointer-events-none CSS wrapper during in-flight state
 - vitest setupFiles with dummy DATABASE_URL prevents neon() crash on module import in test env
+- claude-sonnet-4-6 verified current 2026-05-19 via ai-sdk.dev — no model id change required for production deploy
+- eval D3/D4 uses membership check not set equality — extra returned words are D2 tutor dimension, not code failures
 
 ### Pending Todos
 
@@ -172,8 +175,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-19T12:13:43.149Z
-Stopped at: Completed 10-03: handleExtract + friendlyErrorCopy + 5 extraction states in image-upload-flow.tsx
+Last session: 2026-05-19T12:20:59.449Z
+Stopped at: Reached checkpoint 10-04 Task 2: reference dataset curation awaiting Joshua
 Resume file: None
 
 **Planned Phase:** 10 (Vision Extraction Endpoint) — 4 plans — 2026-05-19T10:49:36.116Z
