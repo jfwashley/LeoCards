@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: executing
+status: ready_to_plan
 stopped_at: "Phase 10 functional plans complete; eval dataset deferred (10-HUMAN-UAT.md)"
 last_updated: "2026-05-19T14:00:00Z"
 last_activity: 2026-05-19 -- Phase 10 plan 10-04 finalized (deferred eval tracked)
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 6
   completed_plans: 6
-  percent: 100
+  percent: 75
 ---
 
 # Project State
@@ -21,14 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-18)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase --phase — 10
+**Current focus:** Phase 10 complete (functional; eval deferred) — next: Phase 11 (Review & Commit)
 
 ## Current Position
 
-Phase: 10 (Vision Extraction Endpoint) — FUNCTIONAL COMPLETE, eval deferred
-Plan: 4 of 4 (10-04 finalized)
-Status: Phase 10 functional work complete; eval reference-dataset deferred (see below)
-Last activity: 2026-05-19 -- Phase 10 plan 10-04 finalized with deferred eval tracked
+Phase: 11 (Review & Commit) — not started
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-05-19 — Phase 10 functional complete (4/4 plans, verification 11/11 passed); eval dataset deferred (10-HUMAN-UAT.md)
+
+> Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase again; corrected here. Real milestone order: 9 ✓ → 10 ✓ → 11 (next).
 
 ### Deferred: Eval Reference-Dataset (10-04 Task 2 + Task 3)
 
@@ -51,7 +53,7 @@ proceed without it.
 
 **Velocity:**
 
-- Total plans completed: 3 (v2.0); 25 (v1.0, shipped)
+- Total plans completed: 7 (v2.0); 25 (v1.0, shipped)
 - Average duration: 2 min
 - Total execution time: 2 min (v2.0)
 
@@ -62,6 +64,7 @@ proceed without it.
 | 9 (v2.0) | 2/2 | ~12 min | ~6 min |
 | 10-11 (v2.0) | - | - | - |
 | 9 | 2 | - | - |
+| 10 | 4 | - | - |
 
 **Recent Trend:**
 

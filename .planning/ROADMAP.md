@@ -94,7 +94,7 @@ Phases execute in numeric order: 9 → 10 → 11
 | 7. Backend Security and Quality Fixes | v1.0 | 3/3 | Complete | 2026-03-29 |
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
 | 9. Image Upload & Deck Selection | v2.0 | 2/2 | Complete    | 2026-05-18 |
-| 10. Vision Extraction Endpoint | v2.0 | 4/4 | Functional complete; eval deferred (10-HUMAN-UAT.md) | 2026-05-19 |
+| 10. Vision Extraction Endpoint | v2.0 | 4/4 | Complete    | 2026-05-19 |
 | 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
 
 ## Backlog
@@ -112,7 +112,7 @@ Phases execute in numeric order: 9 → 10 → 11
 **Context:** Raised 2026-05-18 during Phase 9 execution. Observed dev slowness was `next dev` cold-compile + a freshly cleared `.next` cache, NOT proven production slowness — so a real production baseline (Phase A) must precede any optimization.
 
 **Requirements:** TBD
-**Plans:** 2/2 plans complete
+**Plans:** 4/4 plans complete
 
 Plans:
 - [ ] TBD (promote with /gsd-review-backlog when ready)

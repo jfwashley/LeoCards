@@ -74,11 +74,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMG-03 | Phase 9 | Complete |
 | IMG-04 | Phase 9 | Complete |
 | IMG-05 | Phase 9 | Complete |
-| EXT-01 | Phase 10 | Pending |
-| EXT-02 | Phase 10 | Pending |
-| EXT-03 | Phase 10 | Pending |
-| EXT-04 | Phase 10 | Pending |
-| EXT-05 | Phase 10 | Pending |
+| EXT-01 | Phase 10 | Complete |
+| EXT-02 | Phase 10 | Complete |
+| EXT-03 | Phase 10 | Complete |
+| EXT-04 | Phase 10 | Complete |
+| EXT-05 | Phase 10 | Complete |
 | RVW-01 | Phase 11 | Pending |
 | RVW-02 | Phase 11 | Pending |
 | RVW-03 | Phase 11 | Pending |
