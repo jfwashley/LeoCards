@@ -17,7 +17,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 All 23 v1 requirements satisfied across 8 phases (25 plans).
 
-**v2.0 progress:** Phase 9 (Image Upload & Deck Selection) complete — IMG-01–IMG-05 satisfied (image picker, type/size validation, preview/replace, deck pre-selection; verification passed). Next: Phase 10 (Vision Extraction Endpoint).
+**v2.0 progress:** Phases 9–10 complete. Phase 9 — IMG-01–IMG-05 (image picker, validation, preview, deck pre-selection). Phase 10 — EXT-01–EXT-05 (protected rate-limited Claude vision `/api/extract` via Vercel AI SDK v6, full failure handling, client wiring; verification 11/11 passed). Outstanding: Phase 10 offline eval reference-dataset deferred & tracked (10-HUMAN-UAT.md). Next: Phase 11 (Review & Commit).
 
 ## Current Milestone: v2.0 Image-to-Flashcards
 
@@ -114,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-18 — Phase 9 (Image Upload & Deck Selection) complete*
+*Last updated: 2026-05-19 — Phase 10 (Vision Extraction Endpoint) functional complete; eval deferred*
