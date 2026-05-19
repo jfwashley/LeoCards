@@ -4,14 +4,14 @@ milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: planning
 stopped_at: Phase 11 UI-SPEC approved
-last_updated: "2026-05-19T14:07:56.977Z"
+last_updated: "2026-05-19T14:30:58.209Z"
 last_activity: 2026-05-19 — Phase 10 functional complete (4/4 plans, verification 11/11 passed); eval dataset deferred (10-HUMAN-UAT.md)
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
+  total_plans: 10
   completed_plans: 6
-  percent: 100
+  percent: 60
 ---
 
 # Project State
@@ -199,4 +199,4 @@ Last session: --stopped-at
 Stopped at: Phase 11 UI-SPEC approved
 Resume file: --resume-file
 
-**Planned Phase:** 10 (Vision Extraction Endpoint) — 4 plans — 2026-05-19T10:49:36.116Z
+**Planned Phase:** 11 (Review & Commit) — 4 plans — 2026-05-19T14:30:58.149Z
