@@ -148,10 +148,10 @@ describe("reviewListReducer", () => {
     };
     const action: ReviewAction = { type: "TOGGLE_WORD", id: "row-0" };
     const next = reviewListReducer(stateWithRows, action);
-    expect(next.rows[0].kept).toBe(false);
-    expect(next.rows[1].kept).toBe(true);
+    expect(next.rows[0]?.kept).toBe(false);
+    expect(next.rows[1]?.kept).toBe(true);
     // Immutability: original row reference unchanged
-    expect(stateWithRows.rows[0].kept).toBe(true);
+    expect(stateWithRows.rows[0]?.kept).toBe(true);
   });
 
   it("EDIT_WORD: updates word on targeted row only", () => {
@@ -164,8 +164,8 @@ describe("reviewListReducer", () => {
     };
     const action: ReviewAction = { type: "EDIT_WORD", id: "row-0", word: "chienne" };
     const next = reviewListReducer(stateWithRows, action);
-    expect(next.rows[0].word).toBe("chienne");
-    expect(next.rows[1].word).toBe("chat");
+    expect(next.rows[0]?.word).toBe("chienne");
+    expect(next.rows[1]?.word).toBe("chat");
   });
 
   it("REMOVE_WORD: removes the targeted row entirely", () => {
@@ -179,7 +179,7 @@ describe("reviewListReducer", () => {
     const action: ReviewAction = { type: "REMOVE_WORD", id: "row-0" };
     const next = reviewListReducer(stateWithRows, action);
     expect(next.rows).toHaveLength(1);
-    expect(next.rows[0].id).toBe("row-1");
+    expect(next.rows[0]?.id).toBe("row-1");
   });
 
   it("SELECT_ALL: every row kept true", () => {
@@ -226,10 +226,10 @@ describe("reviewListReducer", () => {
       nativeText: "dog",
     };
     const next = reviewListReducer(stateTranslating, action);
-    expect(next.translationRows[0].nativeText).toBe("dog");
-    expect(next.translationRows[0].translationError).toBeNull();
+    expect(next.translationRows[0]?.nativeText).toBe("dog");
+    expect(next.translationRows[0]?.translationError).toBeNull();
     // Other row unaffected
-    expect(next.translationRows[1].nativeText).toBe("");
+    expect(next.translationRows[1]?.nativeText).toBe("");
   });
 
   it("TRANSLATION_ROW_ERROR: sets translationError on the matching row; does NOT affect other rows", () => {
@@ -247,13 +247,13 @@ describe("reviewListReducer", () => {
       error: "Translation unavailable — enter manually.",
     };
     const next = reviewListReducer(stateTranslating, action);
-    expect(next.translationRows[0].translationError).toBe(
+    expect(next.translationRows[0]?.translationError).toBe(
       "Translation unavailable — enter manually."
     );
-    expect(next.translationRows[0].nativeText).toBe("");
+    expect(next.translationRows[0]?.nativeText).toBe("");
     // Other row unaffected
-    expect(next.translationRows[1].nativeText).toBe("cat");
-    expect(next.translationRows[1].translationError).toBeNull();
+    expect(next.translationRows[1]?.nativeText).toBe("cat");
+    expect(next.translationRows[1]?.translationError).toBeNull();
   });
 
   it("EDIT_NATIVE: updates only the targeted translationRow nativeText field", () => {
@@ -266,8 +266,8 @@ describe("reviewListReducer", () => {
       ],
     };
     const next = reviewListReducer(stateB, { type: "EDIT_NATIVE", id: "tr-0", nativeText: "hound" });
-    expect(next.translationRows[0].nativeText).toBe("hound");
-    expect(next.translationRows[1].nativeText).toBe("cat");
+    expect(next.translationRows[0]?.nativeText).toBe("hound");
+    expect(next.translationRows[1]?.nativeText).toBe("cat");
   });
 
   it("EDIT_TARGET: updates only the targeted translationRow word field", () => {
@@ -280,8 +280,8 @@ describe("reviewListReducer", () => {
       ],
     };
     const next = reviewListReducer(stateB, { type: "EDIT_TARGET", id: "tr-0", word: "chienne" });
-    expect(next.translationRows[0].word).toBe("chienne");
-    expect(next.translationRows[1].word).toBe("chat");
+    expect(next.translationRows[0]?.word).toBe("chienne");
+    expect(next.translationRows[1]?.word).toBe("chat");
   });
 
   it("COMMIT_START: step → committing", () => {
@@ -338,10 +338,10 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
-    expect(results[0].nativeText).toBe("dog");
-    expect(results[0].translationError).toBeNull();
-    expect(results[1].nativeText).toBe("cat");
-    expect(results[1].translationError).toBeNull();
+    expect(results[0]?.nativeText).toBe("dog");
+    expect(results[0]?.translationError).toBeNull();
+    expect(results[1]?.nativeText).toBe("cat");
+    expect(results[1]?.translationError).toBeNull();
   });
 
   it("maps rejected/non-ok results to translationError without blocking other rows", async () => {
@@ -358,11 +358,11 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
-    expect(results[0].translationError).toBe("Translation unavailable — enter manually.");
-    expect(results[0].nativeText).toBe("");
+    expect(results[0]?.translationError).toBe("Translation unavailable — enter manually.");
+    expect(results[0]?.nativeText).toBe("");
     // Second row still resolves correctly
-    expect(results[1].nativeText).toBe("cat");
-    expect(results[1].translationError).toBeNull();
+    expect(results[1]?.nativeText).toBe("cat");
+    expect(results[1]?.translationError).toBeNull();
   });
 
   it("maps non-ok HTTP response to translationError", async () => {
@@ -373,7 +373,7 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
-    expect(results[0].translationError).toBe("Translation unavailable — enter manually.");
+    expect(results[0]?.translationError).toBe("Translation unavailable — enter manually.");
   });
 
   it("sends correct request body shape: { text, sourceLang: targetLang, targetLang: nativeLang } (D-08 direction)", async () => {

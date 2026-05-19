@@ -104,7 +104,9 @@ interface ReviewListProps {
 
 ## Deviations from Plan
 
-None — plan executed exactly as written. The `TRANSLATE_ALL_DONE` action is an internal implementation detail not mentioned in the plan but required to cleanly transition states; it does not affect exported symbols or test contracts.
+**Post-implementation tsc gate repair (Wave-0 scaffold):** After plan 11-03 was recorded complete, `npx tsc --noEmit` reported 26 TS2532 errors ("Object is possibly 'undefined'") in the Wave-0 scaffold `src/components/review-list.test.ts`. These arose from unguarded array indexed access (`rows[0].kept`, `results[0].nativeText`, etc.) under `noUncheckedIndexedAccess: true` in tsconfig. Vitest was green throughout because it does not type-check. All 26 sites were fixed by converting `arr[n].prop` to `arr[n]?.prop` (optional chaining), which is consistent with `noNonNullAssertion` Biome rules already in the project and keeps biome clean at the same 2-errors/1-warning baseline as the original scaffold. No test logic, assertions, expected values, or describe/it structure was changed. Commit: see fix commit below.
+
+The `TRANSLATE_ALL_DONE` action is an internal implementation detail not mentioned in the plan but required to cleanly transition states; it does not affect exported symbols or test contracts.
 
 ## Issues Encountered
 
