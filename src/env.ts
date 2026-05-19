@@ -7,6 +7,7 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(32),
     RESEND_API_KEY: z.string().min(1).optional(),
     DEEPL_API_KEY: z.string().min(1).optional(),
+    ANTHROPIC_API_KEY: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
@@ -17,5 +18,6 @@ export const env = createEnv({
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     DEEPL_API_KEY: process.env.DEEPL_API_KEY,
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
   },
 });
