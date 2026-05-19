@@ -30,27 +30,28 @@ key-files:
 key-decisions:
   - "nativeLangLabel/targetLangLabel derived inline in image-upload-flow.tsx using a local LANGUAGE_LABELS map (same as new-card/page.tsx) rather than threading additional props through NewCardModeToggle — avoids a cascading prop-drilling change while satisfying ReviewListProps optional label contract"
 
-requirements-completed: [RVW-01, RVW-02, RVW-03, RVW-04, RVW-05]
+requirements-completed: []
 
 duration: 5min
 completed: "2026-05-19"
+notes: "Task 1 complete (RVW-01..05 code wired); Task 2 live UAT deferred — external credentials unavailable (DeepL placeholder key + Anthropic billing). Tracked in 11-HUMAN-UAT.md. Requirements marked complete only after live UAT passes."
 ---
 
 # Phase 11 Plan 04: Wire ReviewList into EXTRACT_SUCCESS + Human UAT Summary
 
-**Replaced the Phase 10 disabled "Review words ->" stub in image-upload-flow.tsx with a real <ReviewList> render, completing the v2.0 image-to-flashcards wiring — human UAT checkpoint awaiting.**
+**Task 1 complete: replaced the Phase 10 disabled "Review words ->" stub in image-upload-flow.tsx with a real <ReviewList> render. Task 2 (live human UAT) DEFERRED — external credentials unavailable; tracked in 11-HUMAN-UAT.md.**
 
 ## Status
 
 - **Task 1 (auto):** COMPLETE — committed ac90fe7
-- **Task 2 (checkpoint:human-verify):** AWAITING — browser/live-DB/DeepL walkthrough required
+- **Task 2 (checkpoint:human-verify):** DEFERRED — live UAT blocked by unavailable external credentials (real DeepL API key + billing-enabled Anthropic key required); tracked in `.planning/phases/11-review-commit/11-HUMAN-UAT.md`
 
 ## Performance
 
-- **Duration:** ~5 min
+- **Duration:** ~5 min (Task 1 only)
 - **Started:** 2026-05-19T16:00:00Z
 - **Completed (Task 1):** 2026-05-19T16:10:00Z
-- **Tasks:** 1/2 complete (Task 2 is a blocking human checkpoint)
+- **Tasks:** 1/2 complete (Task 2 deferred — live UAT, external-credential blocked)
 - **Files modified:** 1
 
 ## Accomplishments
@@ -76,7 +77,7 @@ completed: "2026-05-19"
 
 ## Known Stubs
 
-None. The EXTRACT_SUCCESS branch now renders the real ReviewList. Task 2 (human UAT) will confirm end-to-end behavior on a live environment.
+None in committed code. The EXTRACT_SUCCESS branch now renders the real ReviewList. Task 2 (human UAT) has been DEFERRED — the live end-to-end walkthrough has not been performed. RVW-01..05 are wired and unit-tested but NOT manually verified on a live environment. The walkthrough steps are documented in `11-HUMAN-UAT.md` with `status: partial`.
 
 ## Threat Flags
 
@@ -92,12 +93,34 @@ No new threat surface. This is a pure client-side prop hand-off. T-11-11 and T-1
 - [x] `npm test` — 1765 passed, 4 skipped, 11 pre-existing e2e failures (no regression)
 - [x] Commit ac90fe7 exists
 
-## Self-Check: PASSED
+## Self-Check: PASSED (Task 1 scope only)
 
-## Awaiting: Task 2 — Human UAT
+- [x] `src/components/image-upload-flow.tsx` contains exactly 1 `<ReviewList` (grep -c == 1)
+- [x] `"Review words ->"` stub text absent (grep -c == 0)
+- [x] `import { ReviewList } from "@/components/review-list"` present
+- [x] `npx tsc --noEmit` — 0 errors
+- [x] `npx biome check src/components/image-upload-flow.tsx` — clean
+- [x] `npm test` — 1765 passed, 4 skipped, 11 pre-existing e2e failures (no regression)
+- [x] Commit ac90fe7 exists
+- [ ] Task 2 live UAT — DEFERRED (tracked in 11-HUMAN-UAT.md; NOT claimed as passed)
 
-Task 2 is a `checkpoint:human-verify` (blocking) requiring a live Neon + DeepL + ANTHROPIC_API_KEY environment. The checkpoint state and exact manual verification steps are documented in the CHECKPOINT REACHED message returned by the executor.
+## Deferred: Task 2 — Live Human UAT
+
+**Reason for deferral:** The live walkthrough requires two external credentials that are not available
+in the current environment:
+
+1. A real DeepL API key — the current `.env.local` value is a placeholder, causing `/api/translate`
+   to return 502.
+2. A billing-enabled Anthropic API key — without it the extraction endpoint fails before any words
+   reach ReviewList.
+
+This is QA validation debt (same pattern as Phase 10's deferred eval dataset). The code is
+unit-tested, type-checked, and lint-clean. RVW-01..05 are NOT claimed as manually verified.
+
+**Tracker:** `.planning/phases/11-review-commit/11-HUMAN-UAT.md` (status: partial)
+Contains: prerequisites checklist, 6-step walkthrough with expected outcomes, instructions for
+signalling completion when credentials are available.
 
 ---
 *Phase: 11-review-commit*
-*Partially completed: 2026-05-19 (Task 2 awaiting UAT)*
+*Functionally closed 2026-05-19 (Task 1 complete; Task 2 live UAT deferred — see 11-HUMAN-UAT.md)*

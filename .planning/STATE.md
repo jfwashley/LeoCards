@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: Completed Task 1 of 11-04-PLAN.md; Task 2 awaiting human UAT checkpoint
-last_updated: "2026-05-19T15:06:33.189Z"
+stopped_at: "11-04 functionally closed: Task 1 complete (ac90fe7), Task 2 live UAT DEFERRED (11-HUMAN-UAT.md). Phase 11 functional code complete; live-validation debt outstanding."
+last_updated: "2026-05-19T16:30:00Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
@@ -45,8 +45,23 @@ Three pending items:
 2. Author real ground-truth labels in reference-labels.json with FR/ES tutor
 3. Run RUN_EXTRACTION_EVALS=true npx vitest run ... and complete D1/D2/D5b manual rubric
 
-This is offline quality-assurance (not a functional EXT-01..05 dependency). Phase 11 can
-proceed without it.
+This is offline quality-assurance (not a functional EXT-01..05 dependency).
+
+### Deferred: Phase 11 Live Human UAT (11-04 Task 2)
+
+The live browser walkthrough (ReviewList end-to-end: Step A prune/edit → DeepL translate → Step B
+commit → success summary + duplicate skip + zero-write cancel) requires external credentials
+unavailable in-session:
+- Real DeepL API key (current .env.local value is a placeholder → /api/translate 502)
+- Billing-enabled Anthropic API key for Claude vision extraction
+
+Deferred by Joshua's decision 2026-05-19. Tracked in:
+
+  .planning/phases/11-review-commit/11-HUMAN-UAT.md (status: partial)
+
+Six pending walkthrough steps (see 11-HUMAN-UAT.md). This is live QA validation debt — RVW-01..05
+code is unit-tested, typed, and lint-clean; the manual-only behaviors have not been browser-verified.
+NOT a functional code dependency for phase closure.
 
 > Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase; corrected here. Real milestone order: 9 → 10 → 11.
 
@@ -199,6 +214,7 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 - [eval-debt] Curate 20 reference images + tutor labels for extract-eval suite — tracked in .planning/phases/10-vision-extraction-endpoint/10-HUMAN-UAT.md
+- [live-uat-debt] Phase 11 ReviewList live human UAT (6 steps: RVW-01..05 + D-14 zero-write cancel) — requires real DEEPL_API_KEY + billing-enabled ANTHROPIC_API_KEY; tracked in .planning/phases/11-review-commit/11-HUMAN-UAT.md
 
 ### Blockers/Concerns
 
@@ -207,8 +223,8 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-19T15:06:24.040Z
-Stopped at: Completed Task 1 of 11-04-PLAN.md; Task 2 awaiting human UAT checkpoint
+Last session: 2026-05-19T16:30:00Z
+Stopped at: "11-04 functionally closed. Task 1 wired & committed (ac90fe7). Task 2 live UAT DEFERRED — external credentials unavailable; tracked in 11-HUMAN-UAT.md. Phase 11 functional code complete."
 Resume file: None
 
 **Planned Phase:** 11 (Review & Commit) — 4 plans — 2026-05-19T14:30:58.149Z
