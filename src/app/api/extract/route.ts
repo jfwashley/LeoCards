@@ -137,7 +137,9 @@ export async function POST(request: Request) {
 
   try {
     // Instantiate model inside handler — never at module scope (D-03, Pitfall 3)
-    // ASSUMED-latest model id — verify against https://ai-sdk.dev/providers/ai-sdk-providers/anthropic before production deploy (10-AI-SPEC Section 4)
+    // verified 2026-05-19: claude-sonnet-4-6 is current Sonnet-tier vision-capable model id
+    // (confirmed against https://ai-sdk.dev/providers/ai-sdk-providers/anthropic — listed on
+    // Vercel AI SDK playground as current; no newer Sonnet-tier id has superseded it)
     // Note: anthropic() reads ANTHROPIC_API_KEY from process.env automatically; key presence
     // is validated above (503 guard). No second arg in @ai-sdk/anthropic@3.x API.
     const model = anthropic("claude-sonnet-4-6");
