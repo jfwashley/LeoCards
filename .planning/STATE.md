@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-05-19T14:47:29.077Z"
+stopped_at: Completed 11-03-PLAN.md
+last_updated: "2026-05-19T14:55:31.345Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 8
-  percent: 80
+  completed_plans: 9
+  percent: 90
 ---
 
 # Project State
@@ -79,6 +79,7 @@ proceed without it.
 | Phase 10-vision-extraction-endpoint P04 | 15 | 1 tasks | 4 files |
 | Phase 11-review-commit P01 | 8 | 3 tasks | 3 files |
 | Phase 11-review-commit P02 | 3 | 2 tasks | 1 files |
+| Phase 11-review-commit P03 | 20 | 2 tasks | 1 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -190,6 +191,8 @@ Recent decisions affecting current work:
 - Combined ownership+language gate in getSameLanguageDeckBackWords: first query uses and(eq(decks.id, deckId), eq(decks.userId, userId)) — one round-trip checks both ownership and language (T-11-03)
 - saveImageCards returns Array<{ok, error?}> indexed by input (not aggregate counts) — Wave 3 derives added/failed from outcomes; richer data for per-card error reporting
 - No logging of cardInputs, back values, or image data in saveImageCards (T-11-06 privacy mitigation)
+- TRANSLATE_ALL_DONE action added to atomically transition translating → step-b with fully-resolved rows array (Wave 3 ReviewList)
+- commitReviewRows calls saveImageCards per row (one-element array) for test compatibility with Wave 0 per-call mock setup
 
 ### Pending Todos
 
@@ -202,8 +205,8 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-19T14:47:29.071Z
-Stopped at: Completed 11-02-PLAN.md
+Last session: 2026-05-19T14:55:31.338Z
+Stopped at: Completed 11-03-PLAN.md
 Resume file: None
 
 **Planned Phase:** 11 (Review & Commit) — 4 plans — 2026-05-19T14:30:58.149Z
