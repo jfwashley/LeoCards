@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
 status: executing
-stopped_at: Completed 11-03-PLAN.md
-last_updated: "2026-05-19T14:55:31.345Z"
+stopped_at: Completed Task 1 of 11-04-PLAN.md; Task 2 awaiting human UAT checkpoint
+last_updated: "2026-05-19T15:06:33.189Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
-  percent: 90
+  completed_plans: 10
+  percent: 100
 ---
 
 # Project State
@@ -80,6 +80,7 @@ proceed without it.
 | Phase 11-review-commit P01 | 8 | 3 tasks | 3 files |
 | Phase 11-review-commit P02 | 3 | 2 tasks | 1 files |
 | Phase 11-review-commit P03 | 20 | 2 tasks | 1 files |
+| Phase 11-review-commit P04 | 5 | 1 tasks | 1 files |
 
 ### v1.0 Historical (shipped 2026-04-15)
 
@@ -193,6 +194,7 @@ Recent decisions affecting current work:
 - No logging of cardInputs, back values, or image data in saveImageCards (T-11-06 privacy mitigation)
 - TRANSLATE_ALL_DONE action added to atomically transition translating → step-b with fully-resolved rows array (Wave 3 ReviewList)
 - commitReviewRows calls saveImageCards per row (one-element array) for test compatibility with Wave 0 per-call mock setup
+- nativeLangLabel/targetLangLabel derived inline in image-upload-flow.tsx via local LANGUAGE_LABELS map rather than threading additional props through NewCardModeToggle
 
 ### Pending Todos
 
@@ -205,8 +207,8 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-19T14:55:31.338Z
-Stopped at: Completed 11-03-PLAN.md
+Last session: 2026-05-19T15:06:24.040Z
+Stopped at: Completed Task 1 of 11-04-PLAN.md; Task 2 awaiting human UAT checkpoint
 Resume file: None
 
 **Planned Phase:** 11 (Review & Commit) — 4 plans — 2026-05-19T14:30:58.149Z
