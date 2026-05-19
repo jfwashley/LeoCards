@@ -75,7 +75,11 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. Each kept word is auto-translated via the existing DeepL pipeline with the translation editable, exactly like a manual card add
   4. User confirms and the kept words are added to the selected deck, then sees a success summary with the count added
   5. User can cancel the review without adding any cards, and words already present in the deck are flagged or skipped
-**Plans**: TBD
+**Plans**: 4 plans
+  - [ ] 11-01-PLAN.md — Wave 0: source-union widening (D-11) + review-list.test.ts + deck-actions.test.ts scaffolds (RED)
+  - [ ] 11-02-PLAN.md — getSameLanguageDeckBackWords + saveImageCards server actions (auth + ownership scoped)
+  - [ ] 11-03-PLAN.md — ReviewList component: 6-state reducer, dedupe, DeepL fan-out, Step B, batched commit, success summary
+  - [ ] 11-04-PLAN.md — Wire ReviewList into image-upload-flow EXTRACT_SUCCESS + human UAT checkpoint
 **UI hint**: yes
 
 ## Progress
@@ -95,7 +99,7 @@ Phases execute in numeric order: 9 → 10 → 11
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
 | 9. Image Upload & Deck Selection | v2.0 | 2/2 | Complete    | 2026-05-18 |
 | 10. Vision Extraction Endpoint | v2.0 | 4/4 | Complete    | 2026-05-19 |
-| 11. Review & Commit | v2.0 | 0/TBD | Not started | - |
+| 11. Review & Commit | v2.0 | 0/4 | Planned | - |
 
 ## Backlog
 
