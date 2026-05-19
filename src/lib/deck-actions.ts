@@ -185,6 +185,46 @@ export async function addWordToCard(
 }
 
 // ============================================================
+// getSameLanguageDeckBackWords
+// ============================================================
+
+/**
+ * Returns a Set of all card `back` values (trimmed + lowercased) from the
+ * authenticated user's decks that share the same language as the target deck.
+ * Used for duplicate detection before adding image-extracted cards.
+ * Ownership is verified: a foreign or forged deckId throws "Forbidden".
+ */
+export async function getSameLanguageDeckBackWords(
+  deckId: string,
+): Promise<Set<string>> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) throw new Error("Unauthorized");
+  const userId = session.user.id as UserId;
+
+  // Step 1: Get target deck language + verify ownership (T-11-03)
+  const [targetDeck] = await db
+    .select({ language: decks.language })
+    .from(decks)
+    .where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, userId)));
+
+  if (!targetDeck) throw new Error("Forbidden");
+
+  // Step 2: Get all back values from cards in same-language decks owned by user
+  const rows = await db
+    .select({ back: cards.back })
+    .from(cards)
+    .innerJoin(decks, eq(cards.deckId, decks.id))
+    .where(
+      and(
+        eq(decks.userId, userId),
+        eq(decks.language, targetDeck.language),
+      ),
+    );
+
+  return new Set(rows.map((r) => r.back.trim().toLowerCase()));
+}
+
+// ============================================================
 // removeWordFromDeck
 // ============================================================
 
