@@ -66,7 +66,7 @@ export async function saveCard(
   deckId: string,
   front: string,
   back: string,
-  source: "manual" | "wordlist",
+  source: "manual" | "wordlist" | "image",
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error("Unauthorized");
