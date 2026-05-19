@@ -1,0 +1,85 @@
+{
+  "_schema": "Each key is the fixture filename (must match a file in fixtures/). expectedWords contains the exact printed forms (diacritics preserved) that D3/D4 assertions will check. Images 18-19 MUST have expectedWords: []. DO NOT commit this template unchanged — replace with real ground-truth labels after curating the 20 fixtures.",
+  "_slots": {
+    "01-fr-menu-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "02-fr-menu-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "03-fr-menu-c.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "04-es-sign-a.<ext>": {
+      "targetLanguage": "es",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "05-es-sign-b.<ext>": {
+      "targetLanguage": "es",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "06-fr-textbook-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "07-fr-textbook-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "08-fr-en-packaging-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "09-fr-en-packaging-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "10-fr-handwritten-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "11-fr-handwritten-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "12-fr-dense-label-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "13-fr-dense-label-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "14-sparse-sign-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "15-sparse-sign-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "16-en-only-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "17-en-only-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    },
+    "18-blank-no-text-a.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": []
+    },
+    "19-blank-no-text-b.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": []
+    },
+    "20-multilingual.<ext>": {
+      "targetLanguage": "fr",
+      "expectedWords": ["REPLACE_WITH_EXACT_WORDS_FROM_IMAGE"]
+    }
+  }
+}
