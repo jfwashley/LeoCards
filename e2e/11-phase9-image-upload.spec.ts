@@ -76,7 +76,11 @@ test("Phase 9: image upload + deck selection flow", async ({ page }) => {
   // Re-pick a valid image to proceed
   await page
     .locator('input[type="file"]')
-    .setInputFiles({ name: "vocab.png", mimeType: "image/png", buffer: PNG_1x1 });
+    .setInputFiles({
+      name: "vocab.png",
+      mimeType: "image/png",
+      buffer: PNG_1x1,
+    });
   await expect(page.getByRole("img", { name: "Selected file" })).toBeVisible();
 
   // 7. Step 2: deck selector pre-selected, recap thumbnail, Extract present
@@ -87,14 +91,9 @@ test("Phase 9: image upload + deck selection flow", async ({ page }) => {
   await expect(extractBtn).toBeVisible();
   await expect(extractBtn).toBeEnabled();
 
-  // 8. Extract is a Phase-9 no-op: no navigation, no error, stays on Step 2
-  await extractBtn.click();
-  await page.waitForTimeout(500);
-  await expect(page).toHaveURL(/\/deck\/new-card/);
-  await expect(extractBtn).toBeVisible();
-  await expect(page.getByText("Add words to:")).toBeVisible();
-
-  // 9. Back → returns to preview, image still held
+  // 8. Back → returns to preview, image still held
+  // (Clicking Extract is Phase 10's territory — fires /api/extract → owned by
+  // the Phase 10 endpoint specs. Phase 9 regression stops at Step 2 surface.)
   await page.getByRole("button", { name: "Back" }).click();
   await expect(page.getByRole("img", { name: "Selected file" })).toBeVisible();
   await expect(
