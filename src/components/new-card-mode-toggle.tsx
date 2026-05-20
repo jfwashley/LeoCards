@@ -12,7 +12,6 @@ interface NewCardModeToggleProps {
   nativeLang: string;
   nativeLangLabel: string;
   targetLangLabel: string;
-  deckId: string;
   targetLang: string;
 }
 
@@ -22,7 +21,6 @@ export function NewCardModeToggle({
   nativeLang,
   nativeLangLabel,
   targetLangLabel,
-  deckId,
   targetLang,
 }: NewCardModeToggleProps) {
   const [mode, setMode] = useState<"type" | "image">("type");
@@ -45,7 +43,7 @@ export function NewCardModeToggle({
       </div>
       {mode === "type" ? (
         <TranslationForm
-          deckId={deckId}
+          deckId={activeDeckId}
           nativeLang={nativeLang}
           targetLang={targetLang}
           nativeLangLabel={nativeLangLabel}

@@ -52,7 +52,6 @@ export default async function NewCardPage({ searchParams }: NewCardPageProps) {
           nativeLang={nativeLang}
           nativeLangLabel={nativeLangLabel}
           targetLangLabel={targetLangLabel}
-          deckId={activeDeck.id}
           targetLang={activeDeck.language}
         />
       </main>
