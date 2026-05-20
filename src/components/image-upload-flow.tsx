@@ -204,9 +204,21 @@ export function ImageUploadFlow({
       reader.readAsDataURL(file);
     });
 
-    // deck.language is already BCP-47 ("en"/"fr"/"es") per DeckOption — no DeckOption schema change needed
+    // deck.language is already BCP-47 ("en"/"fr"/"es") per DeckOption — no DeckOption schema change needed.
+    // IN-03: Surface a missing-deck mismatch as a loud error instead of silently
+    // defaulting to French. selectedDeckId is set from the same `decks` list,
+    // so this branch should be unreachable in practice; if it fires, something
+    // upstream is wrong and we'd rather see it than send the call to the wrong language.
     const deck = decks.find((d) => d.id === state.selectedDeckId);
-    const targetLanguage = deck?.language ?? "fr";
+    if (!deck) {
+      dispatch({
+        type: "EXTRACT_ERROR",
+        status: 0,
+        message: "Deck not found.",
+      });
+      return;
+    }
+    const targetLanguage = deck.language;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 35_000); // 35s client > 30s server so server's clean 504 wins
@@ -387,7 +399,18 @@ export function ImageUploadFlow({
     // State 2 — Success (RVW-01): extractWords is non-empty array — hand off to ReviewList
     if (Array.isArray(state.extractWords) && state.extractWords.length > 0) {
       const deck = decks.find((d) => d.id === state.selectedDeckId);
-      const targetLang = deck?.language ?? "fr";
+      // IN-03: selectedDeckId is always sourced from `decks`, so a missing match
+      // means props are stale or there is a race during re-render. Render an
+      // explicit error instead of silently defaulting the target language to "fr".
+      if (!deck) {
+        return (
+          <div role="alert" className="text-sm text-destructive">
+            <AlertCircle className="inline size-4 mr-1" aria-hidden="true" />
+            Deck not found.
+          </div>
+        );
+      }
+      const targetLang = deck.language;
       return (
         <ReviewList
           words={state.extractWords}
