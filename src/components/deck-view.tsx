@@ -23,6 +23,7 @@ export interface CardRow {
   source: string;
   createdAt: Date;
   masteryRound?: number;
+  pausedAt: Date | null;
 }
 
 function formatCountdown(ms: number): string {
@@ -198,6 +199,11 @@ export function DeckView({
             </Link>
           </div>
         </div>
+        {hasCards && !hasDueCards && !earliestCooldownEnd && (
+          <p className="text-sm text-muted-foreground mt-2 mb-4">
+            All cards are paused — unpause one to study.
+          </p>
+        )}
         <CardList
           cards={initialCards}
           nativeLangLabel={nativeLangLabel}

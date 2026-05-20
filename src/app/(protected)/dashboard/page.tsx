@@ -109,6 +109,7 @@ export default async function DashboardPage({
     source: c.source,
     createdAt: c.createdAt,
     masteryRound: masteryByCardId.get(c.id) ?? 0,
+    pausedAt: c.pausedAt,
   }));
 
   return (

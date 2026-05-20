@@ -19,6 +19,7 @@ export interface CardRow {
   source: string;
   createdAt: Date;
   masteryRound?: number; // 0|1|2|3, undefined for backward compat
+  pausedAt: Date | null;
 }
 
 interface CardEditDialogProps {
