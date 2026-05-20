@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Image-to-Flashcards
-status: executing
+status: ready_to_plan
 stopped_at: "11-04 functionally closed: Task 1 complete (ac90fe7), Task 2 live UAT DEFERRED (11-HUMAN-UAT.md). Phase 11 functional code complete; live-validation debt outstanding."
 last_updated: "2026-05-19T16:30:00Z"
 last_activity: 2026-05-19 -- Phase --phase execution started
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 10
   completed_plans: 10
   percent: 100
@@ -21,14 +21,18 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-18)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase --phase — 11
+**Current focus:** v2.0 Image-to-Flashcards — ALL phases (9, 10, 11) functionally complete. Next: /gsd-complete-milestone.
 
 ## Current Position
 
-Phase: --phase (11) — EXECUTING
-Plan: 1 of --name
-Status: Executing Phase --phase
-Last activity: 2026-05-19 -- Phase --phase execution started
+Phase: — (v2.0 milestone functionally complete: 9 ✓, 10 ✓, 11 ✓)
+Plan: —
+Status: Milestone complete — ready for /gsd-complete-milestone
+Last activity: 2026-05-19 — Phase 11 complete (4/4 plans, verification 13/13 passed); live UAT deferred (11-HUMAN-UAT.md)
+
+> Note: `phase.complete` again mis-picked backlog 999.1 as next_phase; corrected. Phase 11 is the LAST v2.0 milestone phase — there is no next sequenced phase. Phase 999.1 (perf initiative) remains a backlog parking-lot item, NOT auto-next.
+>
+> Outstanding tracked debt carried into milestone close (non-blocking, intentional deferrals): 10-HUMAN-UAT.md (Phase 10 vision eval dataset) · 11-HUMAN-UAT.md (Phase 11 live review/commit walkthrough — blocked on real DeepL + billing-enabled Anthropic keys).
 
 > Note: Phase 999.1 (perf initiative) is a backlog parking-lot item, NOT the sequenced next phase. `phase.complete` mis-picked it as next_phase again; corrected here. Real milestone order: 9 ✓ → 10 ✓ → 11 (next).
 
@@ -69,7 +73,7 @@ NOT a functional code dependency for phase closure.
 
 **Velocity:**
 
-- Total plans completed: 7 (v2.0); 25 (v1.0, shipped)
+- Total plans completed: 11 (v2.0); 25 (v1.0, shipped)
 - Average duration: 2 min
 - Total execution time: 2 min (v2.0)
 
@@ -81,6 +85,7 @@ NOT a functional code dependency for phase closure.
 | 10-11 (v2.0) | - | - | - |
 | 9 | 2 | - | - |
 | 10 | 4 | - | - |
+| 11 | 4 | - | - |
 
 **Recent Trend:**
 

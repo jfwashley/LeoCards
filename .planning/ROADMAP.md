@@ -29,7 +29,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 - [x] **Phase 9: Image Upload & Deck Selection** - Choose, validate, preview an image and pick the target deck from the add-card flow
 - [x] **Phase 10: Vision Extraction Endpoint** - Rate-limited Claude vision endpoint that turns an uploaded image into a word list, with robust loading/error handling (functional complete 2026-05-19; eval reference-dataset deferred — 10-HUMAN-UAT.md)
-- [ ] **Phase 11: Review & Commit** - Editable review screen that funnels kept words through the existing add-card + DeepL pipeline into the selected deck
+- [x] **Phase 11: Review & Commit** - Editable review screen that funnels kept words through the existing add-card + DeepL pipeline into the selected deck (completed 2026-05-19)
 
 ## Phase Details
 
@@ -100,7 +100,7 @@ Phases execute in numeric order: 9 → 10 → 11
 | 8. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-04-14 |
 | 9. Image Upload & Deck Selection | v2.0 | 2/2 | Complete    | 2026-05-18 |
 | 10. Vision Extraction Endpoint | v2.0 | 4/4 | Complete    | 2026-05-19 |
-| 11. Review & Commit | v2.0 | 3/4 + partial | Functional code complete; live UAT deferred (11-HUMAN-UAT.md) | 2026-05-19 |
+| 11. Review & Commit | v2.0 | 4/4 | Complete    | 2026-05-19 |
 
 ## Backlog
 
