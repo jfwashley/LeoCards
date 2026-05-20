@@ -5,6 +5,10 @@ export type ValidationResult =
   | { ok: false; message: string };
 
 export function validateImageFile(file: File): ValidationResult {
+  // NOTE: file.type is browser-supplied (derived from extension or OS MIME
+  // registry) and can be spoofed by renaming. This client-side guard is for
+  // UX only — Phase 10 MUST validate magic bytes server-side before
+  // processing the image. (IN-01)
   if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
     const ext = file.name.split(".").pop()?.toUpperCase() ?? "unknown format";
     return {
