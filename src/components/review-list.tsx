@@ -491,53 +491,70 @@ export function ReviewList({
   async function handleNext() {
     dispatch({ type: "TRANSLATE_START" });
 
-    const keptRows = state.rows.filter((r) => r.kept);
-    const translationRowsForFanOut: TranslationRow[] = keptRows.map((r) => ({
-      id: `tr-${r.id}`,
-      word: r.word,
-      nativeText: "",
-      translationError: null,
-    }));
+    try {
+      const keptRows = state.rows.filter((r) => r.kept);
+      const translationRowsForFanOut: TranslationRow[] = keptRows.map((r) => ({
+        id: `tr-${r.id}`,
+        word: r.word,
+        nativeText: "",
+        translationError: null,
+      }));
 
-    const fanOutResults = await runTranslationFanOut(
-      translationRowsForFanOut,
-      targetLang,
-      nativeLang,
-    );
+      const fanOutResults = await runTranslationFanOut(
+        translationRowsForFanOut,
+        targetLang,
+        nativeLang,
+      );
 
-    if (cancelled.current) return;
+      if (cancelled.current) return;
 
-    const completedRows: TranslationRow[] = translationRowsForFanOut.map(
-      (row, i) => {
-        const fanOut = fanOutResults[i];
-        return {
-          ...row,
-          nativeText: fanOut?.nativeText ?? "",
-          translationError: fanOut?.translationError ?? null,
-        };
-      },
-    );
+      const completedRows: TranslationRow[] = translationRowsForFanOut.map(
+        (row, i) => {
+          const fanOut = fanOutResults[i];
+          return {
+            ...row,
+            nativeText: fanOut?.nativeText ?? "",
+            translationError: fanOut?.translationError ?? null,
+          };
+        },
+      );
 
-    dispatch({ type: "TRANSLATE_ALL_DONE", rows: completedRows });
+      dispatch({ type: "TRANSLATE_ALL_DONE", rows: completedRows });
+    } catch {
+      // Roll back to step-a so the UI can recover if anything unexpected throws (WR-02)
+      if (cancelled.current) return;
+      dispatch({ type: "BACK_TO_STEP_A" });
+    }
   }
 
   async function handleCommit() {
     dispatch({ type: "COMMIT_START" });
 
-    const result = await commitReviewRows(
-      state.translationRows,
-      deckId,
-      state.duplicates,
-    );
+    try {
+      const result = await commitReviewRows(
+        state.translationRows,
+        deckId,
+        state.duplicates,
+      );
 
-    if (cancelled.current) return;
+      if (cancelled.current) return;
 
-    dispatch({
-      type: "COMMIT_DONE",
-      addedCount: result.addedCount,
-      failedCount: result.failedCount,
-      skippedCount: result.skippedCount,
-    });
+      dispatch({
+        type: "COMMIT_DONE",
+        addedCount: result.addedCount,
+        failedCount: result.failedCount,
+        skippedCount: result.skippedCount,
+      });
+    } catch {
+      // Dispatch a failed-commit result so the UI can recover (WR-02)
+      if (cancelled.current) return;
+      dispatch({
+        type: "COMMIT_DONE",
+        addedCount: 0,
+        failedCount: state.translationRows.length,
+        skippedCount: state.duplicates.length,
+      });
+    }
   }
 
   function handleGoToDeck() {
