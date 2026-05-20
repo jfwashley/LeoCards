@@ -10,56 +10,61 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Current State
 
-**Version:** v1.0 MVP — shipped 2026-04-15
+**Version:** v2.0 Image-to-Flashcards — shipped 2026-05-20
 **Live at:** https://leocards.vercel.app
-**Tech stack:** Next.js 16, Better Auth, Drizzle ORM, Neon Postgres, PixiJS 8.x, Motion 12, DeepL, Vitest, Biome
-**Codebase:** 8,568 LOC TypeScript/TSX, 221 files, 171 commits
+**Tech stack:** Next.js 16, Better Auth, Drizzle ORM, Neon Postgres, PixiJS 8.x, Motion 12, DeepL, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3 (Claude vision), Vitest, Biome
+**Tests:** 1773 unit tests green
+**Requirements satisfied:** 23 (v1.0) + 15 (v2.0) = 38 across 11 phases (35 plans)
 
-All 23 v1 requirements satisfied across 8 phases (25 plans).
+**v2.0 highlights:** Image-to-flashcards pipeline end-to-end — pick → validate → preview → Claude vision extract → review & edit → DeepL translate → batched commit to deck. Protected `/api/extract` endpoint (auth-gated, rate-limited, magic-byte verified, PII-safe). All 32 STRIDE threats accounted for across 3 SECURITY.md artifacts. 20 code-review findings fixed.
 
-**v2.0 progress:** ALL phases (9, 10, 11) functionally complete — image-to-flashcards pipeline working end-to-end in code. Phase 9 — IMG-01–IMG-05 (image picker, validation, preview, deck pre-selection; verification 9/9). Phase 10 — EXT-01–EXT-05 (protected rate-limited Claude vision `/api/extract` via Vercel AI SDK v6, full failure handling, client wiring; verification 11/11). Phase 11 — RVW-01–RVW-05 (editable ReviewList with same-language dedupe segregation, two-step DeepL translate+edit, batched commit with Neon no-tx continue-on-failure, success summary, zero-write cancel; verification 13/13). 1765 unit tests green; source tsc/biome clean. Outstanding tracked debts (non-blocking, intentional deferrals): `10-HUMAN-UAT.md` (offline vision eval reference-dataset — needs real photos + FR/ES tutor) and `11-HUMAN-UAT.md` (live 6-step browser walkthrough — needs real DeepL key + billing-enabled Anthropic key). Next: `/gsd-complete-milestone`.
+## Next Milestone Goals
 
-## Current Milestone: v2.0 Image-to-Flashcards
+The next milestone is **TBD** — promote candidates from the backlog via `/gsd-review-backlog` or start fresh with `/gsd-new-milestone`. Strong candidates already captured:
 
-**Goal:** Let users upload a photo and have Claude vision extract the words, then review/edit and add them (auto-translated) to a chosen deck.
+- **Production art pass** — replace placeholder tiger/habitat sprites with the cute 2D illustrated visual style (deferred since v1.0).
+- **Perf initiative (Phase 999.1 in backlog)** — measure → optimize navigation latency to <~100ms perceived in a production build.
 
-**Target features:**
-- Upload an image (JPG/PNG/WebP, one at a time, ~5MB cap) from the add-card flow
-- Claude vision (Anthropic multimodal) extracts vocabulary words from the image
-- Review & edit screen: user ticks/edits/removes extracted words before committing
-- Extracted words flow through the existing add-card pipeline (DeepL auto-translate, editable) into a user-selected deck
-- Reuse existing in-memory rate limiter to protect the vision endpoint
+## Validated Requirements (shipped)
 
-**Key context:** Scope is the image feature only — the outstanding "cute 2D illustrated visual style" remains deferred. Extracted words are treated exactly like manually added cards (same DeepL translation, same edit affordances).
+### v1.0 MVP (shipped 2026-04-15)
+- ✓ Users can create accounts and progress is saved across devices
+- ✓ Users can study French, Spanish, or English with pre-made word lists
+- ✓ Users can manually add words to any language deck (auto-translated, editable)
+- ✓ Users can browse built-in word lists and select cards to add to their deck
+- ✓ Flashcard practice uses classic show-and-self-grade mechanic
+- ✓ A card is "learned" after 3 successful self-graded recalls (3-round spaced mastery with directional tracking)
+- ✓ All learned cards across all languages feed into one shared tiger habitat
+- ✓ Habitat improves gradually as cards are learned (10-level system)
+- ✓ Tiger and habitat reflect neglect — hard decay if inactive (2-day grace, 5%/day)
+- ✓ Milestone unlocks trigger special moments at key card-count thresholds
+- ✓ New animals appear in the habitat as visual rewards for major milestones
+- ✓ Users can manage decks for French, Spanish, and English independently
 
-## Requirements
+### v2.0 Image-to-Flashcards (shipped 2026-05-20)
+- ✓ Users can pick a JPG/PNG/WebP image (≤5MB) from the add-card flow with preview and pre-selected target deck
+- ✓ Claude vision extracts vocabulary words from the image via the protected `/api/extract` endpoint (auth + rate-limit + payload validation + secure failure paths)
+- ✓ Users review, edit, and toggle off extracted words before any card is added; duplicates already in the deck are flagged or skipped
+- ✓ Kept words are auto-translated via the existing DeepL pipeline (translation editable) and committed in a batched no-tx insert with per-row failure tolerance
+- ✓ Cancel paths write nothing; success summary shows the count added
 
-### Validated
-
-- ✓ Users can create accounts and their progress is saved across devices — v1.0
-- ✓ Users can study French, Spanish, or English with pre-made word lists — v1.0
-- ✓ Users can manually add words to any language deck (auto-translated, editable) — v1.0
-- ✓ Users can browse built-in word lists and select cards to add to their deck — v1.0
-- ✓ Flashcard practice uses classic show-and-self-grade mechanic — v1.0
-- ✓ A card is considered "learned" after 3 successful self-graded recalls (3-round spaced mastery with directional tracking) — v1.0
-- ✓ All learned cards across all languages feed into one shared tiger habitat — v1.0
-- ✓ The habitat improves gradually as cards are learned (10-level system) — v1.0
-- ✓ The tiger and habitat visually reflect neglect — hard decay if inactive (2-day grace, 5%/day) — v1.0
-- ✓ Milestone unlocks trigger special moments at key card-count thresholds — v1.0
-- ✓ New animals appear in the habitat as visual rewards for major milestones — v1.0
-- ✓ Users can manage decks for French, Spanish, and English independently — v1.0
-
-### Active
+## Active Requirements (deferred)
 
 - [ ] Visual style is cute 2D illustrated (currently placeholder sprites)
 
-### Out of Scope
+## Out of Scope
 
 - Multiple habitats per language — one tiger, one habitat shared across all languages
-- Gamified animal abilities (animals are visual rewards only, no functional bonuses)
-- Social features / shareable habitats — single-player only for v1
-- Pronunciation features — audio/speech not in v1
-- Mobile app — web only for v1
+- Gamified animal abilities (animals are visual rewards only)
+- Social features / shareable habitats — single-player only
+- Pronunciation features — audio/speech not in scope
+- Mobile app — web only
+- Multi-image batch upload (deferred — IMG-F1)
+- Live camera capture (deferred — IMG-F2)
+- Per-word source-language tagging for mixed-language images (deferred — EXT-F1)
+- OCR handwriting accuracy SLA (best-effort only)
+- Bulk image-to-deck without a review step (UX decision)
+- Storing/retaining uploaded images after extraction (privacy + scope)
 
 ## Context
 
@@ -68,13 +73,14 @@ All 23 v1 requirements satisfied across 8 phases (25 plans).
 - Hard decay (habitat degrades with inactivity) creates stakes without being punishing with a 2-day grace period
 - Pre-made word lists cover A1-B1 French, Spanish, English common vocabulary (14 categories)
 - Auto-translation powered by DeepL API; user can override before saving
+- Claude vision powers image-to-flashcards extraction; words flow into the same DeepL-translate + edit pipeline as manual entries
 
 ## Constraints
 
-- **Tech stack**: Next.js 16, Better Auth, Drizzle + Neon, PixiJS 8.x, Biome, Vitest
-- **Languages**: French, Spanish, English (pre-made lists); user-added cards via auto-translate
-- **Scope**: Web-first, single-player, v1
-- **Database**: Neon HTTP driver — no transaction support (sequential writes only)
+- **Tech stack**: Next.js 16, Better Auth, Drizzle + Neon, PixiJS 8.x, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3, Biome, Vitest
+- **Languages**: French, Spanish, English (pre-made lists and image extraction)
+- **Scope**: Web-first, single-player
+- **Database**: Neon HTTP driver — no transaction support (sequential writes only, per-row failure tolerance in batched commits)
 
 ## Key Decisions
 
@@ -86,15 +92,21 @@ All 23 v1 requirements satisfied across 8 phases (25 plans).
 | 3-round spaced mastery with directional tracking | Evolved from simple 3-4 recalls to 3-round system with 12h/24h cooldowns | ✓ Shipped v1.0 |
 | Compute-on-read habitat state | No stored computed columns, no cron jobs — derive from DB facts at request time | ✓ Shipped v1.0 |
 | PixiJS 8.x for habitat rendering | WebGL canvas with SSR-safe dynamic loading, ticker visibility control | ✓ Shipped v1.0 |
-| In-memory rate limiting | Appropriate for single-server v1 deployment; Redis not needed yet | ✓ Shipped v1.0 |
+| In-memory rate limiting | Appropriate for current single-server deployment; Redis not needed yet | ✓ Shipped v1.0, reused v2.0 |
 | Better Auth additionalFields for custom user columns | nativeLanguage persisted at signup without separate onboarding flow | ✓ Shipped v1.0 |
+| Vercel AI SDK v6 + `@ai-sdk/anthropic` for vision | Streamed, typed, dependency-pinned, framework-aligned | ✓ Shipped v2.0 |
+| Mandatory review & edit step before image-to-deck commit | Keeps user control over noise / mis-extractions | ✓ Shipped v2.0 |
+| Batched commit with per-row failure tolerance on Neon HTTP no-tx | Preserves successful inserts when one row fails; mirrors v1.0 sequential-write constraint | ✓ Shipped v2.0 |
 
 ## Known Tech Debt
 
-- Study session writes are sequential, not atomic (Neon HTTP driver constraint)
+- Study session writes are sequential, not atomic (Neon HTTP driver constraint — applies project-wide)
 - esbuild vulnerability in drizzle-kit deferred (requires breaking downgrade)
 - Placeholder sprite assets (tiger, habitat layers, bird) — not production art
-- Nyquist validation incomplete across most phases
+- Nyquist validation bookkeeping incomplete on Phases 9/10/11 (Wave-0 tests are green; `nyquist_compliant: false` flag-flip pending — candidate for `/gsd-validate-phase`)
+- `10-HUMAN-UAT.md`, `11-HUMAN-UAT.md` — intentional deferrals blocked on external resources (real photos + FR/ES tutor; real DeepL + billing-enabled Anthropic keys)
+- Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright spec, keep/delete decision outstanding
+- `gsd-sdk phase.complete` upstream bug mispicks backlog 999.1 as next_phase
 
 ## Evolution
 
@@ -114,4 +126,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-20 — v2.0 Image-to-Flashcards: ALL phases (9, 10, 11) functionally complete; ready for /gsd-complete-milestone (with 2 tracked UAT debts)*
+*Last updated: 2026-05-20 — v2.0 Image-to-Flashcards shipped*
