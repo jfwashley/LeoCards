@@ -454,9 +454,8 @@ describe("saveImageCards", () => {
 
   it("throws Forbidden if deck does not belong to user", async () => {
     mockSession();
-    selectChain.where.mockResolvedValueOnce([
-      { id: FAKE_DECK_ID, userId: "other-user" },
-    ]);
+    // Combined-WHERE pattern (IN-01): foreign-user deck returns empty rows.
+    selectChain.where.mockResolvedValueOnce([]);
 
     await expect(
       saveImageCards(FAKE_DECK_ID, [{ front: "hello", back: "bonjour" }]),

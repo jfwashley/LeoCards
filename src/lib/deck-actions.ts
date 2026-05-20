@@ -265,13 +265,13 @@ export async function saveImageCards(
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;
 
-  // Verify deck ownership once (T-11-04)
+  // Verify deck ownership once (T-11-04). Combined-WHERE pattern (IN-01):
+  // a single atomic gate that never returns a foreign-user deck row.
   const deckRows = await db
-    .select()
+    .select({ id: decks.id })
     .from(decks)
-    .where(eq(decks.id, deckId as DeckId));
-  const deck = deckRows[0];
-  if (!deck || deck.userId !== userId) throw new Error("Forbidden");
+    .where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, userId)));
+  if (!deckRows[0]) throw new Error("Forbidden");
 
   // Sequential inserts, continue-on-failure (D-12: Neon HTTP has no transactions)
   const outcomes: Array<{ ok: boolean; error?: string }> = [];
