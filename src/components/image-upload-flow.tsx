@@ -274,7 +274,12 @@ export function ImageUploadFlow({
   useEffect(() => {
     function handlePaste(e: ClipboardEvent) {
       const file = e.clipboardData?.files?.[0];
-      if (file) validateAndSetFile(file);
+      if (file) {
+        // Suppress browser default only for image paste; normal text-input
+        // paste in sibling components remains unaffected. (WR-02)
+        e.preventDefault();
+        validateAndSetFile(file);
+      }
     }
     document.addEventListener("paste", handlePaste);
     return () => document.removeEventListener("paste", handlePaste);
