@@ -69,6 +69,7 @@ import {
   getSameLanguageDeckBackWords,
   removeWordFromDeck,
   saveCard,
+  saveImageCards,
 } from "./deck-actions";
 
 const FAKE_USER_ID = "user-abc-123";
@@ -402,5 +403,108 @@ describe("getSameLanguageDeckBackWords", () => {
     ]);
     const result = await getSameLanguageDeckBackWords(FAKE_DECK_ID);
     expect(result).toEqual(new Set(["chien", "chat"]));
+  });
+});
+
+// ============================================================
+// saveImageCards
+// ============================================================
+
+describe("saveImageCards", () => {
+  it("returns [] for an empty input array (short-circuits before auth)", async () => {
+    mockNoSession();
+    const result = await saveImageCards(FAKE_DECK_ID, []);
+    expect(result).toEqual([]);
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it("throws when input array length exceeds 100", async () => {
+    const overLimit = Array.from({ length: 101 }, () => ({
+      front: "a",
+      back: "b",
+    }));
+    await expect(saveImageCards(FAKE_DECK_ID, overLimit)).rejects.toThrow(
+      "Too many cards in a single request",
+    );
+  });
+
+  it("throws Invalid card data for empty/whitespace front or back", async () => {
+    await expect(
+      saveImageCards(FAKE_DECK_ID, [{ front: "  ", back: "ok" }]),
+    ).rejects.toThrow("Invalid card data");
+    await expect(
+      saveImageCards(FAKE_DECK_ID, [{ front: "ok", back: "" }]),
+    ).rejects.toThrow("Invalid card data");
+  });
+
+  it("throws Invalid card data for overly long front or back (>500)", async () => {
+    const long = "x".repeat(501);
+    await expect(
+      saveImageCards(FAKE_DECK_ID, [{ front: long, back: "ok" }]),
+    ).rejects.toThrow("Invalid card data");
+  });
+
+  it("throws Unauthorized when no session", async () => {
+    mockNoSession();
+    await expect(
+      saveImageCards(FAKE_DECK_ID, [{ front: "hello", back: "bonjour" }]),
+    ).rejects.toThrow("Unauthorized");
+  });
+
+  it("throws Forbidden if deck does not belong to user", async () => {
+    mockSession();
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: "other-user" },
+    ]);
+
+    await expect(
+      saveImageCards(FAKE_DECK_ID, [{ front: "hello", back: "bonjour" }]),
+    ).rejects.toThrow("Forbidden");
+  });
+
+  it("inserts each card with source='image' and calls revalidatePath once on happy path", async () => {
+    mockSession();
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
+    ]);
+
+    const result = await saveImageCards(FAKE_DECK_ID, [
+      { front: "hello", back: "bonjour" },
+      { front: "cat", back: "chat" },
+    ]);
+
+    expect(result).toEqual([{ ok: true }, { ok: true }]);
+    expect(db.insert).toHaveBeenCalledTimes(2);
+    expect(insertChain.values).toHaveBeenCalledWith(
+      expect.objectContaining({
+        source: "image",
+        front: "hello",
+        back: "bonjour",
+      }),
+    );
+    expect(revalidatePath).toHaveBeenCalledTimes(1);
+    expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("continue-on-failure: one insert throws but loop returns outcomes for all inputs", async () => {
+    mockSession();
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
+    ]);
+
+    insertChain.values
+      .mockRejectedValueOnce(new Error("DB error"))
+      .mockResolvedValueOnce(undefined);
+
+    const result = await saveImageCards(FAKE_DECK_ID, [
+      { front: "hello", back: "bonjour" },
+      { front: "cat", back: "chat" },
+    ]);
+
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({ ok: false, error: "DB error" });
+    expect(result[1]).toEqual({ ok: true });
+    expect(revalidatePath).toHaveBeenCalledTimes(1);
   });
 });
