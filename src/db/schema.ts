@@ -103,6 +103,7 @@ export const cards = pgTable("cards", {
   masteryRound: integer("masteryRound").notNull().default(0), // 0=new, 1=round1done, 2=round2done, 3=learned
   cooldownUntil: timestamp("cooldownUntil"), // null = available now
   lastStudiedAt: timestamp("lastStudiedAt"),
+  pausedAt: timestamp("pausedAt"), // null = active, non-null = paused at this instant
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });

@@ -15,6 +15,13 @@
       "when": 1774651555210,
       "tag": "0001_ambitious_dark_beast",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779291594612,
+      "tag": "0002_first_slipstream",
+      "breakpoints": true
     }
   ]
 }
