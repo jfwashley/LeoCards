@@ -1,8 +1,8 @@
 // Verifies three.js 0.160.x is installed, resolvable via ESM, and exposes
 // the constructors the Phase 13 plans depend on. Locks Plan 13-01 / SPEC R2.
 
-import { describe, expect, it } from "vitest";
 import * as THREE from "three";
+import { describe, expect, it } from "vitest";
 
 describe("three.js install (Plan 13-01, SPEC R2)", () => {
   it("imports as an ESM namespace at runtime", () => {

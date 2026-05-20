@@ -1,7 +1,7 @@
 // Palette + toonGrad unit tests (Plan 13-01 Task 3).
 
-import { describe, expect, it } from "vitest";
 import * as THREE from "three";
+import { describe, expect, it } from "vitest";
 import { CLAY, toonGrad } from "../palette";
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
