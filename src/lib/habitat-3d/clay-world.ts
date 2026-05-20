@@ -852,15 +852,18 @@ export function buildClayWorld(
     updOpts?: { reducedMotion?: boolean },
   ): void {
     const reduced = updOpts?.reducedMotion === true;
-    if (lakeMat) {
-      lakeMat.color.lerpColors(
-        new THREE.Color(CLAY.water),
-        new THREE.Color("#9ad6e0"),
-        0.5 + Math.sin(t * 1.4) * 0.5,
-      );
-    }
-    for (const l of lilies) {
-      l.obj.position.y = l.baseY + Math.sin(t * 0.9 + l.phase) * 0.025;
+    // R6 (Plan 13-04): water shimmer + lily bob are ambient — gate them.
+    if (!reduced) {
+      if (lakeMat) {
+        lakeMat.color.lerpColors(
+          new THREE.Color(CLAY.water),
+          new THREE.Color("#9ad6e0"),
+          0.5 + Math.sin(t * 1.4) * 0.5,
+        );
+      }
+      for (const l of lilies) {
+        l.obj.position.y = l.baseY + Math.sin(t * 0.9 + l.phase) * 0.025;
+      }
     }
     if (toyG) {
       toyG.rotation.y = t * 0.4;

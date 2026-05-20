@@ -528,13 +528,16 @@ export function buildStorybookAmbient(
     updOpts?: { reducedMotion?: boolean },
   ): void {
     const reduced = updOpts?.reducedMotion === true;
-    for (const p of pollen) {
-      const a = t * p.speed + p.phase;
-      p.mesh.position.set(
-        p.cx + Math.cos(a) * p.radius,
-        p.baseY + Math.sin(a * 1.3) * 0.5,
-        p.cz + Math.sin(a) * p.radius,
-      );
+    // R6 (Plan 13-04): gate pollen + petals on reducedMotion.
+    if (!reduced) {
+      for (const p of pollen) {
+        const a = t * p.speed + p.phase;
+        p.mesh.position.set(
+          p.cx + Math.cos(a) * p.radius,
+          p.baseY + Math.sin(a * 1.3) * 0.5,
+          p.cz + Math.sin(a) * p.radius,
+        );
+      }
     }
     if (!reduced) {
       for (const b of birds) {
@@ -552,17 +555,19 @@ export function buildStorybookAmbient(
         ud.wR.rotation.z = -flap;
       }
     }
-    for (const p of petals) {
-      p.y -= p.vy * dt;
-      p.x += p.driftX * dt;
-      p.z += p.driftZ * dt;
-      p.mesh.position.set(p.x, p.y, p.z);
-      p.mesh.rotation.y += p.spin * dt;
-      p.mesh.rotation.z = Math.sin(t * 1.5 + p.phase) * 0.7;
-      if (p.y < 0.15) {
-        p.y = 4 + rng() * 2.2;
-        p.x = (rng() - 0.5) * 14;
-        p.z = (rng() - 0.5) * 14;
+    if (!reduced) {
+      for (const p of petals) {
+        p.y -= p.vy * dt;
+        p.x += p.driftX * dt;
+        p.z += p.driftZ * dt;
+        p.mesh.position.set(p.x, p.y, p.z);
+        p.mesh.rotation.y += p.spin * dt;
+        p.mesh.rotation.z = Math.sin(t * 1.5 + p.phase) * 0.7;
+        if (p.y < 0.15) {
+          p.y = 4 + rng() * 2.2;
+          p.x = (rng() - 0.5) * 14;
+          p.z = (rng() - 0.5) * 14;
+        }
       }
     }
     for (const n of notePool) {

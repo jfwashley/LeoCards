@@ -31,9 +31,23 @@
 
 import { useEffect, useRef, useState } from "react";
 import type * as THREE from "three";
-import { updateWorld } from "@/lib/habitat-3d/clay-animation";
+import {
+  animateElephant,
+  applyLionWalk,
+  type LionState,
+  updateWorld,
+} from "@/lib/habitat-3d/clay-animation";
+import {
+  buildElephant,
+  buildLionStorybook,
+} from "@/lib/habitat-3d/clay-characters";
 import { featuresForLevel, LEVEL_CONFIG } from "@/lib/habitat-3d/clay-level";
 import { buildClayWorld } from "@/lib/habitat-3d/clay-world";
+import {
+  applyDecay,
+  applyMood,
+  type MoodAnimState,
+} from "@/lib/habitat-3d/mood-decay";
 import { attachOrbit, buildSceneHost } from "@/lib/habitat-3d/scene-host";
 import type { HabitatState } from "@/lib/habitat-engine";
 
@@ -106,6 +120,18 @@ export interface MountHabitatSceneOpts {
    */
   width?: number;
   height?: number;
+  /**
+   * Plan 13-04: per-frame state ref. Lets the canvas read the latest
+   * mood/quality without remounting the scene (only `level` triggers a
+   * rebuild). If omitted, the initial habitatState is used for every frame.
+   */
+  stateRef?: { current: HabitatState };
+  /**
+   * Plan 13-04: per-frame mood-animation state. Persists D-06 transition
+   * channels across frames. The React shell owns the ref so it survives
+   * Strict-Mode double-mount.
+   */
+  moodStateRef?: { current: MoodAnimState };
 }
 
 export interface MountedHabitatScene {
@@ -131,6 +157,43 @@ export function mountHabitatScene(
     LEVEL_CONFIG[1] ?? { sky: "default" as const };
   const world = buildClayWorld(ctx, features, { sky: cfg.sky });
   const orbit = attachOrbit(canvas, ctx.camera, { reducedMotion });
+
+  // -- 1b. characters (Plan 13-04: required for applyMood to bind to Leo) ----
+  // buildLionStorybook returns a rig; we mount its root into ctx.scene so it
+  // renders. The elephant is L5+ only (per LEVEL_CONFIG.elephant).
+  const lionRig = buildLionStorybook(world.mat);
+  ctx.scene.add(lionRig.root);
+  const elephantRig = level >= 5 ? buildElephant(world.mat) : null;
+  if (elephantRig) {
+    elephantRig.position.set(4.5, 0, 3.5);
+    ctx.scene.add(elephantRig);
+  }
+  // Expose rigs + fog on the world ref so mood-decay can find them.
+  (world as unknown as { lionRig: typeof lionRig }).lionRig = lionRig;
+  if (elephantRig) {
+    (world as unknown as { elephantRig: typeof elephantRig }).elephantRig =
+      elephantRig;
+  }
+  if (ctx.scene.fog) {
+    (world as unknown as { fog: THREE.Fog }).fog = ctx.scene.fog as THREE.Fog;
+  }
+  (world as unknown as { sky: typeof world.skyMat }).sky = world.skyMat;
+
+  // Lion + mood state (Plan 13-04).
+  const lionState: LionState = {
+    u: 0,
+    speedMul: 1.5,
+    sleeping: false,
+    wasSleeping: false,
+  };
+  const moodState: MoodAnimState = opts.moodStateRef?.current ?? {
+    speedMul: 1.5,
+    headDroop: 0,
+    sparkleOn: false,
+    bounceUntil: 0,
+    prevMood: null,
+  };
+  if (opts.moodStateRef) opts.moodStateRef.current = moodState;
 
   // -- 2. wrapper keyboard handler (R5) --------------------------------------
   wrapper.tabIndex = 0;
@@ -161,7 +224,27 @@ export function mountHabitatScene(
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     orbit.tick(dt);
+
+    // Plan 13-04: per-frame mood + decay binding (no scene rebuild).
+    const liveState = opts.stateRef?.current ?? habitatState;
+    applyMood(world, liveState.mood, moodState, now);
+    applyDecay(world, liveState.quality);
+    lionState.speedMul = moodState.speedMul;
+
     updateWorld(world, dt, now / 1000, { reducedMotion });
+    applyLionWalk(lionRig, world.lionCurve, dt, now / 1000, lionState);
+
+    // Apply mood-driven head-droop and bounce on top of the walk driver.
+    const droop = (lionRig.headG.userData.moodDroop as number | undefined) ?? 0;
+    lionRig.headG.rotation.x += droop;
+    const bounce =
+      (lionRig.root.userData.moodBounce as number | undefined) ?? 0;
+    lionRig.root.position.y += bounce;
+
+    if (elephantRig) {
+      animateElephant(elephantRig, dt, now / 1000);
+    }
+
     ctx.renderer.render(ctx.scene, ctx.camera);
     raf = requestAnimationFrame(tick);
   };
@@ -245,6 +328,32 @@ export interface HabitatCanvasProps {
   celebratingLevel?: number | null;
 }
 
+// Dev-only URL override (Plan 13-04 Task 3 snapshot affordance).
+// Gated by NODE_ENV — tree-shaken in production.
+function readDevOverride(initial: HabitatState): HabitatState {
+  if (process.env.NODE_ENV === "production") return initial;
+  if (typeof window === "undefined") return initial;
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("snapshot") !== "true") return initial;
+  const lvl = params.get("devLevel");
+  const mood = params.get("devMood");
+  const q = params.get("devQuality");
+  return {
+    ...initial,
+    level: lvl
+      ? Math.max(1, Math.min(9, parseInt(lvl, 10) || 1))
+      : initial.level,
+    mood:
+      mood === "excited" ||
+      mood === "happy" ||
+      mood === "neutral" ||
+      mood === "sad"
+        ? mood
+        : initial.mood,
+    quality: q ? Math.max(0, Math.min(1, parseFloat(q))) : initial.quality,
+  };
+}
+
 export default function HabitatCanvas({
   habitatState,
   // celebratingLevel is plumbed for API parity with the v1.0 PixiJS canvas;
@@ -256,16 +365,29 @@ export default function HabitatCanvas({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
 
+  // Apply dev URL override if present (snapshot mode for Plan 04 Playwright).
+  const effectiveState = readDevOverride(habitatState);
+
   // Clamp level to [1, 9] — only level + reducedMotion trigger a scene
   // rebuild (D-30 / designer's `tweaksRef` pattern at
   // `habitat-clay-styles.jsx:2258`). mood/quality intentionally omitted —
   // Plan 04 binds them via stateRef without rebuilding.
-  const sceneLevel = Math.max(1, Math.min(9, Math.floor(habitatState.level)));
+  const sceneLevel = Math.max(1, Math.min(9, Math.floor(effectiveState.level)));
 
   // Keep the latest state in a ref so the per-frame update closure can read
   // the current mood/quality without re-running the mount effect.
-  const stateRef = useRef<HabitatState>(habitatState);
-  stateRef.current = habitatState;
+  const stateRef = useRef<HabitatState>(effectiveState);
+  stateRef.current = effectiveState;
+
+  // Plan 13-04: mood-anim state ref — survives Strict-Mode double-mount and
+  // multi-canvas scenarios because each <HabitatCanvas> instance owns its own.
+  const moodStateRef = useRef<MoodAnimState>({
+    speedMul: 1.5,
+    headDroop: 0,
+    sparkleOn: false,
+    bounceUntil: 0,
+    prevMood: null,
+  });
 
   // sceneLevel is read inside mountHabitatScene via stateRef.current.level;
   // Biome can't trace through the ref, so the dep is required to remount on
@@ -278,6 +400,8 @@ export default function HabitatCanvas({
       wrapper: wrapperRef.current,
       habitatState: stateRef.current,
       reducedMotion,
+      stateRef,
+      moodStateRef,
     });
     return () => handle.dispose();
   }, [sceneLevel, reducedMotion]);
