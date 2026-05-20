@@ -55,7 +55,10 @@ function HabitatLoadingSpinner() {
 }
 
 // SSR-safe: ssr:false only works inside "use client" modules (Next.js 16 rule)
-const HabitatCanvas = dynamic(() => import("@/components/habitat-canvas"), {
+// Plan 13-03: import target swapped PixiJS (habitat-canvas) → Three.js
+// (habitat-3d-canvas). The shell's outer concerns (cache, retry, level-up
+// overlay, mood label) are unchanged.
+const HabitatCanvas = dynamic(() => import("@/components/habitat-3d-canvas"), {
   ssr: false,
   loading: () => <HabitatLoadingSpinner />,
 });
