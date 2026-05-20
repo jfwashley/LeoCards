@@ -512,28 +512,28 @@ describe("batch commit", () => {
 });
 
 // ============================================================
-// cancel (RVW-05b)
+// cancel (RVW-05b) — placeholder contracts
 // ============================================================
 
-describe("cancel", () => {
-  it("Step A cancel: onCancel callback invoked; zero saveImageCards/saveCard calls", () => {
-    const onCancel = vi.fn();
-
-    // Simulate cancel action at Step A: reviewer calls onCancel prop
-    // The contract: ReviewList component must call onCancel() with no DB writes
-    onCancel();
-
-    expect(onCancel).toHaveBeenCalledTimes(1);
-    expect(mockSaveImageCards).not.toHaveBeenCalled();
+// NOTE (IN-02): The Step A / Step B cancel paths exercise the
+// `cancelled.current` guard inside the `ReviewList` component. Verifying
+// them requires mounting the component with a test renderer (React Testing
+// Library) and simulating a user-driven cancel mid-flight, which is
+// deferred to UAT / Playwright coverage. The previous unit tests in this
+// block called a freshly-constructed `vi.fn()` and then asserted that the
+// same `vi.fn()` had been called — a tautology that gave no signal about
+// the actual component wiring. Those misleading assertions have been
+// removed; this block is intentionally left as a documented placeholder
+// so future work attaches a real render-based test here.
+describe.skip("cancel (placeholder — needs component mount)", () => {
+  it.skip("Step A cancel: onCancel invoked; no DB writes", () => {
+    // TODO: mount <ReviewList> at Step A, click Cancel, assert onCancel
+    // prop was called and that no `saveImageCards` / `saveCard` call was
+    // dispatched between the cancel and any in-flight resolution.
   });
 
-  it("Step B cancel: onCancel callback invoked; zero saveImageCards/saveCard calls", () => {
-    const onCancel = vi.fn();
-
-    // Simulate cancel action at Step B: same contract
-    onCancel();
-
-    expect(onCancel).toHaveBeenCalledTimes(1);
-    expect(mockSaveImageCards).not.toHaveBeenCalled();
+  it.skip("Step B cancel: onCancel invoked; no DB writes", () => {
+    // TODO: mount <ReviewList> at Step B, click Cancel during commit,
+    // assert `cancelled.current` short-circuits the commit-result dispatch.
   });
 });
