@@ -1,1 +1,4 @@
 * text=auto eol=lf
+
+# Plan 13-04: habitat reference screenshots are binary PNGs.
+e2e/__screenshots__/habitat-states/*.png binary

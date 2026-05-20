@@ -1,0 +1,1143 @@
+{
+  "threshold": 1,
+  "generatedAt": "2026-05-20T23:44:13.728Z",
+  "captureCount": 28,
+  "totalPairs": 126,
+  "failureCount": 0,
+  "rows": [
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=1.00",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-happy-q1.00.png",
+      "mse": 70.547,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=1.00",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-neutral-q1.00.png",
+      "mse": 86.9949,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=1.00",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-sad-q1.00.png",
+      "mse": 86.1204,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=1.00",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-neutral-q1.00.png",
+      "mse": 49.2902,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=1.00",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-sad-q1.00.png",
+      "mse": 66.1754,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=1.00",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-sad-q1.00.png",
+      "mse": 28.8591,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=0.70",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-happy-q0.70.png",
+      "mse": 51.2475,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=0.70",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-neutral-q0.70.png",
+      "mse": 75.413,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=0.70",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-sad-q0.70.png",
+      "mse": 72.618,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=0.70",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-neutral-q0.70.png",
+      "mse": 51.5941,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=0.70",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-sad-q0.70.png",
+      "mse": 70.6926,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=0.70",
+      "a": "L5-mood-neutral-q0.70.png",
+      "b": "L5-mood-sad-q0.70.png",
+      "mse": 32.053,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=0.50",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-happy-q0.50.png",
+      "mse": 53.8443,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=0.50",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-neutral-q0.50.png",
+      "mse": 85.3489,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=0.50",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-sad-q0.50.png",
+      "mse": 79.388,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=0.50",
+      "a": "L5-mood-happy-q0.50.png",
+      "b": "L5-mood-neutral-q0.50.png",
+      "mse": 56.0673,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=0.50",
+      "a": "L5-mood-happy-q0.50.png",
+      "b": "L5-mood-sad-q0.50.png",
+      "mse": 63.8764,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=0.50",
+      "a": "L5-mood-neutral-q0.50.png",
+      "b": "L5-mood-sad-q0.50.png",
+      "mse": 36.4353,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=0.40",
+      "a": "L5-mood-excited-q0.40.png",
+      "b": "L5-mood-happy-q0.40.png",
+      "mse": 48.8738,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=0.40",
+      "a": "L5-mood-excited-q0.40.png",
+      "b": "L5-mood-neutral-q0.40.png",
+      "mse": 72.2256,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=0.40",
+      "a": "L5-mood-excited-q0.40.png",
+      "b": "L5-mood-sad-q0.40.png",
+      "mse": 89.0662,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=0.40",
+      "a": "L5-mood-happy-q0.40.png",
+      "b": "L5-mood-neutral-q0.40.png",
+      "mse": 51.3385,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=0.40",
+      "a": "L5-mood-happy-q0.40.png",
+      "b": "L5-mood-sad-q0.40.png",
+      "mse": 76.2006,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=0.40",
+      "a": "L5-mood-neutral-q0.40.png",
+      "b": "L5-mood-sad-q0.40.png",
+      "mse": 44.225,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=0.30",
+      "a": "L5-mood-excited-q0.30.png",
+      "b": "L5-mood-happy-q0.30.png",
+      "mse": 44.368,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=0.30",
+      "a": "L5-mood-excited-q0.30.png",
+      "b": "L5-mood-neutral-q0.30.png",
+      "mse": 70.9073,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=0.30",
+      "a": "L5-mood-excited-q0.30.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 76.2815,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=0.30",
+      "a": "L5-mood-happy-q0.30.png",
+      "b": "L5-mood-neutral-q0.30.png",
+      "mse": 45.4981,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=0.30",
+      "a": "L5-mood-happy-q0.30.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 60.8183,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=0.30",
+      "a": "L5-mood-neutral-q0.30.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 28.5349,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=0.20",
+      "a": "L5-mood-excited-q0.20.png",
+      "b": "L5-mood-happy-q0.20.png",
+      "mse": 42.4097,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=0.20",
+      "a": "L5-mood-excited-q0.20.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 73.4692,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=0.20",
+      "a": "L5-mood-excited-q0.20.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 81.0037,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=0.20",
+      "a": "L5-mood-happy-q0.20.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 44.1118,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=0.20",
+      "a": "L5-mood-happy-q0.20.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 71.4728,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=0.20",
+      "a": "L5-mood-neutral-q0.20.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 38.2107,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔happy @ q=0.10",
+      "a": "L5-mood-excited-q0.10.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 52.0955,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔neutral @ q=0.10",
+      "a": "L5-mood-excited-q0.10.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 71.8538,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "excited↔sad @ q=0.10",
+      "a": "L5-mood-excited-q0.10.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 84.3595,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔neutral @ q=0.10",
+      "a": "L5-mood-happy-q0.10.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 50.8473,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "happy↔sad @ q=0.10",
+      "a": "L5-mood-happy-q0.10.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 68.4542,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "mood-pair",
+      "label": "neutral↔sad @ q=0.10",
+      "a": "L5-mood-neutral-q0.10.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 44.269,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=1.00↔q=0.70",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-excited-q0.70.png",
+      "mse": 43.3144,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=1.00↔q=0.50",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-excited-q0.50.png",
+      "mse": 49.3007,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=1.00↔q=0.40",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-excited-q0.40.png",
+      "mse": 44.5623,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=1.00↔q=0.30",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-excited-q0.30.png",
+      "mse": 559.7369,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=1.00↔q=0.20",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-excited-q0.20.png",
+      "mse": 573.0958,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=1.00↔q=0.10",
+      "a": "L5-mood-excited-q1.00.png",
+      "b": "L5-mood-excited-q0.10.png",
+      "mse": 576.7895,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.70↔q=0.50",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-excited-q0.50.png",
+      "mse": 16.6469,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.70↔q=0.40",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-excited-q0.40.png",
+      "mse": 30.923,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.70↔q=0.30",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-excited-q0.30.png",
+      "mse": 541.4144,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.70↔q=0.20",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-excited-q0.20.png",
+      "mse": 544.0651,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.70↔q=0.10",
+      "a": "L5-mood-excited-q0.70.png",
+      "b": "L5-mood-excited-q0.10.png",
+      "mse": 571.68,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.50↔q=0.40",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-excited-q0.40.png",
+      "mse": 25.2359,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.50↔q=0.30",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-excited-q0.30.png",
+      "mse": 535.7672,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.50↔q=0.20",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-excited-q0.20.png",
+      "mse": 545.8491,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.50↔q=0.10",
+      "a": "L5-mood-excited-q0.50.png",
+      "b": "L5-mood-excited-q0.10.png",
+      "mse": 556.7134,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.40↔q=0.30",
+      "a": "L5-mood-excited-q0.40.png",
+      "b": "L5-mood-excited-q0.30.png",
+      "mse": 532.8789,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.40↔q=0.20",
+      "a": "L5-mood-excited-q0.40.png",
+      "b": "L5-mood-excited-q0.20.png",
+      "mse": 538.1966,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.40↔q=0.10",
+      "a": "L5-mood-excited-q0.40.png",
+      "b": "L5-mood-excited-q0.10.png",
+      "mse": 537.3875,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.30↔q=0.20",
+      "a": "L5-mood-excited-q0.30.png",
+      "b": "L5-mood-excited-q0.20.png",
+      "mse": 8.1866,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.30↔q=0.10",
+      "a": "L5-mood-excited-q0.30.png",
+      "b": "L5-mood-excited-q0.10.png",
+      "mse": 20.6675,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "excited q=0.20↔q=0.10",
+      "a": "L5-mood-excited-q0.20.png",
+      "b": "L5-mood-excited-q0.10.png",
+      "mse": 18.6268,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=1.00↔q=0.70",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-happy-q0.70.png",
+      "mse": 11.2076,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=1.00↔q=0.50",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-happy-q0.50.png",
+      "mse": 13.7194,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=1.00↔q=0.40",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-happy-q0.40.png",
+      "mse": 22.0388,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=1.00↔q=0.30",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-happy-q0.30.png",
+      "mse": 545.3259,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=1.00↔q=0.20",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-happy-q0.20.png",
+      "mse": 552.1223,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=1.00↔q=0.10",
+      "a": "L5-mood-happy-q1.00.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 570.5393,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.70↔q=0.50",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-happy-q0.50.png",
+      "mse": 10.0346,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.70↔q=0.40",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-happy-q0.40.png",
+      "mse": 9.9972,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.70↔q=0.30",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-happy-q0.30.png",
+      "mse": 526.0448,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.70↔q=0.20",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-happy-q0.20.png",
+      "mse": 537.7134,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.70↔q=0.10",
+      "a": "L5-mood-happy-q0.70.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 558.0764,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.50↔q=0.40",
+      "a": "L5-mood-happy-q0.50.png",
+      "b": "L5-mood-happy-q0.40.png",
+      "mse": 5.05,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.50↔q=0.30",
+      "a": "L5-mood-happy-q0.50.png",
+      "b": "L5-mood-happy-q0.30.png",
+      "mse": 525.3584,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.50↔q=0.20",
+      "a": "L5-mood-happy-q0.50.png",
+      "b": "L5-mood-happy-q0.20.png",
+      "mse": 534.3466,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.50↔q=0.10",
+      "a": "L5-mood-happy-q0.50.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 537.7849,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.40↔q=0.30",
+      "a": "L5-mood-happy-q0.40.png",
+      "b": "L5-mood-happy-q0.30.png",
+      "mse": 517.8285,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.40↔q=0.20",
+      "a": "L5-mood-happy-q0.40.png",
+      "b": "L5-mood-happy-q0.20.png",
+      "mse": 527.3383,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.40↔q=0.10",
+      "a": "L5-mood-happy-q0.40.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 534.1717,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.30↔q=0.20",
+      "a": "L5-mood-happy-q0.30.png",
+      "b": "L5-mood-happy-q0.20.png",
+      "mse": 9.5588,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.30↔q=0.10",
+      "a": "L5-mood-happy-q0.30.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 18.1898,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "happy q=0.20↔q=0.10",
+      "a": "L5-mood-happy-q0.20.png",
+      "b": "L5-mood-happy-q0.10.png",
+      "mse": 20.3324,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=1.00↔q=0.70",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-neutral-q0.70.png",
+      "mse": 2.4878,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=1.00↔q=0.50",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-neutral-q0.50.png",
+      "mse": 14.5108,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=1.00↔q=0.40",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-neutral-q0.40.png",
+      "mse": 17.7115,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=1.00↔q=0.30",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-neutral-q0.30.png",
+      "mse": 545.0134,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=1.00↔q=0.20",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 547.5527,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=1.00↔q=0.10",
+      "a": "L5-mood-neutral-q1.00.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 568.4546,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.70↔q=0.50",
+      "a": "L5-mood-neutral-q0.70.png",
+      "b": "L5-mood-neutral-q0.50.png",
+      "mse": 7.749,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.70↔q=0.40",
+      "a": "L5-mood-neutral-q0.70.png",
+      "b": "L5-mood-neutral-q0.40.png",
+      "mse": 8.3083,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.70↔q=0.30",
+      "a": "L5-mood-neutral-q0.70.png",
+      "b": "L5-mood-neutral-q0.30.png",
+      "mse": 534.4652,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.70↔q=0.20",
+      "a": "L5-mood-neutral-q0.70.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 534.5281,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.70↔q=0.10",
+      "a": "L5-mood-neutral-q0.70.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 552.9465,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.50↔q=0.40",
+      "a": "L5-mood-neutral-q0.50.png",
+      "b": "L5-mood-neutral-q0.40.png",
+      "mse": 4.0681,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.50↔q=0.30",
+      "a": "L5-mood-neutral-q0.50.png",
+      "b": "L5-mood-neutral-q0.30.png",
+      "mse": 526.9136,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.50↔q=0.20",
+      "a": "L5-mood-neutral-q0.50.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 528.6867,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.50↔q=0.10",
+      "a": "L5-mood-neutral-q0.50.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 539.959,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.40↔q=0.30",
+      "a": "L5-mood-neutral-q0.40.png",
+      "b": "L5-mood-neutral-q0.30.png",
+      "mse": 522.6106,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.40↔q=0.20",
+      "a": "L5-mood-neutral-q0.40.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 521.1422,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.40↔q=0.10",
+      "a": "L5-mood-neutral-q0.40.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 531.7146,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.30↔q=0.20",
+      "a": "L5-mood-neutral-q0.30.png",
+      "b": "L5-mood-neutral-q0.20.png",
+      "mse": 8.5612,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.30↔q=0.10",
+      "a": "L5-mood-neutral-q0.30.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 7.7933,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "neutral q=0.20↔q=0.10",
+      "a": "L5-mood-neutral-q0.20.png",
+      "b": "L5-mood-neutral-q0.10.png",
+      "mse": 7.9063,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=1.00↔q=0.70",
+      "a": "L5-mood-sad-q1.00.png",
+      "b": "L5-mood-sad-q0.70.png",
+      "mse": 9.7516,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=1.00↔q=0.50",
+      "a": "L5-mood-sad-q1.00.png",
+      "b": "L5-mood-sad-q0.50.png",
+      "mse": 20.1574,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=1.00↔q=0.40",
+      "a": "L5-mood-sad-q1.00.png",
+      "b": "L5-mood-sad-q0.40.png",
+      "mse": 34.316,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=1.00↔q=0.30",
+      "a": "L5-mood-sad-q1.00.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 538.4039,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=1.00↔q=0.20",
+      "a": "L5-mood-sad-q1.00.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 562.6806,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=1.00↔q=0.10",
+      "a": "L5-mood-sad-q1.00.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 578.2182,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.70↔q=0.50",
+      "a": "L5-mood-sad-q0.70.png",
+      "b": "L5-mood-sad-q0.50.png",
+      "mse": 4.5485,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.70↔q=0.40",
+      "a": "L5-mood-sad-q0.70.png",
+      "b": "L5-mood-sad-q0.40.png",
+      "mse": 15.9697,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.70↔q=0.30",
+      "a": "L5-mood-sad-q0.70.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 535.2385,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.70↔q=0.20",
+      "a": "L5-mood-sad-q0.70.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 546.2771,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.70↔q=0.10",
+      "a": "L5-mood-sad-q0.70.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 555.5133,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.50↔q=0.40",
+      "a": "L5-mood-sad-q0.50.png",
+      "b": "L5-mood-sad-q0.40.png",
+      "mse": 8.3912,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.50↔q=0.30",
+      "a": "L5-mood-sad-q0.50.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 530.9686,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.50↔q=0.20",
+      "a": "L5-mood-sad-q0.50.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 537.4617,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.50↔q=0.10",
+      "a": "L5-mood-sad-q0.50.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 540.578,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.40↔q=0.30",
+      "a": "L5-mood-sad-q0.40.png",
+      "b": "L5-mood-sad-q0.30.png",
+      "mse": 534.8332,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.40↔q=0.20",
+      "a": "L5-mood-sad-q0.40.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 526.1389,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.40↔q=0.10",
+      "a": "L5-mood-sad-q0.40.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 526.2958,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.30↔q=0.20",
+      "a": "L5-mood-sad-q0.30.png",
+      "b": "L5-mood-sad-q0.20.png",
+      "mse": 16.4383,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.30↔q=0.10",
+      "a": "L5-mood-sad-q0.30.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 27.7495,
+      "sizeMismatch": false,
+      "pass": true
+    },
+    {
+      "kind": "quality-pair",
+      "label": "sad q=0.20↔q=0.10",
+      "a": "L5-mood-sad-q0.20.png",
+      "b": "L5-mood-sad-q0.10.png",
+      "mse": 9.8602,
+      "sizeMismatch": false,
+      "pass": true
+    }
+  ]
+}
