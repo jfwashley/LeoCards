@@ -141,7 +141,7 @@ describe("habitatLevel", () => {
     expect(habitatLevel(300)).toBe(10);
   });
 
-  it("returns 10 when effectiveCardCount is 400 (max, threshold[9]=400 — D-10)", () => {
+  it("returns 10 when effectiveCardCount is 400 (well past max threshold, clamped — D-10)", () => {
     expect(habitatLevel(400)).toBe(10);
   });
 
@@ -149,10 +149,10 @@ describe("habitatLevel", () => {
     expect(habitatLevel(1000)).toBe(10);
   });
 
-  it("exports LEVEL_THRESHOLDS with 10 entries", () => {
-    expect(LEVEL_THRESHOLDS).toHaveLength(10);
-    expect(LEVEL_THRESHOLDS[0]).toBe(5);
-    expect(LEVEL_THRESHOLDS[9]).toBe(400);
+  it("exports LEVEL_THRESHOLDS with 9 entries (levels 2-10, D-07/D-10)", () => {
+    expect(LEVEL_THRESHOLDS).toHaveLength(9);
+    expect(LEVEL_THRESHOLDS[0]).toBe(5); // → level 2
+    expect(LEVEL_THRESHOLDS[8]).toBe(300); // → level 10 (max)
   });
 });
 

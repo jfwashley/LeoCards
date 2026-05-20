@@ -14,12 +14,24 @@ export const DECAY_RATE_PER_DAY = 0.05;
 export const DECAY_FLOOR = 0.1;
 
 /**
- * Card count thresholds for habitat levels 2-10 (D-07).
- * Index 0 = threshold to reach level 2 (5 learned cards)
- * Index 9 = threshold to reach level 10 (400 learned cards)
+ * Effective-card-count thresholds for habitat levels 2-10 (D-07, D-10).
+ *
+ * Nine entries: index `i` = effective-card-count needed to reach level `i + 2`.
+ * - Index 0 (5)   → level 2
+ * - Index 1 (15)  → level 3
+ * - Index 2 (30)  → level 4
+ * - Index 3 (50)  → level 5
+ * - Index 4 (80)  → level 6
+ * - Index 5 (120) → level 7
+ * - Index 6 (170) → level 8
+ * - Index 7 (230) → level 9
+ * - Index 8 (300) → level 10 (D-10: max)
+ *
+ * "Effective cards" = Math.floor(quality × learnedCardCount), so decay
+ * lowers the effective count and can drop the user back down a level.
  */
 export const LEVEL_THRESHOLDS = [
-  5, 15, 30, 50, 80, 120, 170, 230, 300, 400,
+  5, 15, 30, 50, 80, 120, 170, 230, 300,
 ] as const;
 
 /** "Excited" mood window: 60 minutes after completing a study session (D-13) */
