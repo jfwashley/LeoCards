@@ -20,4 +20,11 @@ export const env = createEnv({
     DEEPL_API_KEY: process.env.DEEPL_API_KEY,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
   },
+  // Coerce empty strings to undefined BEFORE Zod runs so optional keys
+  // (RESEND/DEEPL/ANTHROPIC) gracefully fall through to their existing
+  // missing-key paths instead of bricking the whole app at module-eval.
+  // Empty-string env vars are common in CI runners, shared shells (Claude
+  // Code inherits ANTHROPIC_API_KEY="" by default), Docker base images, and
+  // Vercel preview deploys. Caught live by QA on 2026-05-20.
+  emptyStringAsUndefined: true,
 });
