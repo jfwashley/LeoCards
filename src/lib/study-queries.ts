@@ -2,7 +2,7 @@
 // These are called from Server Components, not from client via server actions.
 // Each caller is responsible for verifying the userId comes from a valid session.
 
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import type { CardId } from "@/db/schema";
 import { cards } from "@/db/schema";
@@ -38,5 +38,7 @@ export async function getStudyCards(deckId: string): Promise<
       recallCount: cards.recallCount,
     })
     .from(cards)
-    .where(eq(cards.deckId, deckId));
+    // Paused cards (pausedAt IS NOT NULL) are filtered out at the query layer per 12-CONTEXT.md D-04
+    // so that assembleSession and earliestCooldownEnd remain pause-agnostic.
+    .where(and(eq(cards.deckId, deckId), isNull(cards.pausedAt)));
 }
