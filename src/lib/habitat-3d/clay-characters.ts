@@ -137,16 +137,25 @@ export function buildLionStorybook(
   g.add(torso);
 
   // ---- body ----
-  const body = new THREE.Mesh(new THREE.SphereGeometry(0.95, 28, 20), make(PAL.lion));
+  const body = new THREE.Mesh(
+    new THREE.SphereGeometry(0.95, 28, 20),
+    make(PAL.lion),
+  );
   body.scale.set(1, 0.88, 1.5);
   body.position.y = 1.0;
   body.castShadow = true;
   torso.add(body);
-  const back = new THREE.Mesh(new THREE.SphereGeometry(0.7, 20, 14), make(PAL.shadow));
+  const back = new THREE.Mesh(
+    new THREE.SphereGeometry(0.7, 20, 14),
+    make(PAL.shadow),
+  );
   back.scale.set(0.55, 0.5, 1.3);
   back.position.set(0, 1.35, 0.05);
   torso.add(back);
-  const belly = new THREE.Mesh(new THREE.SphereGeometry(0.72, 20, 16), make(PAL.light));
+  const belly = new THREE.Mesh(
+    new THREE.SphereGeometry(0.72, 20, 16),
+    make(PAL.light),
+  );
   belly.scale.set(0.85, 0.55, 1.18);
   belly.position.set(0, 0.7, 0.1);
   torso.add(belly);
@@ -155,7 +164,10 @@ export function buildLionStorybook(
   const maneAnchor = new THREE.Group();
   maneAnchor.position.set(0, 1.22, -1.05);
   torso.add(maneAnchor);
-  const mane = new THREE.Mesh(new THREE.SphereGeometry(1.0, 24, 18), make(PAL.mane));
+  const mane = new THREE.Mesh(
+    new THREE.SphereGeometry(1.0, 24, 18),
+    make(PAL.mane),
+  );
   mane.scale.set(1.05, 1.05, 0.9);
   mane.castShadow = true;
   maneAnchor.add(mane);
@@ -172,14 +184,20 @@ export function buildLionStorybook(
   }
   for (let i = 0; i < 5; i++) {
     const a = -Math.PI / 6 + (i / 4) * (Math.PI * 1.3);
-    const tip = new THREE.Mesh(new THREE.SphereGeometry(0.14, 10, 8), make(PAL.maneTip));
+    const tip = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 10, 8),
+      make(PAL.maneTip),
+    );
     tip.position.set(Math.cos(a) * 1.04, Math.sin(a) * 0.82 + 0.04, 0.02);
     tip.scale.set(0.85, 0.85, 0.55);
     maneAnchor.add(tip);
   }
   for (let i = 0; i < 6; i++) {
     const a = (i / 6) * Math.PI - Math.PI / 2;
-    const tuft = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 8), make(PAL.maneMid));
+    const tuft = new THREE.Mesh(
+      new THREE.SphereGeometry(0.2, 12, 8),
+      make(PAL.maneMid),
+    );
     tuft.position.set(Math.cos(a) * 0.7, 0.05 + Math.sin(a) * 0.5, 0.25);
     maneAnchor.add(tuft);
   }
@@ -188,26 +206,41 @@ export function buildLionStorybook(
   const headG = new THREE.Group();
   headG.position.set(0, 1.22, -1.5);
   torso.add(headG);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 24, 18), make(PAL.lion));
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.6, 24, 18),
+    make(PAL.lion),
+  );
   head.scale.set(1.05, 0.95, 1);
   head.castShadow = true;
   headG.add(head);
   for (const x of [-0.36, 0.36]) {
-    const cheek = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), make(PAL.light));
+    const cheek = new THREE.Mesh(
+      new THREE.SphereGeometry(0.18, 12, 10),
+      make(PAL.light),
+    );
     cheek.position.set(x, -0.1, -0.35);
     headG.add(cheek);
   }
   for (const x of [-0.34, 0.34]) {
-    const blush = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 10), make(PAL.blush));
+    const blush = new THREE.Mesh(
+      new THREE.SphereGeometry(0.09, 12, 10),
+      make(PAL.blush),
+    );
     blush.position.set(x, -0.12, -0.52);
     blush.scale.set(1, 0.55, 0.25);
     headG.add(blush);
   }
-  const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.34, 18, 14), make(PAL.light));
+  const muzzle = new THREE.Mesh(
+    new THREE.SphereGeometry(0.34, 18, 14),
+    make(PAL.light),
+  );
   muzzle.position.set(0, -0.18, -0.5);
   muzzle.scale.set(1, 0.75, 0.9);
   headG.add(muzzle);
-  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 10), make(PAL.nose));
+  const nose = new THREE.Mesh(
+    new THREE.SphereGeometry(0.1, 12, 10),
+    make(PAL.nose),
+  );
   nose.position.set(0, -0.08, -0.78);
   nose.scale.set(1.2, 0.85, 0.8);
   headG.add(nose);
@@ -226,10 +259,16 @@ export function buildLionStorybook(
     { x: -0.3, group: earL },
     { x: 0.3, group: earR },
   ]) {
-    const outer = new THREE.Mesh(new THREE.SphereGeometry(0.17, 14, 10), make(PAL.lion));
+    const outer = new THREE.Mesh(
+      new THREE.SphereGeometry(0.17, 14, 10),
+      make(PAL.lion),
+    );
     outer.scale.set(0.85, 1.1, 0.5);
     ear.add(outer);
-    const inner = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 8), make(PAL.pink));
+    const inner = new THREE.Mesh(
+      new THREE.SphereGeometry(0.1, 12, 8),
+      make(PAL.pink),
+    );
     inner.position.set(0, -0.02, -0.05);
     inner.scale.set(0.7, 0.9, 0.4);
     ear.add(inner);
@@ -246,7 +285,10 @@ export function buildLionStorybook(
     { x: -0.22, group: browL },
     { x: 0.22, group: browR },
   ]) {
-    const browMesh = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 8), make(PAL.shadow));
+    const browMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08, 10, 8),
+      make(PAL.shadow),
+    );
     browMesh.position.set(x, 0.18, -0.52);
     browMesh.scale.set(1.2, 0.4, 0.4);
     browMesh.rotation.z = x > 0 ? -0.4 : 0.4;
@@ -257,7 +299,10 @@ export function buildLionStorybook(
   // ---- eyes ----
   const eyes: LionEyeRef[] = [];
   for (const x of [-0.22, 0.22]) {
-    const eyeWhite = new THREE.Mesh(new THREE.SphereGeometry(0.1, 14, 10), make(PAL.white));
+    const eyeWhite = new THREE.Mesh(
+      new THREE.SphereGeometry(0.1, 14, 10),
+      make(PAL.white),
+    );
     eyeWhite.position.set(x, 0.06, -0.52);
     eyeWhite.scale.set(0.85, 1, 0.3);
     headG.add(eyeWhite);
@@ -265,18 +310,32 @@ export function buildLionStorybook(
     const pupilG = new THREE.Group();
     pupilG.position.set(x, 0.06, -0.58);
     headG.add(pupilG);
-    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 10), make(PAL.eye));
+    const pupil = new THREE.Mesh(
+      new THREE.SphereGeometry(0.07, 12, 10),
+      make(PAL.eye),
+    );
     pupil.scale.set(0.85, 1, 0.6);
     pupilG.add(pupil);
-    const shine1 = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 8), make(PAL.white));
+    const shine1 = new THREE.Mesh(
+      new THREE.SphereGeometry(0.022, 10, 8),
+      make(PAL.white),
+    );
     shine1.position.set(x > 0 ? 0.022 : -0.022, 0.028, -0.045);
     shine1.scale.set(1, 1, 0.4);
     pupilG.add(shine1);
-    const shine2 = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), make(PAL.white));
+    const shine2 = new THREE.Mesh(
+      new THREE.SphereGeometry(0.012, 8, 6),
+      make(PAL.white),
+    );
     shine2.position.set(x > 0 ? -0.018 : 0.018, -0.022, -0.045);
     pupilG.add(shine2);
 
-    eyes.push({ white: eyeWhite, pupil, pupilG, basePos: pupilG.position.clone() });
+    eyes.push({
+      white: eyeWhite,
+      pupil,
+      pupilG,
+      basePos: pupilG.position.clone(),
+    });
   }
 
   // ---- legs ----
@@ -290,7 +349,10 @@ export function buildLionStorybook(
     upper.position.y = -0.2;
     upper.castShadow = true;
     pivot.add(upper);
-    const paw = new THREE.Mesh(new THREE.SphereGeometry(0.22, 14, 10), make(PAL.lion));
+    const paw = new THREE.Mesh(
+      new THREE.SphereGeometry(0.22, 14, 10),
+      make(PAL.lion),
+    );
     paw.position.y = -0.45;
     paw.scale.set(1.05, 0.6, 1.15);
     paw.castShadow = true;
@@ -309,16 +371,25 @@ export function buildLionStorybook(
   const tailRoot = new THREE.Group();
   tailRoot.position.set(0, 1.15, 1.3);
   torso.add(tailRoot);
-  const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.05, 1.1, 10), make(PAL.lion));
+  const tail = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.05, 1.1, 10),
+    make(PAL.lion),
+  );
   tail.geometry.translate(0, 0.55, 0);
   tail.rotation.x = -Math.PI / 3;
   tailRoot.add(tail);
   const tailTuft = new THREE.Group();
   tailTuft.position.set(0, 0.6, 0);
   tail.add(tailTuft);
-  const tuft = new THREE.Mesh(new THREE.SphereGeometry(0.2, 14, 10), make(PAL.mane));
+  const tuft = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 14, 10),
+    make(PAL.mane),
+  );
   tailTuft.add(tuft);
-  const tuftTip = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 10), make(PAL.maneTip));
+  const tuftTip = new THREE.Mesh(
+    new THREE.SphereGeometry(0.12, 12, 10),
+    make(PAL.maneTip),
+  );
   tuftTip.position.set(0, 0.14, 0);
   tailTuft.add(tuftTip);
 
@@ -364,7 +435,10 @@ export function buildElephant(mat: MatFactory): ElephantRig {
 
   const bodyG = new THREE.Group();
   g.add(bodyG);
-  const body = new THREE.Mesh(new THREE.SphereGeometry(0.78, 22, 16), make(PAL.skin));
+  const body = new THREE.Mesh(
+    new THREE.SphereGeometry(0.78, 22, 16),
+    make(PAL.skin),
+  );
   body.scale.set(1.15, 1, 1.45);
   body.position.y = 1.0;
   body.castShadow = true;
@@ -372,7 +446,10 @@ export function buildElephant(mat: MatFactory): ElephantRig {
 
   const headG = new THREE.Group();
   g.add(headG);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 20, 16), make(PAL.skin));
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.6, 20, 16),
+    make(PAL.skin),
+  );
   head.position.set(0, 1.15, -1.0);
   head.castShadow = true;
   headG.add(head);
@@ -401,10 +478,16 @@ export function buildElephant(mat: MatFactory): ElephantRig {
     { x: -0.65, group: earL },
     { x: 0.65, group: earR },
   ]) {
-    const outer = new THREE.Mesh(new THREE.SphereGeometry(0.38, 14, 12), make(PAL.dark));
+    const outer = new THREE.Mesh(
+      new THREE.SphereGeometry(0.38, 14, 12),
+      make(PAL.dark),
+    );
     outer.scale.set(0.28, 1.1, 1.1);
     ear.add(outer);
-    const inner = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 10), make(PAL.pink));
+    const inner = new THREE.Mesh(
+      new THREE.SphereGeometry(0.28, 12, 10),
+      make(PAL.pink),
+    );
     inner.position.set(-0.05 * (x > 0 ? 1 : -1), -0.05, 0.07);
     inner.scale.set(0.2, 0.8, 0.85);
     ear.add(inner);
@@ -416,11 +499,17 @@ export function buildElephant(mat: MatFactory): ElephantRig {
 
   const eyes: Array<{ white: THREE.Mesh; pupil: THREE.Mesh }> = [];
   for (const x of [-0.3, 0.3]) {
-    const white = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 10), make(PAL.white));
+    const white = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08, 12, 10),
+      make(PAL.white),
+    );
     white.position.set(x, 1.25, -1.42);
     white.scale.set(0.85, 1, 0.4);
     headG.add(white);
-    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), make(PAL.eye));
+    const pupil = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 10, 8),
+      make(PAL.eye),
+    );
     pupil.position.set(x, 1.25, -1.47);
     headG.add(pupil);
     eyes.push({ white, pupil });
@@ -428,7 +517,10 @@ export function buildElephant(mat: MatFactory): ElephantRig {
 
   // tusks
   for (const x of [-0.18, 0.18]) {
-    const t = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.25, 8), make(PAL.white));
+    const t = new THREE.Mesh(
+      new THREE.ConeGeometry(0.05, 0.25, 8),
+      make(PAL.white),
+    );
     t.position.set(x, 0.85, -1.5);
     t.rotation.x = 0.6;
     headG.add(t);
@@ -450,7 +542,10 @@ export function buildElephant(mat: MatFactory): ElephantRig {
   }
 
   // tail
-  const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8), make(PAL.skin));
+  const tail = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8),
+    make(PAL.skin),
+  );
   tail.position.set(0, 1.0, 0.95);
   tail.rotation.x = 0.4;
   bodyG.add(tail);

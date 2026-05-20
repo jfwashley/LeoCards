@@ -4,13 +4,18 @@
 
 import * as THREE from "three";
 import { describe, expect, it } from "vitest";
-import { buildElephant, buildLionStorybook, rigMaterials } from "../clay-characters";
-import { toonGrad } from "../palette";
 import type { MatFactory } from "../clay-characters";
+import {
+  buildElephant,
+  buildLionStorybook,
+  rigMaterials,
+} from "../clay-characters";
+import { toonGrad } from "../palette";
 
 function makeMatFactory(): MatFactory {
   const grad = toonGrad(4);
-  return (color: string) => new THREE.MeshToonMaterial({ color, gradientMap: grad });
+  return (color: string) =>
+    new THREE.MeshToonMaterial({ color, gradientMap: grad });
 }
 
 function countVerts(root: THREE.Object3D): number {
