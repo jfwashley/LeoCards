@@ -215,10 +215,7 @@ export async function getSameLanguageDeckBackWords(
     .from(cards)
     .innerJoin(decks, eq(cards.deckId, decks.id))
     .where(
-      and(
-        eq(decks.userId, userId),
-        eq(decks.language, targetDeck.language),
-      ),
+      and(eq(decks.userId, userId), eq(decks.language, targetDeck.language)),
     );
 
   return new Set(rows.map((r) => r.back.trim().toLowerCase()));
@@ -240,6 +237,30 @@ export async function saveImageCards(
   deckId: string,
   cardInputs: Array<{ front: string; back: string }>,
 ): Promise<Array<{ ok: boolean; error?: string }>> {
+  // Guard: validate array shape, cap length, validate each field (T-11 review WR-01)
+  if (!Array.isArray(cardInputs) || cardInputs.length === 0) {
+    return [];
+  }
+  if (cardInputs.length > 100) {
+    throw new Error("Too many cards in a single request");
+  }
+  const sanitizedInputs: Array<{ front: string; back: string }> = [];
+  for (const input of cardInputs) {
+    if (
+      !input ||
+      typeof input.front !== "string" ||
+      typeof input.back !== "string"
+    ) {
+      throw new Error("Invalid card data");
+    }
+    const f = input.front.trim();
+    const b = input.back.trim();
+    if (!f || !b || f.length > 500 || b.length > 500) {
+      throw new Error("Invalid card data");
+    }
+    sanitizedInputs.push({ front: f, back: b });
+  }
+
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;
@@ -254,18 +275,16 @@ export async function saveImageCards(
 
   // Sequential inserts, continue-on-failure (D-12: Neon HTTP has no transactions)
   const outcomes: Array<{ ok: boolean; error?: string }> = [];
-  for (const input of cardInputs) {
+  for (const input of sanitizedInputs) {
     try {
       const id = crypto.randomUUID() as CardId;
-      await db
-        .insert(cards)
-        .values({
-          id,
-          deckId: deckId as DeckId,
-          front: input.front,
-          back: input.back,
-          source: "image",
-        });
+      await db.insert(cards).values({
+        id,
+        deckId: deckId as DeckId,
+        front: input.front,
+        back: input.back,
+        source: "image",
+      });
       outcomes.push({ ok: true });
     } catch (err) {
       outcomes.push({
