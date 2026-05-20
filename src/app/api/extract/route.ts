@@ -40,7 +40,11 @@ const RequestSchema = z.object({
   image: z.string().min(1), // base64 data-URL: "data:image/jpeg;base64,..."
   mimeType: z.string(), // declared MIME — server must magic-byte verify (D-10)
   deckId: z.string().min(1),
-  targetLanguage: z.string(), // BCP-47, e.g. "fr" — biases extraction (D-05)
+  // BCP-47, e.g. "fr" — biases extraction (D-05).
+  // Regex constraint mirrors ExtractionSchema.detectedLanguage and closes a
+  // prompt-injection vector: `targetLanguage` is interpolated into the system
+  // prompt below, so we fence it to language tags only (IN-01).
+  targetLanguage: z.string().regex(/^[a-z]{2}(-[A-Z]{2})?$/),
 });
 
 // D-10: magic-byte signature check — hand-rolled, no file-type dep (RESEARCH Section 2)
