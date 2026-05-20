@@ -355,7 +355,11 @@ export function ImageUploadFlow({
             <Button
               variant="outline"
               onClick={() => {
-                dispatch({ type: "EXTRACT_RETRY" });
+                // IN-03: handleExtract() already dispatches EXTRACT_START, which
+                // produces the same state transition as EXTRACT_RETRY. Dispatching
+                // both here caused a redundant re-render. The EXTRACT_RETRY action
+                // is retained in the reducer for potential future use (e.g. retry
+                // animation triggers) but is no longer fired on this path.
                 void handleExtract();
               }}
             >
