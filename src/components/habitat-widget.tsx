@@ -9,7 +9,7 @@ import { LEVEL_THRESHOLDS } from "@/lib/habitat-engine";
 
 // SSR-safe: ssr:false only works inside "use client" modules (Next.js 16 rule)
 const HabitatWidgetCanvas = dynamic(
-  () => import("@/components/habitat-widget-canvas"),
+  () => import("@/components/habitat-3d-widget-canvas"),
   {
     ssr: false,
     loading: () => (
@@ -27,7 +27,7 @@ export const HabitatWidget = React.memo(function HabitatWidget({
   habitatState,
   celebratingLevel = null,
 }: HabitatWidgetProps) {
-  const { level, learnedCardCount, nextLevelThreshold, mood } = habitatState;
+  const { level, learnedCardCount, nextLevelThreshold } = habitatState;
 
   // Calculate progress percentage toward next level
   let progressPct: number;
@@ -55,7 +55,7 @@ export const HabitatWidget = React.memo(function HabitatWidget({
     >
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
         <CardContent className="p-4">
-          <HabitatWidgetCanvas mood={mood} />
+          <HabitatWidgetCanvas habitatState={habitatState} />
           <div className="mt-3">
             <div className="flex justify-between text-sm text-muted-foreground mb-1">
               <span>Level {level}</span>
