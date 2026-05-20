@@ -50,7 +50,7 @@ The next milestone is **TBD** — promote candidates from the backlog via `/gsd-
 
 ## Active Requirements (deferred)
 
-- [ ] Visual style is cute 2D illustrated (currently placeholder sprites)
+- [ ] Visual style is cute 3D illustrated habitats — Course 1: 10 scene-states per habitat level, with tiger + milestone animals as 3D actors in the same scene (current v1.0 placeholder is 2D PixiJS sprites). Renderer + asset pipeline scoped in Phase 13 discuss.
 
 ## Out of Scope
 
@@ -102,7 +102,7 @@ The next milestone is **TBD** — promote candidates from the backlog via `/gsd-
 
 - Study session writes are sequential, not atomic (Neon HTTP driver constraint — applies project-wide)
 - esbuild vulnerability in drizzle-kit deferred (requires breaking downgrade)
-- Placeholder sprite assets (tiger, habitat layers, bird) — not production art
+- Placeholder sprite assets (tiger, habitat layers, bird) — not production art; will be superseded entirely by 3D pipeline in Phase 13 rather than swapped 1:1
 - Nyquist validation bookkeeping incomplete on Phases 9/10/11 (Wave-0 tests are green; `nyquist_compliant: false` flag-flip pending — candidate for `/gsd-validate-phase`)
 - `10-HUMAN-UAT.md`, `11-HUMAN-UAT.md` — intentional deferrals blocked on external resources (real photos + FR/ES tutor; real DeepL + billing-enabled Anthropic keys)
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright spec, keep/delete decision outstanding
