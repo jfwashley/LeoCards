@@ -265,3 +265,32 @@ export function earliestCooldownEnd(
     date < earliest ? date : earliest,
   );
 }
+
+// ============================================================
+// computeUnpauseUpdate
+// ============================================================
+
+/**
+ * Computes the cooldown shift when unpausing a card.
+ *
+ * Rule: cooldownUntil shifts forward by exactly (now − pausedAt). The SRS clock
+ * was frozen during pause; on unpause the card resurfaces with the same cadence
+ * it would have had absent the pause. NULL cooldown stays NULL.
+ *
+ * lastStudiedAt is NOT mutated — pausedAt is the source of truth for "card
+ * was unavailable" intervals.
+ */
+export function computeUnpauseUpdate(
+  pausedAt: Date,
+  cooldownUntil: Date | null,
+  now: Date,
+): { cooldownUntil: Date | null; pausedAt: null } {
+  if (cooldownUntil === null) {
+    return { cooldownUntil: null, pausedAt: null };
+  }
+  const pauseDurationMs = now.getTime() - pausedAt.getTime();
+  return {
+    cooldownUntil: new Date(cooldownUntil.getTime() + pauseDurationMs),
+    pausedAt: null,
+  };
+}

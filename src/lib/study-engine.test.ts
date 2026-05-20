@@ -4,6 +4,7 @@ import {
   assembleSession,
   type CardForSession,
   computeCardUpdate,
+  computeUnpauseUpdate,
   earliestCooldownEnd,
   type GradeEntry,
   getCardStage,
@@ -324,5 +325,49 @@ describe("earliestCooldownEnd", () => {
       makeCard({ id: "card-2" as CardId, cooldownUntil: FUTURE }),
     ];
     expect(earliestCooldownEnd(cards, NOW)).toEqual(FUTURE);
+  });
+});
+
+// ============================================================
+// computeUnpauseUpdate
+// ============================================================
+
+describe("computeUnpauseUpdate", () => {
+  it("leaves NULL cooldown NULL", () => {
+    const pausedAt = new Date("2026-01-10T00:00:00Z");
+    const now = new Date("2026-01-15T00:00:00Z");
+    expect(computeUnpauseUpdate(pausedAt, null, now)).toEqual({
+      cooldownUntil: null,
+      pausedAt: null,
+    });
+  });
+
+  it("shifts future cooldown forward by exact pause duration", () => {
+    const pausedAt = new Date("2026-01-10T00:00:00Z");
+    const cooldownUntil = new Date("2026-01-11T00:00:00Z"); // due 1d after pause
+    const now = new Date("2026-01-15T00:00:00Z"); // 5d after pause
+    const result = computeUnpauseUpdate(pausedAt, cooldownUntil, now);
+    expect(result.pausedAt).toBeNull();
+    expect(result.cooldownUntil?.toISOString()).toBe(
+      "2026-01-16T00:00:00.000Z",
+    );
+  });
+
+  it("shifts past cooldown forward too (overdue card stays overdue by same amount)", () => {
+    const pausedAt = new Date("2026-01-10T00:00:00Z");
+    const cooldownUntil = new Date("2026-01-09T00:00:00Z"); // overdue by 1d at pause
+    const now = new Date("2026-01-15T00:00:00Z");
+    const result = computeUnpauseUpdate(pausedAt, cooldownUntil, now);
+    expect(result.cooldownUntil?.toISOString()).toBe(
+      "2026-01-14T00:00:00.000Z",
+    );
+  });
+
+  it("zero-duration pause leaves cooldown unchanged", () => {
+    const t = new Date("2026-01-10T00:00:00Z");
+    const cooldown = new Date("2026-01-11T00:00:00Z");
+    expect(
+      computeUnpauseUpdate(t, cooldown, t).cooldownUntil?.toISOString(),
+    ).toBe(cooldown.toISOString());
   });
 });
