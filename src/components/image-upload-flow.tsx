@@ -295,7 +295,7 @@ export function ImageUploadFlow({
         <div className="flex flex-col gap-4">
           {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
           <img
-            src={state.previewUrl ?? ""}
+            src={state.previewUrl ?? undefined}
             alt="Selected file"
             className="max-h-32 w-auto object-contain rounded-md"
           />
@@ -333,7 +333,7 @@ export function ImageUploadFlow({
         <div className="flex flex-col gap-4">
           {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
           <img
-            src={state.previewUrl ?? ""}
+            src={state.previewUrl ?? undefined}
             alt="Selected file"
             className="max-h-32 w-auto object-contain rounded-md"
           />
@@ -381,7 +381,7 @@ export function ImageUploadFlow({
         <div className="flex flex-col gap-4">
           {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
           <img
-            src={state.previewUrl ?? ""}
+            src={state.previewUrl ?? undefined}
             alt="Selected file"
             className="max-h-32 w-auto object-contain rounded-md"
           />
@@ -440,7 +440,7 @@ export function ImageUploadFlow({
       <div className="flex flex-col gap-4">
         {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
         <img
-          src={state.previewUrl ?? ""}
+          src={state.previewUrl ?? undefined}
           alt="Selected file"
           className="max-h-32 w-auto object-contain rounded-md"
         />
@@ -478,7 +478,7 @@ export function ImageUploadFlow({
         <div className="relative inline-block">
           {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
           <img
-            src={state.previewUrl ?? ""}
+            src={state.previewUrl ?? undefined}
             alt="Selected file"
             className="max-h-64 w-auto object-contain rounded-lg"
           />
