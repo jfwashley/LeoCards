@@ -450,20 +450,24 @@ export function ReviewList({
   const router = useRouter();
   const cancelled = useRef(false);
 
-  const initialState: ReviewState = {
-    step: "loading-dedupe",
+  // IN-04: lazy initializer avoids reallocating the initial-state object
+  // on every render (useReducer only consumes it on the first render).
+  const [state, dispatch] = useReducer(
+    reviewListReducer,
     words,
-    rows: [],
-    duplicates: [],
-    dedupeError: null,
-    translationRows: [],
-    commitStep: null,
-    addedCount: 0,
-    failedCount: 0,
-    skippedCount: 0,
-  };
-
-  const [state, dispatch] = useReducer(reviewListReducer, initialState);
+    (initialWords): ReviewState => ({
+      step: "loading-dedupe",
+      words: initialWords,
+      rows: [],
+      duplicates: [],
+      dedupeError: null,
+      translationRows: [],
+      commitStep: null,
+      addedCount: 0,
+      failedCount: 0,
+      skippedCount: 0,
+    }),
+  );
 
   // Dedupe on mount
   useEffect(() => {
