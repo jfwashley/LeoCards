@@ -187,12 +187,9 @@ export async function POST(request: Request) {
             {
               type: "image",
               image,
-              // Field is `mediaType` NOT `mimeType` — v6 rename (AI-SPEC Pitfall 2)
-              mediaType: mimeType as
-                | "image/jpeg"
-                | "image/png"
-                | "image/gif"
-                | "image/webp",
+              // Field is `mediaType` NOT `mimeType` — v6 rename (AI-SPEC Pitfall 2).
+              // Cast narrowed to match ALLOWED_IMAGE_TYPES (no gif) — IN-02.
+              mediaType: mimeType as "image/jpeg" | "image/png" | "image/webp",
             },
           ],
         },
