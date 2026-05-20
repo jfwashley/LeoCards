@@ -1,8 +1,9 @@
 "use client";
 
-import { Pencil, Search, X } from "lucide-react";
+import { Pause, Pencil, Play, Search, X } from "lucide-react";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useMemo, useState, useTransition } from "react";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,38 @@ export const CardList = React.memo(function CardList({
 }: CardListProps) {
   const [query, setQuery] = useState("");
   const [editCard, setEditCard] = useState<CardRow | null>(null);
+  const router = useRouter();
+  const [pendingCardIds, setPendingCardIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [, startTransition] = useTransition();
+
+  const togglePause = (card: CardRow) => {
+    setPendingCardIds((prev) => new Set(prev).add(card.id));
+    startTransition(async () => {
+      const action = card.pausedAt ? "unpause" : "pause";
+      try {
+        const res = await fetch(`/api/cards/${card.id}/${action}`, {
+          method: "POST",
+        });
+        if (res.ok) {
+          router.refresh(); // Pitfall 2 — revalidatePath alone would not update the open tab
+        } else {
+          console.error(
+            `Pause toggle failed (${res.status}); state will resync on next refresh`,
+          );
+        }
+      } catch (err) {
+        console.error("Pause toggle network error", err);
+      } finally {
+        setPendingCardIds((prev) => {
+          const next = new Set(prev);
+          next.delete(card.id);
+          return next;
+        });
+      }
+    });
+  };
 
   const filtered = useMemo(() => {
     const trimmed = query.trim();
@@ -104,19 +137,24 @@ export const CardList = React.memo(function CardList({
                   Round
                 </th>
                 <th className="pb-2 w-11" />
+                <th className="pb-2 w-11" />
               </tr>
             </thead>
             <tbody>
               {filtered.map((card) => (
                 <tr
                   key={card.id}
-                  className="border-b border-border min-h-[48px] hover:bg-secondary transition-colors"
+                  className={`border-b border-border min-h-[48px] hover:bg-secondary transition-colors ${card.pausedAt ? "opacity-50" : ""}`}
                 >
                   <td className="text-base py-3 pr-4">{card.front}</td>
                   <td className="text-base py-3 pr-4">{card.back}</td>
                   <td className="py-3 pr-4">
                     <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                      {card.source === "wordlist" ? "word list" : "manual"}
+                      {card.pausedAt
+                        ? "Paused"
+                        : card.source === "wordlist"
+                          ? "word list"
+                          : "manual"}
                     </span>
                   </td>
                   <td className="py-3 pr-4">
@@ -145,6 +183,26 @@ export const CardList = React.memo(function CardList({
                     <Button
                       variant="ghost"
                       className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
+                      aria-label={
+                        card.pausedAt ? "Resume this card" : "Pause this card"
+                      }
+                      title={
+                        card.pausedAt ? "Resume this card" : "Pause this card"
+                      }
+                      disabled={pendingCardIds.has(card.id)}
+                      onClick={() => togglePause(card)}
+                    >
+                      {card.pausedAt ? (
+                        <Play className="size-4" />
+                      ) : (
+                        <Pause className="size-4" />
+                      )}
+                    </Button>
+                  </td>
+                  <td className="py-3">
+                    <Button
+                      variant="ghost"
+                      className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
                       aria-label="Edit card"
                       onClick={() => setEditCard(card)}
                     >
@@ -161,7 +219,7 @@ export const CardList = React.memo(function CardList({
             {filtered.map((card) => (
               <div
                 key={card.id}
-                className="border border-border rounded-lg p-3 flex items-center gap-3"
+                className={`border border-border rounded-lg p-3 flex items-center gap-3 ${card.pausedAt ? "opacity-50" : ""}`}
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{card.front}</p>
@@ -170,7 +228,11 @@ export const CardList = React.memo(function CardList({
                   </p>
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                      {card.source === "wordlist" ? "word list" : "manual"}
+                      {card.pausedAt
+                        ? "Paused"
+                        : card.source === "wordlist"
+                          ? "word list"
+                          : "manual"}
                     </span>
                     <div
                       className="flex items-center gap-1"
@@ -189,6 +251,22 @@ export const CardList = React.memo(function CardList({
                     </div>
                   </div>
                 </div>
+                <Button
+                  variant="ghost"
+                  className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
+                  aria-label={
+                    card.pausedAt ? "Resume this card" : "Pause this card"
+                  }
+                  title={card.pausedAt ? "Resume this card" : "Pause this card"}
+                  disabled={pendingCardIds.has(card.id)}
+                  onClick={() => togglePause(card)}
+                >
+                  {card.pausedAt ? (
+                    <Play className="size-4" />
+                  ) : (
+                    <Pause className="size-4" />
+                  )}
+                </Button>
                 <Button
                   variant="ghost"
                   className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
