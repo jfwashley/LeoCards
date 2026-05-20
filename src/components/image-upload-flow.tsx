@@ -200,7 +200,9 @@ export function ImageUploadFlow({
     const dataUrl = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
+      // Wrap the ProgressEvent in an Error so the outer catch's
+      // `err instanceof Error` check sees a real Error (WR-03).
+      reader.onerror = () => reject(new Error("FileReader error"));
       reader.readAsDataURL(file);
     });
 
