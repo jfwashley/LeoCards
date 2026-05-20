@@ -27,18 +27,20 @@ export async function getStudyCards(deckId: string): Promise<
     recallCount: number;
   }>
 > {
-  return db
-    .select({
-      id: cards.id,
-      front: cards.front,
-      back: cards.back,
-      masteryRound: cards.masteryRound,
-      cooldownUntil: cards.cooldownUntil,
-      createdAt: cards.createdAt,
-      recallCount: cards.recallCount,
-    })
-    .from(cards)
-    // Paused cards (pausedAt IS NOT NULL) are filtered out at the query layer per 12-CONTEXT.md D-04
-    // so that assembleSession and earliestCooldownEnd remain pause-agnostic.
-    .where(and(eq(cards.deckId, deckId), isNull(cards.pausedAt)));
+  return (
+    db
+      .select({
+        id: cards.id,
+        front: cards.front,
+        back: cards.back,
+        masteryRound: cards.masteryRound,
+        cooldownUntil: cards.cooldownUntil,
+        createdAt: cards.createdAt,
+        recallCount: cards.recallCount,
+      })
+      .from(cards)
+      // Paused cards (pausedAt IS NOT NULL) are filtered out at the query layer per 12-CONTEXT.md D-04
+      // so that assembleSession and earliestCooldownEnd remain pause-agnostic.
+      .where(and(eq(cards.deckId, deckId), isNull(cards.pausedAt)))
+  );
 }
