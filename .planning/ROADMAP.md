@@ -69,10 +69,15 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 
 ### Phase 12: Pause cards in active deck review — let users temporarily exclude a card from study sessions without losing its scheduling state; when unpaused, cadence resumes as if the pause never happened
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Add per-card pause/unpause on the dashboard's active-deck review screen. Paused cards are excluded from study sessions and from dashboard due-counts / cooldown countdowns, but their SRS scheduling state is preserved; on unpause, `cooldownUntil` shifts forward by exactly `(now − pausedAt)` so cadence resumes as if the pause never happened.
+**Requirements**: P12-01, P12-02, P12-03, P12-04, P12-05, P12-06, P12-07, P12-08
 **Depends on:** Phase 11
-**Plans:** 0 plans
+**Plans:** 5 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 12 to break down)
+- [ ] 12-01-PLAN.md — Add nullable `pausedAt timestamp` column to `cards`; generate + apply Drizzle migration (BLOCKING human checkpoint to apply against Neon)
+- [ ] 12-02-PLAN.md — Append pure `computeUnpauseUpdate` to study-engine.ts (+ 4 Vitest cases); add `isNull(cards.pausedAt)` filter to `getStudyCards`
+- [ ] 12-03-PLAN.md — POST /api/cards/[id]/pause and /unpause route handlers (auth + ownership + 30/min rate-limit, idempotent, single-UPDATE writeback); STRIDE threat model in-plan
+- [ ] 12-04-PLAN.md — Thread `pausedAt` through dashboard → DeckView → CardList; per-row Pause/Play icon button with paused styling; all-paused empty-state copy
+- [ ] 12-05-PLAN.md — Playwright e2e spec (`e2e/12-pause-cards.spec.ts`) + full quality gate (lint, typecheck, unit, build, e2e); BLOCKING verification checkpoint
+</content>
