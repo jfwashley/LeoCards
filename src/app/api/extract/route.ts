@@ -4,7 +4,10 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { env } from "@/env";
 import { auth } from "@/lib/auth";
-import { ALLOWED_IMAGE_TYPES } from "@/lib/image-constants";
+import {
+  ALLOWED_IMAGE_TYPES,
+  MAX_SERVER_IMAGE_BYTES,
+} from "@/lib/image-constants";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 // D-17: stricter limit — vision calls are expensive (10 req/min vs translate's 30)
@@ -87,7 +90,7 @@ export async function POST(request: Request) {
 
   // 3. Content-Length fast path (D-11 — fires before JSON parse)
   const cl = request.headers.get("content-length");
-  if (cl && Number(cl) > 7 * 1024 * 1024) {
+  if (cl && Number(cl) > MAX_SERVER_IMAGE_BYTES) {
     return Response.json({ error: "Image too large" }, { status: 413 });
   }
 
@@ -109,7 +112,7 @@ export async function POST(request: Request) {
 
   // 6. Authoritative payload size estimate (D-11 — after parse, BEFORE vision call)
   const estimatedBytes = Math.ceil((image.length * 3) / 4);
-  if (estimatedBytes > 7 * 1024 * 1024) {
+  if (estimatedBytes > MAX_SERVER_IMAGE_BYTES) {
     return Response.json({ error: "Image too large" }, { status: 413 });
   }
 
