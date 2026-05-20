@@ -44,11 +44,6 @@ vi.mock("@/lib/deck-actions", () => ({
   getSameLanguageDeckBackWords: vi.fn(),
 }));
 
-// Subject import — will resolve once Wave 2 ships review-list.tsx (RED until then)
-import {
-  isDuplicate,
-  reviewListReducer,
-} from "@/components/review-list";
 // Types imported from subject (may not exist yet)
 import type {
   CommitResult,
@@ -56,10 +51,12 @@ import type {
   ReviewState,
   TranslationRow,
 } from "@/components/review-list";
-
+// Subject import — will resolve once Wave 2 ships review-list.tsx (RED until then)
 // Helper: also import the orchestration helpers Wave 2 must export
 import {
   commitReviewRows,
+  isDuplicate,
+  reviewListReducer,
   runTranslationFanOut,
 } from "@/components/review-list";
 
@@ -162,7 +159,11 @@ describe("reviewListReducer", () => {
         { id: "row-1", word: "chat", kept: true },
       ],
     };
-    const action: ReviewAction = { type: "EDIT_WORD", id: "row-0", word: "chienne" };
+    const action: ReviewAction = {
+      type: "EDIT_WORD",
+      id: "row-0",
+      word: "chienne",
+    };
     const next = reviewListReducer(stateWithRows, action);
     expect(next.rows[0]?.word).toBe("chienne");
     expect(next.rows[1]?.word).toBe("chat");
@@ -207,7 +208,9 @@ describe("reviewListReducer", () => {
   });
 
   it("TRANSLATE_START: step → translating", () => {
-    const next = reviewListReducer(emptyInitialState, { type: "TRANSLATE_START" });
+    const next = reviewListReducer(emptyInitialState, {
+      type: "TRANSLATE_START",
+    });
     expect(next.step).toBe("translating");
   });
 
@@ -216,7 +219,12 @@ describe("reviewListReducer", () => {
       ...emptyInitialState,
       step: "step-b",
       translationRows: [
-        { id: "tr-0", word: "chien", nativeText: "", translationError: "prev error" },
+        {
+          id: "tr-0",
+          word: "chien",
+          nativeText: "",
+          translationError: "prev error",
+        },
         { id: "tr-1", word: "chat", nativeText: "", translationError: null },
       ],
     };
@@ -248,7 +256,7 @@ describe("reviewListReducer", () => {
     };
     const next = reviewListReducer(stateTranslating, action);
     expect(next.translationRows[0]?.translationError).toBe(
-      "Translation unavailable — enter manually."
+      "Translation unavailable — enter manually.",
     );
     expect(next.translationRows[0]?.nativeText).toBe("");
     // Other row unaffected
@@ -261,11 +269,20 @@ describe("reviewListReducer", () => {
       ...emptyInitialState,
       step: "step-b",
       translationRows: [
-        { id: "tr-0", word: "chien", nativeText: "dog", translationError: null },
+        {
+          id: "tr-0",
+          word: "chien",
+          nativeText: "dog",
+          translationError: null,
+        },
         { id: "tr-1", word: "chat", nativeText: "cat", translationError: null },
       ],
     };
-    const next = reviewListReducer(stateB, { type: "EDIT_NATIVE", id: "tr-0", nativeText: "hound" });
+    const next = reviewListReducer(stateB, {
+      type: "EDIT_NATIVE",
+      id: "tr-0",
+      nativeText: "hound",
+    });
     expect(next.translationRows[0]?.nativeText).toBe("hound");
     expect(next.translationRows[1]?.nativeText).toBe("cat");
   });
@@ -275,11 +292,20 @@ describe("reviewListReducer", () => {
       ...emptyInitialState,
       step: "step-b",
       translationRows: [
-        { id: "tr-0", word: "chien", nativeText: "dog", translationError: null },
+        {
+          id: "tr-0",
+          word: "chien",
+          nativeText: "dog",
+          translationError: null,
+        },
         { id: "tr-1", word: "chat", nativeText: "cat", translationError: null },
       ],
     };
-    const next = reviewListReducer(stateB, { type: "EDIT_TARGET", id: "tr-0", word: "chienne" });
+    const next = reviewListReducer(stateB, {
+      type: "EDIT_TARGET",
+      id: "tr-0",
+      word: "chienne",
+    });
     expect(next.translationRows[0]?.word).toBe("chienne");
     expect(next.translationRows[1]?.word).toBe("chat");
   });
@@ -311,7 +337,9 @@ describe("reviewListReducer", () => {
 
   it("default/unknown action: returns state unchanged (referential equality)", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const next = reviewListReducer(emptyInitialState, { type: "UNKNOWN_ACTION" } as any);
+    const next = reviewListReducer(emptyInitialState, {
+      type: "UNKNOWN_ACTION",
+    } as any);
     expect(next).toBe(emptyInitialState);
   });
 });
@@ -358,7 +386,9 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
-    expect(results[0]?.translationError).toBe("Translation unavailable — enter manually.");
+    expect(results[0]?.translationError).toBe(
+      "Translation unavailable — enter manually.",
+    );
     expect(results[0]?.nativeText).toBe("");
     // Second row still resolves correctly
     expect(results[1]?.nativeText).toBe("cat");
@@ -373,7 +403,9 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
-    expect(results[0]?.translationError).toBe("Translation unavailable — enter manually.");
+    expect(results[0]?.translationError).toBe(
+      "Translation unavailable — enter manually.",
+    );
   });
 
   it("sends correct request body shape: { text, sourceLang: targetLang, targetLang: nativeLang } (D-08 direction)", async () => {
@@ -392,16 +424,26 @@ describe("translation fan-out", () => {
       "/api/translate",
       expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({ text: "chien", sourceLang: "fr", targetLang: "en" }),
-      })
+        body: JSON.stringify({
+          text: "chien",
+          sourceLang: "fr",
+          targetLang: "en",
+        }),
+      }),
     );
   });
 
   it("a single failure never throws and never blocks the others", async () => {
     mockFetch
       .mockRejectedValueOnce(new Error("fail"))
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ translation: "cat" }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ translation: "house" }) });
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ translation: "cat" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ translation: "house" }),
+      });
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "", translationError: null },
@@ -410,7 +452,9 @@ describe("translation fan-out", () => {
     ];
 
     // Should NOT throw
-    await expect(runTranslationFanOut(rows, "fr", "en")).resolves.toHaveLength(3);
+    await expect(runTranslationFanOut(rows, "fr", "en")).resolves.toHaveLength(
+      3,
+    );
   });
 });
 
@@ -424,18 +468,27 @@ describe("batch commit", () => {
   it("computes accurate addedCount / failedCount / skippedCount from mixed outcomes", async () => {
     // saveImageCards called once per row; mock mixed results
     mockSaveImageCards
-      .mockResolvedValueOnce({ ok: true })
-      .mockResolvedValueOnce({ ok: false })
-      .mockResolvedValueOnce({ ok: true });
+      .mockResolvedValueOnce([{ ok: true }])
+      .mockResolvedValueOnce([{ ok: false }])
+      .mockResolvedValueOnce([{ ok: true }]);
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "dog", translationError: null },
       { id: "tr-1", word: "chat", nativeText: "cat", translationError: null },
-      { id: "tr-2", word: "maison", nativeText: "house", translationError: null },
+      {
+        id: "tr-2",
+        word: "maison",
+        nativeText: "house",
+        translationError: null,
+      },
     ];
     const duplicates = ["already-known-word", "another-known"];
 
-    const result: CommitResult = await commitReviewRows(rows, FAKE_DECK_ID, duplicates);
+    const result: CommitResult = await commitReviewRows(
+      rows,
+      FAKE_DECK_ID,
+      duplicates,
+    );
     expect(result.addedCount).toBe(2);
     expect(result.failedCount).toBe(1);
     expect(result.skippedCount).toBe(2); // equals duplicates.length
@@ -444,7 +497,7 @@ describe("batch commit", () => {
   it("continue-on-failure: a failing entry does not abort the batch", async () => {
     mockSaveImageCards
       .mockRejectedValueOnce(new Error("DB error"))
-      .mockResolvedValueOnce({ ok: true });
+      .mockResolvedValueOnce([{ ok: true }]);
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "dog", translationError: null },
@@ -452,7 +505,9 @@ describe("batch commit", () => {
     ];
 
     // Should NOT reject — continues processing even when one call throws
-    await expect(commitReviewRows(rows, FAKE_DECK_ID, [])).resolves.toBeDefined();
+    await expect(
+      commitReviewRows(rows, FAKE_DECK_ID, []),
+    ).resolves.toBeDefined();
   });
 });
 

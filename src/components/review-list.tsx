@@ -297,12 +297,9 @@ export async function commitReviewRows(
 
   for (const row of rows) {
     try {
-      const outcome = await saveImageCards(deckId, [
+      const [result] = await saveImageCards(deckId, [
         { front: row.nativeText.trim(), back: row.word.trim() },
       ]);
-      // saveImageCards returns Array<{ok,error?}> but test mocks it returning {ok} directly
-      // Handle both shapes for test compatibility
-      const result = Array.isArray(outcome) ? outcome[0] : outcome;
       if (result?.ok) {
         addedCount++;
       } else {
