@@ -2,12 +2,13 @@
 gsd_state_version: 1.0
 milestone: none
 milestone_name: between-milestones
-status: milestone_complete
-stopped_at: "v2.0 Image-to-Flashcards shipped 2026-05-20. All 3 phases (9, 10, 11) functionally complete + code-review-clean + threat-secure. Ready for next milestone."
-last_updated: "2026-05-20T13:30:00Z"
-last_activity: 2026-05-20 -- v2.0 milestone archived and tagged
+status: phase_context_gathered
+stopped_at: "Phase 12 context gathered — 12-CONTEXT.md and 12-DISCUSSION-LOG.md written. Ready for /gsd-plan-phase 12."
+resume_file: ".planning/phases/12-pause-cards-in-active-deck-review-let-users-temporarily-excl/12-CONTEXT.md"
+last_updated: "2026-05-20T14:15:00Z"
+last_activity: 2026-05-20 — Phase 12 discuss complete; 4 gray areas decided (cadence-shift on unpause, pausedAt column, inline icon, grey-inline + due-count exclusion)
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -39,13 +40,19 @@ Last activity: 2026-05-20 — v2.0 Image-to-Flashcards archived to milestones/v2
 ## Carried Tech Debt
 
 Non-blocking, intentional deferrals from v2.0:
+
 - VALIDATION.md `nyquist_compliant: false` on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping flag-flip pending. Candidate for `/gsd-validate-phase 9 / 10 / 11`.
 - `10-HUMAN-UAT.md` (status: partial) — offline vision eval reference-dataset; blocked on real photos + FR/ES tutor.
 - `11-HUMAN-UAT.md` (status: partial) — live 6-step browser walkthrough; blocked on real DeepL + billing-enabled Anthropic keys.
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright regression spec, keep/delete decision outstanding.
 - `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
 
+## Roadmap Evolution
+
+- 2026-05-20 — Phase 12 added: Pause cards in active deck review (no milestone wrapper)
+
 ## Next Steps
 
-- `/gsd-review-backlog` — review/promote backlog items (e.g., Phase 999.1 Perf initiative, deferred art pass)
-- `/gsd-new-milestone` — start a fresh milestone with PROJECT.md update → research → requirements → roadmap
+- `/gsd-discuss-phase 12` — gather context on pause UX, state-preservation rules, and SRS interaction
+- `/gsd-plan-phase 12` — break Phase 12 into plans (skip discuss if intent is already clear)
+- `/gsd-review-backlog` / `/gsd-new-milestone` — alternative paths if Phase 12 should sit inside v3.0

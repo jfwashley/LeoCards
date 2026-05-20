@@ -66,3 +66,13 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 - `10-HUMAN-UAT.md` — offline vision eval reference-dataset (needs real photos + FR/ES tutor).
 - `11-HUMAN-UAT.md` — live 6-step browser walkthrough (needs real DeepL + billing-enabled Anthropic keys).
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — keep/delete decision outstanding.
+
+### Phase 12: Pause cards in active deck review — let users temporarily exclude a card from study sessions without losing its scheduling state; when unpaused, cadence resumes as if the pause never happened
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 11
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 12 to break down)
