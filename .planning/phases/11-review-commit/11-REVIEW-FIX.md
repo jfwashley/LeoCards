@@ -1,24 +1,23 @@
 ---
 phase: 11-review-commit
-iteration: 1
-fix_scope: critical_warning
-findings_in_scope: 4
-fixed: 4
+iteration: 2
+fix_scope: all
+findings_in_scope: 8
+fixed: 8
 skipped: 0
 status: all_fixed
 ---
 
 # Phase 11: Code Review Fix Report
 
-**Fixed at:** 2026-05-20
+**Fixed at:** 2026-05-20 (iteration 2)
 **Source review:** `.planning/phases/11-review-commit/11-REVIEW.md`
-**Iteration:** 1
+**Iteration:** 2 (extends iteration 1 with Info-severity findings)
 
 **Summary:**
-- Findings in scope (Critical + Warning): 4
-- Fixed: 4
+- Findings in scope (Critical + Warning + Info): 8
+- Fixed: 8 (WR-01..WR-04 in iteration 1; IN-01..IN-04 in iteration 2)
 - Skipped: 0
-- Info findings (IN-01..IN-04): out of scope; not addressed
 
 ## Fixed Issues
 
@@ -67,23 +66,59 @@ status: all_fixed
 
 Added `saveImageCards` to the import list in `deck-actions.test.ts`.
 
+### IN-01: `saveImageCards` ownership check uses two-step pattern
+
+**Files modified:** `src/lib/deck-actions.ts`, `src/lib/deck-actions.test.ts`
+**Commit:** `8b579e8`
+**Applied fix:** Converted `saveImageCards` ownership verification to the combined-WHERE pattern already used by `getSameLanguageDeckBackWords`:
+- Replaced the two-step pattern (fetch by id, then compare `deck.userId !== userId` in app code) with a single atomic gate: `where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, userId)))`.
+- Selected only `{ id: decks.id }` since no other fields are needed.
+- Reject path is now `if (!deckRows[0]) throw new Error("Forbidden")` — the DB never returns a foreign-user row in the first place.
+- Updated the `Forbidden` unit test to mock `selectChain.where.mockResolvedValueOnce([])` (empty result) instead of returning a foreign-user deck, matching the new query semantics.
+- The weaker two-step pattern still exists in `saveCard`, `addWordToCard`, and `removeWordFromDeck`, but is out of scope for this phase per the review note ("for new server actions, prefer the combined-WHERE pattern").
+
+### IN-02: `commitReviewRows` exported cancel tests trivially pass without testing component behaviour
+
+**Files modified:** `src/components/review-list.test.ts`
+**Commit:** `69d1ff3`
+**Applied fix:** Removed the misleading cancel-test assertions and converted the block to `describe.skip(...)` with `it.skip(...)` placeholders:
+- Old assertions instantiated a fresh `vi.fn()`, called it, then asserted that the same `vi.fn()` had been called — a tautology that produced false confidence.
+- New block contains TODO comments describing what a real coverage test must do: mount `<ReviewList>` with a renderer, simulate user-driven cancel, and assert `cancelled.current` short-circuits any in-flight dispatch.
+- Full render-based cancel coverage is deferred to UAT / Playwright per the original phase plan (UAT-23/UAT-24).
+- The skipped tests show up in vitest output as `2 skipped` so the gap remains visible.
+
+### IN-03: Silent language fallback to `"fr"` in `image-upload-flow.tsx`
+
+**Files modified:** `src/components/image-upload-flow.tsx`
+**Commit:** `565e0d7`
+**Applied fix:** Removed both silent `?? "fr"` fallbacks at the two `decks.find(...)` sites:
+- Extract handler (`handleExtract`, formerly line 209): when `decks.find` returns `undefined`, dispatch `EXTRACT_ERROR` with `status: 0` and message `"Deck not found."` and `return` early. The existing error UI then surfaces the failure to the user.
+- Render handoff to `<ReviewList>` (formerly line 390): when `decks.find` returns `undefined`, render an inline `role="alert"` block with `Deck not found.` instead of mounting `<ReviewList>` with the arbitrary `"fr"` default. This branch should be unreachable because `selectedDeckId` is always sourced from the same `decks` list, but if it ever fires, we now surface the inconsistency rather than silently sending traffic to the wrong language endpoint.
+- `AlertCircle` was already imported, so no import changes were needed.
+
+### IN-04: `initialState` object constructed on every render inside component body
+
+**Files modified:** `src/components/review-list.tsx`
+**Commit:** `7f30c18`
+**Applied fix:** Replaced the eager `initialState` object literal with the lazy-initializer overload of `useReducer`:
+- Passed `words` as the second argument (initial-arg), and an arrow function `(initialWords): ReviewState => ({ ... })` as the third argument (init function).
+- React invokes the init function exactly once on mount, eliminating the per-render allocation of the 10-field state object.
+- The init function captures `words` through its parameter rather than through closure, matching the pattern suggested in the review.
+- Behaviour is unchanged: all 27 existing `review-list.test.ts` cases still pass.
+
 ## Verification
 
-- `npx tsc --noEmit` — clean for source/test files; only pre-existing errors in `.next/dev/types/*` generated routes (unrelated to changes).
-- `npx vitest run src/lib/deck-actions.test.ts src/components/review-list.test.ts` — 14 files, 313 tests, all green.
-- `npx vitest run` (full unit suite) — 1773 unit tests pass. 11 `e2e/*.spec.ts` files reported as failed by vitest because they are Playwright specs; this is a pre-existing test-runner configuration matter, not caused by these fixes.
-- `npx biome check --write` applied formatting auto-fixes (import sort, single-line `db.insert(...).values(...)`) in the touched files; one pre-existing `noExplicitAny` warning in `review-list.test.ts:342` remains and is unrelated.
+- `npx tsc --noEmit` — clean across all touched source and test files; only pre-existing errors in `.next/dev/types/*` generated routes (unrelated).
+- `npx vitest run src/lib/deck-actions.test.ts src/components/review-list.test.ts` — 14 files, 313 tests, all pass (311 passed, 2 intentionally skipped per IN-02).
+- `npx biome check --write` on the touched source files — no fixes needed; one pre-existing `noExplicitAny` warning in `review-list.test.ts:342` remains and is unrelated.
+- The vitest config also picks up Playwright e2e specs as a known pre-existing source of noise; those failures are not caused by these fixes and are out of scope.
 
 ## Skipped Issues
 
 None.
 
-## Out-of-Scope (Info)
-
-IN-01, IN-02, IN-03, IN-04 are Info-severity and outside the `critical_warning` fix scope. They remain documented in `11-REVIEW.md` for future consideration.
-
 ---
 
-_Fixed: 2026-05-20_
+_Fixed: 2026-05-20 (iteration 2)_
 _Fixer: Claude (gsd-code-fixer)_
-_Iteration: 1_
+_Iteration: 2_
