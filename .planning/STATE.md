@@ -1,18 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: none
-milestone_name: between-milestones
-status: phase_context_gathered
-stopped_at: "Phase 12 context gathered — 12-CONTEXT.md and 12-DISCUSSION-LOG.md written. Ready for /gsd-plan-phase 12."
-resume_file: ".planning/phases/12-pause-cards-in-active-deck-review-let-users-temporarily-excl/12-CONTEXT.md"
-last_updated: "2026-05-20T14:15:00Z"
-last_activity: 2026-05-20 — Phase 12 discuss complete; 4 gray areas decided (cadence-shift on unpause, pausedAt column, inline icon, grey-inline + due-count exclusion)
+milestone_name: milestone
+status: completed
+last_updated: "2026-05-20T16:44:48.891Z"
+last_activity: 2026-05-20 -- Phase 12 marked complete
 progress:
-  total_phases: 2
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 3
+  completed_phases: 1
+  total_plans: 5
+  completed_plans: 5
+  percent: 33
 ---
 
 # Project State
@@ -22,15 +20,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-20 for v2.0 shipping)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Between milestones — v2.0 shipped 2026-05-20. Next milestone TBD via `/gsd-review-backlog` or `/gsd-new-milestone`.
+**Current focus:** Phase 12 — pause-cards-in-active-deck-review
 
 ## Current Position
 
 Milestone: — (v2.0 shipped, v3.0 not yet defined)
-Phase: —
-Plan: —
-Status: Milestone complete — ready for next milestone
-Last activity: 2026-05-20 — v2.0 Image-to-Flashcards archived to milestones/v2.0-ROADMAP.md + v2.0-REQUIREMENTS.md; git tag v2.0 created
+Phase: 12 — COMPLETE
+Plan: 1 of 5
+Status: Phase 12 complete
+Last activity: 2026-05-20 -- Phase 12 marked complete
 
 ## Shipped Milestones
 

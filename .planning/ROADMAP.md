@@ -75,19 +75,19 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 **Plans:** 5 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Add nullable `pausedAt timestamp` column to `cards`; generate + apply Drizzle migration (BLOCKING human checkpoint to apply against Neon)
-- [ ] 12-02-PLAN.md — Append pure `computeUnpauseUpdate` to study-engine.ts (+ 4 Vitest cases); add `isNull(cards.pausedAt)` filter to `getStudyCards`
-- [ ] 12-03-PLAN.md — POST /api/cards/[id]/pause and /unpause route handlers (auth + ownership + 30/min rate-limit, idempotent, single-UPDATE writeback); STRIDE threat model in-plan
-- [ ] 12-04-PLAN.md — Thread `pausedAt` through dashboard → DeckView → CardList; per-row Pause/Play icon button with paused styling; all-paused empty-state copy
-- [ ] 12-05-PLAN.md — Playwright e2e spec (`e2e/12-pause-cards.spec.ts`) + full quality gate (lint, typecheck, unit, build, e2e); BLOCKING verification checkpoint
+- [x] 12-01-PLAN.md — Add nullable `pausedAt timestamp` column to `cards`; generate + apply Drizzle migration (BLOCKING human checkpoint to apply against Neon)
+- [x] 12-02-PLAN.md — Append pure `computeUnpauseUpdate` to study-engine.ts (+ 4 Vitest cases); add `isNull(cards.pausedAt)` filter to `getStudyCards`
+- [x] 12-03-PLAN.md — POST /api/cards/[id]/pause and /unpause route handlers (auth + ownership + 30/min rate-limit, idempotent, single-UPDATE writeback); STRIDE threat model in-plan
+- [x] 12-04-PLAN.md — Thread `pausedAt` through dashboard → DeckView → CardList; per-row Pause/Play icon button with paused styling; all-paused empty-state copy
+- [x] 12-05-PLAN.md — Playwright e2e spec (`e2e/12-pause-cards.spec.ts`) + full quality gate (lint, typecheck, unit, build, e2e); BLOCKING verification checkpoint
 
 ### Phase 13: 3D habitat — replace 2D PixiJS sprite habitat with cute-stylized 3D scenes
 
 **Goal:** Migrate the habitat render pipeline from PixiJS 2D sprite atlases to 3D scenes. Renderer = plain Three.js (locked by existing designer artifacts at `.planning/design/animations/`). All 9 habitat levels become 3D scenes (level 1 = Leo on mound; level 9 = endgame: songbirds + golden-hour). Tiger and milestone animals are 3D actors in the same scene for visual coherence (not 2D overlays). Mini-widget direction (live 3D vs. cached image) gated on perf measurement (D-28).
 
-**Requirements**: TBD (covers the existing Active requirement "Visual style is cute illustrated habitats" — to be refined from 2D → 3D in PROJECT.md)
-**Depends on:** Phase 11 (no functional coupling, but should not interleave with Phase 12 deck-review work)
-**Plans:** 0 plans
+**Requirements**: P13-R1..P13-R10 (10 falsifiable requirements locked in `.planning/phases/13-3d-habitat/13-SPEC.md`)
+**Depends on:** Phase 11 (no functional coupling); Phase 12 to ship first per researcher recommendation
+**Plans:** 6 plans (CONTEXT.md, SPEC.md, RESEARCH.md, 13-01..13-06 PLAN.md all written and committed)
 
 **Resolved (post-artifact-inspection, 2026-05-20):**
 - Renderer: **plain Three.js 0.160.x** (locked by designer artifacts)
@@ -108,5 +108,10 @@ Plans:
 - D-29 re-check: existing designer code has subtle character idle baked in — does that close D-29?
 
 Plans:
-- [ ] TBD (Phase 13 CONTEXT.md complete; ready for /gsd-spec-phase 13 or /gsd-plan-phase 13)
+- [ ] 13-01-PLAN.md — Three.js ESM port of scaffolding (`habitats-shared.jsx` → `src/lib/habitat-3d/scene-host.ts`); D-29 confirmation checkpoint
+- [ ] 13-02-PLAN.md — Port clay world + lion + elephant + animation modules (`habitat-clay-styles.jsx` → `src/lib/habitat-3d/`)
+- [ ] 13-03-PLAN.md — React shell rewire + keyboard ArrowLeft/Right orbit + prefers-reduced-motion
+- [ ] 13-04-PLAN.md — Mood + decay binding + 28 reference screenshots at level 5
+- [ ] 13-05-PLAN.md — Mini-widget rewire (live 3D at 80px, auto-orbit only) — parallel with 13-04
+- [ ] 13-06-PLAN.md — Perf gate (Lighthouse CWV) + D-28 widget decision + PixiJS removal
 </content>
