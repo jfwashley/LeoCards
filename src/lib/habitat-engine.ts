@@ -14,24 +14,26 @@ export const DECAY_RATE_PER_DAY = 0.05;
 export const DECAY_FLOOR = 0.1;
 
 /**
- * Effective-card-count thresholds for habitat levels 2-10 (D-07, D-10).
+ * Effective-card-count thresholds for habitat levels 2-9 (D-07, D-10).
  *
- * Nine entries: index `i` = effective-card-count needed to reach level `i + 2`.
- * - Index 0 (5)   → level 2
- * - Index 1 (15)  → level 3
- * - Index 2 (30)  → level 4
- * - Index 3 (50)  → level 5
- * - Index 4 (80)  → level 6
- * - Index 5 (120) → level 7
- * - Index 6 (170) → level 8
- * - Index 7 (230) → level 9
- * - Index 8 (300) → level 10 (D-10: max)
+ * Eight entries: index `i` = effective-card-count needed to reach level `i + 2`.
+ * - Index 0 (5)   → level 2  (Lake + lilies + path)
+ * - Index 1 (15)  → level 3  (Trees + rocks)
+ * - Index 2 (30)  → level 4  (Flowers + grass + butterflies)
+ * - Index 3 (50)  → level 5  (Elephant companion)
+ * - Index 4 (80)  → level 6  (Mushrooms)
+ * - Index 5 (120) → level 7  (Cave + sleep cycle)
+ * - Index 6 (170) → level 8  (Toys)
+ * - Index 7 (230) → level 9  (Songbirds + golden-hour — endgame for Course 1)
  *
  * "Effective cards" = Math.floor(quality × learnedCardCount), so decay
  * lowers the effective count and can drop the user back down a level.
+ *
+ * Level content / unlock mapping is locked by Phase 13's 3D habitat designs
+ * (see `.planning/design/animations/habitat-clay-styles.jsx → ALL_UNLOCKS`).
  */
 export const LEVEL_THRESHOLDS = [
-  5, 15, 30, 50, 80, 120, 170, 230, 300,
+  5, 15, 30, 50, 80, 120, 170, 230,
 ] as const;
 
 /** "Excited" mood window: 60 minutes after completing a study session (D-13) */
@@ -60,7 +62,7 @@ export interface HabitatFacts {
  * Matches the D-15 API response shape.
  */
 export interface HabitatState {
-  /** Habitat level 1-10 (D-07, D-08, D-10) */
+  /** Habitat level 1-9 (D-07, D-08, D-10). Level 9 = endgame for Course 1. */
   level: number;
   /** Quality score 0.10-1.0 (D-03 floor) */
   quality: number;
@@ -117,16 +119,16 @@ export function computeQuality(lastActivityAt: Date | null, now: Date): number {
 // ============================================================
 
 /**
- * Derives the habitat level (1-10) from the effective card count.
+ * Derives the habitat level (1-9) from the effective card count.
  *
  * LEVEL_THRESHOLDS defines the minimum effectiveCardCount to reach each level
  * above 1. Level 1 is the default (welcoming starter habitat, D-08).
  *
  * Examples:
- *   0-4 cards  → level 1
- *   5-14 cards → level 2
+ *   0-4 cards   → level 1 (just Leo on the mound)
+ *   5-14 cards  → level 2 (Lake unlocked)
  *   ...
- *   400+ cards → level 10 (D-10: max)
+ *   230+ cards  → level 9 (D-10: endgame — songbirds + golden-hour)
  *
  * @param effectiveCardCount - Math.floor(quality * learnedCardCount)
  */
@@ -143,7 +145,7 @@ export function habitatLevel(effectiveCardCount: number): number {
     }
   }
 
-  return Math.min(10, level); // D-10: max level 10
+  return Math.min(9, level); // D-10: max level 9 (endgame for Course 1)
 }
 
 // ============================================================

@@ -12,7 +12,7 @@ const CACHE_KEY = "leocards:habitat-state";
 
 // Zod schema for validating cached habitat state from localStorage
 const HabitatStateSchema = z.object({
-  level: z.number().int().min(1).max(10),
+  level: z.number().int().min(1).max(9),
   quality: z.number().min(0.1).max(1),
   mood: z.enum(["excited", "happy", "neutral", "sad"]),
   learnedCardCount: z.number().int().nonnegative(),

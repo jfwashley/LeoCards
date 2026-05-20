@@ -133,26 +133,22 @@ describe("habitatLevel", () => {
     expect(habitatLevel(230)).toBe(9);
   });
 
-  it("returns 9 when effectiveCardCount is 299 (just below max threshold)", () => {
-    expect(habitatLevel(299)).toBe(9);
+  it("returns 9 (endgame) when effectiveCardCount is 230 (threshold[7]=230 — Course 1 max)", () => {
+    expect(habitatLevel(230)).toBe(9);
   });
 
-  it("returns 10 when effectiveCardCount is 300 (threshold[8]=300)", () => {
-    expect(habitatLevel(300)).toBe(10);
+  it("returns 9 when effectiveCardCount is 300 (well past max threshold, clamped — D-10)", () => {
+    expect(habitatLevel(300)).toBe(9);
   });
 
-  it("returns 10 when effectiveCardCount is 400 (well past max threshold, clamped — D-10)", () => {
-    expect(habitatLevel(400)).toBe(10);
+  it("returns 9 (max) when effectiveCardCount is 1000 (D-10: capped at 9 endgame)", () => {
+    expect(habitatLevel(1000)).toBe(9);
   });
 
-  it("returns 10 (max) when effectiveCardCount is 1000 (D-10: capped at 10)", () => {
-    expect(habitatLevel(1000)).toBe(10);
-  });
-
-  it("exports LEVEL_THRESHOLDS with 9 entries (levels 2-10, D-07/D-10)", () => {
-    expect(LEVEL_THRESHOLDS).toHaveLength(9);
+  it("exports LEVEL_THRESHOLDS with 8 entries (levels 2-9, D-07/D-10)", () => {
+    expect(LEVEL_THRESHOLDS).toHaveLength(8);
     expect(LEVEL_THRESHOLDS[0]).toBe(5); // → level 2
-    expect(LEVEL_THRESHOLDS[8]).toBe(300); // → level 10 (max)
+    expect(LEVEL_THRESHOLDS[7]).toBe(230); // → level 9 (endgame, Course 1 max)
   });
 });
 
@@ -303,14 +299,14 @@ describe("computeHabitatState", () => {
     expect(state.minutesSinceActivity).toBeCloseTo(120, 0);
   });
 
-  it("nextLevelThreshold is null when at level 10 (max, D-10)", () => {
-    // Need 400+ effective cards to reach level 10
+  it("nextLevelThreshold is null when at level 9 (max/endgame, D-10)", () => {
+    // Need 230+ effective cards to reach level 9 (Course 1 endgame)
     const facts = makeFacts({
       lastActivityAt: hoursAgo(1),
       learnedCardCount: 500,
     });
     const state = computeHabitatState(facts, NOW);
-    expect(state.level).toBe(10);
+    expect(state.level).toBe(9);
     expect(state.nextLevelThreshold).toBeNull();
   });
 

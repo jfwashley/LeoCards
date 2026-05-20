@@ -83,23 +83,30 @@ Plans:
 
 ### Phase 13: 3D habitat — replace 2D PixiJS sprite habitat with cute-stylized 3D scenes
 
-**Goal:** [To be planned] — Migrate the habitat render pipeline from PixiJS 2D sprite atlases to a real 3D scene (Three.js / react-three-fiber direction TBD in discuss-phase). All 10 habitat levels become 3D scenes; tiger and milestone animals become 3D models in the same scene for visual coherence (rather than 2D overlays). Mini-habitat widget direction (downscaled 3D vs. cached 2D screenshot) to be decided.
+**Goal:** Migrate the habitat render pipeline from PixiJS 2D sprite atlases to 3D scenes. Renderer = plain Three.js (locked by existing designer artifacts at `.planning/design/animations/`). All 9 habitat levels become 3D scenes (level 1 = Leo on mound; level 9 = endgame: songbirds + golden-hour). Tiger and milestone animals are 3D actors in the same scene for visual coherence (not 2D overlays). Mini-widget direction (live 3D vs. cached image) gated on perf measurement (D-28).
 
 **Requirements**: TBD (covers the existing Active requirement "Visual style is cute illustrated habitats" — to be refined from 2D → 3D in PROJECT.md)
 **Depends on:** Phase 11 (no functional coupling, but should not interleave with Phase 12 deck-review work)
 **Plans:** 0 plans
 
-**Open questions for discuss-phase:**
-- Renderer: Three.js + react-three-fiber vs. Babylon.js vs. plain Three.js
-- Asset format expectations (glTF 2.0 / .glb assumed; confirm with designer pipeline)
-- Tiger + animal integration: full 3D scene actors (decided) — but how do mood transitions, milestone animal entries, and sparkle particles compose?
-- Performance budget: bundle size delta, mobile WebGL target, fallback strategy for low-end devices
-- Decay states: 10 scenes vs. 1 scene with material/density modifications
-- Accessibility: prefers-reduced-motion handling for camera moves and animations
-- Mini-habitat widget (dashboard, 80px) — downscaled 3D render vs. cached 2D screenshots
-- v1.0 PixiJS code: deprecate entirely or keep as a fallback tier?
-- Milestone wrapper: should this sit inside a v3.0 milestone alongside other related work, or ship standalone?
+**Resolved (post-artifact-inspection, 2026-05-20):**
+- Renderer: **plain Three.js 0.160.x** (locked by designer artifacts)
+- Asset format: **code, not files** — Three.js JSX gets ported into TypeScript modules
+- Scene structure: **single base scene + level-gated feature flags** (D-09 implemented in code via `featuresForLevel()`)
+- Camera: orbit + auto-orbit-on-idle (D-26) — already implemented in `habitats-shared.jsx`
+- Art style: Soft Clay (locked over lowpoly + voxel explorations)
+- Level count: 9 (level 9 = endgame; engine reconciled)
+
+**Still open for discuss / research:**
+- Performance budget targets (CWV "Good" gate locked; concrete frame-rate floor on mobile TBD)
+- Decay visual implementation (designer code doesn't yet do quality < 1.0)
+- `prefers-reduced-motion` handling
+- Mini-widget D-28 gate (live 3D vs. cached image — measure to decide)
+- v1.0 PixiJS deprecation (assume full removal unless 2D fallback needed for low-end devices)
+- Phase 12 ↔ 13 sequencing recommendation
+- Milestone wrapper question (does Phase 13 sit inside a v3.0 milestone?)
+- D-29 re-check: existing designer code has subtle character idle baked in — does that close D-29?
 
 Plans:
-- [ ] TBD (run /gsd-spec-phase 13 or /gsd-discuss-phase 13 to scope)
+- [ ] TBD (Phase 13 CONTEXT.md complete; ready for /gsd-spec-phase 13 or /gsd-plan-phase 13)
 </content>

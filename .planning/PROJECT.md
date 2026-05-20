@@ -35,7 +35,7 @@ The next milestone is **TBD** — promote candidates from the backlog via `/gsd-
 - ✓ Flashcard practice uses classic show-and-self-grade mechanic
 - ✓ A card is "learned" after 3 successful self-graded recalls (3-round spaced mastery with directional tracking)
 - ✓ All learned cards across all languages feed into one shared tiger habitat
-- ✓ Habitat improves gradually as cards are learned (10-level system)
+- ✓ Habitat improves gradually as cards are learned (9-level system; level 9 = Course 1 endgame; refined 2026-05-20 from 10→9 to match 3D designs)
 - ✓ Tiger and habitat reflect neglect — hard decay if inactive (2-day grace, 5%/day)
 - ✓ Milestone unlocks trigger special moments at key card-count thresholds
 - ✓ New animals appear in the habitat as visual rewards for major milestones
@@ -50,7 +50,7 @@ The next milestone is **TBD** — promote candidates from the backlog via `/gsd-
 
 ## Active Requirements (deferred)
 
-- [ ] Visual style is cute 3D illustrated habitats — Course 1: 10 scene-states per habitat level, with tiger + milestone animals as 3D actors in the same scene (current v1.0 placeholder is 2D PixiJS sprites). Renderer + asset pipeline scoped in Phase 13 discuss.
+- [ ] Visual style is cute 3D illustrated habitats — Course 1: 9 scene-states per habitat level (level 1 = Leo on the mound; level 9 = endgame with songbirds + golden-hour), with tiger + milestone animals as 3D actors in the same scene (current v1.0 placeholder is 2D PixiJS sprites). Renderer: plain Three.js (locked by existing designer artifacts at `.planning/design/animations/`). Integration + asset pipeline scoped in Phase 13.
 
 ## Out of Scope
 
