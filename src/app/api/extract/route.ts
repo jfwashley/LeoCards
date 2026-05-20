@@ -48,8 +48,18 @@ const MAGIC: Record<string, (b: Uint8Array) => boolean> = {
   "image/jpeg": (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff,
   "image/png": (b) =>
     b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47,
+  // WebP: RIFF container with WEBP subtype.
+  // Bytes 0-3 = "RIFF", bytes 4-7 = file size (LE, unchecked),
+  // bytes 8-11 = "WEBP". Checking only RIFF would accept AVI/WAV/ANI.
   "image/webp": (b) =>
-    b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46,
+    b[0] === 0x52 &&
+    b[1] === 0x49 &&
+    b[2] === 0x46 &&
+    b[3] === 0x46 &&
+    b[8] === 0x57 &&
+    b[9] === 0x45 &&
+    b[10] === 0x42 &&
+    b[11] === 0x50,
 };
 
 function checkMagicBytes(dataUrl: string, declaredMimeType: string): boolean {
@@ -57,8 +67,10 @@ function checkMagicBytes(dataUrl: string, declaredMimeType: string): boolean {
   if (!validator) return false;
   const commaIndex = dataUrl.indexOf(",");
   if (commaIndex === -1) return false;
-  // Decode just the first ~12 bytes worth of base64 (~16 base64 chars)
-  const b64Payload = dataUrl.slice(commaIndex + 1, commaIndex + 17);
+  // We need bytes 0-11 (for WebP RIFF/WEBP subtype check).
+  // 16 base64 chars decode to floor(16*6/8)=12 bytes — exact minimum;
+  // take 24 chars (~18 bytes) for safe margin against padding/alignment.
+  const b64Payload = dataUrl.slice(commaIndex + 1, commaIndex + 25);
   try {
     const bytes = Uint8Array.from(atob(b64Payload), (c) => c.charCodeAt(0));
     return validator(bytes);
