@@ -34,7 +34,7 @@ interface VitalsResult {
 }
 
 async function measureVitals(
-  page: import("@playwright/test").Page,
+  page: import("playwright/test").Page,
   route: string,
   profile: "desktop" | "mobile",
 ): Promise<VitalsResult> {
@@ -109,7 +109,11 @@ async function measureVitals(
               if (d > inp) inp = d;
             }
           });
-          inpObs.observe({ type: "event", buffered: true, durationThreshold: 16 });
+          inpObs.observe({
+            type: "event",
+            buffered: true,
+            durationThreshold: 16,
+          } as PerformanceObserverInit & { durationThreshold: number });
         } catch {}
 
         // Collect for 1.5s.

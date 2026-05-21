@@ -1,22 +1,16 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import React from "react";
+import HabitatWidgetImage from "@/components/habitat-3d-widget-image";
 import { Card, CardContent } from "@/components/ui/card";
 import type { HabitatState } from "@/lib/habitat-engine";
 import { LEVEL_THRESHOLDS } from "@/lib/habitat-engine";
 
-// SSR-safe: ssr:false only works inside "use client" modules (Next.js 16 rule)
-const HabitatWidgetCanvas = dynamic(
-  () => import("@/components/habitat-3d-widget-canvas"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[80px] animate-pulse bg-amber-50 rounded" />
-    ),
-  },
-);
+// Phase 13 Plan 06 — D-28 = CACHED. The live 3D widget is replaced by a
+// static <Image>-based variant per level. next/image is SSR-safe so the
+// previous dynamic({ ssr: false }) wrapper is no longer needed.
+const HabitatWidgetCanvas = HabitatWidgetImage;
 
 interface HabitatWidgetProps {
   habitatState: HabitatState;
