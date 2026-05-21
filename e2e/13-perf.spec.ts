@@ -41,7 +41,9 @@ async function measureVitals(
   await page.goto(route, { waitUntil: "domcontentloaded" });
 
   // Wait for the page to stabilize so LCP can settle.
-  await page.waitForLoadState("networkidle", { timeout: 45_000 }).catch(() => {});
+  await page
+    .waitForLoadState("networkidle", { timeout: 45_000 })
+    .catch(() => {});
 
   // For habitat, wait for the canvas to be data-ready so LCP candidate is realised.
   if (route === "/habitat") {
@@ -248,9 +250,15 @@ test.describe("Phase 13 Plan 06 — CWV + widget perf", () => {
   test("CWV thresholds", () => {
     for (const r of results) {
       // LCP ≤ 2500ms, CLS ≤ 0.1, INP ≤ 200ms.
-      expect.soft(r.lcp, `${r.route} ${r.profile} LCP`).toBeLessThanOrEqual(2500);
-      expect.soft(r.cls, `${r.route} ${r.profile} CLS`).toBeLessThanOrEqual(0.1);
-      expect.soft(r.inp, `${r.route} ${r.profile} INP`).toBeLessThanOrEqual(200);
+      expect
+        .soft(r.lcp, `${r.route} ${r.profile} LCP`)
+        .toBeLessThanOrEqual(2500);
+      expect
+        .soft(r.cls, `${r.route} ${r.profile} CLS`)
+        .toBeLessThanOrEqual(0.1);
+      expect
+        .soft(r.inp, `${r.route} ${r.profile} INP`)
+        .toBeLessThanOrEqual(200);
     }
   });
 });
