@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: none
 milestone_name: milestone
-status: completed
-last_updated: "2026-05-20T16:44:48.891Z"
-last_activity: 2026-05-20 -- Phase 12 marked complete
+status: completed-with-concerns
+last_updated: "2026-05-21T00:00:00.000Z"
+last_activity: 2026-05-21 -- Phase 13 (3D habitat) verification PASS-WITH-CARRIED-CONCERNS
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 33
+  completed_phases: 2
+  total_plans: 11
+  completed_plans: 11
+  percent: 67
 ---
 
 # Project State
@@ -20,15 +20,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-20 for v2.0 shipping)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 12 — pause-cards-in-active-deck-review
+**Current focus:** Phase 13 — 3D habitat (shipped to PASS-WITH-CARRIED-CONCERNS)
 
 ## Current Position
 
 Milestone: — (v2.0 shipped, v3.0 not yet defined)
-Phase: 12 — COMPLETE
-Plan: 1 of 5
-Status: Phase 12 complete
-Last activity: 2026-05-20 -- Phase 12 marked complete
+Phase: 13 — COMPLETE (PASS-WITH-CARRIED-CONCERNS)
+Plan: 6 of 6
+Status: Phase 13 closed; R9 carried concern (mobile CWV unmeasured/marginal — instrument-inflated)
+Last activity: 2026-05-21 -- Phase 13 verified (8 PASS, R9 PARTIAL)
 
 ## Shipped Milestones
 
@@ -37,20 +37,28 @@ Last activity: 2026-05-20 -- Phase 12 marked complete
 
 ## Carried Tech Debt
 
-Non-blocking, intentional deferrals from v2.0:
+Non-blocking, intentional deferrals:
 
+**From v2.0:**
 - VALIDATION.md `nyquist_compliant: false` on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping flag-flip pending. Candidate for `/gsd-validate-phase 9 / 10 / 11`.
 - `10-HUMAN-UAT.md` (status: partial) — offline vision eval reference-dataset; blocked on real photos + FR/ES tutor.
 - `11-HUMAN-UAT.md` (status: partial) — live 6-step browser walkthrough; blocked on real DeepL + billing-enabled Anthropic keys.
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright regression spec, keep/delete decision outstanding.
 - `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
 
+**From Phase 13 (new 2026-05-21):**
+- R9 PARTIAL — `/habitat` mobile-emulation CWV: INP 208/240 ms (gate ≤ 200), mobile LCP unmeasured (observer misfire on 4× CPU throttle). `13-PERF.md` attributes to Playwright `page.evaluate` overhead but no clean second-run exists. **Needs real-device or non-instrumented headless CWV re-measurement.**
+- D-28 went to **cached** (live widget FPS 21/18 < 30 gate). If perf re-measurement on real devices shows live widget actually hits ≥ 30 FPS, consider reverting to the live widget (Plan 05 code is in git history at `f55ac04`/`2255b49`, deleted in `d8e8ca0`).
+- Phase 13 not yet wrapped in a milestone (v3.0 TBD).
+
 ## Roadmap Evolution
 
 - 2026-05-20 — Phase 12 added: Pause cards in active deck review (no milestone wrapper)
+- 2026-05-21 — Phase 13 (3D habitat migration) shipped to PASS-WITH-CARRIED-CONCERNS — 6 plans, ~25 commits, PixiJS fully removed, Three.js code-split
 
 ## Next Steps
 
-- `/gsd-discuss-phase 12` — gather context on pause UX, state-preservation rules, and SRS interaction
-- `/gsd-plan-phase 12` — break Phase 12 into plans (skip discuss if intent is already clear)
-- `/gsd-review-backlog` / `/gsd-new-milestone` — alternative paths if Phase 12 should sit inside v3.0
+- **Resolve R9 carried concern** — run real-device CWV on `/habitat` mobile; if clean, flip R9 to PASS and consider re-evaluating D-28 (live widget option).
+- `/gsd-new-milestone` — start v3.0 (wraps Phase 13 + whatever ships next).
+- `/gsd-review-backlog` — promote Phase 999.1 (perf initiative) if performance work should be the next focus.
+- `/gsd-discuss-phase` for any new phase, OR `/gsd-explore` to ideate.

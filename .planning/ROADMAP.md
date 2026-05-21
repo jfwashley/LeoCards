@@ -108,10 +108,12 @@ Plans:
 - D-29 re-check: existing designer code has subtle character idle baked in — does that close D-29?
 
 Plans:
-- [ ] 13-01-PLAN.md — Three.js ESM port of scaffolding (`habitats-shared.jsx` → `src/lib/habitat-3d/scene-host.ts`); D-29 confirmation checkpoint
-- [ ] 13-02-PLAN.md — Port clay world + lion + elephant + animation modules (`habitat-clay-styles.jsx` → `src/lib/habitat-3d/`)
-- [ ] 13-03-PLAN.md — React shell rewire + keyboard ArrowLeft/Right orbit + prefers-reduced-motion
-- [ ] 13-04-PLAN.md — Mood + decay binding + 28 reference screenshots at level 5
-- [ ] 13-05-PLAN.md — Mini-widget rewire (live 3D at 80px, auto-orbit only) — parallel with 13-04
-- [ ] 13-06-PLAN.md — Perf gate (Lighthouse CWV) + D-28 widget decision + PixiJS removal
+- [x] 13-01-PLAN.md — Three.js ESM port of scaffolding; D-29 closed (designer idle sufficient) — completed 2026-05-20
+- [x] 13-02-PLAN.md — Clay world + lion + elephant + animation/ambient ported — completed 2026-05-20
+- [x] 13-03-PLAN.md — React shell rewire (habitat-3d-canvas) + keyboard orbit + reduced-motion — completed 2026-05-20
+- [x] 13-04-PLAN.md — Mood + decay binding + 28 reference screenshots (126/126 pairs distinct via automated pixel-diff) — completed 2026-05-20
+- [x] 13-05-PLAN.md — Live 3D 80px widget (later superseded by 13-06 D-28 cached decision) — completed 2026-05-20
+- [x] 13-06-PLAN.md — D-28 = **cached** (live widget FPS 21/18 < 30 gate); 9 hero `.webp`s + image variant; PixiJS removed; Three.js code-split (504 KB chunk) — completed 2026-05-21
+
+**Status:** Complete — PASS-WITH-CARRIED-CONCERNS (R9 PARTIAL — `/habitat` mobile LCP unmeasured + INP 208/240 marginal; instrument-inflated per `13-PERF.md`; needs real-device CWV re-measurement post-merge).
 </content>
