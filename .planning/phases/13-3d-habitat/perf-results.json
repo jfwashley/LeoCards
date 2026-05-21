@@ -1,0 +1,34 @@
+[
+  {
+    "route": "/dashboard",
+    "profile": "desktop",
+    "lcp": 1744,
+    "cls": 0,
+    "inp": 136,
+    "widgetColdLoadTti": 0,
+    "widgetSustainedFps": 21
+  },
+  {
+    "route": "/habitat",
+    "profile": "desktop",
+    "lcp": 2420,
+    "cls": 0,
+    "inp": 208
+  },
+  {
+    "route": "/dashboard",
+    "profile": "mobile",
+    "lcp": 1656,
+    "cls": 0,
+    "inp": 192,
+    "widgetColdLoadTti": 0.5,
+    "widgetSustainedFps": 18
+  },
+  {
+    "route": "/habitat",
+    "profile": "mobile",
+    "lcp": 3336,
+    "cls": 0,
+    "inp": 240
+  }
+]
