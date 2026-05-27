@@ -182,14 +182,9 @@ export function mountHabitatScene(
   // -- 1b. characters (Plan 13-04: required for applyMood to bind to Leo) ----
   // buildLionStorybook returns a rig; we mount its root into ctx.scene so it
   // renders. The elephant is L5+ only (per LEVEL_CONFIG.elephant).
-  //
-  // Plan 13.1 Opt 3: skip the elephant on mobile (saves a 200+ tri rig +
-  // its per-frame animateElephant cost — meaningful on slow mobile GPUs).
-  // Desktop continues to render it from L5.
   const lionRig = buildLionStorybook(world.mat);
   ctx.scene.add(lionRig.root);
-  const elephantRig =
-    level >= 5 && !ctx.isMobile ? buildElephant(world.mat) : null;
+  const elephantRig = level >= 5 ? buildElephant(world.mat) : null;
   if (elephantRig) {
     elephantRig.position.set(4.5, 0, 3.5);
     ctx.scene.add(elephantRig);

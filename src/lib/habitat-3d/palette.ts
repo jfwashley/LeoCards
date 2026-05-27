@@ -4,7 +4,6 @@
 // locked — do NOT recolor.
 
 import { DataTexture, NearestFilter, RedFormat } from "three";
-import type { SceneContext } from "./types";
 
 /**
  * Designer-locked clay palette. Source: habitat-clay-styles.jsx:19-30.
@@ -57,46 +56,5 @@ export function toonGrad(steps = 3): DataTexture {
   tex.needsUpdate = true;
   tex.magFilter = NearestFilter;
   tex.minFilter = NearestFilter;
-  return tex;
-}
-
-// ---------------------------------------------------------------------------
-// Plan 13.1 Opt 3 — per-scene toon-gradient cache.
-//
-// Building a fresh DataTexture per material burns ~1 KB of GPU memory + an
-// upload per material. clay-world already calls toonGrad once and shares the
-// instance via the mat() factory, but ANY future code path that needs a
-// toon gradient inside the same SceneContext should reuse the same texture
-// for a given `steps` count. This WeakMap-backed cache makes that contract
-// explicit and free for callers to opt into.
-//
-// The map is keyed on SceneContext so multiple concurrent scenes (e.g.
-// future widget + page coexistence) cannot accidentally share GPU textures
-// across renderer instances. Disposal is automatic when the SceneContext
-// is GC'd (WeakMap).
-// ---------------------------------------------------------------------------
-
-const _toonGradCache: WeakMap<
-  SceneContext,
-  Map<number, DataTexture>
-> = new WeakMap();
-
-/**
- * Scene-scoped toon-gradient lookup. Returns the same DataTexture instance
- * for the same `(ctx, steps)` pair across the lifetime of the SceneContext.
- *
- * Use this instead of `toonGrad(steps)` whenever a SceneContext is in
- * scope — saves GPU uploads on multi-material scenes.
- */
-export function toonGradFor(ctx: SceneContext, steps = 3): DataTexture {
-  let inner = _toonGradCache.get(ctx);
-  if (!inner) {
-    inner = new Map<number, DataTexture>();
-    _toonGradCache.set(ctx, inner);
-  }
-  const cached = inner.get(steps);
-  if (cached) return cached;
-  const tex = toonGrad(steps);
-  inner.set(steps, tex);
   return tex;
 }

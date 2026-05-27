@@ -96,14 +96,7 @@ export function buildSceneHost(
     opts.isMobile ??
     (width < 768 || (typeof window !== "undefined" && window.innerWidth < 768));
   const isMobile = Boolean(inferredMobile);
-
-  // Plan 13.1 Opt 3: slow-CPU detection — when the device has 4 or fewer
-  // logical cores (navigator.hardwareConcurrency) OR 4 GB or less of RAM
-  // (navigator.deviceMemory, where exposed), push the mobile quality scalar
-  // from 0.55 → 0.4. Both APIs are feature-detected so unsupported browsers
-  // fall back to the standard mobile/desktop values. Desktop never receives
-  // the slow-CPU adjustment because we already give it Q=1.
-  const Q = isMobile ? (isSlowDevice() ? 0.4 : 0.55) : 1;
+  const Q = isMobile ? 0.55 : 1;
 
   return {
     renderer,
@@ -115,44 +108,6 @@ export function buildSceneHost(
     isMobile,
     Q,
   };
-}
-
-// ---------------------------------------------------------------------------
-// Plan 13.1 Opt 3 — slow-CPU detection.
-//
-// Both navigator.hardwareConcurrency (HC) and navigator.deviceMemory (DM)
-// are widely supported on Chromium-based mobile browsers (Chrome Android,
-// Samsung Internet, Edge mobile). Safari iOS exposes HC but not DM.
-// Either signal alone qualifies the device as "slow"; we OR them together.
-//
-// Test affordance: __setSlowDeviceStub lets specs deterministically pin
-// the result without faking navigator. Pairs with __setMobileStub in
-// habitat-3d-canvas.tsx.
-// ---------------------------------------------------------------------------
-
-let __slowDeviceStub: (() => boolean) | null = null;
-export function __setSlowDeviceStub(fn: () => boolean): void {
-  __slowDeviceStub = fn;
-}
-export function __resetSlowDeviceStub(): void {
-  __slowDeviceStub = null;
-}
-
-export function isSlowDevice(): boolean {
-  if (__slowDeviceStub) return __slowDeviceStub();
-  if (typeof navigator === "undefined") return false;
-  const nav = navigator as Navigator & {
-    deviceMemory?: number;
-    hardwareConcurrency?: number;
-  };
-  const hc =
-    typeof nav.hardwareConcurrency === "number" ? nav.hardwareConcurrency : 0;
-  const dm = typeof nav.deviceMemory === "number" ? nav.deviceMemory : 0;
-  // hc==0 / dm==0 means the API didn't return a useful value; we don't
-  // count those as "slow" — only positive values that fall below threshold.
-  const hcSlow = hc > 0 && hc <= 4;
-  const dmSlow = dm > 0 && dm <= 4;
-  return hcSlow || dmSlow;
 }
 
 // ---------- Hand-rolled orbit (port of habitats-shared.jsx:30-88) ---------

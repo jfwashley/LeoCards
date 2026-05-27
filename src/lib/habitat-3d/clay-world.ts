@@ -47,7 +47,7 @@ import {
   Vector3,
 } from "three";
 import type { FeatureFlags } from "./clay-level";
-import { CLAY, toonGradFor } from "./palette";
+import { CLAY, toonGrad } from "./palette";
 import type { SceneContext, WorldOpts } from "./types";
 
 export type ClayMatFactory = (color: string) => MeshToonMaterial;
@@ -135,12 +135,8 @@ export function buildClayWorld(
   const root = new Group();
   ctx.scene.add(root);
 
-  // shared material factory (toon).
-  // Plan 13.1 Opt 3: scene-scoped DataTexture cache — if any future code
-  // path inside this SceneContext also asks for a 4-step toon gradient
-  // (e.g. mood-decay swapping band counts on tier-2), the same instance is
-  // returned. WeakMap collects on SceneContext GC.
-  const grad = toonGradFor(ctx, 4);
+  // shared material factory (toon)
+  const grad = toonGrad(4);
   const materials: Material[] = [];
   const mat: ClayMatFactory = (c) => {
     const m = new MeshToonMaterial({ color: c, gradientMap: grad });
