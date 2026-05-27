@@ -46,10 +46,12 @@ Non-blocking, intentional deferrals:
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright regression spec, keep/delete decision outstanding.
 - `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
 
-**From Phase 13 (2026-05-21, R9 re-measured 2026-05-27):**
-- R9 **FAIL on `/habitat` mobile** (confirmed clean Lighthouse, see `13-PERF-REAL.md`): LCP median 2989 ms > 2500 gate; TBT median 646 ms > 200 gate. Three.js 504 KB chunk dominates mobile main-thread time. Other 3 R9 cells (dashboard desktop+mobile, `/habitat` desktop) PASS. Likely fix: defer Three.js init past LCP using `attachViewportGate` (already plumbed) + a static poster as the LCP element. Candidate scope for **Phase 13.1** or rolled into **Phase 999.1**.
-- D-28 stays **cached** — confirmed by re-measurement (dashboard mobile LCP 2151 / Perf 93 with cached image vs. expected regression with live widget). No revert.
-- Throwaway test user `cwv-test-1779866703@leocards-test.local` left in preview's Neon DB (clean up if preview DB ≠ prod DB matters).
+**From Phase 13 (2026-05-21, R9 re-measured 2026-05-27, Phase 13.1 attempt #1 reverted 2026-05-27):**
+- R9 **FAIL on `/habitat` mobile** (confirmed clean Lighthouse, see `13-PERF-REAL.md`): LCP median 2989 ms > 2500 gate; TBT median 646 ms > 200 gate. Three.js 504 KB chunk dominates mobile main-thread time. Other 3 R9 cells (dashboard desktop+mobile, `/habitat` desktop) PASS.
+- **Phase 13.1 attempt #1 (defer + tree-shake + mobile-budget) REVERTED.** All 4 commits (`ef4f43f`, `9ea06ee`, `77fbdf6`, `cfdac42`) reverted by `56c4dff`/`e714c90`/`a9df4f4`/`b962c35`. Caused 86% LCP regression on `/habitat` mobile (5560 ms vs 2989 baseline). Root causes: posters were widget-sized (1-3 KB) not habitat-sized; `requestIdleCallback` fired inside Lighthouse trace; tree-shake produced 0 bytes saved on three r160. Full postmortem at `.planning/phases/13-3d-habitat/13-PERF-FIX-ATTEMPT-1.md`.
+- Attempt #2 prerequisites (do not skip): full-resolution `/habitat`-sized poster generation (Playwright build-time, ~1280×720 webp), gesture-only defer (no idle fallback), drop unrelated tree-shake/mobile-budget changes, measure each opt individually.
+- D-28 stays **cached** — confirmed.
+- Throwaway test users in preview Neon DB: `cwv-test-1779866703@…` and `cwv-test-1779873404@…` (clean up if preview shares prod DB).
 - Phase 13 not yet wrapped in a milestone (v3.0 TBD).
 
 ## Roadmap Evolution
