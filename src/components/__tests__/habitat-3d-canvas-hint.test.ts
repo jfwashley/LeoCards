@@ -24,10 +24,7 @@ import { HINT_COPY, setupHintTimer } from "../habitat-3d-canvas";
 // ---- helpers -------------------------------------------------------------
 
 function srcText(): string {
-  return readFileSync(
-    join(__dirname, "..", "habitat-3d-canvas.tsx"),
-    "utf8",
-  );
+  return readFileSync(join(__dirname, "..", "habitat-3d-canvas.tsx"), "utf8");
 }
 
 // ---- tests ---------------------------------------------------------------

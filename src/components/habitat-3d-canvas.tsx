@@ -167,6 +167,45 @@ export function setupGestureGate(opts: SetupGestureGateOpts): () => void {
 }
 
 // ---------------------------------------------------------------------------
+// setupHintTimer — Plan 13.1-03 (R5)
+// ---------------------------------------------------------------------------
+//
+// Schedules the "Tap to animate" mount-hint to appear 2000 ms after the
+// poster paints, IFF the user has not gestured and is not reduced-motion.
+// Pure factory so the timer logic is testable in the project's node-env
+// Vitest (no jsdom). The React `useEffect` in <HabitatCanvas> delegates to
+// this factory.
+//
+// Hard rule: the hint timer is visibility-only. It MUST NOT call
+// `setCanvasMounted` / `setGestured` / `mountHabitatScene`. Test H6 pins
+// this via source-grep on the factory body. The gesture gate (Plan 02) is
+// the only path that mounts the canvas.
+
+export const HINT_COPY = "Tap to animate";
+export const HINT_DELAY_MS = 2000;
+
+export interface SetupHintTimerOpts {
+  reducedMotion: boolean;
+  canvasMounted: boolean;
+  delayMs: number;
+  setHintVisible: (v: boolean) => void;
+}
+
+export function setupHintTimer(opts: SetupHintTimerOpts): () => void {
+  const { reducedMotion, canvasMounted, delayMs, setHintVisible } = opts;
+  // R4 hard lockout: reduced-motion users never see a hint.
+  if (reducedMotion) return () => {};
+  // Canvas already mounted: no need to advertise the gesture gate.
+  if (canvasMounted) return () => {};
+  const id = setTimeout(() => {
+    setHintVisible(true);
+  }, delayMs);
+  return () => {
+    clearTimeout(id);
+  };
+}
+
+// ---------------------------------------------------------------------------
 // mountHabitatScene — pure factory (no React)
 // ---------------------------------------------------------------------------
 
@@ -451,6 +490,13 @@ export default function HabitatCanvas({
   const [gestured, setGestured] = useState(false);
   const canvasMounted = snapshotMode || (!reducedMotion && gestured);
 
+  // R5: subtle "Tap to animate" hint, fades in 2s after the poster paints.
+  // Visibility is owned by the hint-timer effect below; it is cleared
+  // automatically the moment `canvasMounted` flips true (the guard in the
+  // JSX `&& !canvasMounted` makes the overlay vanish in the same render
+  // pass that paints the canvas).
+  const [hintVisible, setHintVisible] = useState(false);
+
   // Clamp level to [1, 9] — only level triggers a scene rebuild
   // (D-30 / designer's `tweaksRef` pattern). mood/quality flow via stateRef.
   const sceneLevel = Math.max(1, Math.min(9, Math.floor(effectiveState.level)));
@@ -487,6 +533,24 @@ export default function HabitatCanvas({
       reducedMotion: false,
     });
     return cleanup;
+  }, [canvasMounted, reducedMotion]);
+
+  // R5: hint-timer effect. Schedules `setHintVisible(true)` 2s after mount
+  // IFF the user has not yet gestured and is not reduced-motion. Cleanup
+  // (re-run on gesture / canvasMounted flip / reducedMotion change) cancels
+  // the pending timer. The factory is pure — it MUST NOT mount the canvas.
+  useEffect(() => {
+    // Clear any stale hint state when the canvas mounts.
+    if (canvasMounted) {
+      setHintVisible(false);
+      return;
+    }
+    return setupHintTimer({
+      reducedMotion,
+      canvasMounted,
+      delayMs: HINT_DELAY_MS,
+      setHintVisible,
+    });
   }, [canvasMounted, reducedMotion]);
 
   // Mount the Three.js scene only once `canvasMounted` flips true.
@@ -558,6 +622,32 @@ export default function HabitatCanvas({
             borderRadius: "0.5rem",
           }}
         />
+      ) : null}
+      {/* R5: subtle "Tap to animate" hint. Fades in 2s after the poster
+          paints if no gesture detected. aria-hidden + pointerEvents:none
+          so it cannot absorb input or imply interactivity to AT users; the
+          static poster's role/aria-label already labels the scene. */}
+      {!reducedMotion && hintVisible && !canvasMounted ? (
+        <div
+          data-testid="habitat-canvas-hint"
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            bottom: "8%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            padding: "0.25rem 0.75rem",
+            borderRadius: "9999px",
+            background: "rgba(0,0,0,0.55)",
+            color: "white",
+            fontSize: "0.75rem",
+            pointerEvents: "none",
+            opacity: 0.85,
+            transition: "opacity 200ms ease-out",
+          }}
+        >
+          {HINT_COPY}
+        </div>
       ) : null}
     </div>
   );
