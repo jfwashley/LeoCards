@@ -47,6 +47,13 @@ async function gotoHabitat(
   await page
     .waitForLoadState("networkidle", { timeout: 30_000 })
     .catch(() => {});
+  // Phase 13.1-02 gesture gate: the Three.js canvas no longer mounts on
+  // page load — it waits for a real user input event. Synthesize one so the
+  // existing R4/R5/R6 acceptance assertions still find the canvas. This is
+  // a TEST-ONLY shim; the component itself remains gesture-gated.
+  await page.evaluate(() => {
+    document.dispatchEvent(new PointerEvent("pointerdown"));
+  });
   // Wait for the 3D canvas to mark itself ready.
   await page.waitForSelector(READY_SELECTOR, { timeout: 30_000 });
 }
@@ -171,38 +178,41 @@ test.describe("Habitat 3D — R4 / R5 / R6 acceptance", () => {
   });
 });
 
-test.describe("Habitat 3D — R6 prefers-reduced-motion", () => {
+test.describe("Habitat 3D — R6 prefers-reduced-motion (13.1 SPEC R4 hard lockout)", () => {
   test.use({ contextOptions: { reducedMotion: "reduce" } });
 
-  test("R6: reduced-motion freezes auto-orbit; manual drag still works", async ({
+  test("R6: reduced-motion never mounts the 3D canvas; poster IS the experience", async ({
     page,
   }) => {
+    // Phase 13.1 SPEC R4 (supersedes Phase 13 R6): prefers-reduced-motion
+    // users get the static poster only, regardless of form factor. The
+    // canvas must NEVER mount — even after a synthesized gesture.
     await signUpWithDeck(page, "French");
-    await gotoHabitat(page);
+    await page.goto("/habitat");
+    await page
+      .waitForLoadState("networkidle", { timeout: 30_000 })
+      .catch(() => {});
 
-    const pre = await readCameraPos(page);
-    expect(pre).not.toBeNull();
+    // Poster IS the LCP candidate — assert its presence.
+    await page.waitForSelector('img[alt^="Tiger habitat level"]', {
+      timeout: 10_000,
+    });
 
-    // Wait well past the 1200ms idle window — auto-orbit should NOT fire.
-    await page.waitForTimeout(3_000);
-    const post = await readCameraPos(page);
-    expect(post?.theta).toBeCloseTo(pre?.theta ?? 0, 4);
+    // Dispatch every gate event the gesture gate listens for. None of them
+    // should mount the canvas under reduced-motion.
+    await page.evaluate(() => {
+      document.dispatchEvent(new PointerEvent("pointerdown"));
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
+      document.dispatchEvent(new WheelEvent("wheel"));
+      window.dispatchEvent(new Event("scroll"));
+    });
+    await page.waitForTimeout(2_000);
 
-    // Positive control: manual drag still works under reduced motion
-    // (SPEC R6 line 58 — only auto-motion is frozen).
-    const canvas = page.locator(CANVAS_SELECTOR);
-    const box = await canvas.boundingBox();
-    if (!box) throw new Error("canvas not visible");
-    const cx = box.x + box.width / 2;
-    const cy = box.y + box.height / 2;
-    await page.mouse.move(cx, cy);
-    await page.mouse.down();
-    await page.mouse.move(cx + 200, cy, { steps: 10 });
-    await page.mouse.up();
-    await page.waitForTimeout(200);
-    const afterDrag = await readCameraPos(page);
-    expect(
-      Math.abs((afterDrag?.theta ?? 0) - (post?.theta ?? 0)),
-    ).toBeGreaterThan(0.05);
+    // Canvas element must NOT exist; the poster must remain visible at
+    // full opacity (style sets opacity:1 when canvasMounted is false).
+    const canvasCount = await page.locator(CANVAS_SELECTOR).count();
+    expect(canvasCount).toBe(0);
+    const dev = await readCameraPos(page);
+    expect(dev).toBeNull(); // dev affordances are attached only by mountHabitatScene
   });
 });
