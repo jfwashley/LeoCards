@@ -117,3 +117,13 @@ Plans:
 
 **Status:** Complete — PASS-WITH-KNOWN-PERF-REGRESSION (R9 FAIL on `/habitat` mobile only — confirmed via clean Lighthouse 2026-05-27: LCP 2989 ms / TBT 646 ms; other 3 cells PASS. D-28 cached widget re-confirmed correct. Fix candidate for Phase 13.1 or 999.1. See `13-PERF-REAL.md`.)
 </content>
+
+### Phase 13.1: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster (fixes R9 carried regression) (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 13
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 13.1 to break down)

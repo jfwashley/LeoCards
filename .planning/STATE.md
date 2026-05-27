@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: none
-milestone_name: milestone
-status: completed-with-concerns
-last_updated: "2026-05-21T00:00:00.000Z"
-last_activity: 2026-05-21 -- Phase 13 (3D habitat) verification PASS-WITH-CARRIED-CONCERNS
+milestone_name: "- VALIDATION.md `nyquist_compliant: false` flag-flip on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping only. Candidate for `/gsd-validate-phase 9 / 10 / 11`."
+status: Phase 13 closed; R9 carried concern (mobile CWV unmeasured/marginal — instrument-inflated)
+last_updated: "2026-05-27T09:50:10.127Z"
+last_activity: 2026-05-21 -- Phase 13 verified (8 PASS, R9 PARTIAL)
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 2
   total_plans: 11
   completed_plans: 11
-  percent: 67
+  percent: 50
 ---
 
 # Project State
@@ -40,6 +40,7 @@ Last activity: 2026-05-21 -- Phase 13 verified (8 PASS, R9 PARTIAL)
 Non-blocking, intentional deferrals:
 
 **From v2.0:**
+
 - VALIDATION.md `nyquist_compliant: false` on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping flag-flip pending. Candidate for `/gsd-validate-phase 9 / 10 / 11`.
 - `10-HUMAN-UAT.md` (status: partial) — offline vision eval reference-dataset; blocked on real photos + FR/ES tutor.
 - `11-HUMAN-UAT.md` (status: partial) — live 6-step browser walkthrough; blocked on real DeepL + billing-enabled Anthropic keys.
@@ -47,6 +48,7 @@ Non-blocking, intentional deferrals:
 - `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
 
 **From Phase 13 (2026-05-21, R9 re-measured 2026-05-27, Phase 13.1 attempt #1 reverted 2026-05-27):**
+
 - R9 **FAIL on `/habitat` mobile** (confirmed clean Lighthouse, see `13-PERF-REAL.md`): LCP median 2989 ms > 2500 gate; TBT median 646 ms > 200 gate. Three.js 504 KB chunk dominates mobile main-thread time. Other 3 R9 cells (dashboard desktop+mobile, `/habitat` desktop) PASS.
 - **Phase 13.1 attempt #1 (defer + tree-shake + mobile-budget) REVERTED.** All 4 commits (`ef4f43f`, `9ea06ee`, `77fbdf6`, `cfdac42`) reverted by `56c4dff`/`e714c90`/`a9df4f4`/`b962c35`. Caused 86% LCP regression on `/habitat` mobile (5560 ms vs 2989 baseline). Root causes: posters were widget-sized (1-3 KB) not habitat-sized; `requestIdleCallback` fired inside Lighthouse trace; tree-shake produced 0 bytes saved on three r160. Full postmortem at `.planning/phases/13-3d-habitat/13-PERF-FIX-ATTEMPT-1.md`.
 - Attempt #2 prerequisites (do not skip): full-resolution `/habitat`-sized poster generation (Playwright build-time, ~1280×720 webp), gesture-only defer (no idle fallback), drop unrelated tree-shake/mobile-budget changes, measure each opt individually.
@@ -65,3 +67,9 @@ Non-blocking, intentional deferrals:
 - `/gsd-new-milestone` — start v3.0 (wraps Phase 13 + whatever ships next).
 - `/gsd-review-backlog` — promote Phase 999.1 (perf initiative) if performance work should be the next focus.
 - `/gsd-discuss-phase` for any new phase, OR `/gsd-explore` to ideate.
+
+## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 13.1 inserted after Phase 13: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster (fixes R9 carried regression) (URGENT)
