@@ -3,11 +3,11 @@
 // Per Phase 5 carry-forward D-01 (cute cartoon art style) the palette is
 // locked — do NOT recolor.
 
-import * as THREE from "three";
+import { DataTexture, NearestFilter, RedFormat } from "three";
 
 /**
  * Designer-locked clay palette. Source: habitat-clay-styles.jsx:19-30.
- * All values are CSS hex color strings; consumed by `THREE.Color(...)` and
+ * All values are CSS hex color strings; consumed by `Color(...)` and
  * inline DOM styling alike.
  */
 export const CLAY = {
@@ -45,16 +45,16 @@ export type ClayColor = keyof typeof CLAY;
  * `toonGrad`; underscore convention is JS-only).
  *
  * @param steps Number of toon bands. Default 3.
- * @returns A `THREE.DataTexture` ready to assign as `material.gradientMap`.
+ * @returns A `DataTexture` ready to assign as `material.gradientMap`.
  */
-export function toonGrad(steps = 3): THREE.DataTexture {
+export function toonGrad(steps = 3): DataTexture {
   const data = new Uint8Array(steps);
   for (let i = 0; i < steps; i++) {
     data[i] = Math.round(((i + 1) / steps) * 255);
   }
-  const tex = new THREE.DataTexture(data, steps, 1, THREE.RedFormat);
+  const tex = new DataTexture(data, steps, 1, RedFormat);
   tex.needsUpdate = true;
-  tex.magFilter = THREE.NearestFilter;
-  tex.minFilter = THREE.NearestFilter;
+  tex.magFilter = NearestFilter;
+  tex.minFilter = NearestFilter;
   return tex;
 }

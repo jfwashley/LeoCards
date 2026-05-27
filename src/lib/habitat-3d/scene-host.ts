@@ -17,7 +17,17 @@
 // orbit is azimuth-only by construction — `OrbitControls` is intentionally
 // not used.
 
-import * as THREE from "three";
+import {
+  ACESFilmicToneMapping,
+  Color,
+  Fog,
+  PCFSoftShadowMap,
+  PerspectiveCamera,
+  Scene,
+  SRGBColorSpace,
+  Vector3,
+  WebGLRenderer,
+} from "three";
 import type { OrbitHandle, OrbitOptions, SceneContext } from "./types";
 
 // ---------- Scene scaffolding (port of habitats-shared.jsx:6-29) -----------
@@ -49,7 +59,7 @@ export function buildSceneHost(
   height: number,
   opts: BuildSceneHostOpts = {},
 ): SceneContext {
-  const renderer = new THREE.WebGLRenderer({
+  const renderer = new WebGLRenderer({
     canvas,
     antialias: true,
     alpha: false,
@@ -58,18 +68,18 @@ export function buildSceneHost(
   renderer.setPixelRatio(Math.min(dpr, 2));
   renderer.setSize(width, height, false);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.shadowMap.type = PCFSoftShadowMap;
+  renderer.outputColorSpace = SRGBColorSpace;
+  renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = opts.exposure ?? 1.0;
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(opts.bg ?? "#1a1a1a");
+  const scene = new Scene();
+  scene.background = new Color(opts.bg ?? "#1a1a1a");
   if (opts.fog) {
-    scene.fog = new THREE.Fog(opts.fog, opts.fogNear ?? 20, opts.fogFar ?? 50);
+    scene.fog = new Fog(opts.fog, opts.fogNear ?? 20, opts.fogFar ?? 50);
   }
 
-  const camera = new THREE.PerspectiveCamera(
+  const camera = new PerspectiveCamera(
     opts.fov ?? 30,
     width / height,
     0.1,
@@ -121,11 +131,11 @@ type PointerEventLike = {
 
 export function attachOrbit(
   canvas: OrbitCanvas,
-  camera: THREE.PerspectiveCamera,
+  camera: PerspectiveCamera,
   opts: OrbitOptions = {},
 ): OrbitHandle {
   const lookY = opts.lookY ?? 1;
-  const target = new THREE.Vector3(0, lookY, 0);
+  const target = new Vector3(0, lookY, 0);
 
   let theta = Math.atan2(
     camera.position.x - target.x,

@@ -38,7 +38,14 @@
 //     the lion root so a future pass can read it; the unit tests assert
 //     `state.sparkleOn` directly.
 
-import * as THREE from "three";
+import {
+  Color,
+  type Group,
+  type Mesh,
+  type MeshStandardMaterial,
+  type Object3D,
+  type ShaderMaterial,
+} from "three";
 import type { TigerMood } from "@/lib/habitat-engine";
 import type { ClayWorld } from "./clay-world";
 
@@ -156,8 +163,8 @@ export function applyMood(
 
   // -- Expose channels to clay-animation via userData --
   const lion = world.featureGroups.lion as
-    | (THREE.Group & {
-        userData: { headG?: THREE.Group; root?: THREE.Group };
+    | (Group & {
+        userData: { headG?: Group; root?: Group };
       })
     | undefined;
   // The actual rig is referenced via featureGroups.lion in newer ports OR
@@ -165,15 +172,15 @@ export function applyMood(
   const leoRoot =
     (
       world as unknown as {
-        lionRig?: { root: THREE.Group; headG: THREE.Group };
+        lionRig?: { root: Group; headG: Group };
       }
     ).lionRig?.root ?? lion;
   const leoHead =
     (
       world as unknown as {
-        lionRig?: { root: THREE.Group; headG: THREE.Group };
+        lionRig?: { root: Group; headG: Group };
       }
-    ).lionRig?.headG ?? (lion?.userData?.headG as THREE.Group | undefined);
+    ).lionRig?.headG ?? (lion?.userData?.headG as Group | undefined);
 
   if (leoHead) {
     leoHead.userData.moodDroop = state.headDroop;
@@ -196,23 +203,23 @@ export function applyMood(
 // Decay — RESEARCH section C.3
 // ---------------------------------------------------------------------------
 
-const COLOR_DECAYED = new THREE.Color("#6a7560"); // dull olive
-const COLOR_SKY_DECAYED_TOP = new THREE.Color("#a8b5b8");
-const COLOR_SKY_DECAYED_BOT = new THREE.Color("#c8cdcc");
+const COLOR_DECAYED = new Color("#6a7560"); // dull olive
+const COLOR_SKY_DECAYED_TOP = new Color("#a8b5b8");
+const COLOR_SKY_DECAYED_BOT = new Color("#c8cdcc");
 const TIER2_QUALITY = 0.4;
 
 /** Type guard for an Object3D that exposes a `material` (a Mesh). */
-function meshMaterial(o: THREE.Object3D): THREE.MeshStandardMaterial | null {
-  const m = (o as THREE.Mesh).material;
+function meshMaterial(o: Object3D): MeshStandardMaterial | null {
+  const m = (o as Mesh).material;
   if (!m) return null;
   if (Array.isArray(m)) return null;
-  return m as unknown as THREE.MeshStandardMaterial;
+  return m as unknown as MeshStandardMaterial;
 }
 
 /** Ensure baseColor is cached so applyDecay is idempotent (T-13-16). */
-function ensureBaseColor(m: THREE.MeshStandardMaterial): THREE.Color | null {
+function ensureBaseColor(m: MeshStandardMaterial): Color | null {
   if (!m.color) return null;
-  const ud = m.userData as { baseColor?: THREE.Color };
+  const ud = m.userData as { baseColor?: Color };
   if (!ud.baseColor) {
     ud.baseColor = m.color.clone();
   }
@@ -227,21 +234,21 @@ interface FogLike {
 
 interface SkyShaderLike {
   uniforms?: {
-    top?: { value: THREE.Color };
-    bot?: { value: THREE.Color };
-    color1?: { value: THREE.Color };
+    top?: { value: Color };
+    bot?: { value: Color };
+    color1?: { value: Color };
   };
   userData?: {
-    baseTop?: THREE.Color;
-    baseBot?: THREE.Color;
+    baseTop?: Color;
+    baseBot?: Color;
   };
 }
 
 interface WorldWithDecayTargets {
-  featureGroups: Record<string, THREE.Group | undefined>;
+  featureGroups: Record<string, Group | undefined>;
   fog?: FogLike;
   sky?: SkyShaderLike;
-  skyMat?: THREE.ShaderMaterial & SkyShaderLike;
+  skyMat?: ShaderMaterial & SkyShaderLike;
 }
 
 /**
