@@ -29,7 +29,6 @@
 //     flip `data-ready` to "false" on loss; restart RAF + restore
 //     `data-ready` on restore.
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type * as THREE from "three";
 import {
@@ -51,26 +50,6 @@ import {
 } from "@/lib/habitat-3d/mood-decay";
 import { attachOrbit, buildSceneHost } from "@/lib/habitat-3d/scene-host";
 import type { HabitatState } from "@/lib/habitat-engine";
-
-// ---------------------------------------------------------------------------
-// Plan 13.1 Opt 1 — defer Three.js init past LCP.
-//
-// On /habitat we render `public/habitat/widget-l{N}.webp` as the initial LCP
-// element via next/image. The live Three.js canvas mounts only after BOTH
-//   (a) the viewport is reached (IntersectionObserver), AND
-//   (b) the main thread is idle (requestIdleCallback / 200ms fallback) OR a
-//       user gesture fires (pointerdown / keydown / scroll).
-// Then we fade the poster out over ≤200ms and reveal the canvas.
-//
-// For users whose system asks for reduced motion AND who are on a mobile
-// form-factor, we never mount the canvas — the poster is the experience.
-// Desktop reduced-motion users still get the canvas with the auto-orbit
-// frozen (Plan 04 behavior preserved).
-//
-// All deferral logic lives in the React shell; the pure `mountHabitatScene`
-// factory below is unchanged so unit tests + Playwright + screenshot specs
-// continue to drive it the same way.
-// ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
 // matchMedia stub plumbing (test-only)
@@ -375,37 +354,6 @@ function readDevOverride(initial: HabitatState): HabitatState {
   };
 }
 
-// ---------------------------------------------------------------------------
-// Plan 13.1 Opt 1 — mobile-form-factor detection (test-overridable)
-// ---------------------------------------------------------------------------
-//
-// The "static-poster-only" reduced-motion path applies ONLY when the user
-// is on a mobile form factor AND prefers reduced motion. Desktop reduced-
-// motion users still get the canvas (Plan 04 behavior: auto-orbit frozen).
-
-let __mobileStub: (() => boolean) | null = null;
-export function __setMobileStub(fn: () => boolean): void {
-  __mobileStub = fn;
-}
-export function __resetMobileStub(): void {
-  __mobileStub = null;
-}
-
-function isMobileFormFactor(): boolean {
-  if (__mobileStub) return __mobileStub();
-  if (typeof window === "undefined") return false;
-  // Heuristic: viewport < 768px OR coarse pointer (touch device).
-  if (window.innerWidth < 768) return true;
-  if (typeof window.matchMedia === "function") {
-    try {
-      return window.matchMedia("(pointer: coarse)").matches;
-    } catch {
-      return false;
-    }
-  }
-  return false;
-}
-
 export default function HabitatCanvas({
   habitatState,
   // celebratingLevel is plumbed for API parity with the v1.0 PixiJS canvas;
@@ -416,10 +364,6 @@ export default function HabitatCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
-
-  // Plan 13.1 Opt 1: gate canvas mount on viewport + idle/gesture.
-  const [canvasMounted, setCanvasMounted] = useState(false);
-  const [posterHidden, setPosterHidden] = useState(false);
 
   // Apply dev URL override if present (snapshot mode for Plan 04 Playwright).
   const effectiveState = readDevOverride(habitatState);
@@ -445,114 +389,11 @@ export default function HabitatCanvas({
     prevMood: null,
   });
 
-  // -- Plan 13.1 Opt 1: viewport + idle/gesture gate -----------------------
-  //
-  // We do NOT mount the canvas until BOTH the wrapper is intersecting AND
-  // either requestIdleCallback fires or a user gesture is detected. Mobile +
-  // reduced-motion users skip the canvas entirely.
-  //
-  // biome-ignore lint/correctness/useExhaustiveDependencies: reducedMotion gates the effect re-run; sceneLevel triggers remount via downstream effect
-  useEffect(() => {
-    if (!wrapperRef.current) return;
-
-    // Mobile + reduced-motion → never mount the canvas; poster IS the
-    // experience for the entire session.
-    const mobile = isMobileFormFactor();
-    if (reducedMotion && mobile) {
-      return;
-    }
-
-    const target = wrapperRef.current;
-    let gestureBound = false;
-    let idleScheduled = false;
-    let viewportSeen = false;
-    let cleaned = false;
-
-    const cleanup: Array<() => void> = [];
-
-    const tryMount = () => {
-      if (cleaned) return;
-      if (!viewportSeen) return;
-      cleaned = true;
-      for (const fn of cleanup) fn();
-      setCanvasMounted(true);
-    };
-
-    // (a) viewport gate.
-    if (typeof IntersectionObserver !== "undefined") {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              viewportSeen = true;
-              tryMount();
-            }
-          }
-        },
-        { threshold: 0.01 },
-      );
-      io.observe(target);
-      cleanup.push(() => io.disconnect());
-    } else {
-      viewportSeen = true;
-    }
-
-    // (b) idle OR gesture, whichever fires first.
-    const onGesture = () => {
-      tryMount();
-    };
-    const bindGestures = () => {
-      if (gestureBound) return;
-      gestureBound = true;
-      window.addEventListener("pointerdown", onGesture, { once: true });
-      window.addEventListener("keydown", onGesture, { once: true });
-      window.addEventListener("scroll", onGesture, {
-        once: true,
-        passive: true,
-      });
-      cleanup.push(() => {
-        window.removeEventListener("pointerdown", onGesture);
-        window.removeEventListener("keydown", onGesture);
-        window.removeEventListener("scroll", onGesture);
-      });
-    };
-
-    type IdleWindow = typeof window & {
-      requestIdleCallback?: (
-        cb: () => void,
-        opts?: { timeout?: number },
-      ) => number;
-      cancelIdleCallback?: (id: number) => void;
-    };
-    const w = window as IdleWindow;
-    if (typeof w.requestIdleCallback === "function") {
-      idleScheduled = true;
-      const id = w.requestIdleCallback(() => tryMount(), { timeout: 1500 });
-      cleanup.push(() => {
-        if (typeof w.cancelIdleCallback === "function")
-          w.cancelIdleCallback(id);
-      });
-    } else {
-      const t = setTimeout(() => tryMount(), 200);
-      idleScheduled = true;
-      cleanup.push(() => clearTimeout(t));
-    }
-
-    // Bind gestures only if idle isn't immediate (still gives gesture-first
-    // wakeup if the user touches the page before idle resolves).
-    if (idleScheduled) bindGestures();
-
-    return () => {
-      cleaned = true;
-      for (const fn of cleanup) fn();
-    };
-  }, [reducedMotion]);
-
-  // -- Three.js mount/dispose effect (only runs once canvasMounted=true) ---
-  //
+  // sceneLevel is read inside mountHabitatScene via stateRef.current.level;
+  // Biome can't trace through the ref, so the dep is required to remount on
+  // level changes (mood/quality flow via stateRef without remount).
   // biome-ignore lint/correctness/useExhaustiveDependencies: sceneLevel required to trigger remount on level change
   useEffect(() => {
-    if (!canvasMounted) return;
     if (!canvasRef.current || !wrapperRef.current) return;
     const handle = mountHabitatScene({
       canvas: canvasRef.current,
@@ -562,57 +403,21 @@ export default function HabitatCanvas({
       stateRef,
       moodStateRef,
     });
-    // Cross-fade: hide the poster shortly after the canvas mounts so it has
-    // a chance to render its first frame.
-    const fade = setTimeout(() => setPosterHidden(true), 50);
-    return () => {
-      clearTimeout(fade);
-      handle.dispose();
-      setPosterHidden(false);
-    };
-  }, [canvasMounted, sceneLevel, reducedMotion]);
+    return () => handle.dispose();
+  }, [sceneLevel, reducedMotion]);
 
   return (
     <div
       ref={wrapperRef}
-      className="w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-lg relative"
+      className="w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
       style={{ aspectRatio: "16/9", maxHeight: "min(70vh, 400px)" }}
       role="img"
       aria-label="Tiger habitat 3D scene"
     >
-      {/*
-       * Plan 13.1 Opt 1: static poster — primary LCP element.
-       *
-       * Sized via `fill` so it always matches the wrapper's box (zero CLS
-       * when the canvas swaps in). `priority` marks it as the LCP candidate
-       * so the browser fetches it eagerly. The hero images live at
-       * public/habitat/widget-l{1..9}.webp (Plan 06 generated).
-       */}
-      <Image
-        src={`/habitat/widget-l${sceneLevel}.webp`}
-        alt={`Lion habitat level ${sceneLevel}`}
-        fill
-        preload
-        sizes="(max-width: 768px) 100vw, 70vw"
-        style={{
-          objectFit: "cover",
-          opacity: posterHidden ? 0 : 1,
-          transition: "opacity 200ms ease-out",
-          pointerEvents: "none",
-        }}
-        data-testid="habitat-3d-poster"
-      />
       <canvas
         ref={canvasRef}
         data-testid="habitat-3d-canvas"
-        data-mounted={canvasMounted ? "true" : "false"}
-        style={{
-          width: "100%",
-          height: "100%",
-          display: canvasMounted ? "block" : "none",
-          position: "relative",
-          zIndex: 1,
-        }}
+        style={{ width: "100%", height: "100%", display: "block" }}
       />
     </div>
   );
