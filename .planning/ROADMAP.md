@@ -115,5 +115,5 @@ Plans:
 - [x] 13-05-PLAN.md — Live 3D 80px widget (later superseded by 13-06 D-28 cached decision) — completed 2026-05-20
 - [x] 13-06-PLAN.md — D-28 = **cached** (live widget FPS 21/18 < 30 gate); 9 hero `.webp`s + image variant; PixiJS removed; Three.js code-split (504 KB chunk) — completed 2026-05-21
 
-**Status:** Complete — PASS-WITH-CARRIED-CONCERNS (R9 PARTIAL — `/habitat` mobile LCP unmeasured + INP 208/240 marginal; instrument-inflated per `13-PERF.md`; needs real-device CWV re-measurement post-merge).
+**Status:** Complete — PASS-WITH-KNOWN-PERF-REGRESSION (R9 FAIL on `/habitat` mobile only — confirmed via clean Lighthouse 2026-05-27: LCP 2989 ms / TBT 646 ms; other 3 cells PASS. D-28 cached widget re-confirmed correct. Fix candidate for Phase 13.1 or 999.1. See `13-PERF-REAL.md`.)
 </content>

@@ -1,10 +1,14 @@
 ---
 phase: 13-3d-habitat
 verified: 2026-05-21T01:40:00Z
+re_verified: 2026-05-27T07:30:00Z
 status: gaps_found
-score: 8/10 requirements PASS, 2 PARTIAL, 0 FAIL
-overall_verdict: PASS-WITH-CARRIED-CONCERNS
+score: 9/10 PASS, 0 PARTIAL, 1 FAIL (R9 — /habitat mobile)
+overall_verdict: PASS-WITH-KNOWN-PERF-REGRESSION
 ---
+
+> **2026-05-27 update — R9 re-measured.** Non-instrumented Lighthouse 13.3.0 vs Vercel preview with real auth cookie (see `13-PERF-REAL.md`). 3 of 4 route×profile cells PASS; **`/habitat` mobile FAILS** CWV (LCP median 2989 ms > 2500 gate; TBT median 646 ms > 200 gate; CLS 0). The instrument-inflation hypothesis was directionally right for INP but the underlying mobile perf on `/habitat` is genuinely below the gate. R9 row downgraded from PARTIAL → **FAIL** for `/habitat` mobile (PASS for the other 3 cells). Overall verdict upgraded from PASS-WITH-CARRIED-CONCERNS to **PASS-WITH-KNOWN-PERF-REGRESSION** — phase still ships (D-28 cached widget is correct; dashboard CWV is fully green), but `/habitat` mobile needs a perf follow-up (likely Phase 13.1 or rolled into Phase 999.1). See `13-PERF-REAL.md` for full matrix + optimization candidates. D-28 re-evaluation: **stays cached** (dashboard mobile LCP 2151 ms / Perf 93 — no reason to revert).
+
 
 # Phase 13 — 3D Habitat Migration Verification
 
@@ -24,7 +28,7 @@ overall_verdict: PASS-WITH-CARRIED-CONCERNS
 | R6 | `prefers-reduced-motion` respected | **PASS** | `src/lib/habitat-3d/__tests__/clay-animation-reduced-motion.test.ts` exists. Plan 03 + Plan 04 SUMMARIES: green. `13-habitat-3d.spec.ts` covers Playwright reduced-motion emulation. |
 | R7 | Mood + decay drive visible scene differences | **PASS** | `e2e/__screenshots__/habitat-states/` contains **28 PNGs**. `diff-table.json`: `totalPairs: 126`, `failureCount: 0`, all 126 pairs `pass: true` (re-validated via Node `require()`). Min MSE 2.49 per Plan 04 SUMMARY; threshold 1.0. |
 | R8 | Mini-widget perf-gated live 3D vs cached (D-28) | **PASS** | D-28 resolved **CACHED** per `13-WIDGET-PERF.md` (FPS 21 desktop / 18 mobile < 30 gate). `src/components/habitat-widget.tsx` line 5 imports `@/components/habitat-3d-widget-image` (the cached image variant). Live widget `habitat-3d-widget-canvas.tsx` and its test deleted in commit `d6454cf` (verified absent). No orphan imports — `grep -rn "habitat-3d-widget-canvas" src/` returns 0 matches. 9 hero images `public/habitat/widget-l{1..9}.webp` all present. Cached path matches the gated decision. |
-| R9 | CWV "Good" on dashboard + `/habitat` (desktop + mobile) | **PARTIAL** | Dashboard rows: ✓ desktop (LCP 672, INP 0, CLS 0), ✓ mobile (LCP 2364, INP 0, CLS 0.003). `/habitat` desktop: LCP 1252 ✓, **INP 240 ms ✗ (+40 over 200 gate)**, CLS 0 ✓. `/habitat` mobile: **LCP unmeasured (observer misfire)**, **INP 208 ms ✗ (+8 over gate)**, CLS 0 ✓. `13-PERF.md` argues both INP fails are Playwright `page.evaluate` event-dispatch surcharge (plausible — see dashboard rows reading INP 0 because no eligible interaction observed, vs. /habitat canvas-click flow showing the surcharge). However **no second clean-run measurement (real device or non-instrumented headless) was taken**, and mobile `/habitat` LCP was never captured. Per verification rules: instrument-inflated raw numbers without a clean re-run cannot auto-PASS. → **PARTIAL**. |
+| R9 | CWV "Good" on dashboard + `/habitat` (desktop + mobile) | **FAIL** (mobile `/habitat` only; other 3 cells PASS) | 2026-05-27 re-measurement (3 runs/cell, medians, see `13-PERF-REAL.md`) against Vercel preview with real auth cookie: `/dashboard` desktop LCP 985 ✓ TBT 36 ✓ CLS 0 ✓ Perf 98 — PASS. `/dashboard` mobile LCP 2151 ✓ TBT 286 ⚠ CLS 0 ✓ Perf 93 — PASS (TBT marginal). `/habitat` desktop LCP 931 ✓ TBT 19 ✓ CLS 0 ✓ Perf 98 — PASS. `/habitat` mobile LCP **2989 ✗** TBT **646 ✗** CLS 0 ✓ Perf 77 — **FAIL**. Three.js 504 KB chunk dominates mobile main-thread time. Old 2026-05-21 instrumented numbers (Plan 06 PERF.md INP 208/240) reflected Playwright `page.evaluate` overhead, but underlying mobile perf on `/habitat` is genuinely below gate. |
 | R10 | v1.0 PixiJS habitat code removed | **PASS** | `grep -rn "pixi\|babel/standalone\|unpkg.com" src/ public/ package.json` → **0 matches**. `npm ls pixi.js` → empty. All listed deletions absent: `habitat-canvas.tsx`, `habitat-layers.tsx`, `habitat-widget-canvas.tsx`, `tiger-sprite.tsx`, `sparkle-particles.tsx`, `bird-sprite.tsx`, `public/sprites/`. Only residual textual mention is a non-load-bearing comment in `habitat-scene.tsx:58` ("import target swapped PixiJS → Three.js"). No live import. |
 
 ## Concerns Investigated
@@ -58,11 +62,11 @@ overall_verdict: PASS-WITH-CARRIED-CONCERNS
 
 ## Overall Verdict
 
-**PASS-WITH-CARRIED-CONCERNS**
+**PASS-WITH-KNOWN-PERF-REGRESSION** (updated 2026-05-27)
 
-8/10 requirements PASS outright. R1, R2, R3, R4, R5, R6, R7, R8, R10 all verified against the codebase. R9 is PARTIAL because two `/habitat` INP rows and one mobile LCP row breach or fail to measure the CWV "Good" gate, and the team's instrument-inflation explanation, while plausible, lacks a clean second-run measurement. The two carried concerns are documented, non-blocking, and addressable post-merge with a real-device re-measurement.
+9/10 requirements PASS. R9 is **FAIL** on the `/habitat` mobile cell only — confirmed by clean non-instrumented Lighthouse runs against the Vercel preview (`13-PERF-REAL.md`). The other 3 R9 cells (dashboard desktop+mobile, `/habitat` desktop) PASS. D-28 re-evaluation confirmed cached widget is correct: dashboard mobile delivers LCP 2151 ms / Perf 93 with the cached `<img>` — reverting would push dashboard mobile into the same failure mode.
 
-The phase ships per the orchestrator's autonomous-resolution rule; the verifier records R9 as PARTIAL for honesty and recommends a follow-up CWV re-measurement.
+The phase ships with the regression documented as Phase 13.1 / Phase 999.1 work. The user-visible impact: a small share of mobile users will see a slightly slow `/habitat` first-load (LCP ~3 s vs 2.5 s budget) and main-thread jank (~650 ms TBT) during initial scene parse. Suggested fix priority — defer Three.js init past LCP using the existing `attachViewportGate` plumbing (Plan 13-01) and a static poster image as the LCP element.
 
 ---
 

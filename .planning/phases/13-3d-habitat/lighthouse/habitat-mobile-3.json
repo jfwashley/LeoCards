@@ -1,0 +1,5164 @@
+{
+  "lighthouseVersion": "13.3.0",
+  "requestedUrl": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+  "mainDocumentUrl": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+  "finalDisplayedUrl": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+  "finalUrl": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+  "fetchTime": "2026-05-27T07:27:36.449Z",
+  "gatherMode": "navigation",
+  "runWarnings": [],
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.0.0 Safari/537.36",
+  "environment": {
+    "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36",
+    "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.0.0 Safari/537.36",
+    "benchmarkIndex": 2511,
+    "credits": {}
+  },
+  "audits": {
+    "first-contentful-paint": {
+      "id": "first-contentful-paint",
+      "title": "First Contentful Paint",
+      "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more about the First Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-contentful-paint/).",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 1038.5825,
+      "numericUnit": "millisecond",
+      "displayValue": "1.0 s",
+      "scoringOptions": {
+        "p10": 1800,
+        "median": 3000
+      }
+    },
+    "largest-contentful-paint": {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)",
+      "score": 0.78,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 2988.5825,
+      "numericUnit": "millisecond",
+      "displayValue": "3.0 s",
+      "scoringOptions": {
+        "p10": 2500,
+        "median": 4000
+      }
+    },
+    "speed-index": {
+      "id": "speed-index",
+      "title": "Speed Index",
+      "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more about the Speed Index metric](https://developer.chrome.com/docs/lighthouse/performance/speed-index/).",
+      "score": 0.94,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 2961.682431297362,
+      "numericUnit": "millisecond",
+      "displayValue": "3.0 s",
+      "scoringOptions": {
+        "p10": 3387,
+        "median": 5800
+      }
+    },
+    "screenshot-thumbnails": {
+      "id": "screenshot-thumbnails",
+      "title": "Screenshot Thumbnails",
+      "description": "This is what the load of your site looked like.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "filmstrip",
+        "scale": 3823,
+        "items": [
+          {
+            "timing": 478,
+            "timestamp": 194241646828,
+            "data": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAD4AHwDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAj/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AKpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//9k="
+          },
+          {
+            "timing": 956,
+            "timestamp": 194242124703,
+            "data": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAD4AHwDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAIBAwj/xAAfEAEAAQQCAwEAAAAAAAAAAAAAAQIREiETUkFRcWH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAXEQEBAQEAAAAAAAAAAAAAAAAAARFB/9oADAMBAAIRAxEAPwD1DXVj9TnPVVVOX1OE9mLrUw5PcOjnx73Los3qXOACoAAAAAAyZtF5Lxr9aAnKFMs0AAAAAAAE5RewKGNAAAAAAAAAAAAATTqLKYBHloAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//Z"
+          },
+          {
+            "timing": 1434,
+            "timestamp": 194242602578,
+            "data": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAD4AHwDASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAAAAQGAQMFAv/EADgQAQACAQIDBgIIAwkAAAAAAAABAgMEEQUSMRYhUVSj0TJBEyJhcYGRobEVM5IGFCMkVWJywfD/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAgMEAQX/xAAvEQEAAQMACAMHBQAAAAAAAAAAAQIDEQQFEhMUITFRQYGhFTIzcZGx0VJhwfDx/9oADAMBAAIRAxEAPwC76rNOG+LHSk5MuW3LWvRqpl114rNNBltW07RMVmYn7vyTNVo/p5x3receXHPNW8fIjFr4msxxLJG3Tam0dd/Hxhm06NZzfncTOx4Y2f5592jV86pjR6eIiNvxzt+mzy6Y9UG+qzYLT/edN9HWtorbv+tWZjeO77k+KxMbx0R7cMyZctrajVXyRaYtbu2m23dHf9zoRTaNohq1Xx0RVxnl0z6cuzHrj2fM0cD542seH6ufdo5CK7TukchyPWy8XCRj4jmrjmlvreEomoyX1F+bJO89Hvkg5IV02qKJ2ohbXdrrp2apYw58uGfq2mY8Jes2qy5dp7qT9k9WOSDkhybNuZzh2L9yI2co81mZ3nqciRyMci3KnCFqstNNgvmyb8teu0MRmpNMdoi2143juTuQmkT1hzMoxTO1mejm11mC0bxedu/v5Z/98pSuVtjBSOlKx8+kPXI7Ez4pzEeDfynK40anjOr79Ppa4KT0nLMR+nfP6PdeEa3NMTq+I22n4q46/tM+zDxdVfw7cz8+X35+iWHTvkx4/jyUr987I+TiOix/Fnr+He04/wCz+irMTk+myT/uyTH7bJdOHaGm3LpcO8fPkiVdekXqfemmn5zM/hKKZnpCFPGtDvtTJN58KwxPGMc/Bp9Rb7qS69YrWsRWsREfKGrNk5sdq47ctpiYi3Xb7WW7rCm3Gar30p/1fZ0S7enFMOdHE7z00Gq/HHMf9MxxHL/p+p/pn2cKNdruG8e02mtmtnjNljHat7TPNW2+1o8J32/VcpttCmzrOLlOZrmPKPwv0rV1ejVRGYmJcmeJZPIar+ifZj+LbfHo9VX78dvZ1PpY8J/Jsi28LY0+mel2fpDLuanH/jWlj+ZXLSPG1dmzHxjh9+mev5S6m/2NWbTafPP+Ngx5P+VYlbTpmfdux50z+YRm1VHg049VpsnwZsc/i3xEWjeJiY+xDzcF4fm66etJj547TT9phGvwCtN50es1GG/2zFo9/wBWim/fnnEU1R+0/wB+6Exjq6vKxyuPbTcb0v8AJz4dVT5xb6tv13/d4njGvwzyZ+F55yR1mlZtH5xvDvGxT8SiY8s/bLmFh5vBiZlgeDd0y9d61fRvpt009IAGVMcyeH6ibW/ze1J6RFPh+zq6YjVRTV1hZbu12/cnDkU4Dp41uLWZMmXJqccfVta20fP5R96fbmrPfbd6yUtNt+sPHJbwQmMcohCuuquc1Tk5p8ZZpWbRPfL1jpMTvMfgxbLb5dxjHVB6iMlene2Rvt39Wj6S3i247c0d8JUzDsPZHcCyJmmcw71Zi0/Nnmh5Gy3rC/RGM5+aubVMgDEsAAAAAAGJrE9YhkB55a+EPUd3QAAAAAdXs/xPy3qV9zs/xPy3qV91+Hp8Fb7yu3cKD2f4n5b1K+52f4n5b1K+6/BwVvvJu4UHs/xPy3qV9zs/xPy3qV91+DgrfeTdwoPZ/iflvUr7nZ/iflvUr7r8HBW+8m7hQez/ABPy3qV9zs/xPy3qV91+DgrfeTdwoPZ/iflvUr7nZ/iflvUr7r8HBW+8m7hQez/E/LepX3Oz/E/LepX3X4OCt95N3Cg9n+J+W9Svudn+J+W9SvuvwcFb7ybuABsTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/2Q=="
+          },
+          {
+            "timing": 1912,
+            "timestamp": 194243080453,
+            "data": "data:image/jpeg;base64,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"
+          },
+          {
+            "timing": 2389,
+            "timestamp": 194243558328,
+            "data": "data:image/jpeg;base64,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"
+          },
+          {
+            "timing": 2867,
+            "timestamp": 194244036203,
+            "data": "data:image/jpeg;base64,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"
+          },
+          {
+            "timing": 3345,
+            "timestamp": 194244514078,
+            "data": "data:image/jpeg;base64,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"
+          },
+          {
+            "timing": 3823,
+            "timestamp": 194244991953,
+            "data": "data:image/jpeg;base64,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"
+          }
+        ]
+      }
+    },
+    "final-screenshot": {
+      "id": "final-screenshot",
+      "title": "Final Screenshot",
+      "description": "The last screenshot captured of the pageload.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "screenshot",
+        "timing": 3824,
+        "timestamp": 194244992726,
+        "data": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAD4AHwDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAECAwQFBwb/xAA2EAACAQIDBQQJAwUBAAAAAAAAAQIDEQQFEiExVKPRFiJBUQYTFTJhcYGhsSORkhQzYnLB8f/EABoBAQADAQEBAAAAAAAAAAAAAAACAwQBBQb/xAAvEQEAAQMACAQGAgMAAAAAAAAAAQIDEQQFEhMUITFRMkGBoTNhcZGxwRXRUvDx/9oADAMBAAIRAxEAPwD7XFVnSnSp04a61WWmMdxihVx01FwwFSUZO0Wotp/L9jcxWE9e6c4zlTq03qjNeAVPME01mNRad1o28b+fmjNp0a0m/O4mdjyxs/vn3aNXTqiNHp4iI2/PO37bPLpj3aU8VWoyf9ThvVqMlGW3vRbV1s+RvKN1dWsa88sqVakpYnEzq6mpS7tnJpWW35HQULKyRq1Vx0RVxnp0z7cuzHrj+PmaOB9cbWPL/Ln39mDQFCzujY0DQetl4mGxTzGvGm4S73kzUxFSpXnqqO73F9A0FdNqiidqIXV3q66dmqSjXq0X3ZNryZatiqtWz2Qfwe8roGg5Nm3M5w7F+5EbOWu4Xd3vGg2NBGgtypw0sVUhhqE61S+iO+yIVaDhTnaVpq67pvOF/AhwvvQzKMUztZno50cZh5K6m7bdul+H/jNrT8DKqMFupxXjuLaREz5pTEeTPpJ0nFWJznF7cPhY0IPc6rS+21/Yusox1Zp4vMZJPfGnH8Nv/hh4uuv4duZ+vL88/ZLDpzqU6fv1IR+bsa1TMsHT96vH6bTFT9H8FFp1PXVX/lUa/FjbhluBhbThaF146E2V16Rep8U00+sz/ScUzPSGk87wN7QqOb8ooh5xTfuYfES+VNnYioxSUYpJeCJKKtMiOt37U/8AU4s1dnHWaVHuwGL+tOS/4T7Sq8Bif4vodWc1COqW40M3xtTD5dWq0dKnFKzavbbtZnr1nbo5Tcn7Q02NX3r/AIYYXmVVb8Biv4PoV9rW9/BYqPzpy6HK9Fc7xGIeIeKdSVKCnN370klK1142ttsfXJ3VztrWMXIzvJj6xH6NK0C5o1exViXG9tYZL9SNWC85RsZIZxgJ7sRH9mdX6GGthsPXf69CnU/2imaKdMz4bsetM/3DLNqqPJhp4rD1F3K1N/UzpKSummvgadbJMurb8OoPzpycPw0a0/R+MNuDxmIoz+LUl1+5opv355xFNUfKf9/KExjq6ukjScd4bO8L/Zr0cVDxUu7L73/JV5xmFF6K+VV3UW/RFyX7q6JcbFPxKKo9M/jKOH0Dn5EXbIRY+fu6Zeu+Krl8noU26aekFgAZkwAAYsTT9bScL2v8DkYnKnUoVKMsVV0zi4vYtz+h1akJuV96KaJeTKa6YqnnCdF65b5UThwsh9H6eUVpVY4irWqSTjtSikm77kd6EHO7uy1Om09UlsXgRKrLw2CIiOqNy5Vcq2q5zK0VUi9m0yq9tu811UkvEzUp61tROmYRhcizW4kFkTMTmHeopvxJ1IrJFTZb1hftxjOfqqmzTKUWKEmFasCLknQAAAAACHFPekSAK6I+SLJW3AAALlWwJkyoBwdbs9mnC8yPUdns04XmR6noAPU4K33ldu4ef9ns04XmR6js9mnC8yPU9AA4K33k3cPP+z+acNzIdSez+acLzI9T78DgrfeTdw+A9gZpwvMj1HsDNOF5kep9+BwVHeTdw+A9gZpwvMj1HsDNOF5kep9+BwVHeTdw8/7P5pw3Mh1HZ/NOG5kep6ABwVvvJu4ef9ns04XmR6js9mnC8yPU9AA4K33k3cPP+z2acLzI9R2ezTheZHqegAcFb7ybuAAGxMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//2Q=="
+      }
+    },
+    "total-blocking-time": {
+      "id": "total-blocking-time",
+      "title": "Total Blocking Time",
+      "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more about the Total Blocking Time metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/).",
+      "score": 0.46,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 646,
+      "numericUnit": "millisecond",
+      "displayValue": "650 ms",
+      "scoringOptions": {
+        "p10": 200,
+        "median": 600
+      }
+    },
+    "max-potential-fid": {
+      "id": "max-potential-fid",
+      "title": "Max Potential First Input Delay",
+      "description": "The maximum potential First Input Delay that your users could experience is the duration of the longest task. [Learn more about the Maximum Potential First Input Delay metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-max-potential-fid/).",
+      "score": 0.72,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 185,
+      "numericUnit": "millisecond",
+      "displayValue": "190 ms"
+    },
+    "cumulative-layout-shift": {
+      "id": "cumulative-layout-shift",
+      "title": "Cumulative Layout Shift",
+      "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls).",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 0,
+      "numericUnit": "unitless",
+      "displayValue": "0",
+      "scoringOptions": {
+        "p10": 0.1,
+        "median": 0.25
+      },
+      "details": {
+        "type": "debugdata",
+        "items": [
+          {
+            "cumulativeLayoutShiftMainFrame": 0,
+            "newEngineResult": {
+              "cumulativeLayoutShift": 0,
+              "cumulativeLayoutShiftMainFrame": 0
+            },
+            "newEngineResultDiffered": false
+          }
+        ]
+      }
+    },
+    "server-response-time": {
+      "id": "server-response-time",
+      "title": "Initial server response time was short",
+      "description": "Keep the server response time for the main document short because all other requests depend on it. [Learn more about the Time to First Byte metric](https://developer.chrome.com/docs/lighthouse/performance/time-to-first-byte/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 89,
+      "numericUnit": "millisecond",
+      "displayValue": "Root document took 90 ms",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "responseTime",
+            "valueType": "timespanMs",
+            "label": "Time Spent"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+            "responseTime": 89
+          }
+        ],
+        "overallSavingsMs": 0
+      },
+      "guidanceLevel": 1
+    },
+    "interactive": {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "description": "Time to Interactive is the amount of time it takes for the page to become fully interactive. [Learn more about the Time to Interactive metric](https://developer.chrome.com/docs/lighthouse/performance/interactive/).",
+      "score": 0.78,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 4895.5825,
+      "numericUnit": "millisecond",
+      "displayValue": "4.9 s"
+    },
+    "user-timings": {
+      "id": "user-timings",
+      "title": "User Timing marks and measures",
+      "description": "Consider instrumenting your app with the User Timing API to measure your app's real-world performance during key user experiences. [Learn more about User Timing marks](https://developer.chrome.com/docs/lighthouse/performance/user-timings/).",
+      "score": null,
+      "scoreDisplayMode": "notApplicable",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "name",
+            "valueType": "text",
+            "label": "Name"
+          },
+          {
+            "key": "timingType",
+            "valueType": "text",
+            "label": "Type"
+          },
+          {
+            "key": "startTime",
+            "valueType": "ms",
+            "granularity": 0.01,
+            "label": "Start Time"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 0.01,
+            "label": "Duration"
+          }
+        ],
+        "items": []
+      },
+      "guidanceLevel": 2
+    },
+    "redirects": {
+      "id": "redirects",
+      "title": "Avoid multiple page redirects",
+      "description": "Redirects introduce additional delays before the page can be loaded. [Learn how to avoid page redirects](https://developer.chrome.com/docs/lighthouse/performance/redirects/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 0,
+      "numericUnit": "millisecond",
+      "displayValue": "",
+      "metricSavings": {
+        "LCP": 0,
+        "FCP": 0
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [],
+        "items": [],
+        "overallSavingsMs": 0
+      },
+      "guidanceLevel": 2
+    },
+    "mainthread-work-breakdown": {
+      "id": "mainthread-work-breakdown",
+      "title": "Minimize main-thread work",
+      "description": "Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to minimize main-thread work](https://developer.chrome.com/docs/lighthouse/performance/mainthread-work-breakdown/)",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 4669.46399999997,
+      "numericUnit": "millisecond",
+      "displayValue": "4.7 s",
+      "metricSavings": {
+        "TBT": 650
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "groupLabel",
+            "valueType": "text",
+            "label": "Category"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Time Spent"
+          }
+        ],
+        "items": [
+          {
+            "group": "scriptEvaluation",
+            "groupLabel": "Script Evaluation",
+            "duration": 3633.147999999974
+          },
+          {
+            "group": "other",
+            "groupLabel": "Other",
+            "duration": 625.8559999999961
+          },
+          {
+            "group": "scriptParseCompile",
+            "groupLabel": "Script Parsing & Compilation",
+            "duration": 169.284
+          },
+          {
+            "group": "styleLayout",
+            "groupLabel": "Style & Layout",
+            "duration": 109.1
+          },
+          {
+            "group": "paintCompositeRender",
+            "groupLabel": "Rendering",
+            "duration": 66.12799999999999
+          },
+          {
+            "group": "garbageCollection",
+            "groupLabel": "Garbage Collection",
+            "duration": 44.51599999999997
+          },
+          {
+            "group": "parseHTML",
+            "groupLabel": "Parse HTML & CSS",
+            "duration": 21.432000000000002
+          }
+        ],
+        "sortedBy": [
+          "duration"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "bootup-time": {
+      "id": "bootup-time",
+      "title": "Reduce JavaScript execution time",
+      "description": "Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to reduce Javascript execution time](https://developer.chrome.com/docs/lighthouse/performance/bootup-time/).",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 3706.388000000004,
+      "numericUnit": "millisecond",
+      "displayValue": "3.7 s",
+      "metricSavings": {
+        "TBT": 650
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "total",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Total CPU Time"
+          },
+          {
+            "key": "scripting",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Script Evaluation"
+          },
+          {
+            "key": "scriptParseCompile",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Script Parse"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "total": 3098.7120000000023,
+            "scripting": 2693.3200000000024,
+            "scriptParseCompile": 64.15599999999999
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "total": 802.0040000000015,
+            "scripting": 752.7640000000015,
+            "scriptParseCompile": 29.524
+          },
+          {
+            "url": "Unattributable",
+            "total": 355.09600000000177,
+            "scripting": 10.747999999999998,
+            "scriptParseCompile": 0
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+            "total": 150.512,
+            "scripting": 9.655999999999999,
+            "scriptParseCompile": 4.9639999999999995
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/16ksa~32zaksw.js",
+            "total": 143.2480000000001,
+            "scripting": 122.4280000000001,
+            "scriptParseCompile": 18.828000000000003
+          }
+        ],
+        "summary": {
+          "wastedMs": 3706.388000000004
+        },
+        "sortedBy": [
+          "total"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "diagnostics": {
+      "id": "diagnostics",
+      "title": "Diagnostics",
+      "description": "Collection of useful page vitals.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "debugdata",
+        "items": [
+          {
+            "numRequests": 19,
+            "numScripts": 14,
+            "numStylesheets": 1,
+            "numFonts": 2,
+            "numTasks": 1408,
+            "numTasksOver10ms": 11,
+            "numTasksOver25ms": 8,
+            "numTasksOver50ms": 2,
+            "numTasksOver100ms": 0,
+            "numTasksOver500ms": 0,
+            "rtt": 75.01,
+            "throughput": 17404026.00985335,
+            "maxRtt": 77.47999999999999,
+            "maxServerLatency": 138.58249999999998,
+            "totalByteWeight": 515938,
+            "totalTaskTime": 1167.366000000001,
+            "mainDocumentTransferSize": 3722
+          }
+        ]
+      }
+    },
+    "network-requests": {
+      "id": "network-requests",
+      "title": "Network Requests",
+      "description": "Lists the network requests that were made during page load.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "protocol",
+            "valueType": "text",
+            "label": "Protocol"
+          },
+          {
+            "key": "networkRequestTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Network Request Time"
+          },
+          {
+            "key": "networkEndTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Network End Time"
+          },
+          {
+            "key": "transferSize",
+            "valueType": "bytes",
+            "displayUnit": "kb",
+            "granularity": 1,
+            "label": "Transfer Size"
+          },
+          {
+            "key": "resourceSize",
+            "valueType": "bytes",
+            "displayUnit": "kb",
+            "granularity": 1,
+            "label": "Resource Size"
+          },
+          {
+            "key": "statusCode",
+            "valueType": "text",
+            "label": "Status Code"
+          },
+          {
+            "key": "mimeType",
+            "valueType": "text",
+            "label": "MIME Type"
+          },
+          {
+            "key": "resourceType",
+            "valueType": "text",
+            "label": "Resource Type"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 0,
+            "networkRequestTime": 1.2400000095367432,
+            "networkEndTime": 461.7840000092983,
+            "finished": true,
+            "transferSize": 3722,
+            "resourceSize": 11219,
+            "statusCode": 200,
+            "mimeType": "text/html",
+            "resourceType": "Document",
+            "priority": "VeryHigh",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/media/83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 471.0290000140667,
+            "networkRequestTime": 473.31900000572205,
+            "networkEndTime": 654.0960000157356,
+            "finished": true,
+            "transferSize": 48657,
+            "resourceSize": 48432,
+            "statusCode": 200,
+            "mimeType": "font/woff2",
+            "resourceType": "Font",
+            "priority": "High",
+            "isLinkPreload": true,
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 472.1380000114441,
+            "networkRequestTime": 474.19600000977516,
+            "networkEndTime": 581.5750000178814,
+            "finished": true,
+            "transferSize": 29574,
+            "resourceSize": 29288,
+            "statusCode": 200,
+            "mimeType": "font/woff2",
+            "resourceType": "Font",
+            "priority": "High",
+            "isLinkPreload": true,
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0svz_dd_i-399.css",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 473,
+            "networkRequestTime": 476.33700001239777,
+            "networkEndTime": 716.391999989748,
+            "finished": true,
+            "transferSize": 11322,
+            "resourceSize": 56031,
+            "statusCode": 200,
+            "mimeType": "text/css",
+            "resourceType": "Stylesheet",
+            "priority": "VeryHigh",
+            "isLinkPreload": true,
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0-hrh_uw98wb_.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 485.08500000834465,
+            "networkRequestTime": 493.68099999427795,
+            "networkEndTime": 718.2329999804497,
+            "finished": true,
+            "transferSize": 2276,
+            "resourceSize": 5598,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "isLinkPreload": true,
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/13zm7iq1nssdo.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 485.402999997139,
+            "networkRequestTime": 494.27000001072884,
+            "networkEndTime": 708.8959999978542,
+            "finished": true,
+            "transferSize": 9571,
+            "resourceSize": 31932,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 485.58100003004074,
+            "networkRequestTime": 494.72799998521805,
+            "networkEndTime": 661.1290000081062,
+            "finished": true,
+            "transferSize": 72473,
+            "resourceSize": 227425,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/16ksa~32zaksw.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 485.72499999403954,
+            "networkRequestTime": 496.9839999973774,
+            "networkEndTime": 724.1509999930859,
+            "finished": true,
+            "transferSize": 38373,
+            "resourceSize": 136911,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0jb.wowuku9y3.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 485.86500000953674,
+            "networkRequestTime": 497.47800001502037,
+            "networkEndTime": 720.9060000181198,
+            "finished": true,
+            "transferSize": 9790,
+            "resourceSize": 44022,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/turbopack-0m0hv8kyvs7zf.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.02000001072884,
+            "networkRequestTime": 497.90099999308586,
+            "networkEndTime": 720.0440000295639,
+            "finished": true,
+            "transferSize": 4727,
+            "resourceSize": 10830,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0x.73w57rn4ou.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.152999997139,
+            "networkRequestTime": 501.6720000207424,
+            "networkEndTime": 720.3270000219345,
+            "finished": true,
+            "transferSize": 1686,
+            "resourceSize": 3380,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0i.l9589uvx0j.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.28600001335144,
+            "networkRequestTime": 502.19200003147125,
+            "networkEndTime": 721.4690000116825,
+            "finished": true,
+            "transferSize": 13712,
+            "resourceSize": 54763,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0br~5tjbe9wpl.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.46299999952316,
+            "networkRequestTime": 504.0310000181198,
+            "networkEndTime": 722.4120000004768,
+            "finished": true,
+            "transferSize": 3116,
+            "resourceSize": 6923,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0ma7430nqjagh.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.5900000035763,
+            "networkRequestTime": 504.53500002622604,
+            "networkEndTime": 722.0460000038147,
+            "finished": true,
+            "transferSize": 14070,
+            "resourceSize": 40795,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/073b84iqt1p.o.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.72300001978874,
+            "networkRequestTime": 506.58300000429153,
+            "networkEndTime": 774.6340000033379,
+            "finished": true,
+            "transferSize": 63312,
+            "resourceSize": 270099,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/125v.ecx5uiln.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 486.8600000143051,
+            "networkRequestTime": 507.0920000076294,
+            "networkEndTime": 785.2019999921322,
+            "finished": true,
+            "transferSize": 46116,
+            "resourceSize": 134186,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://vercel.live/_next-live/feedback/feedback.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 763.5119999945164,
+            "networkRequestTime": 764.2829999923706,
+            "networkEndTime": 1084.7690000236034,
+            "finished": true,
+            "transferSize": 157,
+            "resourceSize": 0,
+            "statusCode": 204,
+            "mimeType": "text/plain",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.live"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 882.28900000453,
+            "networkRequestTime": 882.9390000104904,
+            "networkEndTime": 986.1270000040531,
+            "finished": true,
+            "transferSize": 133766,
+            "resourceSize": 516088,
+            "statusCode": 200,
+            "mimeType": "application/javascript",
+            "resourceType": "Script",
+            "priority": "Low",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/favicon.ico?favicon.0x3dzn~oxb6tn.ico",
+            "sessionTargetType": "page",
+            "protocol": "h2",
+            "rendererStartTime": 1289.6620000004768,
+            "networkRequestTime": 1290.0779999792576,
+            "networkEndTime": 1436.4620000123978,
+            "finished": true,
+            "transferSize": 9518,
+            "resourceSize": 25931,
+            "statusCode": 200,
+            "mimeType": "image/vnd.microsoft.icon",
+            "resourceType": "Other",
+            "priority": "High",
+            "experimentalFromMainFrame": true,
+            "entity": "vercel.app"
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "networkStartTimeTs": 194241170357,
+          "initiators": [
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 437
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 498
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 568
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 638
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 708
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 788
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 858
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 928
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 998
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 1068
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 1138
+            },
+            {
+              "type": "parser",
+              "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+              "lineNumber": 0,
+              "columnNumber": 1208
+            }
+          ]
+        }
+      }
+    },
+    "network-rtt": {
+      "id": "network-rtt",
+      "title": "Network Round Trip Times",
+      "description": "Network round trip times (RTT) have a large impact on performance. If the RTT to an origin is high, it's an indication that servers closer to the user could improve performance. [Learn more about the Round Trip Time](https://hpbn.co/primer-on-latency-and-bandwidth/).",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "numericValue": 77.47999999999999,
+      "numericUnit": "millisecond",
+      "displayValue": "80 ms",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "origin",
+            "valueType": "text",
+            "label": "URL"
+          },
+          {
+            "key": "rtt",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Time Spent"
+          }
+        ],
+        "items": [
+          {
+            "origin": "https://vercel.live",
+            "rtt": 77.47999999999999
+          },
+          {
+            "origin": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app",
+            "rtt": 75.01
+          }
+        ],
+        "sortedBy": [
+          "rtt"
+        ]
+      }
+    },
+    "network-server-latency": {
+      "id": "network-server-latency",
+      "title": "Server Backend Latencies",
+      "description": "Server latencies can impact web performance. If the server latency of an origin is high, it's an indication the server is overloaded or has poor backend performance. [Learn more about server response time](https://hpbn.co/primer-on-web-performance/#analyzing-the-resource-waterfall).",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "numericValue": 138.58249999999998,
+      "numericUnit": "millisecond",
+      "displayValue": "140 ms",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "origin",
+            "valueType": "text",
+            "label": "URL"
+          },
+          {
+            "key": "serverResponseTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Time Spent"
+          }
+        ],
+        "items": [
+          {
+            "origin": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app",
+            "serverResponseTime": 138.58249999999998
+          },
+          {
+            "origin": "https://vercel.live",
+            "serverResponseTime": 42.67700000000002
+          }
+        ],
+        "sortedBy": [
+          "serverResponseTime"
+        ]
+      }
+    },
+    "main-thread-tasks": {
+      "id": "main-thread-tasks",
+      "title": "Tasks",
+      "description": "Lists the toplevel main thread tasks that executed during page load.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "startTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Start Time"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "End Time"
+          }
+        ],
+        "items": [
+          {
+            "duration": 21.724,
+            "startTime": 468.293
+          },
+          {
+            "duration": 8.058,
+            "startTime": 672.435
+          },
+          {
+            "duration": 25.017,
+            "startTime": 728.779
+          },
+          {
+            "duration": 35.462,
+            "startTime": 770.11
+          },
+          {
+            "duration": 5.069,
+            "startTime": 807.66
+          },
+          {
+            "duration": 36.651,
+            "startTime": 819.941
+          },
+          {
+            "duration": 5.497,
+            "startTime": 856.67
+          },
+          {
+            "duration": 7.667,
+            "startTime": 862.173
+          },
+          {
+            "duration": 7.687,
+            "startTime": 869.849
+          },
+          {
+            "duration": 8.679,
+            "startTime": 881.535
+          },
+          {
+            "duration": 45.582,
+            "startTime": 997.52
+          },
+          {
+            "duration": 82.843,
+            "startTime": 1046.651
+          },
+          {
+            "duration": 92.617,
+            "startTime": 1129.503
+          },
+          {
+            "duration": 25.625,
+            "startTime": 1223.616
+          },
+          {
+            "duration": 35.589,
+            "startTime": 1249.253
+          },
+          {
+            "duration": 10.677,
+            "startTime": 1306.641
+          },
+          {
+            "duration": 8.207,
+            "startTime": 1323.271
+          },
+          {
+            "duration": 5.708,
+            "startTime": 1339.464
+          },
+          {
+            "duration": 6.253,
+            "startTime": 1356.148
+          },
+          {
+            "duration": 8.556,
+            "startTime": 1372.833
+          },
+          {
+            "duration": 6.703,
+            "startTime": 1657.015
+          },
+          {
+            "duration": 5.285,
+            "startTime": 1842.904
+          },
+          {
+            "duration": 10.092,
+            "startTime": 1861.104
+          },
+          {
+            "duration": 5.149,
+            "startTime": 1956.861
+          },
+          {
+            "duration": 5.672,
+            "startTime": 2073.353
+          },
+          {
+            "duration": 5.249,
+            "startTime": 2090.007
+          },
+          {
+            "duration": 5.356,
+            "startTime": 2123.606
+          },
+          {
+            "duration": 5.413,
+            "startTime": 2140.294
+          },
+          {
+            "duration": 5.277,
+            "startTime": 2340.622
+          },
+          {
+            "duration": 5.312,
+            "startTime": 2356.973
+          },
+          {
+            "duration": 5.739,
+            "startTime": 2456.803
+          },
+          {
+            "duration": 5.277,
+            "startTime": 2623.886
+          },
+          {
+            "duration": 5.467,
+            "startTime": 2856.952
+          },
+          {
+            "duration": 5.262,
+            "startTime": 2873.589
+          },
+          {
+            "duration": 5.294,
+            "startTime": 2890.071
+          },
+          {
+            "duration": 6.064,
+            "startTime": 3123.6
+          },
+          {
+            "duration": 5.128,
+            "startTime": 3457.079
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "id": "metrics",
+      "title": "Metrics",
+      "description": "Collects all available metrics.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "numericValue": 4896,
+      "numericUnit": "millisecond",
+      "details": {
+        "type": "debugdata",
+        "items": [
+          {
+            "firstContentfulPaint": 1039,
+            "largestContentfulPaint": 2989,
+            "interactive": 4896,
+            "speedIndex": 2962,
+            "totalBlockingTime": 646,
+            "maxPotentialFID": 185,
+            "cumulativeLayoutShift": 0,
+            "cumulativeLayoutShiftMainFrame": 0,
+            "timeToFirstByte": 739,
+            "observedTimeOrigin": 0,
+            "observedTimeOriginTs": 194241168953,
+            "observedNavigationStart": 0,
+            "observedNavigationStartTs": 194241168953,
+            "observedFirstPaint": 773,
+            "observedFirstPaintTs": 194241942024,
+            "observedFirstContentfulPaint": 940,
+            "observedFirstContentfulPaintTs": 194242108648,
+            "observedFirstContentfulPaintAllFrames": 940,
+            "observedFirstContentfulPaintAllFramesTs": 194242108648,
+            "observedLargestContentfulPaint": 940,
+            "observedLargestContentfulPaintTs": 194242108648,
+            "observedLargestContentfulPaintAllFrames": 940,
+            "observedLargestContentfulPaintAllFramesTs": 194242108648,
+            "observedTraceEnd": 3830,
+            "observedTraceEndTs": 194244998843,
+            "observedLoad": 1288,
+            "observedLoadTs": 194242457057,
+            "observedDomContentLoaded": 760,
+            "observedDomContentLoadedTs": 194241928502,
+            "observedCumulativeLayoutShift": 0,
+            "observedCumulativeLayoutShiftMainFrame": 0,
+            "observedFirstVisualChange": 758,
+            "observedFirstVisualChangeTs": 194241926953,
+            "observedLastVisualChange": 3823,
+            "observedLastVisualChangeTs": 194244991953,
+            "observedSpeedIndex": 992,
+            "observedSpeedIndexTs": 194242160999
+          },
+          {
+            "lcpInvalidated": false
+          }
+        ]
+      }
+    },
+    "resource-summary": {
+      "id": "resource-summary",
+      "title": "Resources Summary",
+      "description": "Aggregates all network requests and groups them by type",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "label",
+            "valueType": "text",
+            "label": "Resource Type"
+          },
+          {
+            "key": "requestCount",
+            "valueType": "numeric",
+            "label": "Requests"
+          },
+          {
+            "key": "transferSize",
+            "valueType": "bytes",
+            "label": "Transfer Size"
+          }
+        ],
+        "items": [
+          {
+            "resourceType": "total",
+            "label": "Total",
+            "requestCount": 19,
+            "transferSize": 515938
+          },
+          {
+            "resourceType": "script",
+            "label": "Script",
+            "requestCount": 14,
+            "transferSize": 413145
+          },
+          {
+            "resourceType": "font",
+            "label": "Font",
+            "requestCount": 2,
+            "transferSize": 78231
+          },
+          {
+            "resourceType": "stylesheet",
+            "label": "Stylesheet",
+            "requestCount": 1,
+            "transferSize": 11322
+          },
+          {
+            "resourceType": "other",
+            "label": "Other",
+            "requestCount": 1,
+            "transferSize": 9518
+          },
+          {
+            "resourceType": "document",
+            "label": "Document",
+            "requestCount": 1,
+            "transferSize": 3722
+          },
+          {
+            "resourceType": "image",
+            "label": "Image",
+            "requestCount": 0,
+            "transferSize": 0
+          },
+          {
+            "resourceType": "media",
+            "label": "Media",
+            "requestCount": 0,
+            "transferSize": 0
+          },
+          {
+            "resourceType": "third-party",
+            "label": "Third-party",
+            "requestCount": 1,
+            "transferSize": 157
+          }
+        ]
+      }
+    },
+    "layout-shifts": {
+      "id": "layout-shifts",
+      "title": "Avoid large layout shifts",
+      "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that led to the layout shift. Some of these layout shifts may not be included in the CLS metric value due to [windowing](https://web.dev/articles/cls#what_is_cls). [Learn how to improve CLS](https://web.dev/articles/optimize-cls)",
+      "score": null,
+      "scoreDisplayMode": "notApplicable",
+      "metricSavings": {
+        "CLS": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "subItemsHeading": {
+              "key": "extra"
+            },
+            "label": "Element"
+          },
+          {
+            "key": "score",
+            "valueType": "numeric",
+            "subItemsHeading": {
+              "key": "cause",
+              "valueType": "text"
+            },
+            "granularity": 0.001,
+            "label": "Layout shift score"
+          }
+        ],
+        "items": []
+      },
+      "guidanceLevel": 2
+    },
+    "long-tasks": {
+      "id": "long-tasks",
+      "title": "Avoid long main-thread tasks",
+      "description": "Lists the longest tasks on the main thread, useful for identifying worst contributors to input delay. [Learn how to avoid long main-thread tasks](https://web.dev/articles/optimize-long-tasks)",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "displayValue": "9 long tasks found",
+      "metricSavings": {
+        "TBT": 650
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "startTime",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Start Time"
+          },
+          {
+            "key": "duration",
+            "valueType": "ms",
+            "granularity": 1,
+            "label": "Duration"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "duration": 185,
+            "startTime": 4536.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "duration": 182,
+            "startTime": 4188.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "duration": 166,
+            "startTime": 4370.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "duration": 147,
+            "startTime": 1938.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/16ksa~32zaksw.js",
+            "duration": 142,
+            "startTime": 2238.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "duration": 103,
+            "startTime": 4721.5825
+          },
+          {
+            "url": "Unattributable",
+            "duration": 87,
+            "startTime": 888.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "duration": 71,
+            "startTime": 4824.5825
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+            "duration": 50,
+            "startTime": 987.5825
+          }
+        ],
+        "sortedBy": [
+          "duration"
+        ],
+        "skipSumming": [
+          "startTime"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "urls": [
+            "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/16ksa~32zaksw.js",
+            "Unattributable",
+            "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat"
+          ],
+          "tasks": [
+            {
+              "urlIndex": 0,
+              "startTime": 4536.6,
+              "duration": 185,
+              "other": 185,
+              "paintCompositeRender": 0,
+              "scriptEvaluation": 0,
+              "styleLayout": 0
+            },
+            {
+              "urlIndex": 0,
+              "startTime": 4188.6,
+              "duration": 182,
+              "other": 182,
+              "scriptEvaluation": 0
+            },
+            {
+              "urlIndex": 1,
+              "startTime": 4370.6,
+              "duration": 166,
+              "other": 166
+            },
+            {
+              "urlIndex": 1,
+              "startTime": 1938.6,
+              "duration": 147,
+              "other": 147
+            },
+            {
+              "urlIndex": 2,
+              "startTime": 2238.6,
+              "duration": 142,
+              "other": 142,
+              "scriptEvaluation": 0
+            },
+            {
+              "urlIndex": 1,
+              "startTime": 4721.6,
+              "duration": 103,
+              "other": 103
+            },
+            {
+              "urlIndex": 3,
+              "startTime": 888.6,
+              "duration": 87,
+              "other": 87,
+              "scriptEvaluation": 0
+            },
+            {
+              "urlIndex": 0,
+              "startTime": 4824.6,
+              "duration": 71,
+              "other": 71,
+              "paintCompositeRender": 0,
+              "scriptEvaluation": 0,
+              "styleLayout": 0
+            },
+            {
+              "urlIndex": 4,
+              "startTime": 987.6,
+              "duration": 50,
+              "other": 50,
+              "paintCompositeRender": 0,
+              "scriptEvaluation": 0,
+              "styleLayout": 0
+            }
+          ]
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "non-composited-animations": {
+      "id": "non-composited-animations",
+      "title": "Avoid non-composited animations",
+      "description": "Animations which are not composited can be janky and increase CLS. [Learn how to avoid non-composited animations](https://developer.chrome.com/docs/lighthouse/performance/non-composited-animations/)",
+      "score": null,
+      "scoreDisplayMode": "notApplicable",
+      "metricSavings": {
+        "CLS": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "subItemsHeading": {
+              "key": "failureReason",
+              "valueType": "text"
+            },
+            "label": "Element"
+          }
+        ],
+        "items": []
+      },
+      "guidanceLevel": 2
+    },
+    "unsized-images": {
+      "id": "unsized-images",
+      "title": "Image elements have explicit `width` and `height`",
+      "description": "Set an explicit width and height on image elements to reduce layout shifts and improve CLS. [Learn how to set image dimensions](https://web.dev/articles/optimize-cls#images_without_dimensions)",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "CLS": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "label": ""
+          },
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          }
+        ],
+        "items": []
+      },
+      "guidanceLevel": 4
+    },
+    "script-treemap-data": {
+      "id": "script-treemap-data",
+      "title": "Script Treemap Data",
+      "description": "Used for treemap app",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "treemap-data",
+        "nodes": [
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "resourceBytes": 227425,
+            "encodedBytes": 54591,
+            "unusedBytes": 75372
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/13zm7iq1nssdo.js",
+            "resourceBytes": 31932,
+            "encodedBytes": 9431,
+            "unusedBytes": 12903
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+            "resourceBytes": 8369,
+            "encodedBytes": 2326,
+            "children": [
+              {
+                "name": "(inline) (self.__next_f=…",
+                "resourceBytes": 43,
+                "unusedBytes": 0
+              },
+              {
+                "name": "(inline) self.__next_f.p…",
+                "resourceBytes": 1192,
+                "unusedBytes": 0
+              },
+              {
+                "name": "(inline) self.__next_f.p…",
+                "resourceBytes": 4490,
+                "unusedBytes": 0
+              },
+              {
+                "name": "(inline) self.__next_f.p…",
+                "resourceBytes": 526,
+                "unusedBytes": 0
+              },
+              {
+                "name": "(inline) self.__next_f.p…",
+                "resourceBytes": 1504,
+                "unusedBytes": 0
+              },
+              {
+                "name": "(inline) self.__next_f.p…",
+                "resourceBytes": 614,
+                "unusedBytes": 0
+              }
+            ]
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0-hrh_uw98wb_.js",
+            "resourceBytes": 5596,
+            "encodedBytes": 0,
+            "unusedBytes": 1821
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0br~5tjbe9wpl.js",
+            "resourceBytes": 6921,
+            "encodedBytes": 0,
+            "unusedBytes": 1086
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0x.73w57rn4ou.js",
+            "resourceBytes": 3380,
+            "encodedBytes": 0,
+            "unusedBytes": 3106
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/turbopack-0m0hv8kyvs7zf.js",
+            "resourceBytes": 10830,
+            "encodedBytes": 0,
+            "unusedBytes": 4079
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0jb.wowuku9y3.js",
+            "resourceBytes": 44022,
+            "encodedBytes": 0,
+            "unusedBytes": 37079
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0ma7430nqjagh.js",
+            "resourceBytes": 40795,
+            "encodedBytes": 0,
+            "unusedBytes": 35178
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0i.l9589uvx0j.js",
+            "resourceBytes": 54761,
+            "encodedBytes": 0,
+            "unusedBytes": 46626
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/16ksa~32zaksw.js",
+            "resourceBytes": 136911,
+            "encodedBytes": 0,
+            "unusedBytes": 77998
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/073b84iqt1p.o.js",
+            "resourceBytes": 252989,
+            "encodedBytes": 48455,
+            "unusedBytes": 212813
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/125v.ecx5uiln.js",
+            "resourceBytes": 134186,
+            "encodedBytes": 10406,
+            "unusedBytes": 82090
+          },
+          {
+            "name": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "resourceBytes": 516088,
+            "encodedBytes": 133580,
+            "unusedBytes": 176934
+          },
+          {
+            "name": "https://vercel.live/_next-live/feedback/feedback.js",
+            "resourceBytes": 0,
+            "encodedBytes": 0
+          }
+        ]
+      }
+    },
+    "total-byte-weight": {
+      "id": "total-byte-weight",
+      "title": "Avoids enormous network payloads",
+      "description": "Large network payloads cost users real money and are highly correlated with long load times. [Learn how to reduce payload sizes](https://developer.chrome.com/docs/lighthouse/performance/total-byte-weight/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 515938,
+      "numericUnit": "byte",
+      "displayValue": "Total size was 504 KiB",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "label": "Transfer Size"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "totalBytes": 133766
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "totalBytes": 72473
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/073b84iqt1p.o.js",
+            "totalBytes": 63312
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/media/83afe278b6a6bb3c-s.p.0q-301v4kxxnr.woff2",
+            "totalBytes": 48657
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/125v.ecx5uiln.js",
+            "totalBytes": 46116
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/16ksa~32zaksw.js",
+            "totalBytes": 38373
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+            "totalBytes": 29574
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0ma7430nqjagh.js",
+            "totalBytes": 14070
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0i.l9589uvx0j.js",
+            "totalBytes": 13712
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0svz_dd_i-399.css",
+            "totalBytes": 11322
+          }
+        ],
+        "sortedBy": [
+          "totalBytes"
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "unminified-css": {
+      "id": "unminified-css",
+      "title": "Minify CSS",
+      "description": "Minifying CSS files can reduce network payload sizes. [Learn how to minify CSS](https://developer.chrome.com/docs/lighthouse/performance/unminified-css/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 0,
+      "numericUnit": "millisecond",
+      "displayValue": "",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [],
+        "items": [],
+        "overallSavingsMs": 0,
+        "overallSavingsBytes": 0,
+        "sortedBy": [
+          "wastedBytes"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 0
+          }
+        }
+      },
+      "guidanceLevel": 3
+    },
+    "unminified-javascript": {
+      "id": "unminified-javascript",
+      "title": "Minify JavaScript",
+      "description": "Minifying JavaScript files can reduce payload sizes and script parse time. [Learn how to minify JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unminified-javascript/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 0,
+      "numericUnit": "millisecond",
+      "displayValue": "",
+      "warnings": [],
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [],
+        "items": [],
+        "overallSavingsMs": 0,
+        "overallSavingsBytes": 0,
+        "sortedBy": [
+          "wastedBytes"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 0
+          }
+        }
+      },
+      "guidanceLevel": 3
+    },
+    "unused-css-rules": {
+      "id": "unused-css-rules",
+      "title": "Reduce unused CSS",
+      "description": "Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity. [Learn how to reduce unused CSS](https://developer.chrome.com/docs/lighthouse/performance/unused-css-rules/).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 0,
+      "numericUnit": "millisecond",
+      "displayValue": "",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [],
+        "items": [],
+        "overallSavingsMs": 0,
+        "overallSavingsBytes": 0,
+        "sortedBy": [
+          "wastedBytes"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 0
+          }
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "unused-javascript": {
+      "id": "unused-javascript",
+      "title": "Reduce unused JavaScript",
+      "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "numericValue": 300,
+      "numericUnit": "millisecond",
+      "displayValue": "Est savings of 82 KiB",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 300
+      },
+      "details": {
+        "type": "opportunity",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "subItemsHeading": {
+              "key": "source",
+              "valueType": "code"
+            },
+            "label": "URL"
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceBytes"
+            },
+            "label": "Transfer Size"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceWastedBytes"
+            },
+            "label": "Est Savings"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/11c_2vdyn8skq.js",
+            "totalBytes": 133580,
+            "wastedBytes": 45796,
+            "wastedPercent": 34.28368805320023
+          },
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/073b84iqt1p.o.js",
+            "totalBytes": 45386,
+            "wastedBytes": 38178,
+            "wastedPercent": 84.11946764483831
+          }
+        ],
+        "overallSavingsMs": 300,
+        "overallSavingsBytes": 83974,
+        "sortedBy": [
+          "wastedBytes"
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 300
+          }
+        }
+      },
+      "guidanceLevel": 1
+    },
+    "bf-cache": {
+      "id": "bf-cache",
+      "title": "Page didn't prevent back/forward cache restoration",
+      "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://developer.chrome.com/docs/lighthouse/performance/bf-cache/)",
+      "score": 1,
+      "scoreDisplayMode": "binary",
+      "guidanceLevel": 4
+    },
+    "cache-insight": {
+      "id": "cache-insight",
+      "title": "Use efficient cache lifetimes",
+      "description": "A long cache lifetime can speed up repeat visits to your page. [Learn more about caching](https://developer.chrome.com/docs/performance/insights/cache).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "Request"
+          },
+          {
+            "key": "cacheLifetimeMs",
+            "valueType": "ms",
+            "label": "Cache TTL",
+            "displayUnit": "duration"
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "label": "Transfer Size",
+            "displayUnit": "kb",
+            "granularity": 1
+          }
+        ],
+        "items": [],
+        "debugData": {
+          "type": "debugdata",
+          "wastedBytes": 0
+        }
+      },
+      "guidanceLevel": 3
+    },
+    "cls-culprits-insight": {
+      "id": "cls-culprits-insight",
+      "title": "Layout shift culprits",
+      "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements being added, removed, or their fonts changing as the page loads.",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "metricSavings": {
+        "CLS": 0
+      },
+      "details": {
+        "type": "list",
+        "items": []
+      },
+      "guidanceLevel": 3
+    },
+    "document-latency-insight": {
+      "id": "document-latency-insight",
+      "title": "Document request latency",
+      "description": "Your first network request is the most important. [Reduce its latency](https://developer.chrome.com/docs/performance/insights/document-latency) by avoiding redirects, ensuring a fast server response, and enabling text compression.",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "checklist",
+        "items": {
+          "noRedirects": {
+            "label": "Avoids redirects",
+            "value": true
+          },
+          "serverResponseIsFast": {
+            "label": "Server responds quickly (observed 89 ms)",
+            "value": true
+          },
+          "usesCompression": {
+            "label": "Applies text compression",
+            "value": true
+          }
+        },
+        "debugData": {
+          "type": "debugdata",
+          "redirectDuration": 0,
+          "serverResponseTime": 89,
+          "uncompressedResponseBytes": 0,
+          "wastedBytes": 0
+        }
+      },
+      "guidanceLevel": 3
+    },
+    "dom-size-insight": {
+      "id": "dom-size-insight",
+      "title": "Optimize DOM size",
+      "description": "A large DOM can increase the duration of style calculations and layout reflows, impacting page responsiveness. A large DOM will also increase memory usage. [Learn how to avoid an excessive DOM size](https://developer.chrome.com/docs/performance/insights/dom-size).",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 23,
+      "numericUnit": "element",
+      "metricSavings": {
+        "INP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "statistic",
+            "valueType": "text",
+            "label": "Statistic"
+          },
+          {
+            "key": "node",
+            "valueType": "node",
+            "label": "Element"
+          },
+          {
+            "key": "value",
+            "valueType": "numeric",
+            "label": "Value"
+          }
+        ],
+        "items": [
+          {
+            "statistic": "Total elements",
+            "value": {
+              "type": "numeric",
+              "granularity": 1,
+              "value": 23
+            }
+          },
+          {
+            "statistic": "DOM depth",
+            "value": {
+              "type": "numeric",
+              "granularity": 1,
+              "value": 7
+            }
+          },
+          {
+            "statistic": "Most children",
+            "node": {
+              "type": "node",
+              "lhId": "page-2-BODY",
+              "path": "1,HTML,1,BODY",
+              "selector": "body.min-h-full",
+              "boundingRect": {
+                "top": 0,
+                "bottom": 823,
+                "left": 0,
+                "right": 412,
+                "width": 412,
+                "height": 823
+              },
+              "snippet": "<body class=\"min-h-full flex flex-col font-sans\" style=\"font-family:Inter, ui-sans-serif, system-ui, sans-serif\">",
+              "nodeLabel": "body.min-h-full"
+            },
+            "value": {
+              "type": "numeric",
+              "granularity": 1,
+              "value": 10
+            }
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "totalElements": 23,
+          "maxChildren": 10,
+          "maxDepth": 7
+        }
+      },
+      "guidanceLevel": 3
+    },
+    "duplicated-javascript-insight": {
+      "id": "duplicated-javascript-insight",
+      "title": "Duplicated JavaScript",
+      "description": "Remove large, [duplicate JavaScript modules](https://developer.chrome.com/docs/performance/insights/duplicated-javascript) from bundles to reduce unnecessary bytes consumed by network activity.",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "source",
+            "valueType": "code",
+            "subItemsHeading": {
+              "key": "url",
+              "valueType": "url"
+            },
+            "label": "Source"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "subItemsHeading": {
+              "key": "sourceTransferBytes"
+            },
+            "granularity": 10,
+            "label": "Duplicated bytes"
+          }
+        ],
+        "items": [],
+        "debugData": {
+          "type": "debugdata",
+          "wastedBytes": 0
+        }
+      },
+      "guidanceLevel": 2
+    },
+    "font-display-insight": {
+      "id": "font-display-insight",
+      "title": "Font display",
+      "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitigate layout shifts with [font metric overrides](https://developer.chrome.com/blog/font-fallbacks).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "INP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "wastedMs",
+            "valueType": "ms",
+            "label": "Est Savings"
+          }
+        ],
+        "items": [],
+        "skipSumming": [
+          "wastedMs"
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "forced-reflow-insight": {
+      "id": "forced-reflow-insight",
+      "title": "Forced reflow",
+      "description": "A forced reflow occurs when JavaScript queries geometric properties (such as offsetWidth) after styles have been invalidated by a change to the DOM state. This can result in poor performance. Learn more about [forced reflows](https://developer.chrome.com/docs/performance/insights/forced-reflow) and possible mitigations.",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "details": {
+        "type": "list",
+        "items": [
+          {
+            "type": "table",
+            "headings": [
+              {
+                "key": "source",
+                "valueType": "source-location",
+                "label": "Source"
+              },
+              {
+                "key": "reflowTime",
+                "valueType": "ms",
+                "granularity": 1,
+                "label": "Total reflow time"
+              }
+            ],
+            "items": []
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "image-delivery-insight": {
+      "id": "image-delivery-insight",
+      "title": "Improve image delivery",
+      "description": "Reducing the download time of images can improve the perceived load time of the page and LCP. [Learn more about optimizing image size](https://developer.chrome.com/docs/performance/insights/image-delivery)",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "label": ""
+          },
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL",
+            "subItemsHeading": {
+              "key": "reason",
+              "valueType": "text"
+            }
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "label": "Resource Size"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "label": "Est Savings",
+            "subItemsHeading": {
+              "key": "wastedBytes",
+              "valueType": "bytes"
+            }
+          }
+        ],
+        "items": [],
+        "debugData": {
+          "type": "debugdata",
+          "wastedBytes": 0
+        }
+      },
+      "guidanceLevel": 3
+    },
+    "inp-breakdown-insight": {
+      "id": "inp-breakdown-insight",
+      "title": "INP breakdown",
+      "description": "Start investigating [how to improve INP](https://developer.chrome.com/docs/performance/insights/inp-breakdown) by looking at the longest subpart.",
+      "score": null,
+      "scoreDisplayMode": "notApplicable",
+      "guidanceLevel": 3
+    },
+    "lcp-breakdown-insight": {
+      "id": "lcp-breakdown-insight",
+      "title": "LCP breakdown",
+      "description": "Each [subpart has specific improvement strategies](https://developer.chrome.com/docs/performance/insights/lcp-breakdown). Ideally, most of the LCP time should be spent on loading the resources, not within delays.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "metricSavings": {
+        "LCP": 0
+      },
+      "details": {
+        "type": "list",
+        "items": [
+          {
+            "type": "table",
+            "headings": [
+              {
+                "key": "label",
+                "valueType": "text",
+                "label": "Subpart"
+              },
+              {
+                "key": "duration",
+                "valueType": "ms",
+                "label": "Duration"
+              }
+            ],
+            "items": [
+              {
+                "subpart": "timeToFirstByte",
+                "label": "Time to first byte",
+                "duration": 293.014
+              },
+              {
+                "subpart": "elementRenderDelay",
+                "label": "Element render delay",
+                "duration": 646.681
+              }
+            ]
+          },
+          {
+            "type": "node",
+            "lhId": "page-0-DIV",
+            "path": "1,HTML,1,BODY,1,MAIN,0,DIV,0,DIV,0,DIV",
+            "selector": "main.w-full > div.relative > div > div.absolute",
+            "boundingRect": {
+              "top": 12,
+              "bottom": 40,
+              "left": 12,
+              "right": 81,
+              "width": 69,
+              "height": 28
+            },
+            "snippet": "<div class=\"absolute top-3 left-3 bg-primary text-primary-foreground text-sm font-semi…\">",
+            "nodeLabel": "Level 1"
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "lcp-discovery-insight": {
+      "id": "lcp-discovery-insight",
+      "title": "LCP request discovery",
+      "description": "[Optimize LCP](https://developer.chrome.com/docs/performance/insights/lcp-discovery) by making the LCP image discoverable from the HTML immediately, and avoiding lazy-loading",
+      "score": null,
+      "scoreDisplayMode": "notApplicable",
+      "guidanceLevel": 3
+    },
+    "legacy-javascript-insight": {
+      "id": "legacy-javascript-insight",
+      "title": "Legacy JavaScript",
+      "description": "Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren't necessary for modern browsers. Consider modifying your JavaScript build process to not transpile [Baseline](https://web.dev/articles/baseline-and-polyfills) features, unless you know you must support older browsers. [Learn why most sites can deploy ES6+ code without transpiling](https://developer.chrome.com/docs/performance/insights/legacy-javascript)",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "displayValue": "Est savings of 14 KiB",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 150
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "subItemsHeading": {
+              "key": "location",
+              "valueType": "source-location"
+            },
+            "label": "URL"
+          },
+          {
+            "key": null,
+            "valueType": "code",
+            "subItemsHeading": {
+              "key": "signal"
+            },
+            "label": ""
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "label": "Wasted bytes"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+            "wastedBytes": 13953,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "signal": "Array.prototype.at",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 6451
+                  }
+                },
+                {
+                  "signal": "Array.prototype.flat",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 5839
+                  }
+                },
+                {
+                  "signal": "Array.prototype.flatMap",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 5952
+                  }
+                },
+                {
+                  "signal": "Object.fromEntries",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 6328
+                  }
+                },
+                {
+                  "signal": "Object.hasOwn",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 6586
+                  }
+                },
+                {
+                  "signal": "String.prototype.trimEnd",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 5581
+                  }
+                },
+                {
+                  "signal": "String.prototype.trimStart",
+                  "location": {
+                    "type": "source-location",
+                    "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0v-nnodu33ws~.js",
+                    "urlProvider": "network",
+                    "line": 0,
+                    "column": 5496
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "wastedBytes": 13953
+        }
+      },
+      "guidanceLevel": 2
+    },
+    "modern-http-insight": {
+      "id": "modern-http-insight",
+      "title": "Modern HTTP",
+      "description": "HTTP/2 and HTTP/3 offer many benefits over HTTP/1.1, such as multiplexing. [Learn more about using modern HTTP](https://developer.chrome.com/docs/performance/insights/modern-http).",
+      "score": 1,
+      "scoreDisplayMode": "metricSavings",
+      "metricSavings": {
+        "FCP": 0,
+        "LCP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "protocol",
+            "valueType": "text",
+            "label": "Protocol"
+          }
+        ],
+        "items": []
+      },
+      "guidanceLevel": 3
+    },
+    "network-dependency-tree-insight": {
+      "id": "network-dependency-tree-insight",
+      "title": "Network dependency tree",
+      "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferring the download of unnecessary resources to improve page load.",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "metricSavings": {
+        "LCP": 0
+      },
+      "details": {
+        "type": "list",
+        "items": [
+          {
+            "type": "list-section",
+            "value": {
+              "type": "network-tree",
+              "chains": {
+                "1407A568EB5BE95D181893FC9AB07560": {
+                  "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/habitat",
+                  "navStartToEndTime": 494,
+                  "transferSize": 3722,
+                  "isLongest": true,
+                  "children": {}
+                }
+              },
+              "longestChain": {
+                "duration": 494
+              }
+            }
+          },
+          {
+            "type": "list-section",
+            "title": "Preconnected origins",
+            "description": "[preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.",
+            "value": {
+              "type": "text",
+              "value": "no origins were preconnected"
+            }
+          },
+          {
+            "type": "list-section",
+            "title": "Preconnect candidates",
+            "description": "Add [preconnect](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/) hints to your most important origins, but try to use no more than 4.",
+            "value": {
+              "type": "text",
+              "value": "No additional origins are good candidates for preconnecting"
+            }
+          }
+        ]
+      },
+      "guidanceLevel": 1
+    },
+    "render-blocking-insight": {
+      "id": "render-blocking-insight",
+      "title": "Render-blocking requests",
+      "description": "Requests are blocking the page's initial render, which may delay LCP. [Deferring or inlining](https://developer.chrome.com/docs/performance/insights/render-blocking) can move these network requests out of the critical path.",
+      "score": 0,
+      "scoreDisplayMode": "metricSavings",
+      "displayValue": "Est savings of 90 ms",
+      "metricSavings": {
+        "FCP": 100,
+        "LCP": 100
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL"
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "label": "Transfer Size"
+          },
+          {
+            "key": "wastedMs",
+            "valueType": "timespanMs",
+            "label": "Duration"
+          }
+        ],
+        "items": [
+          {
+            "url": "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app/_next/static/chunks/0svz_dd_i-399.css",
+            "totalBytes": 11322,
+            "wastedMs": 150
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    },
+    "third-parties-insight": {
+      "id": "third-parties-insight",
+      "title": "3rd parties",
+      "description": "3rd party code can significantly impact load performance. [Reduce and defer loading of 3rd party code](https://developer.chrome.com/docs/performance/insights/third-parties) to prioritize your page's content.",
+      "score": 1,
+      "scoreDisplayMode": "informative",
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "entity",
+            "valueType": "text",
+            "label": "3rd party",
+            "subItemsHeading": {
+              "key": "url",
+              "valueType": "url"
+            }
+          },
+          {
+            "key": "transferSize",
+            "granularity": 1,
+            "valueType": "bytes",
+            "label": "Transfer size",
+            "subItemsHeading": {
+              "key": "transferSize"
+            }
+          },
+          {
+            "key": "mainThreadTime",
+            "granularity": 1,
+            "valueType": "ms",
+            "label": "Main thread time",
+            "subItemsHeading": {
+              "key": "mainThreadTime"
+            }
+          }
+        ],
+        "items": [
+          {
+            "entity": "vercel.live",
+            "mainThreadTime": 0.1770000159740448,
+            "transferSize": 157,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "url": "https://vercel.live/_next-live/feedback/feedback.js",
+                  "mainThreadTime": 0.1770000159740448,
+                  "transferSize": 157
+                }
+              ]
+            }
+          }
+        ],
+        "isEntityGrouped": true
+      },
+      "guidanceLevel": 3
+    },
+    "viewport-insight": {
+      "id": "viewport-insight",
+      "title": "Optimize viewport for mobile",
+      "description": "Tap interactions may be [delayed by up to 300 ms](https://developer.chrome.com/docs/performance/insights/viewport) if the viewport is not optimized for mobile.",
+      "score": 1,
+      "scoreDisplayMode": "numeric",
+      "metricSavings": {
+        "INP": 0
+      },
+      "details": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "label": ""
+          }
+        ],
+        "items": [
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-1-META",
+              "path": "1,HTML,0,HEAD,1,META",
+              "selector": "head > meta",
+              "boundingRect": {
+                "top": 0,
+                "bottom": 0,
+                "left": 0,
+                "right": 0,
+                "width": 0,
+                "height": 0
+              },
+              "snippet": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+              "nodeLabel": "head > meta"
+            }
+          }
+        ]
+      },
+      "guidanceLevel": 3
+    }
+  },
+  "configSettings": {
+    "output": [
+      "json"
+    ],
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "cli",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": null,
+    "additionalTraceCategories": null,
+    "extraHeaders": {
+      "Cookie": "__Secure-better-auth.session_token=o6gJ72Mo3tkq3fYP8ZwZBOWjp4XsaGzM.hDHRmH9rU%2FXjscCWnMZxHaT7TAtd2qwUKVx9JN82Cgk%3D",
+      "x-vercel-protection-bypass": "qqhmUbte9h5mT7gLuyA241QkHeUETV3v"
+    },
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance"
+    ],
+    "skipAudits": null
+  },
+  "categories": {
+    "performance": {
+      "title": "Performance",
+      "supportedModes": [
+        "navigation",
+        "timespan",
+        "snapshot"
+      ],
+      "auditRefs": [
+        {
+          "id": "first-contentful-paint",
+          "weight": 10,
+          "group": "metrics",
+          "acronym": "FCP"
+        },
+        {
+          "id": "largest-contentful-paint",
+          "weight": 25,
+          "group": "metrics",
+          "acronym": "LCP"
+        },
+        {
+          "id": "total-blocking-time",
+          "weight": 30,
+          "group": "metrics",
+          "acronym": "TBT"
+        },
+        {
+          "id": "cumulative-layout-shift",
+          "weight": 25,
+          "group": "metrics",
+          "acronym": "CLS"
+        },
+        {
+          "id": "speed-index",
+          "weight": 10,
+          "group": "metrics",
+          "acronym": "SI"
+        },
+        {
+          "id": "cache-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "document-latency-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "dom-size-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "duplicated-javascript-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "font-display-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "forced-reflow-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "image-delivery-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "inp-breakdown-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "lcp-breakdown-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "modern-http-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "render-blocking-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "third-parties-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "viewport-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "interactive",
+          "weight": 0,
+          "group": "hidden",
+          "acronym": "TTI"
+        },
+        {
+          "id": "max-potential-fid",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "unminified-css",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unminified-javascript",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unused-css-rules",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unused-javascript",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "total-byte-weight",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "user-timings",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "bootup-time",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "long-tasks",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "non-composited-animations",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unsized-images",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "bf-cache",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "network-requests",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "network-rtt",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "network-server-latency",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "main-thread-tasks",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "diagnostics",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "metrics",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "screenshot-thumbnails",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "final-screenshot",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "script-treemap-data",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "resource-summary",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "redirects",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "server-response-time",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "layout-shifts",
+          "weight": 0,
+          "group": "hidden"
+        }
+      ],
+      "id": "performance",
+      "score": 0.78
+    }
+  },
+  "categoryGroups": {
+    "metrics": {
+      "title": "Metrics"
+    },
+    "insights": {
+      "title": "Insights",
+      "description": "These insights are also available in the Chrome DevTools Performance Panel - [record a trace](https://developer.chrome.com/docs/devtools/performance/reference) to view more detailed information."
+    },
+    "diagnostics": {
+      "title": "Diagnostics",
+      "description": "More information about the performance of your application. These numbers don't [directly affect](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) the Performance score."
+    },
+    "a11y-best-practices": {
+      "title": "Best practices",
+      "description": "These items highlight common accessibility best practices."
+    },
+    "a11y-color-contrast": {
+      "title": "Contrast",
+      "description": "These are opportunities to improve the legibility of your content."
+    },
+    "a11y-names-labels": {
+      "title": "Names and labels",
+      "description": "These are opportunities to improve the semantics of the controls in your application. This may enhance the experience for users of assistive technology, like a screen reader."
+    },
+    "a11y-navigation": {
+      "title": "Navigation",
+      "description": "These are opportunities to improve keyboard navigation in your application."
+    },
+    "a11y-aria": {
+      "title": "ARIA",
+      "description": "These are opportunities to improve the usage of ARIA in your application which may enhance the experience for users of assistive technology, like a screen reader."
+    },
+    "a11y-language": {
+      "title": "Internationalization and localization",
+      "description": "These are opportunities to improve the interpretation of your content by users in different locales."
+    },
+    "a11y-audio-video": {
+      "title": "Audio and video",
+      "description": "These are opportunities to provide alternative content for audio and video. This may improve the experience for users with hearing or vision impairments."
+    },
+    "a11y-tables-lists": {
+      "title": "Tables and lists",
+      "description": "These are opportunities to improve the experience of reading tabular or list data using assistive technology, like a screen reader."
+    },
+    "seo-mobile": {
+      "title": "Mobile Friendly",
+      "description": "Make sure your pages are mobile friendly so users don’t have to pinch or zoom in order to read the content pages. [Learn how to make pages mobile-friendly](https://developers.google.com/search/mobile-sites/)."
+    },
+    "seo-content": {
+      "title": "Content Best Practices",
+      "description": "Format your HTML in a way that enables crawlers to better understand your app’s content."
+    },
+    "seo-crawl": {
+      "title": "Crawling and Indexing",
+      "description": "To appear in search results, crawlers need access to your app."
+    },
+    "best-practices-trust-safety": {
+      "title": "Trust and Safety"
+    },
+    "best-practices-ux": {
+      "title": "User Experience"
+    },
+    "best-practices-browser-compat": {
+      "title": "Browser Compatibility"
+    },
+    "best-practices-general": {
+      "title": "General"
+    },
+    "webmcp": {
+      "title": "WebMCP",
+      "description": "Audits validating WebMCP integration."
+    },
+    "agent-accessibility": {
+      "title": "Agent Accessibility",
+      "description": "These audits highlight best practices for improving the accessibility of the website for AI agents."
+    },
+    "hidden": {
+      "title": ""
+    }
+  },
+  "stackPacks": [],
+  "entities": [
+    {
+      "name": "vercel.app",
+      "origins": [
+        "https://leocards-htrrnhex1-jfwashley-3181s-projects.vercel.app"
+      ],
+      "isFirstParty": true,
+      "isUnrecognized": true
+    },
+    {
+      "name": "vercel.live",
+      "origins": [
+        "https://vercel.live"
+      ],
+      "isUnrecognized": true
+    }
+  ],
+  "fullPageScreenshot": {
+    "screenshot": {
+      "data": "data:image/webp;base64,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",
+      "width": 412,
+      "height": 823
+    },
+    "nodes": {
+      "page-0-DIV": {
+        "id": "",
+        "top": 12,
+        "bottom": 40,
+        "left": 12,
+        "right": 81,
+        "width": 69,
+        "height": 28
+      },
+      "page-1-META": {
+        "id": "",
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "width": 0,
+        "height": 0
+      },
+      "page-2-BODY": {
+        "id": "",
+        "top": 0,
+        "bottom": 823,
+        "left": 0,
+        "right": 412,
+        "width": 412,
+        "height": 823
+      },
+      "page-3-DIV": {
+        "id": "",
+        "top": 0,
+        "bottom": 232,
+        "left": 0,
+        "right": 412,
+        "width": 412,
+        "height": 232
+      }
+    }
+  },
+  "timing": {
+    "entries": [
+      {
+        "startTime": 2652.97,
+        "name": "lh:config",
+        "duration": 781.32,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 2654.27,
+        "name": "lh:config:resolveArtifactsToDefns",
+        "duration": 70.5,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 3434.43,
+        "name": "lh:runner:gather",
+        "duration": 8023.81,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 3526.82,
+        "name": "lh:driver:connect",
+        "duration": 5.82,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 3532.9,
+        "name": "lh:driver:navigate",
+        "duration": 9.54,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 3543.54,
+        "name": "lh:gather:getBenchmarkIndex",
+        "duration": 1007.91,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4551.59,
+        "name": "lh:gather:getVersion",
+        "duration": 0.94,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4552.62,
+        "name": "lh:gather:getDevicePixelRatio",
+        "duration": 1.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4554.09,
+        "name": "lh:prepare:navigationMode",
+        "duration": 90.29,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4554.85,
+        "name": "lh:gather:getVersion",
+        "duration": 0.53,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4572.37,
+        "name": "lh:storage:clearDataForOrigin",
+        "duration": 27,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4599.67,
+        "name": "lh:storage:clearBrowserCaches",
+        "duration": 38.46,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4640.28,
+        "name": "lh:gather:prepareThrottlingAndNetwork",
+        "duration": 4.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 4739.49,
+        "name": "lh:driver:navigate",
+        "duration": 3832.38,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9060.59,
+        "name": "lh:computed:NetworkRecords",
+        "duration": 0.56,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9061.38,
+        "name": "lh:gather:getArtifact:DevtoolsLog",
+        "duration": 0.01,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9061.4,
+        "name": "lh:gather:getArtifact:Trace",
+        "duration": 0.01,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9061.41,
+        "name": "lh:gather:getArtifact:CSSUsage",
+        "duration": 28.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9090.2,
+        "name": "lh:gather:getArtifact:ImageElements",
+        "duration": 6.92,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9097.14,
+        "name": "lh:gather:getArtifact:JsUsage",
+        "duration": 0.08,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9097.29,
+        "name": "lh:gather:getArtifact:NetworkUserAgent",
+        "duration": 0.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9097.32,
+        "name": "lh:gather:getArtifact:Scripts",
+        "duration": 0.06,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9097.39,
+        "name": "lh:gather:getArtifact:SourceMaps",
+        "duration": 0.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9097.42,
+        "name": "lh:gather:getArtifact:Stacks",
+        "duration": 9.15,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9097.46,
+        "name": "lh:gather:collectStacks",
+        "duration": 9.09,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9106.59,
+        "name": "lh:gather:getArtifact:Stylesheets",
+        "duration": 6.82,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9113.45,
+        "name": "lh:gather:getArtifact:TraceElements",
+        "duration": 831.04,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9113.63,
+        "name": "lh:computed:TraceEngineResult",
+        "duration": 717.85,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9113.7,
+        "name": "lh:computed:ProcessedTrace",
+        "duration": 28.07,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9142.88,
+        "name": "lh:computed:TraceEngineResult:total",
+        "duration": 683.4,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9142.9,
+        "name": "lh:computed:TraceEngineResult:parse",
+        "duration": 546.97,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9143.42,
+        "name": "lh:computed:TraceEngineResult:parse:handleEvent",
+        "duration": 85.26,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9228.72,
+        "name": "lh:computed:TraceEngineResult:parse:Meta:finalize",
+        "duration": 4.21,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9233.12,
+        "name": "lh:computed:TraceEngineResult:parse:AnimationFrames:finalize",
+        "duration": 14.13,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9247.3,
+        "name": "lh:computed:TraceEngineResult:parse:Animations:finalize",
+        "duration": 16.72,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9264.08,
+        "name": "lh:computed:TraceEngineResult:parse:Samples:finalize",
+        "duration": 15.8,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9280.01,
+        "name": "lh:computed:TraceEngineResult:parse:AuctionWorklets:finalize",
+        "duration": 15.93,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9296.11,
+        "name": "lh:computed:TraceEngineResult:parse:NetworkRequests:finalize",
+        "duration": 25.95,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9322.27,
+        "name": "lh:computed:TraceEngineResult:parse:Renderer:finalize",
+        "duration": 38.58,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9360.94,
+        "name": "lh:computed:TraceEngineResult:parse:Flows:finalize",
+        "duration": 23.61,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9384.6,
+        "name": "lh:computed:TraceEngineResult:parse:AsyncJSCalls:finalize",
+        "duration": 1.94,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9386.73,
+        "name": "lh:computed:TraceEngineResult:parse:DOMStats:finalize",
+        "duration": 1.78,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9388.65,
+        "name": "lh:computed:TraceEngineResult:parse:UserTimings:finalize",
+        "duration": 15.76,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9404.55,
+        "name": "lh:computed:TraceEngineResult:parse:ExtensionTraceData:finalize",
+        "duration": 1.93,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9406.58,
+        "name": "lh:computed:TraceEngineResult:parse:LayerTree:finalize",
+        "duration": 1.47,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9408.13,
+        "name": "lh:computed:TraceEngineResult:parse:Frames:finalize",
+        "duration": 32.8,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9441.06,
+        "name": "lh:computed:TraceEngineResult:parse:GPU:finalize",
+        "duration": 11.39,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9452.63,
+        "name": "lh:computed:TraceEngineResult:parse:ImagePainting:finalize",
+        "duration": 14.58,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9467.42,
+        "name": "lh:computed:TraceEngineResult:parse:Initiators:finalize",
+        "duration": 15.71,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9483.2,
+        "name": "lh:computed:TraceEngineResult:parse:Invalidations:finalize",
+        "duration": 15.17,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9498.45,
+        "name": "lh:computed:TraceEngineResult:parse:PageLoadMetrics:finalize",
+        "duration": 17.53,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9516.05,
+        "name": "lh:computed:TraceEngineResult:parse:LargestImagePaint:finalize",
+        "duration": 14.7,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9530.81,
+        "name": "lh:computed:TraceEngineResult:parse:LargestTextPaint:finalize",
+        "duration": 15.73,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9546.63,
+        "name": "lh:computed:TraceEngineResult:parse:Screenshots:finalize",
+        "duration": 44.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9590.79,
+        "name": "lh:computed:TraceEngineResult:parse:LayoutShifts:finalize",
+        "duration": 5.63,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9596.54,
+        "name": "lh:computed:TraceEngineResult:parse:Memory:finalize",
+        "duration": 0.26,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9596.86,
+        "name": "lh:computed:TraceEngineResult:parse:PageFrames:finalize",
+        "duration": 13.52,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9610.63,
+        "name": "lh:computed:TraceEngineResult:parse:Scripts:finalize",
+        "duration": 17.78,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9628.6,
+        "name": "lh:computed:TraceEngineResult:parse:SelectorStats:finalize",
+        "duration": 13.22,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9641.97,
+        "name": "lh:computed:TraceEngineResult:parse:UserInteractions:finalize",
+        "duration": 16.06,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9658.07,
+        "name": "lh:computed:TraceEngineResult:parse:Workers:finalize",
+        "duration": 15.44,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9673.57,
+        "name": "lh:computed:TraceEngineResult:parse:Warnings:finalize",
+        "duration": 15.46,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9689.07,
+        "name": "lh:computed:TraceEngineResult:parse:handler.data()",
+        "duration": 0.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9689.88,
+        "name": "lh:computed:TraceEngineResult:insights",
+        "duration": 136.39,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9690.25,
+        "name": "lh:computed:TraceEngineResult:insights:CLSCulprits",
+        "duration": 0.64,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9690.9,
+        "name": "lh:computed:TraceEngineResult:insights:Cache",
+        "duration": 0.25,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9691.16,
+        "name": "lh:computed:TraceEngineResult:insights:CharacterSet",
+        "duration": 0.14,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9691.31,
+        "name": "lh:computed:TraceEngineResult:insights:DOMSize",
+        "duration": 0.45,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9691.79,
+        "name": "lh:computed:TraceEngineResult:insights:DocumentLatency",
+        "duration": 0.19,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9692,
+        "name": "lh:computed:TraceEngineResult:insights:DuplicatedJavaScript",
+        "duration": 0.61,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9692.62,
+        "name": "lh:computed:TraceEngineResult:insights:FontDisplay",
+        "duration": 0.2,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9692.85,
+        "name": "lh:computed:TraceEngineResult:insights:ForcedReflow",
+        "duration": 0.31,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9693.17,
+        "name": "lh:computed:TraceEngineResult:insights:INPBreakdown",
+        "duration": 0.16,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9693.34,
+        "name": "lh:computed:TraceEngineResult:insights:ImageDelivery",
+        "duration": 0.29,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9693.64,
+        "name": "lh:computed:TraceEngineResult:insights:LCPBreakdown",
+        "duration": 0.17,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9693.82,
+        "name": "lh:computed:TraceEngineResult:insights:LCPDiscovery",
+        "duration": 0.19,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9694.02,
+        "name": "lh:computed:TraceEngineResult:insights:LegacyJavaScript",
+        "duration": 0.29,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9694.33,
+        "name": "lh:computed:TraceEngineResult:insights:ModernHTTP",
+        "duration": 0.17,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9694.5,
+        "name": "lh:computed:TraceEngineResult:insights:NetworkDependencyTree",
+        "duration": 0.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9694.56,
+        "name": "lh:computed:TraceEngineResult:insights:RenderBlocking",
+        "duration": 0.08,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9694.65,
+        "name": "lh:computed:TraceEngineResult:insights:SlowCSSSelector",
+        "duration": 0.11,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9694.75,
+        "name": "lh:computed:TraceEngineResult:insights:ThirdParties",
+        "duration": 1.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9695.83,
+        "name": "lh:computed:TraceEngineResult:insights:Viewport",
+        "duration": 0.19,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9696.1,
+        "name": "lh:computed:TraceEngineResult:insights:createLanternContext",
+        "duration": 29.59,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9725.76,
+        "name": "lh:computed:TraceEngineResult:insights:CLSCulprits",
+        "duration": 0.26,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9726.03,
+        "name": "lh:computed:TraceEngineResult:insights:Cache",
+        "duration": 0.29,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9726.32,
+        "name": "lh:computed:TraceEngineResult:insights:CharacterSet",
+        "duration": 0.14,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9726.47,
+        "name": "lh:computed:TraceEngineResult:insights:DOMSize",
+        "duration": 0.06,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9726.54,
+        "name": "lh:computed:TraceEngineResult:insights:DocumentLatency",
+        "duration": 0.22,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9726.76,
+        "name": "lh:computed:TraceEngineResult:insights:DuplicatedJavaScript",
+        "duration": 0.23,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9726.99,
+        "name": "lh:computed:TraceEngineResult:insights:FontDisplay",
+        "duration": 0.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9727.02,
+        "name": "lh:computed:TraceEngineResult:insights:ForcedReflow",
+        "duration": 0.01,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9727.04,
+        "name": "lh:computed:TraceEngineResult:insights:INPBreakdown",
+        "duration": 0.01,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9727.05,
+        "name": "lh:computed:TraceEngineResult:insights:ImageDelivery",
+        "duration": 0.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9727.08,
+        "name": "lh:computed:TraceEngineResult:insights:LCPBreakdown",
+        "duration": 0.18,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9727.26,
+        "name": "lh:computed:TraceEngineResult:insights:LCPDiscovery",
+        "duration": 0.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9727.29,
+        "name": "lh:computed:TraceEngineResult:insights:LegacyJavaScript",
+        "duration": 88.08,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9815.38,
+        "name": "lh:computed:TraceEngineResult:insights:ModernHTTP",
+        "duration": 0.96,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9816.35,
+        "name": "lh:computed:TraceEngineResult:insights:NetworkDependencyTree",
+        "duration": 1.59,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9817.97,
+        "name": "lh:computed:TraceEngineResult:insights:RenderBlocking",
+        "duration": 1.32,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9819.32,
+        "name": "lh:computed:TraceEngineResult:insights:SlowCSSSelector",
+        "duration": 0.06,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9819.4,
+        "name": "lh:computed:TraceEngineResult:insights:ThirdParties",
+        "duration": 6.11,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9825.52,
+        "name": "lh:computed:TraceEngineResult:insights:Viewport",
+        "duration": 0.11,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9835.08,
+        "name": "lh:computed:CumulativeLayoutShift",
+        "duration": 76.19,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 9944.53,
+        "name": "lh:gather:getArtifact:FullPageScreenshot",
+        "duration": 1195.73,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11138.1,
+        "name": "lh:gather:getVersion",
+        "duration": 0.6,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11140.28,
+        "name": "lh:gather:getArtifact:BFCacheFailures",
+        "duration": 277.86,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11459.29,
+        "name": "lh:runner:audit",
+        "duration": 208.72,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11459.53,
+        "name": "lh:runner:auditing",
+        "duration": 208.24,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11461.6,
+        "name": "lh:audit:first-contentful-paint",
+        "duration": 30.58,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11462.47,
+        "name": "lh:computed:FirstContentfulPaint",
+        "duration": 20.38,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11462.68,
+        "name": "lh:computed:ProcessedNavigation",
+        "duration": 2.81,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11465.84,
+        "name": "lh:computed:LanternFirstContentfulPaint",
+        "duration": 16.97,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11466.11,
+        "name": "lh:computed:PageDependencyGraph",
+        "duration": 13.39,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11479.64,
+        "name": "lh:computed:LoadSimulator",
+        "duration": 1.17,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11479.87,
+        "name": "lh:computed:NetworkAnalysis",
+        "duration": 0.82,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11492.78,
+        "name": "lh:audit:largest-contentful-paint",
+        "duration": 5.09,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11493.55,
+        "name": "lh:computed:LargestContentfulPaint",
+        "duration": 2.09,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11493.68,
+        "name": "lh:computed:LanternLargestContentfulPaint",
+        "duration": 1.94,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11498.59,
+        "name": "lh:audit:speed-index",
+        "duration": 59.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11499.53,
+        "name": "lh:computed:SpeedIndex",
+        "duration": 57.61,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11499.69,
+        "name": "lh:computed:LanternSpeedIndex",
+        "duration": 57.43,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11499.76,
+        "name": "lh:computed:Speedline",
+        "duration": 56.27,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11557.66,
+        "name": "lh:audit:screenshot-thumbnails",
+        "duration": 0.28,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11557.96,
+        "name": "lh:audit:final-screenshot",
+        "duration": 1.09,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11558.04,
+        "name": "lh:computed:Screenshots",
+        "duration": 0.98,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11559.26,
+        "name": "lh:audit:total-blocking-time",
+        "duration": 1.88,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11559.55,
+        "name": "lh:computed:TotalBlockingTime",
+        "duration": 1.12,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11559.59,
+        "name": "lh:computed:LanternTotalBlockingTime",
+        "duration": 1.07,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11559.63,
+        "name": "lh:computed:LanternInteractive",
+        "duration": 0.59,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11561.28,
+        "name": "lh:audit:max-potential-fid",
+        "duration": 1.76,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11561.46,
+        "name": "lh:computed:MaxPotentialFID",
+        "duration": 0.81,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11561.5,
+        "name": "lh:computed:LanternMaxPotentialFID",
+        "duration": 0.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11563.15,
+        "name": "lh:audit:cumulative-layout-shift",
+        "duration": 0.41,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11563.7,
+        "name": "lh:audit:server-response-time",
+        "duration": 0.74,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11563.87,
+        "name": "lh:computed:NavigationInsights",
+        "duration": 0.07,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11564.57,
+        "name": "lh:audit:interactive",
+        "duration": 0.56,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11564.72,
+        "name": "lh:computed:Interactive",
+        "duration": 0.04,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11565.24,
+        "name": "lh:audit:user-timings",
+        "duration": 1.53,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11565.39,
+        "name": "lh:computed:UserTimings",
+        "duration": 1,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11566.86,
+        "name": "lh:audit:redirects",
+        "duration": 1.47,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11568.46,
+        "name": "lh:audit:mainthread-work-breakdown",
+        "duration": 8.35,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11568.71,
+        "name": "lh:computed:MainThreadTasks",
+        "duration": 6.67,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11577.07,
+        "name": "lh:audit:bootup-time",
+        "duration": 7.81,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11579.43,
+        "name": "lh:computed:TBTImpactTasks",
+        "duration": 3.53,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11584.91,
+        "name": "lh:audit:diagnostics",
+        "duration": 0.65,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11585.09,
+        "name": "lh:computed:MainResource",
+        "duration": 0.06,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11585.58,
+        "name": "lh:audit:network-requests",
+        "duration": 1.26,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11585.7,
+        "name": "lh:computed:EntityClassification",
+        "duration": 0.85,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11586.97,
+        "name": "lh:audit:network-rtt",
+        "duration": 0.54,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11587.62,
+        "name": "lh:audit:network-server-latency",
+        "duration": 0.89,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11588.52,
+        "name": "lh:audit:main-thread-tasks",
+        "duration": 0.21,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11588.75,
+        "name": "lh:audit:metrics",
+        "duration": 1.85,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11588.85,
+        "name": "lh:computed:TimingSummary",
+        "duration": 1.67,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11589.04,
+        "name": "lh:computed:FirstContentfulPaintAllFrames",
+        "duration": 0.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11589.1,
+        "name": "lh:computed:LargestContentfulPaintAllFrames",
+        "duration": 0.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11589.17,
+        "name": "lh:computed:LCPBreakdown",
+        "duration": 0.94,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11589.25,
+        "name": "lh:computed:TimeToFirstByte",
+        "duration": 0.12,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11589.38,
+        "name": "lh:computed:LCPImageRecord",
+        "duration": 0.73,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11590.61,
+        "name": "lh:audit:resource-summary",
+        "duration": 0.59,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11590.71,
+        "name": "lh:computed:ResourceSummary",
+        "duration": 0.22,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11591.29,
+        "name": "lh:audit:layout-shifts",
+        "duration": 0.52,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11591.88,
+        "name": "lh:audit:long-tasks",
+        "duration": 2.74,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11594.76,
+        "name": "lh:audit:non-composited-animations",
+        "duration": 0.55,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11595.44,
+        "name": "lh:audit:unsized-images",
+        "duration": 0.46,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11595.91,
+        "name": "lh:audit:script-treemap-data",
+        "duration": 18.33,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11596.09,
+        "name": "lh:computed:JSBundles",
+        "duration": 0.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11596.15,
+        "name": "lh:computed:ModuleDuplication",
+        "duration": 0.12,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11596.29,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 3.5,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11599.88,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.16,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.05,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.1,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.16,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.23,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.3,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.37,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.03,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.44,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.12,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.65,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.11,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.83,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.08,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11600.97,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.09,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11601.1,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.21,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11601.35,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.19,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11601.59,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.24,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11608.91,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.97,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11610.02,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 1.28,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11611.35,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 0.79,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11612.16,
+        "name": "lh:computed:UnusedJavascriptSummary",
+        "duration": 2,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11614.49,
+        "name": "lh:audit:total-byte-weight",
+        "duration": 0.94,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11615.54,
+        "name": "lh:audit:unminified-css",
+        "duration": 3.34,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11618.99,
+        "name": "lh:audit:unminified-javascript",
+        "duration": 28.88,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11648.01,
+        "name": "lh:audit:unused-css-rules",
+        "duration": 1.41,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11648.26,
+        "name": "lh:computed:UnusedCSS",
+        "duration": 0.26,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11649.54,
+        "name": "lh:audit:unused-javascript",
+        "duration": 1.85,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11651.56,
+        "name": "lh:audit:bf-cache",
+        "duration": 0.6,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11652.29,
+        "name": "lh:audit:cache-insight",
+        "duration": 0.74,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11653.17,
+        "name": "lh:audit:cls-culprits-insight",
+        "duration": 0.64,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11654.31,
+        "name": "lh:audit:document-latency-insight",
+        "duration": 0.6,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11655.08,
+        "name": "lh:audit:dom-size-insight",
+        "duration": 0.74,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11655.98,
+        "name": "lh:audit:duplicated-javascript-insight",
+        "duration": 0.72,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11656.86,
+        "name": "lh:audit:font-display-insight",
+        "duration": 0.56,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11657.58,
+        "name": "lh:audit:forced-reflow-insight",
+        "duration": 0.58,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11658.31,
+        "name": "lh:audit:image-delivery-insight",
+        "duration": 0.45,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11658.86,
+        "name": "lh:audit:inp-breakdown-insight",
+        "duration": 0.36,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11659.32,
+        "name": "lh:audit:lcp-breakdown-insight",
+        "duration": 0.5,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11659.93,
+        "name": "lh:audit:lcp-discovery-insight",
+        "duration": 0.36,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11660.4,
+        "name": "lh:audit:legacy-javascript-insight",
+        "duration": 0.74,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11661.26,
+        "name": "lh:audit:modern-http-insight",
+        "duration": 0.4,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11661.77,
+        "name": "lh:audit:network-dependency-tree-insight",
+        "duration": 0.56,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11662.44,
+        "name": "lh:audit:render-blocking-insight",
+        "duration": 0.59,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11663.13,
+        "name": "lh:audit:third-parties-insight",
+        "duration": 4.14,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11667.38,
+        "name": "lh:audit:viewport-insight",
+        "duration": 0.39,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 11667.79,
+        "name": "lh:runner:generate",
+        "duration": 0.22,
+        "entryType": "measure"
+      }
+    ],
+    "total": 8232.53
+  },
+  "i18n": {
+    "rendererFormattedStrings": {
+      "calculatorLink": "See calculator.",
+      "collapseView": "Collapse view",
+      "crcInitialNavigation": "Initial Navigation",
+      "crcLongestDurationLabel": "Maximum critical path latency:",
+      "dropdownCopyJSON": "Copy JSON",
+      "dropdownDarkTheme": "Toggle Dark Theme",
+      "dropdownPrintExpanded": "Print Expanded",
+      "dropdownPrintSummary": "Print Summary",
+      "dropdownSaveGist": "Save as Gist",
+      "dropdownSaveHTML": "Save as HTML",
+      "dropdownSaveJSON": "Save as JSON",
+      "dropdownViewUnthrottledTrace": "View Unthrottled Trace",
+      "dropdownViewer": "Open in Viewer",
+      "errorLabel": "Error!",
+      "errorMissingAuditInfo": "Report error: no audit information",
+      "expandView": "Expand view",
+      "firstPartyChipLabel": "1st party",
+      "footerIssue": "File an issue",
+      "hide": "Hide",
+      "labDataTitle": "Lab Data",
+      "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
+      "manualAuditsGroupTitle": "Additional items to manually check",
+      "notApplicableAuditsGroupTitle": "Not applicable",
+      "openInANewTabTooltip": "Open in a new tab",
+      "opportunityResourceColumnLabel": "Opportunity",
+      "opportunitySavingsColumnLabel": "Estimated Savings",
+      "passedAuditsGroupTitle": "Passed audits",
+      "runtimeAnalysisWindow": "Initial page load",
+      "runtimeAnalysisWindowSnapshot": "Point-in-time snapshot",
+      "runtimeAnalysisWindowTimespan": "User interactions timespan",
+      "runtimeCustom": "Custom throttling",
+      "runtimeDesktopEmulation": "Emulated Desktop",
+      "runtimeMobileEmulation": "Emulated Moto G Power",
+      "runtimeNoEmulation": "No emulation",
+      "runtimeSettingsAxeVersion": "Axe version",
+      "runtimeSettingsBenchmark": "Unthrottled CPU/Memory Power",
+      "runtimeSettingsCPUThrottling": "CPU throttling",
+      "runtimeSettingsDevice": "Device",
+      "runtimeSettingsNetworkThrottling": "Network throttling",
+      "runtimeSettingsScreenEmulation": "Screen emulation",
+      "runtimeSettingsUANetwork": "User agent (network)",
+      "runtimeSingleLoad": "Single page session",
+      "runtimeSingleLoadTooltip": "This data is taken from a single page session, as opposed to field data summarizing many sessions.",
+      "runtimeSlow4g": "Slow 4G throttling",
+      "runtimeUnknown": "Unknown",
+      "show": "Show",
+      "showRelevantAudits": "Show audits relevant to:",
+      "snippetCollapseButtonLabel": "Collapse snippet",
+      "snippetExpandButtonLabel": "Expand snippet",
+      "thirdPartyResourcesLabel": "Show 3rd-party resources",
+      "throttlingProvided": "Provided by environment",
+      "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
+      "unattributable": "Unattributable",
+      "unscoredLabel": "Unscored",
+      "unscoredTitle": "This audit does not contribute to the overall category score.",
+      "varianceDisclaimer": "Values are estimated and may vary. The [performance score is calculated](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) directly from these metrics.",
+      "viewTraceLabel": "View Trace",
+      "viewTreemapLabel": "View Treemap",
+      "warningAuditsGroupTitle": "Passed audits but with warnings",
+      "warningHeader": "Warnings: "
+    },
+    "icuMessagePaths": {
+      "core/lib/i18n/i18n.js | firstContentfulPaintMetric": [
+        "audits[first-contentful-paint].title"
+      ],
+      "core/audits/metrics/first-contentful-paint.js | description": [
+        "audits[first-contentful-paint].description"
+      ],
+      "core/lib/i18n/i18n.js | seconds": [
+        {
+          "values": {
+            "timeInMs": 1038.5825
+          },
+          "path": "audits[first-contentful-paint].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 2988.5825
+          },
+          "path": "audits[largest-contentful-paint].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 2961.682431297362
+          },
+          "path": "audits[speed-index].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 4895.5825
+          },
+          "path": "audits.interactive.displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 4669.46399999997
+          },
+          "path": "audits[mainthread-work-breakdown].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 3706.388000000004
+          },
+          "path": "audits[bootup-time].displayValue"
+        }
+      ],
+      "core/lib/i18n/i18n.js | largestContentfulPaintMetric": [
+        "audits[largest-contentful-paint].title"
+      ],
+      "core/audits/metrics/largest-contentful-paint.js | description": [
+        "audits[largest-contentful-paint].description"
+      ],
+      "core/lib/i18n/i18n.js | speedIndexMetric": [
+        "audits[speed-index].title"
+      ],
+      "core/audits/metrics/speed-index.js | description": [
+        "audits[speed-index].description"
+      ],
+      "core/lib/i18n/i18n.js | totalBlockingTimeMetric": [
+        "audits[total-blocking-time].title"
+      ],
+      "core/audits/metrics/total-blocking-time.js | description": [
+        "audits[total-blocking-time].description"
+      ],
+      "core/lib/i18n/i18n.js | ms": [
+        {
+          "values": {
+            "timeInMs": 646
+          },
+          "path": "audits[total-blocking-time].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 185
+          },
+          "path": "audits[max-potential-fid].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 77.47999999999999
+          },
+          "path": "audits[network-rtt].displayValue"
+        },
+        {
+          "values": {
+            "timeInMs": 138.58249999999998
+          },
+          "path": "audits[network-server-latency].displayValue"
+        }
+      ],
+      "core/lib/i18n/i18n.js | maxPotentialFIDMetric": [
+        "audits[max-potential-fid].title"
+      ],
+      "core/audits/metrics/max-potential-fid.js | description": [
+        "audits[max-potential-fid].description"
+      ],
+      "core/lib/i18n/i18n.js | cumulativeLayoutShiftMetric": [
+        "audits[cumulative-layout-shift].title"
+      ],
+      "core/audits/metrics/cumulative-layout-shift.js | description": [
+        "audits[cumulative-layout-shift].description"
+      ],
+      "core/audits/server-response-time.js | title": [
+        "audits[server-response-time].title"
+      ],
+      "core/audits/server-response-time.js | description": [
+        "audits[server-response-time].description"
+      ],
+      "core/audits/server-response-time.js | displayValue": [
+        {
+          "values": {
+            "timeInMs": 89
+          },
+          "path": "audits[server-response-time].displayValue"
+        }
+      ],
+      "core/lib/i18n/i18n.js | columnURL": [
+        "audits[server-response-time].details.headings[0].label",
+        "audits[bootup-time].details.headings[0].label",
+        "audits[network-rtt].details.headings[0].label",
+        "audits[network-server-latency].details.headings[0].label",
+        "audits[long-tasks].details.headings[0].label",
+        "audits[unsized-images].details.headings[1].label",
+        "audits[total-byte-weight].details.headings[0].label",
+        "audits[unused-javascript].details.headings[0].label",
+        "audits[font-display-insight].details.headings[0].label",
+        "audits[image-delivery-insight].details.headings[1].label",
+        "audits[legacy-javascript-insight].details.headings[0].label",
+        "audits[modern-http-insight].details.headings[0].label",
+        "audits[render-blocking-insight].details.headings[0].label"
+      ],
+      "core/lib/i18n/i18n.js | columnTimeSpent": [
+        "audits[server-response-time].details.headings[1].label",
+        "audits[mainthread-work-breakdown].details.headings[1].label",
+        "audits[network-rtt].details.headings[1].label",
+        "audits[network-server-latency].details.headings[1].label"
+      ],
+      "core/lib/i18n/i18n.js | interactiveMetric": [
+        "audits.interactive.title"
+      ],
+      "core/audits/metrics/interactive.js | description": [
+        "audits.interactive.description"
+      ],
+      "core/audits/user-timings.js | title": [
+        "audits[user-timings].title"
+      ],
+      "core/audits/user-timings.js | description": [
+        "audits[user-timings].description"
+      ],
+      "core/lib/i18n/i18n.js | columnName": [
+        "audits[user-timings].details.headings[0].label"
+      ],
+      "core/audits/user-timings.js | columnType": [
+        "audits[user-timings].details.headings[1].label"
+      ],
+      "core/lib/i18n/i18n.js | columnStartTime": [
+        "audits[user-timings].details.headings[2].label",
+        "audits[long-tasks].details.headings[1].label"
+      ],
+      "core/lib/i18n/i18n.js | columnDuration": [
+        "audits[user-timings].details.headings[3].label",
+        "audits[long-tasks].details.headings[2].label",
+        "audits[lcp-breakdown-insight].details.items[0].headings[1].label",
+        "audits[render-blocking-insight].details.headings[2].label"
+      ],
+      "core/audits/redirects.js | title": [
+        "audits.redirects.title"
+      ],
+      "core/audits/redirects.js | description": [
+        "audits.redirects.description"
+      ],
+      "core/audits/mainthread-work-breakdown.js | failureTitle": [
+        "audits[mainthread-work-breakdown].title"
+      ],
+      "core/audits/mainthread-work-breakdown.js | description": [
+        "audits[mainthread-work-breakdown].description"
+      ],
+      "core/audits/mainthread-work-breakdown.js | columnCategory": [
+        "audits[mainthread-work-breakdown].details.headings[0].label"
+      ],
+      "core/audits/bootup-time.js | failureTitle": [
+        "audits[bootup-time].title"
+      ],
+      "core/audits/bootup-time.js | description": [
+        "audits[bootup-time].description"
+      ],
+      "core/audits/bootup-time.js | columnTotal": [
+        "audits[bootup-time].details.headings[1].label"
+      ],
+      "core/audits/bootup-time.js | columnScriptEval": [
+        "audits[bootup-time].details.headings[2].label"
+      ],
+      "core/audits/bootup-time.js | columnScriptParse": [
+        "audits[bootup-time].details.headings[3].label"
+      ],
+      "core/audits/network-rtt.js | title": [
+        "audits[network-rtt].title"
+      ],
+      "core/audits/network-rtt.js | description": [
+        "audits[network-rtt].description"
+      ],
+      "core/audits/network-server-latency.js | title": [
+        "audits[network-server-latency].title"
+      ],
+      "core/audits/network-server-latency.js | description": [
+        "audits[network-server-latency].description"
+      ],
+      "core/lib/i18n/i18n.js | columnResourceType": [
+        "audits[resource-summary].details.headings[0].label"
+      ],
+      "core/lib/i18n/i18n.js | columnRequests": [
+        "audits[resource-summary].details.headings[1].label"
+      ],
+      "core/lib/i18n/i18n.js | columnTransferSize": [
+        "audits[resource-summary].details.headings[2].label",
+        "audits[total-byte-weight].details.headings[1].label",
+        "audits[unused-javascript].details.headings[1].label",
+        "audits[cache-insight].details.headings[2].label",
+        "audits[render-blocking-insight].details.headings[1].label"
+      ],
+      "core/lib/i18n/i18n.js | total": [
+        "audits[resource-summary].details.items[0].label"
+      ],
+      "core/lib/i18n/i18n.js | scriptResourceType": [
+        "audits[resource-summary].details.items[1].label"
+      ],
+      "core/lib/i18n/i18n.js | fontResourceType": [
+        "audits[resource-summary].details.items[2].label"
+      ],
+      "core/lib/i18n/i18n.js | stylesheetResourceType": [
+        "audits[resource-summary].details.items[3].label"
+      ],
+      "core/lib/i18n/i18n.js | otherResourceType": [
+        "audits[resource-summary].details.items[4].label"
+      ],
+      "core/lib/i18n/i18n.js | documentResourceType": [
+        "audits[resource-summary].details.items[5].label"
+      ],
+      "core/lib/i18n/i18n.js | imageResourceType": [
+        "audits[resource-summary].details.items[6].label"
+      ],
+      "core/lib/i18n/i18n.js | mediaResourceType": [
+        "audits[resource-summary].details.items[7].label"
+      ],
+      "core/lib/i18n/i18n.js | thirdPartyResourceType": [
+        "audits[resource-summary].details.items[8].label"
+      ],
+      "core/audits/layout-shifts.js | title": [
+        "audits[layout-shifts].title"
+      ],
+      "core/audits/layout-shifts.js | description": [
+        "audits[layout-shifts].description"
+      ],
+      "core/lib/i18n/i18n.js | columnElement": [
+        "audits[layout-shifts].details.headings[0].label",
+        "audits[non-composited-animations].details.headings[0].label",
+        "audits[dom-size-insight].details.headings[1].label"
+      ],
+      "core/audits/layout-shifts.js | columnScore": [
+        "audits[layout-shifts].details.headings[1].label"
+      ],
+      "core/audits/long-tasks.js | title": [
+        "audits[long-tasks].title"
+      ],
+      "core/audits/long-tasks.js | description": [
+        "audits[long-tasks].description"
+      ],
+      "core/audits/long-tasks.js | displayValue": [
+        {
+          "values": {
+            "itemCount": 9
+          },
+          "path": "audits[long-tasks].displayValue"
+        }
+      ],
+      "core/audits/non-composited-animations.js | title": [
+        "audits[non-composited-animations].title"
+      ],
+      "core/audits/non-composited-animations.js | description": [
+        "audits[non-composited-animations].description"
+      ],
+      "core/audits/unsized-images.js | title": [
+        "audits[unsized-images].title"
+      ],
+      "core/audits/unsized-images.js | description": [
+        "audits[unsized-images].description"
+      ],
+      "core/audits/byte-efficiency/total-byte-weight.js | title": [
+        "audits[total-byte-weight].title"
+      ],
+      "core/audits/byte-efficiency/total-byte-weight.js | description": [
+        "audits[total-byte-weight].description"
+      ],
+      "core/audits/byte-efficiency/total-byte-weight.js | displayValue": [
+        {
+          "values": {
+            "totalBytes": 515938
+          },
+          "path": "audits[total-byte-weight].displayValue"
+        }
+      ],
+      "core/audits/byte-efficiency/unminified-css.js | title": [
+        "audits[unminified-css].title"
+      ],
+      "core/audits/byte-efficiency/unminified-css.js | description": [
+        "audits[unminified-css].description"
+      ],
+      "core/audits/byte-efficiency/unminified-javascript.js | title": [
+        "audits[unminified-javascript].title"
+      ],
+      "core/audits/byte-efficiency/unminified-javascript.js | description": [
+        "audits[unminified-javascript].description"
+      ],
+      "core/audits/byte-efficiency/unused-css-rules.js | title": [
+        "audits[unused-css-rules].title"
+      ],
+      "core/audits/byte-efficiency/unused-css-rules.js | description": [
+        "audits[unused-css-rules].description"
+      ],
+      "core/audits/byte-efficiency/unused-javascript.js | title": [
+        "audits[unused-javascript].title"
+      ],
+      "core/audits/byte-efficiency/unused-javascript.js | description": [
+        "audits[unused-javascript].description"
+      ],
+      "core/lib/i18n/i18n.js | displayValueByteSavings": [
+        {
+          "values": {
+            "wastedBytes": 83974
+          },
+          "path": "audits[unused-javascript].displayValue"
+        },
+        {
+          "values": {
+            "wastedBytes": 13953
+          },
+          "path": "audits[legacy-javascript-insight].displayValue"
+        }
+      ],
+      "core/lib/i18n/i18n.js | columnWastedBytes": [
+        "audits[unused-javascript].details.headings[2].label",
+        "audits[font-display-insight].details.headings[1].label",
+        "audits[image-delivery-insight].details.headings[3].label"
+      ],
+      "core/audits/bf-cache.js | title": [
+        "audits[bf-cache].title"
+      ],
+      "core/audits/bf-cache.js | description": [
+        "audits[bf-cache].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Cache.js | title": [
+        "audits[cache-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Cache.js | description": [
+        "audits[cache-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Cache.js | requestColumn": [
+        "audits[cache-insight].details.headings[0].label"
+      ],
+      "core/lib/i18n/i18n.js | columnCacheTTL": [
+        "audits[cache-insight].details.headings[1].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/CLSCulprits.js | title": [
+        "audits[cls-culprits-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/CLSCulprits.js | description": [
+        "audits[cls-culprits-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | title": [
+        "audits[document-latency-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | description": [
+        "audits[document-latency-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | passingRedirects": [
+        "audits[document-latency-insight].details.items.noRedirects.label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | passingServerResponseTime": [
+        {
+          "values": {
+            "PH1": "89 ms"
+          },
+          "path": "audits[document-latency-insight].details.items.serverResponseIsFast.label"
+        }
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | passingTextCompression": [
+        "audits[document-latency-insight].details.items.usesCompression.label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | title": [
+        "audits[dom-size-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | description": [
+        "audits[dom-size-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | statistic": [
+        "audits[dom-size-insight].details.headings[0].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | value": [
+        "audits[dom-size-insight].details.headings[2].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | totalElements": [
+        "audits[dom-size-insight].details.items[0].statistic"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | maxDOMDepth": [
+        "audits[dom-size-insight].details.items[1].statistic"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | maxChildren": [
+        "audits[dom-size-insight].details.items[2].statistic"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DuplicatedJavaScript.js | title": [
+        "audits[duplicated-javascript-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DuplicatedJavaScript.js | description": [
+        "audits[duplicated-javascript-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DuplicatedJavaScript.js | columnSource": [
+        "audits[duplicated-javascript-insight].details.headings[0].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DuplicatedJavaScript.js | columnDuplicatedBytes": [
+        "audits[duplicated-javascript-insight].details.headings[1].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/FontDisplay.js | title": [
+        "audits[font-display-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/FontDisplay.js | description": [
+        "audits[font-display-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ForcedReflow.js | title": [
+        "audits[forced-reflow-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ForcedReflow.js | description": [
+        "audits[forced-reflow-insight].description"
+      ],
+      "core/lib/i18n/i18n.js | columnSource": [
+        "audits[forced-reflow-insight].details.items[0].headings[0].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ForcedReflow.js | totalReflowTime": [
+        "audits[forced-reflow-insight].details.items[0].headings[1].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ImageDelivery.js | title": [
+        "audits[image-delivery-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ImageDelivery.js | description": [
+        "audits[image-delivery-insight].description"
+      ],
+      "core/lib/i18n/i18n.js | columnResourceSize": [
+        "audits[image-delivery-insight].details.headings[2].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/INPBreakdown.js | title": [
+        "audits[inp-breakdown-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/INPBreakdown.js | description": [
+        "audits[inp-breakdown-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPBreakdown.js | title": [
+        "audits[lcp-breakdown-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPBreakdown.js | description": [
+        "audits[lcp-breakdown-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPBreakdown.js | subpart": [
+        "audits[lcp-breakdown-insight].details.items[0].headings[0].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPBreakdown.js | timeToFirstByte": [
+        "audits[lcp-breakdown-insight].details.items[0].items[0].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPBreakdown.js | elementRenderDelay": [
+        "audits[lcp-breakdown-insight].details.items[0].items[1].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPDiscovery.js | title": [
+        "audits[lcp-discovery-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPDiscovery.js | description": [
+        "audits[lcp-discovery-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LegacyJavaScript.js | title": [
+        "audits[legacy-javascript-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LegacyJavaScript.js | description": [
+        "audits[legacy-javascript-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LegacyJavaScript.js | columnWastedBytes": [
+        "audits[legacy-javascript-insight].details.headings[2].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ModernHTTP.js | title": [
+        "audits[modern-http-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ModernHTTP.js | description": [
+        "audits[modern-http-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ModernHTTP.js | protocol": [
+        "audits[modern-http-insight].details.headings[1].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | title": [
+        "audits[network-dependency-tree-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | description": [
+        "audits[network-dependency-tree-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | preconnectOriginsTableTitle": [
+        "audits[network-dependency-tree-insight].details.items[1].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | preconnectOriginsTableDescription": [
+        "audits[network-dependency-tree-insight].details.items[1].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | noPreconnectOrigins": [
+        "audits[network-dependency-tree-insight].details.items[1].value.value"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | estSavingTableTitle": [
+        "audits[network-dependency-tree-insight].details.items[2].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | estSavingTableDescription": [
+        "audits[network-dependency-tree-insight].details.items[2].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/NetworkDependencyTree.js | noPreconnectCandidates": [
+        "audits[network-dependency-tree-insight].details.items[2].value.value"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/RenderBlocking.js | title": [
+        "audits[render-blocking-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/RenderBlocking.js | description": [
+        "audits[render-blocking-insight].description"
+      ],
+      "core/lib/i18n/i18n.js | displayValueMsSavings": [
+        {
+          "values": {
+            "wastedMs": 88
+          },
+          "path": "audits[render-blocking-insight].displayValue"
+        }
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | title": [
+        "audits[third-parties-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | description": [
+        "audits[third-parties-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | columnThirdParty": [
+        "audits[third-parties-insight].details.headings[0].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | columnTransferSize": [
+        "audits[third-parties-insight].details.headings[1].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | columnMainThreadTime": [
+        "audits[third-parties-insight].details.headings[2].label"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Viewport.js | title": [
+        "audits[viewport-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Viewport.js | description": [
+        "audits[viewport-insight].description"
+      ],
+      "core/config/default-config.js | performanceCategoryTitle": [
+        "categories.performance.title"
+      ],
+      "core/config/default-config.js | metricGroupTitle": [
+        "categoryGroups.metrics.title"
+      ],
+      "core/config/default-config.js | insightsGroupTitle": [
+        "categoryGroups.insights.title"
+      ],
+      "core/config/default-config.js | insightsGroupDescription": [
+        "categoryGroups.insights.description"
+      ],
+      "core/config/default-config.js | diagnosticsGroupTitle": [
+        "categoryGroups.diagnostics.title"
+      ],
+      "core/config/default-config.js | diagnosticsGroupDescription": [
+        "categoryGroups.diagnostics.description"
+      ],
+      "core/config/default-config.js | a11yBestPracticesGroupTitle": [
+        "categoryGroups[a11y-best-practices].title"
+      ],
+      "core/config/default-config.js | a11yBestPracticesGroupDescription": [
+        "categoryGroups[a11y-best-practices].description"
+      ],
+      "core/config/default-config.js | a11yColorContrastGroupTitle": [
+        "categoryGroups[a11y-color-contrast].title"
+      ],
+      "core/config/default-config.js | a11yColorContrastGroupDescription": [
+        "categoryGroups[a11y-color-contrast].description"
+      ],
+      "core/config/default-config.js | a11yNamesLabelsGroupTitle": [
+        "categoryGroups[a11y-names-labels].title"
+      ],
+      "core/config/default-config.js | a11yNamesLabelsGroupDescription": [
+        "categoryGroups[a11y-names-labels].description"
+      ],
+      "core/config/default-config.js | a11yNavigationGroupTitle": [
+        "categoryGroups[a11y-navigation].title"
+      ],
+      "core/config/default-config.js | a11yNavigationGroupDescription": [
+        "categoryGroups[a11y-navigation].description"
+      ],
+      "core/config/default-config.js | a11yAriaGroupTitle": [
+        "categoryGroups[a11y-aria].title"
+      ],
+      "core/config/default-config.js | a11yAriaGroupDescription": [
+        "categoryGroups[a11y-aria].description"
+      ],
+      "core/config/default-config.js | a11yLanguageGroupTitle": [
+        "categoryGroups[a11y-language].title"
+      ],
+      "core/config/default-config.js | a11yLanguageGroupDescription": [
+        "categoryGroups[a11y-language].description"
+      ],
+      "core/config/default-config.js | a11yAudioVideoGroupTitle": [
+        "categoryGroups[a11y-audio-video].title"
+      ],
+      "core/config/default-config.js | a11yAudioVideoGroupDescription": [
+        "categoryGroups[a11y-audio-video].description"
+      ],
+      "core/config/default-config.js | a11yTablesListsVideoGroupTitle": [
+        "categoryGroups[a11y-tables-lists].title"
+      ],
+      "core/config/default-config.js | a11yTablesListsVideoGroupDescription": [
+        "categoryGroups[a11y-tables-lists].description"
+      ],
+      "core/config/default-config.js | seoMobileGroupTitle": [
+        "categoryGroups[seo-mobile].title"
+      ],
+      "core/config/default-config.js | seoMobileGroupDescription": [
+        "categoryGroups[seo-mobile].description"
+      ],
+      "core/config/default-config.js | seoContentGroupTitle": [
+        "categoryGroups[seo-content].title"
+      ],
+      "core/config/default-config.js | seoContentGroupDescription": [
+        "categoryGroups[seo-content].description"
+      ],
+      "core/config/default-config.js | seoCrawlingGroupTitle": [
+        "categoryGroups[seo-crawl].title"
+      ],
+      "core/config/default-config.js | seoCrawlingGroupDescription": [
+        "categoryGroups[seo-crawl].description"
+      ],
+      "core/config/default-config.js | bestPracticesTrustSafetyGroupTitle": [
+        "categoryGroups[best-practices-trust-safety].title"
+      ],
+      "core/config/default-config.js | bestPracticesUXGroupTitle": [
+        "categoryGroups[best-practices-ux].title"
+      ],
+      "core/config/default-config.js | bestPracticesBrowserCompatGroupTitle": [
+        "categoryGroups[best-practices-browser-compat].title"
+      ],
+      "core/config/default-config.js | bestPracticesGeneralGroupTitle": [
+        "categoryGroups[best-practices-general].title"
+      ],
+      "core/config/default-config.js | webmcpGroupTitle": [
+        "categoryGroups.webmcp.title"
+      ],
+      "core/config/default-config.js | webmcpGroupDescription": [
+        "categoryGroups.webmcp.description"
+      ],
+      "core/config/default-config.js | agentAccessibilityGroupTitle": [
+        "categoryGroups[agent-accessibility].title"
+      ],
+      "core/config/default-config.js | agentAccessibilityGroupDescription": [
+        "categoryGroups[agent-accessibility].description"
+      ]
+    }
+  }
+}

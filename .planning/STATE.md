@@ -46,9 +46,10 @@ Non-blocking, intentional deferrals:
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright regression spec, keep/delete decision outstanding.
 - `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
 
-**From Phase 13 (new 2026-05-21):**
-- R9 PARTIAL — `/habitat` mobile-emulation CWV: INP 208/240 ms (gate ≤ 200), mobile LCP unmeasured (observer misfire on 4× CPU throttle). `13-PERF.md` attributes to Playwright `page.evaluate` overhead but no clean second-run exists. **Needs real-device or non-instrumented headless CWV re-measurement.**
-- D-28 went to **cached** (live widget FPS 21/18 < 30 gate). If perf re-measurement on real devices shows live widget actually hits ≥ 30 FPS, consider reverting to the live widget (Plan 05 code is in git history at `f55ac04`/`2255b49`, deleted in `d8e8ca0`).
+**From Phase 13 (2026-05-21, R9 re-measured 2026-05-27):**
+- R9 **FAIL on `/habitat` mobile** (confirmed clean Lighthouse, see `13-PERF-REAL.md`): LCP median 2989 ms > 2500 gate; TBT median 646 ms > 200 gate. Three.js 504 KB chunk dominates mobile main-thread time. Other 3 R9 cells (dashboard desktop+mobile, `/habitat` desktop) PASS. Likely fix: defer Three.js init past LCP using `attachViewportGate` (already plumbed) + a static poster as the LCP element. Candidate scope for **Phase 13.1** or rolled into **Phase 999.1**.
+- D-28 stays **cached** — confirmed by re-measurement (dashboard mobile LCP 2151 / Perf 93 with cached image vs. expected regression with live widget). No revert.
+- Throwaway test user `cwv-test-1779866703@leocards-test.local` left in preview's Neon DB (clean up if preview DB ≠ prod DB matters).
 - Phase 13 not yet wrapped in a milestone (v3.0 TBD).
 
 ## Roadmap Evolution
