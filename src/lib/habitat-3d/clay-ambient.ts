@@ -15,26 +15,7 @@
 // available, preserving the storybook "Z" look without coupling this
 // module to the DOM.
 
-import {
-  BoxGeometry,
-  type BufferGeometry,
-  ConeGeometry,
-  CylinderGeometry,
-  DataTexture,
-  DoubleSide,
-  Group,
-  type Material,
-  Mesh,
-  type MeshToonMaterial,
-  RGBAFormat,
-  RingGeometry,
-  type Scene,
-  SphereGeometry,
-  Sprite,
-  SpriteMaterial,
-  type Texture,
-  Vector3,
-} from "three";
+import * as THREE from "three";
 import type { ClayMatFactory } from "./clay-world";
 
 function mulberry32(seed: number): () => number {
@@ -61,7 +42,7 @@ export interface SleepBubblesHandle {
  * designer's canvas-baked "Z" glyph. Plan 03 may swap this for a real
  * canvas texture via the `bubbleTexture` option.
  */
-function buildBlobTexture(): DataTexture {
+function buildBlobTexture(): THREE.DataTexture {
   const N = 32;
   const data = new Uint8Array(N * N * 4);
   for (let y = 0; y < N; y++) {
@@ -77,35 +58,35 @@ function buildBlobTexture(): DataTexture {
       data[i + 3] = Math.floor(a);
     }
   }
-  const tex = new DataTexture(data, N, N, RGBAFormat);
+  const tex = new THREE.DataTexture(data, N, N, THREE.RGBAFormat);
   tex.needsUpdate = true;
   return tex;
 }
 
 export function buildSleepBubbles(
-  scene: Scene,
-  opts: { bubbleTexture?: Texture } = {},
+  scene: THREE.Scene,
+  opts: { bubbleTexture?: THREE.Texture } = {},
 ): SleepBubblesHandle {
   const tex = opts.bubbleTexture ?? buildBlobTexture();
   const POOL = 6;
   const bubbles: Array<{
-    sprite: Sprite;
-    mat: SpriteMaterial;
+    sprite: THREE.Sprite;
+    mat: THREE.SpriteMaterial;
     life: number;
-    basePos: Vector3;
+    basePos: THREE.Vector3;
   }> = [];
   for (let i = 0; i < POOL; i++) {
-    const m = new SpriteMaterial({
+    const m = new THREE.SpriteMaterial({
       map: tex,
       transparent: true,
       opacity: 0,
       depthWrite: false,
     });
-    const s = new Sprite(m);
+    const s = new THREE.Sprite(m);
     s.scale.set(0.35, 0.35, 1);
     s.visible = false;
     scene.add(s);
-    bubbles.push({ sprite: s, mat: m, life: 0, basePos: new Vector3() });
+    bubbles.push({ sprite: s, mat: m, life: 0, basePos: new THREE.Vector3() });
   }
   function spawn(x: number, y: number, z: number): void {
     const free = bubbles.find((b) => b.life <= 0);
@@ -152,21 +133,21 @@ export interface DrinkingFXHandle {
 }
 
 export function buildElephantDrinkingFX(
-  scene: Scene,
+  scene: THREE.Scene,
   mat: ClayMatFactory,
 ): DrinkingFXHandle {
   const POOL = 5;
   const ripples: Array<{
-    mesh: Mesh;
-    mat: MeshToonMaterial;
+    mesh: THREE.Mesh;
+    mat: THREE.MeshToonMaterial;
     life: number;
   }> = [];
   for (let i = 0; i < POOL; i++) {
     const rmat = mat("#fbfaf6");
     rmat.transparent = true;
     rmat.opacity = 0;
-    rmat.side = DoubleSide;
-    const m = new Mesh(new RingGeometry(0.04, 0.08, 30), rmat);
+    rmat.side = THREE.DoubleSide;
+    const m = new THREE.Mesh(new THREE.RingGeometry(0.04, 0.08, 30), rmat);
     m.rotation.x = -Math.PI / 2;
     m.visible = false;
     scene.add(m);
@@ -207,7 +188,7 @@ export function buildElephantDrinkingFX(
 // ---------------- Storybook ambient (pollen + petals + birds + dust) ----
 
 export interface DustPool {
-  spawn: (pos: Vector3) => void;
+  spawn: (pos: THREE.Vector3) => void;
 }
 
 export interface StorybookAmbientHandle {
@@ -232,7 +213,7 @@ function groundY(x: number, z: number): number {
 }
 
 export function buildStorybookAmbient(
-  scene: Scene,
+  scene: THREE.Scene,
   mat: ClayMatFactory,
   opts: StorybookAmbientOpts = {},
 ): StorybookAmbientHandle {
@@ -242,14 +223,14 @@ export function buildStorybookAmbient(
     petals: opts.petals !== false,
     birds: opts.birds !== false,
   };
-  const ownedMaterials: Material[] = [];
-  const ownedGeometries: BufferGeometry[] = [];
+  const ownedMaterials: THREE.Material[] = [];
+  const ownedGeometries: THREE.BufferGeometry[] = [];
 
   // pollen
-  const pollenG = new Group();
+  const pollenG = new THREE.Group();
   scene.add(pollenG);
   const pollen: Array<{
-    mesh: Mesh;
+    mesh: THREE.Mesh;
     cx: number;
     cz: number;
     baseY: number;
@@ -259,7 +240,10 @@ export function buildStorybookAmbient(
   }> = [];
   if (enable.pollen) {
     for (let i = 0; i < 26; i++) {
-      const m = new Mesh(new SphereGeometry(0.055, 6, 6), mat("#fbfaf6"));
+      const m = new THREE.Mesh(
+        new THREE.SphereGeometry(0.055, 6, 6),
+        mat("#fbfaf6"),
+      );
       pollenG.add(m);
       pollen.push({
         mesh: m,
@@ -274,24 +258,36 @@ export function buildStorybookAmbient(
   }
 
   // flying birds
-  function makeBird(color: string): Group {
-    const g = new Group();
-    const body = new Mesh(new SphereGeometry(0.11, 10, 8), mat(color));
+  function makeBird(color: string): THREE.Group {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.SphereGeometry(0.11, 10, 8),
+      mat(color),
+    );
     body.scale.set(1, 0.8, 1.7);
     body.castShadow = true;
     g.add(body);
-    const tail = new Mesh(new ConeGeometry(0.07, 0.14, 4), mat(color));
+    const tail = new THREE.Mesh(
+      new THREE.ConeGeometry(0.07, 0.14, 4),
+      mat(color),
+    );
     tail.position.set(0, 0, 0.18);
     tail.rotation.x = Math.PI / 2;
     g.add(tail);
-    const wL = new Group();
+    const wL = new THREE.Group();
     g.add(wL);
-    const wingL = new Mesh(new BoxGeometry(0.36, 0.015, 0.2), mat(color));
+    const wingL = new THREE.Mesh(
+      new THREE.BoxGeometry(0.36, 0.015, 0.2),
+      mat(color),
+    );
     wingL.geometry.translate(0.18, 0, 0);
     wL.add(wingL);
-    const wR = new Group();
+    const wR = new THREE.Group();
     g.add(wR);
-    const wingR = new Mesh(new BoxGeometry(0.36, 0.015, 0.2), mat(color));
+    const wingR = new THREE.Mesh(
+      new THREE.BoxGeometry(0.36, 0.015, 0.2),
+      mat(color),
+    );
     wingR.geometry.translate(-0.18, 0, 0);
     wR.add(wingR);
     g.userData = { wL, wR };
@@ -300,7 +296,7 @@ export function buildStorybookAmbient(
   const birdCols = opts.birdCols ?? ["#3a2818", "#5a3a28", "#2a1f14"];
   const perchedBirdCols = opts.perchedBirdCols ?? birdCols;
   const birds: Array<{
-    obj: Group;
+    obj: THREE.Group;
     cx: number;
     cz: number;
     r: number;
@@ -334,32 +330,47 @@ export function buildStorybookAmbient(
     [5.6, 2.8, 0.85],
   ];
   function makePerchedBird(col: string): {
-    group: Group;
-    head: Mesh;
+    group: THREE.Group;
+    head: THREE.Mesh;
   } {
-    const g = new Group();
-    const body = new Mesh(new SphereGeometry(0.28, 12, 10), mat(col));
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.SphereGeometry(0.28, 12, 10),
+      mat(col),
+    );
     body.scale.set(1, 0.85, 1.55);
     body.castShadow = true;
     g.add(body);
-    const head = new Mesh(new SphereGeometry(0.2, 12, 10), mat(col));
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(0.2, 12, 10),
+      mat(col),
+    );
     head.position.set(0, 0.18, -0.3);
     head.castShadow = true;
     g.add(head);
-    const beak = new Mesh(new ConeGeometry(0.06, 0.18, 5), mat("#c8a050"));
+    const beak = new THREE.Mesh(
+      new THREE.ConeGeometry(0.06, 0.18, 5),
+      mat("#c8a050"),
+    );
     beak.rotation.x = -Math.PI / 2;
     beak.position.set(0, 0.16, -0.54);
     g.add(beak);
-    const breast = new Mesh(new SphereGeometry(0.14, 10, 8), mat("#fbfaf6"));
+    const breast = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 10, 8),
+      mat("#fbfaf6"),
+    );
     breast.position.set(0, 0.0, -0.22);
     breast.scale.set(0.7, 0.8, 0.45);
     g.add(breast);
-    const eye = new Mesh(new SphereGeometry(0.04, 8, 6), mat("#1a0e08"));
+    const eye = new THREE.Mesh(
+      new THREE.SphereGeometry(0.04, 8, 6),
+      mat("#1a0e08"),
+    );
     eye.position.set(0.085, 0.22, -0.44);
     g.add(eye);
     for (let s = -1; s <= 1; s += 2) {
-      const foot = new Mesh(
-        new CylinderGeometry(0.02, 0.02, 0.12, 5),
+      const foot = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.02, 0.02, 0.12, 5),
         mat("#c8a050"),
       );
       foot.position.set(s * 0.1, -0.22, 0.05);
@@ -369,18 +380,24 @@ export function buildStorybookAmbient(
     return { group: g, head };
   }
   const NOTE_COL = "#4a4070";
-  function makeNoteMesh(): Group {
-    const g = new Group();
-    const head = new Mesh(new SphereGeometry(0.065, 10, 8), mat(NOTE_COL));
+  function makeNoteMesh(): THREE.Group {
+    const g = new THREE.Group();
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(0.065, 10, 8),
+      mat(NOTE_COL),
+    );
     head.scale.set(1.1, 0.82, 0.6);
     g.add(head);
-    const stem = new Mesh(
-      new CylinderGeometry(0.018, 0.018, 0.22, 6),
+    const stem = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.018, 0.018, 0.22, 6),
       mat(NOTE_COL),
     );
     stem.position.set(0.07, 0.13, 0);
     g.add(stem);
-    const flag = new Mesh(new SphereGeometry(0.04, 8, 6), mat(NOTE_COL));
+    const flag = new THREE.Mesh(
+      new THREE.SphereGeometry(0.04, 8, 6),
+      mat(NOTE_COL),
+    );
     flag.position.set(0.1, 0.21, 0);
     flag.scale.set(0.7, 0.55, 0.4);
     g.add(flag);
@@ -388,8 +405,8 @@ export function buildStorybookAmbient(
     return g;
   }
   const perchedBirds: Array<{
-    obj: Group;
-    head: Mesh;
+    obj: THREE.Group;
+    head: THREE.Mesh;
     phase: number;
     noteTimer: number;
     perchX: number;
@@ -397,7 +414,7 @@ export function buildStorybookAmbient(
     perchZ: number;
   }> = [];
   const notePool: Array<{
-    mesh: Group;
+    mesh: THREE.Group;
     life: number;
     baseX: number;
     baseY: number;
@@ -444,11 +461,11 @@ export function buildStorybookAmbient(
   }
 
   // petals
-  const petalG = new Group();
+  const petalG = new THREE.Group();
   scene.add(petalG);
   const petalCols = ["#fae0a8", "#f0a8a0", "#fffbe8", "#f8c8d8"];
   const petals: Array<{
-    mesh: Mesh;
+    mesh: THREE.Mesh;
     x: number;
     y: number;
     z: number;
@@ -461,7 +478,7 @@ export function buildStorybookAmbient(
   if (enable.petals) {
     for (let i = 0; i < 14; i++) {
       const col = petalCols[i % petalCols.length] ?? "#fffbe8";
-      const m = new Mesh(new SphereGeometry(0.08, 8, 6), mat(col));
+      const m = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), mat(col));
       m.scale.set(1, 0.25, 1);
       petalG.add(m);
       petals.push({
@@ -481,21 +498,21 @@ export function buildStorybookAmbient(
   // dust puff pool
   const POOL = 10;
   const puffs: Array<{
-    mesh: Mesh;
-    mat: MeshToonMaterial;
+    mesh: THREE.Mesh;
+    mat: THREE.MeshToonMaterial;
     life: number;
   }> = [];
   for (let i = 0; i < POOL; i++) {
     const pmat = mat("#e8d4b0");
     pmat.transparent = true;
     pmat.opacity = 0;
-    const m = new Mesh(new SphereGeometry(0.22, 10, 8), pmat);
+    const m = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 8), pmat);
     m.visible = false;
     scene.add(m);
     puffs.push({ mesh: m, mat: pmat, life: 0 });
   }
   const dustPool: DustPool = {
-    spawn(pos: Vector3): void {
+    spawn(pos: THREE.Vector3): void {
       const p = puffs.find((p) => p.life <= 0);
       if (!p) return;
       p.mesh.position.copy(pos);
@@ -533,7 +550,7 @@ export function buildStorybookAmbient(
         b.obj.rotation.y = -a;
         b.obj.rotation.z = Math.sin(a) * 0.18;
         const flap = Math.sin(t * b.flapRate + b.phase) * 0.85;
-        const ud = b.obj.userData as { wL: Group; wR: Group };
+        const ud = b.obj.userData as { wL: THREE.Group; wR: THREE.Group };
         ud.wL.rotation.z = flap;
         ud.wR.rotation.z = -flap;
       }

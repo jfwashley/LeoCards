@@ -13,7 +13,7 @@
 // no `window`/`document`. The London-time sleep cycle uses `Intl`
 // (available in node + browser) for `_londonSecondsSinceMidnight`.
 
-import { type CatmullRomCurve3, MathUtils, Vector3 } from "three";
+import * as THREE from "three";
 import type {
   DrinkingFXHandle,
   DustPool,
@@ -49,7 +49,7 @@ export interface CaveAnchor {
 
 export interface LionState {
   u?: number;
-  lastPos?: Vector3;
+  lastPos?: THREE.Vector3;
   smoothSpeed?: number;
   blinkT?: number;
   speedMul?: number;
@@ -201,7 +201,7 @@ export function applyLionSleep(
 
 export function applyLionWalk(
   leo: LionStorybookRig,
-  lionCurve: CatmullRomCurve3,
+  lionCurve: THREE.CatmullRomCurve3,
   dt: number,
   t: number,
   state: LionState,
@@ -227,7 +227,7 @@ export function applyLionWalk(
   const u = state.u % 1;
   const p = lionCurve.getPoint(u);
   const tan = lionCurve.getTangent(u).normalize();
-  state.lastPos = state.lastPos ?? new Vector3();
+  state.lastPos = state.lastPos ?? new THREE.Vector3();
   state.smoothSpeed = state.smoothSpeed ?? 0;
   state.blinkT = (state.blinkT ?? 0) + dt;
 
@@ -295,11 +295,11 @@ export function applyLionExtras(
     lx = Math.cos(yaw) * dx - Math.sin(yaw) * dz;
     lz = Math.sin(yaw) * dx + Math.cos(yaw) * dz;
     const inFront = lz < -0.3 ? 1 : 0;
-    lookStrength = MathUtils.clamp(1 - dist / 6.5, 0, 1) * inFront;
+    lookStrength = THREE.MathUtils.clamp(1 - dist / 6.5, 0, 1) * inFront;
   }
 
   // pupil tracking
-  const targetTX = MathUtils.clamp(lx * 0.005, -0.028, 0.028);
+  const targetTX = THREE.MathUtils.clamp(lx * 0.005, -0.028, 0.028);
   const targetTY = 0.006;
   const idleX = Math.sin(t * 0.6) * 0.012;
   const idleY = Math.cos(t * 0.5) * 0.006;
@@ -314,7 +314,8 @@ export function applyLionExtras(
   }
 
   const targetYaw =
-    lookStrength * MathUtils.clamp(Math.atan2(lx, -lz) * 0.45, -0.35, 0.35) +
+    lookStrength *
+      THREE.MathUtils.clamp(Math.atan2(lx, -lz) * 0.45, -0.35, 0.35) +
     (1 - lookStrength) * Math.sin(t * 0.8) * 0.12;
   const targetPitch =
     lookStrength * 0.06 + (1 - lookStrength) * Math.sin(t * 0.5) * 0.05;
@@ -353,7 +354,7 @@ export function applyLionExtras(
     state.dustT = 0;
     const keys: Array<"FL" | "FR" | "BL" | "BR"> = ["FL", "FR", "BL", "BR"];
     const k = keys[Math.floor(Math.random() * 4)] as "FL" | "FR" | "BL" | "BR";
-    const wp = new Vector3();
+    const wp = new THREE.Vector3();
     leo.legs[k].getWorldPosition(wp);
     wp.y = leo.root.position.y + 0.198 + 0.02;
     state.dustPool.spawn(wp);
@@ -414,7 +415,7 @@ export function animateElephant(
   if (ud.drinking && opts.drinkingFX) {
     ud.lastDipEase = ud.lastDipEase ?? 0;
     if (dipEase > 0.78 && ud.lastDipEase <= 0.78) {
-      const tip = new Vector3();
+      const tip = new THREE.Vector3();
       const lastSeg = ud.trunkSegs[ud.trunkSegs.length - 1];
       if (lastSeg) {
         lastSeg.getWorldPosition(tip);
