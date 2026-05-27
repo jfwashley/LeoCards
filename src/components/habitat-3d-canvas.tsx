@@ -29,6 +29,7 @@
 //     flip `data-ready` to "false" on loss; restart RAF + restore
 //     `data-ready` on restore.
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type * as THREE from "three";
 import {
@@ -102,6 +103,67 @@ function usePrefersReducedMotion(): boolean {
     return () => mql.removeEventListener?.("change", onChange);
   }, []);
   return reduced;
+}
+
+// ---------------------------------------------------------------------------
+// setupGestureGate — Plan 13.1-02 (R3/R4)
+// ---------------------------------------------------------------------------
+//
+// Defers Three.js canvas mount until the user produces a real input gesture
+// on the page. Listens for pointerdown / touchstart / keydown / wheel on the
+// document plus scroll on the window (scroll does not bubble from window to
+// document in all browsers).
+//
+// Contract:
+//   • `reducedMotion: true` → attach NO listeners; return a no-op cleanup.
+//     `onGesture` is NEVER invoked. This is the hard lockout from Phase 13.1
+//     SPEC R4.
+//   • Otherwise → attach passive listeners; on the FIRST event fired, call
+//     `onGesture()` exactly once and synchronously detach every listener so
+//     subsequent events are dropped.
+//
+// Hard rule: gesture-only mount, no idle or timer fallbacks. Attempt #1 added
+// an idle-callback fallback that fired inside Lighthouse's trace window and
+// spiked TBT — see `13-PERF-FIX-ATTEMPT-1.md`. If the user never produces a
+// gesture, the canvas never mounts; that is the CWV-pass contract.
+
+export interface SetupGestureGateOpts {
+  document: Document;
+  window: Window;
+  onGesture: () => void;
+  reducedMotion: boolean;
+}
+
+const GESTURE_DOC_EVENTS = ["pointerdown", "touchstart", "keydown", "wheel"];
+const GESTURE_WIN_EVENT = "scroll";
+
+export function setupGestureGate(opts: SetupGestureGateOpts): () => void {
+  const { document: doc, window: win, onGesture, reducedMotion } = opts;
+  // R4 hard lockout: reduced-motion users never get a canvas, full stop.
+  if (reducedMotion) return () => {};
+
+  let fired = false;
+  // Single shared handler — same identity for add/remove on every event.
+  const handler: EventListener = (_e: Event) => {
+    if (fired) return;
+    fired = true;
+    cleanup();
+    onGesture();
+  };
+
+  const cleanup = () => {
+    for (const ev of GESTURE_DOC_EVENTS) {
+      doc.removeEventListener?.(ev, handler);
+    }
+    win.removeEventListener?.(GESTURE_WIN_EVENT, handler);
+  };
+
+  for (const ev of GESTURE_DOC_EVENTS) {
+    doc.addEventListener?.(ev, handler, { passive: true });
+  }
+  win.addEventListener?.(GESTURE_WIN_EVENT, handler, { passive: true });
+
+  return cleanup;
 }
 
 // ---------------------------------------------------------------------------
@@ -354,6 +416,16 @@ function readDevOverride(initial: HabitatState): HabitatState {
   };
 }
 
+// Dev-only snapshot-mode escape hatch: when `?snapshot=true` is on the URL we
+// bypass BOTH the gesture gate and the reduced-motion lockout so deterministic
+// e2e capture (Plan 04 mood/decay baselines) still works. NODE_ENV !== "production"
+// gate → tree-shaken from production bundles.
+function readSnapshotMode(): boolean {
+  if (process.env.NODE_ENV === "production") return false;
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("snapshot") === "true";
+}
+
 export default function HabitatCanvas({
   habitatState,
   // celebratingLevel is plumbed for API parity with the v1.0 PixiJS canvas;
@@ -368,10 +440,19 @@ export default function HabitatCanvas({
   // Apply dev URL override if present (snapshot mode for Plan 04 Playwright).
   const effectiveState = readDevOverride(habitatState);
 
-  // Clamp level to [1, 9] — only level + reducedMotion trigger a scene
-  // rebuild (D-30 / designer's `tweaksRef` pattern at
-  // `habitat-clay-styles.jsx:2258`). mood/quality intentionally omitted —
-  // Plan 04 binds them via stateRef without rebuilding.
+  // Snapshot-mode escape hatch (dev-only, NODE_ENV-gated above): when set,
+  // ignore the gesture gate AND reduced-motion lockout so Phase 13 e2e specs
+  // capturing mood/decay baselines still mount the canvas deterministically.
+  const snapshotMode = readSnapshotMode();
+
+  // R3 gesture gate: canvas does NOT mount until the first user gesture.
+  // R4 reduced-motion lockout: reducedMotion users never mount the canvas.
+  // Snapshot mode (dev-only) forces immediate mount for deterministic capture.
+  const [gestured, setGestured] = useState(false);
+  const canvasMounted = snapshotMode || (!reducedMotion && gestured);
+
+  // Clamp level to [1, 9] — only level triggers a scene rebuild
+  // (D-30 / designer's `tweaksRef` pattern). mood/quality flow via stateRef.
   const sceneLevel = Math.max(1, Math.min(9, Math.floor(effectiveState.level)));
 
   // Keep the latest state in a ref so the per-frame update closure can read
@@ -379,8 +460,7 @@ export default function HabitatCanvas({
   const stateRef = useRef<HabitatState>(effectiveState);
   stateRef.current = effectiveState;
 
-  // Plan 13-04: mood-anim state ref — survives Strict-Mode double-mount and
-  // multi-canvas scenarios because each <HabitatCanvas> instance owns its own.
+  // Plan 13-04: mood-anim state ref — survives Strict-Mode double-mount.
   const moodStateRef = useRef<MoodAnimState>({
     speedMul: 1.5,
     headDroop: 0,
@@ -389,11 +469,30 @@ export default function HabitatCanvas({
     prevMood: null,
   });
 
-  // sceneLevel is read inside mountHabitatScene via stateRef.current.level;
-  // Biome can't trace through the ref, so the dep is required to remount on
-  // level changes (mood/quality flow via stateRef without remount).
+  // R3: attach the gesture gate once, only when the canvas is NOT already
+  // mounted and reduced-motion is off. The gate fires `setGestured(true)` on
+  // the first qualifying event, then detaches all listeners synchronously.
+  // Gesture-only mount: no idle or timer fallback. Gestureless users stay on
+  // the poster forever — that is the price of CWV pass.
+  useEffect(() => {
+    if (canvasMounted) return;
+    if (reducedMotion) return;
+    if (typeof document === "undefined" || typeof window === "undefined") {
+      return;
+    }
+    const cleanup = setupGestureGate({
+      document,
+      window,
+      onGesture: () => setGestured(true),
+      reducedMotion: false,
+    });
+    return cleanup;
+  }, [canvasMounted, reducedMotion]);
+
+  // Mount the Three.js scene only once `canvasMounted` flips true.
   // biome-ignore lint/correctness/useExhaustiveDependencies: sceneLevel required to trigger remount on level change
   useEffect(() => {
+    if (!canvasMounted) return;
     if (!canvasRef.current || !wrapperRef.current) return;
     const handle = mountHabitatScene({
       canvas: canvasRef.current,
@@ -404,21 +503,62 @@ export default function HabitatCanvas({
       moodStateRef,
     });
     return () => handle.dispose();
-  }, [sceneLevel, reducedMotion]);
+  }, [canvasMounted, sceneLevel, reducedMotion]);
+
+  // R6 zero-CLS: wrapper carries intrinsic size BEFORE either child paints.
+  // Both poster <Image fill> and the <canvas> are absolutely positioned
+  // inside so the swap is layout-shift free.
+  // R4: reduced-motion users get the poster only — no canvas, no tabIndex,
+  // no keyboard-orbit affordance.
+  const wrapperClass = reducedMotion
+    ? "w-full rounded-lg"
+    : "w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-lg";
 
   return (
     <div
       ref={wrapperRef}
-      className="w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
-      style={{ aspectRatio: "16/9", maxHeight: "min(70vh, 400px)" }}
+      className={wrapperClass}
+      style={{
+        aspectRatio: "16/9",
+        maxHeight: "min(70vh, 400px)",
+        position: "relative",
+      }}
       role="img"
-      aria-label="Tiger habitat 3D scene"
+      aria-label={`Tiger habitat level ${sceneLevel}`}
     >
-      <canvas
-        ref={canvasRef}
-        data-testid="habitat-3d-canvas"
-        style={{ width: "100%", height: "100%", display: "block" }}
+      {/* R2 LCP candidate: full-resolution poster, paints before any Three.js
+          code is fetched. Next.js 16 uses `priority` to opt the image into
+          preload behavior (a `<link rel="preload" as="image">` is injected
+          in <head>). `fill` + `sizes` lets next/image generate a srcset that
+          matches the wrapper. */}
+      <Image
+        src={`/habitat/hero-l${sceneLevel}.webp`}
+        alt={`Tiger habitat level ${sceneLevel}`}
+        fill
+        priority
+        sizes="(max-width: 768px) 100vw, 720px"
+        style={{
+          objectFit: "cover",
+          borderRadius: "0.5rem",
+          transition: "opacity 200ms ease-out",
+          opacity: canvasMounted ? 0 : 1,
+          pointerEvents: canvasMounted ? "none" : "auto",
+        }}
       />
+      {canvasMounted ? (
+        <canvas
+          ref={canvasRef}
+          data-testid="habitat-3d-canvas"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            display: "block",
+            borderRadius: "0.5rem",
+          }}
+        />
+      ) : null}
     </div>
   );
 }
