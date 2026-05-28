@@ -29,7 +29,6 @@
 //     flip `data-ready` to "false" on loss; restart RAF + restore
 //     `data-ready` on restore.
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type * as THREE from "three";
 import {
@@ -427,6 +426,12 @@ export function mountHabitatScene(
 export interface HabitatCanvasProps {
   habitatState: HabitatState;
   celebratingLevel?: number | null;
+  /**
+   * Phase 13.1-04: parent (HabitatScene) owns the SSR poster and needs to fade
+   * it out the moment the Three.js canvas signals data-ready. Optional so
+   * existing tests and the snapshot-mode harness keep working.
+   */
+  onCanvasReady?: () => void;
 }
 
 // Dev-only URL override (Plan 13-04 Task 3 snapshot affordance).
@@ -471,6 +476,7 @@ export default function HabitatCanvas({
   // Plan 03 does not bind level-up celebration to the 3D scene yet (the
   // overlay lives in `habitat-scene.tsx`).
   celebratingLevel: _celebratingLevel = null,
+  onCanvasReady,
 }: HabitatCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -566,49 +572,36 @@ export default function HabitatCanvas({
       stateRef,
       moodStateRef,
     });
+    // Phase 13.1-04: notify parent so it can fade its SSR poster out.
+    // mountHabitatScene sets data-ready="true" synchronously before returning.
+    onCanvasReady?.();
     return () => handle.dispose();
-  }, [canvasMounted, sceneLevel, reducedMotion]);
+  }, [canvasMounted, sceneLevel, reducedMotion, onCanvasReady]);
 
-  // R6 zero-CLS: wrapper carries intrinsic size BEFORE either child paints.
-  // Both poster <Image fill> and the <canvas> are absolutely positioned
-  // inside so the swap is layout-shift free.
-  // R4: reduced-motion users get the poster only — no canvas, no tabIndex,
-  // no keyboard-orbit affordance.
-  const wrapperClass = reducedMotion
-    ? "w-full rounded-lg"
-    : "w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-lg";
+  // Phase 13.1-04 SSR-POSTER-FIX:
+  //   The SSR poster + the aspect-ratio sized outer wrapper now live in
+  //   `<HabitatScene>` (parent). This component only paints the absolutely-
+  //   positioned <canvas> + hint overlay layered ON TOP of the parent's
+  //   poster. R6 (CLS=0) is preserved because the parent's wrapper already
+  //   carries intrinsic dimensions in the initial SSR HTML.
+  //
+  //   R4 reduced-motion lockout: when reducedMotion is true (and snapshot
+  //   mode is off), this component renders NOTHING — the parent's SSR
+  //   poster is the full, accessible representation. No tabIndex, no key
+  //   handler, no Three.js bundle is mounted.
+  if (reducedMotion && !canvasMounted) {
+    return null;
+  }
 
   return (
     <div
       ref={wrapperRef}
-      className={wrapperClass}
+      className="focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
       style={{
-        aspectRatio: "16/9",
-        maxHeight: "min(70vh, 400px)",
-        position: "relative",
+        position: "absolute",
+        inset: 0,
       }}
-      role="img"
-      aria-label={`Tiger habitat level ${sceneLevel}`}
     >
-      {/* R2 LCP candidate: full-resolution poster, paints before any Three.js
-          code is fetched. Next.js 16 uses `priority` to opt the image into
-          preload behavior (a `<link rel="preload" as="image">` is injected
-          in <head>). `fill` + `sizes` lets next/image generate a srcset that
-          matches the wrapper. */}
-      <Image
-        src={`/habitat/hero-l${sceneLevel}.webp`}
-        alt={`Tiger habitat level ${sceneLevel}`}
-        fill
-        priority
-        sizes="(max-width: 768px) 100vw, 720px"
-        style={{
-          objectFit: "cover",
-          borderRadius: "0.5rem",
-          transition: "opacity 200ms ease-out",
-          opacity: canvasMounted ? 0 : 1,
-          pointerEvents: canvasMounted ? "none" : "auto",
-        }}
-      />
       {canvasMounted ? (
         <canvas
           ref={canvasRef}
@@ -626,7 +619,9 @@ export default function HabitatCanvas({
       {/* R5: subtle "Tap to animate" hint. Fades in 2s after the poster
           paints if no gesture detected. aria-hidden + pointerEvents:none
           so it cannot absorb input or imply interactivity to AT users; the
-          static poster's role/aria-label already labels the scene. */}
+          parent's SSR poster (role="img"-equivalent via alt) labels the
+          scene. The hint sits inside this absolute layer so it positions
+          relative to the same wrapper the canvas will fill. */}
       {!reducedMotion && hintVisible && !canvasMounted ? (
         <div
           data-testid="habitat-canvas-hint"

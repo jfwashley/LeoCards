@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -22,45 +23,30 @@ const HabitatStateSchema = z.object({
   nextLevelThreshold: z.number().nullable(),
 });
 
-// Loading spinner shown while PixiJS and sprite assets initialize (D-18)
-function HabitatLoadingSpinner() {
-  return (
-    <div
-      className="w-full flex items-center justify-center"
-      style={{ aspectRatio: "16/9", maxHeight: "min(70vh, 400px)" }}
-    >
-      <svg
-        className="animate-spin h-10 w-10 text-orange-500"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        aria-label="Loading habitat"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        />
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-        />
-      </svg>
-    </div>
-  );
-}
+// Wrapper dimensions — single source of truth shared by the SSR poster wrapper
+// and the dynamic-imported canvas loading spinner so the hand-off is CLS=0.
+const WRAPPER_STYLE = {
+  aspectRatio: "16/9",
+  maxHeight: "min(70vh, 400px)",
+  position: "relative" as const,
+};
 
-// SSR-safe: ssr:false only works inside "use client" modules (Next.js 16 rule)
-// Plan 13-03: import target swapped PixiJS (habitat-canvas) → Three.js
-// (habitat-3d-canvas). The shell's outer concerns (cache, retry, level-up
-// overlay, mood label) are unchanged.
+// Phase 13.1-04: no loading-spinner fallback. The dynamic-imported canvas
+// chunk only fetches AFTER a user gesture, and even then the SSR poster
+// below remains visible underneath until `canvasReady` flips. A spinner
+// would visually fight the poster and is no longer the LCP candidate.
+
+// SSR-safe: ssr:false only works inside "use client" modules (Next.js 16 rule).
+// Phase 13.1-04: the OUTER wrapper + SSR poster live in <HabitatScene> (this
+// file). The dynamic canvas now renders only the absolutely-positioned <canvas>
+// + hint overlay on top of the parent-owned poster.
 const HabitatCanvas = dynamic(() => import("@/components/habitat-3d-canvas"), {
   ssr: false,
-  loading: () => <HabitatLoadingSpinner />,
+  // No loading fallback: the SSR poster already occupies the wrapper, so an
+  // additional spinner would visually fight the poster. The dynamic chunk only
+  // fetches after a user gesture, by which point the poster has long since
+  // painted.
+  loading: () => null,
 });
 
 // ============================================================
@@ -87,7 +73,7 @@ interface MoodIndicatorProps {
 
 function MoodIndicator({ mood }: MoodIndicatorProps) {
   return (
-    <div className="absolute top-3 right-3 text-sm font-normal text-muted-foreground flex items-center gap-2">
+    <div className="absolute top-3 right-3 text-sm font-normal text-muted-foreground flex items-center gap-2 z-10">
       <span className={`w-2.5 h-2.5 rounded-full ${MOOD_DOT_CLASSES[mood]}`} />
       {MOOD_LABELS[mood]}
     </div>
@@ -109,6 +95,9 @@ export function HabitatScene({
   const [error, setError] = useState(false);
   const [offline, setOffline] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
+  // Phase 13.1-04: parent owns the SSR poster, so parent also owns the
+  // poster-fade trigger. The canvas signals readiness via `onCanvasReady`.
+  const [canvasReady, setCanvasReady] = useState(false);
   const prevLevelRef = useRef(habitatState.level);
 
   // Sync state when prop changes (BP3)
@@ -172,7 +161,7 @@ export function HabitatScene({
     return (
       <div
         className="w-full flex flex-col items-center justify-center bg-card rounded-lg border"
-        style={{ aspectRatio: "16/9", maxHeight: "min(70vh, 400px)" }}
+        style={WRAPPER_STYLE}
       >
         <p className="text-lg font-semibold mb-2">Something went wrong</p>
         <p className="text-sm text-muted-foreground mb-4">
@@ -184,15 +173,29 @@ export function HabitatScene({
     );
   }
 
+  // Clamp level for poster filename — keeps the SSR <img src> in [1,9].
+  const sceneLevel = Math.max(1, Math.min(9, Math.floor(state.level)));
+
   return (
     <div className="relative w-full">
-      {/* D-19: scene fades in from loading state over ~0.5s */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+      {/*
+        Phase 13.1-04 SSR-POSTER-FIX:
+          The aspect-ratio wrapper + <Image priority fill> poster live OUTSIDE
+          the dynamic({ssr:false}) boundary so they appear in the server-rendered
+          HTML. This is the LCP candidate. The motion.div opacity-0 wrapper that
+          used to wrap the canvas+overlays is GONE — opacity-0 disqualifies the
+          element as an LCP candidate at SSR time, which broke the Phase 13.1-02
+          attempt (Lighthouse reported "NO LCP DETAILS" on the Vercel preview).
+
+          R6 CLS=0: wrapper carries intrinsic size BEFORE either the SSR poster
+          or the (later) Three.js canvas paints.
+      */}
+      <div
+        className="w-full rounded-lg overflow-hidden"
+        style={WRAPPER_STYLE}
+        data-testid="habitat-scene-wrapper"
       >
-        {/* Level badge overlay (D-15, UI-SPEC) */}
+        {/* Level badge overlay (D-15, UI-SPEC) — z-10 so it sits above poster + canvas */}
         <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm font-semibold px-3 py-1 rounded-full z-10">
           Level {state.level}
         </div>
@@ -200,11 +203,39 @@ export function HabitatScene({
         {/* Mood indicator overlay (D-15, UI-SPEC) */}
         <MoodIndicator mood={state.mood} />
 
+        {/*
+          R2 LCP candidate: SSR-rendered <Image priority fill>. Lives at the
+          parent level (NOT inside dynamic({ssr:false})), so the <img> + the
+          preload <link> Next.js injects appear in the document the browser
+          receives. Opacity is NEVER 0 at SSR time — the parent controls the
+          fade-out via canvasReady, which can only flip true after hydration.
+        */}
+        <Image
+          src={`/habitat/hero-l${sceneLevel}.webp`}
+          alt={`Tiger habitat level ${sceneLevel}`}
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 720px"
+          style={{
+            objectFit: "cover",
+            transition: "opacity 200ms ease-out",
+            opacity: canvasReady ? 0 : 1,
+            pointerEvents: canvasReady ? "none" : "auto",
+          }}
+        />
+
+        {/*
+          Dynamic Three.js canvas. The component absolutely-positions its own
+          <canvas> over our poster. It owns the gesture gate, hint timer, and
+          dev affordances. It calls `onCanvasReady` when data-ready flips to
+          "true" so we can fade the SSR poster out.
+        */}
         <HabitatCanvas
           habitatState={state}
           celebratingLevel={celebratingLevel}
+          onCanvasReady={() => setCanvasReady(true)}
         />
-      </motion.div>
+      </div>
 
       {/* Offline indicator (D-24): shows when displaying cached data */}
       {offline && (
