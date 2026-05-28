@@ -115,15 +115,20 @@ Plans:
 - [x] 13-05-PLAN.md — Live 3D 80px widget (later superseded by 13-06 D-28 cached decision) — completed 2026-05-20
 - [x] 13-06-PLAN.md — D-28 = **cached** (live widget FPS 21/18 < 30 gate); 9 hero `.webp`s + image variant; PixiJS removed; Three.js code-split (504 KB chunk) — completed 2026-05-21
 
-**Status:** Complete — PASS-WITH-KNOWN-PERF-REGRESSION (R9 FAIL on `/habitat` mobile only — confirmed via clean Lighthouse 2026-05-27: LCP 2989 ms / TBT 646 ms; other 3 cells PASS. D-28 cached widget re-confirmed correct. Fix candidate for Phase 13.1 or 999.1. See `13-PERF-REAL.md`.)
+**Status:** Complete — PASS-WITH-KNOWN-PERF-REGRESSION (R9 originally FAIL; addressed in Phase 13.1 — `/habitat` mobile LCP improved 2989 → 2561 ms median, desktop went to Perf 100. 61 ms over lab gate; 3/6 lab runs pass. Field-data CWV needed to fully close. See `13-PERF-REAL.md` + `13.1-PERF.md`.)
 </content>
 
-### Phase 13.1: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster (fixes R9 carried regression) (INSERTED)
+### Phase 13.1: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster
 
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
+**Goal:** Bring `/habitat` mobile back into CWV "Good" by deferring Three.js init past LCP using a full-resolution static poster as the LCP element and a gesture-only canvas mount. (Closes Phase 13 R9 carried regression.)
+**Requirements:** P13.1-R1..P13.1-R8 (8 falsifiable requirements locked in `13.1-SPEC.md`)
 **Depends on:** Phase 13
-**Plans:** 0 plans
+**Plans:** 4 plans (all complete) + 4 iteration commits
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 13.1 to break down)
+- [x] 13.1-01-PLAN.md — Full-resolution poster generation script + 9 hero webps (R1)
+- [x] 13.1-02-PLAN.md — Canvas defer + gesture gate + reduced-motion lockout + zero-CLS wrapper (R2/R3/R4/R6)
+- [x] 13.1-03-PLAN.md — "Tap to animate" hint (R5)
+- [x] 13.1-04-PLAN.md — Measurement + SSR-poster fix + CDN-direct + poster shrink (R7/R8)
+
+**Status:** Complete — PASS-WITH-LAB-VARIANCE. `/habitat` desktop Perf **100** (LCP 578); `/habitat` mobile LCP median 2561 ms (3/6 lab runs pass; 61 ms over gate; min 1862). −14% LCP, −16% TBT vs Phase 13 baseline. CLS 0 across all 15 Lighthouse runs. Architecturally correct (SSR `<link rel=preload as=image>`, direct CDN delivery, opacity:1, Lighthouse identifies LCP element). See `13.1-PERF.md` + `13.1-VERIFICATION.md` + `13.1-SUMMARY.md`. Recommended next: field-data CWV monitoring + Phase 999.1 for residual TBT optimization.

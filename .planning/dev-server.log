@@ -1,0 +1,331 @@
+
+> leocards@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.21.0.92:3000
+- Environments: .env.local
+✓ Ready in 1697ms
+
+ GET /signup 200 in 2.1s (next.js: 380ms, proxy.ts: 1077ms, application-code: 690ms)
+ POST /api/auth/sign-up/email 200 in 7.1s (next.js: 1318ms, application-code: 5.8s)
+ GET /dashboard 200 in 2.1s (next.js: 364ms, proxy.ts: 56ms, application-code: 1724ms)
+ GET /dashboard 200 in 1286ms (next.js: 17ms, proxy.ts: 18ms, application-code: 1250ms)
+ GET /dashboard 200 in 2.3s (next.js: 651ms, proxy.ts: 47ms, application-code: 1589ms)
+ POST /dashboard 200 in 2.1s (next.js: 32ms, proxy.ts: 42ms, application-code: 2.0s)
+  └─ ƒ createDeck("fr") in 684ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 1133ms (next.js: 17ms, proxy.ts: 20ms, application-code: 1096ms)
+ GET /habitat?snapshot=true&devLevel=1 200 in 1123ms (next.js: 144ms, application-code: 979ms)
+ GET /habitat?snapshot=true&devLevel=2 200 in 5.0s (next.js: 318ms, application-code: 4.7s)
+ GET /habitat?snapshot=true&devLevel=3 200 in 9.5s (next.js: 683ms, application-code: 8.8s)
+ GET /habitat?snapshot=true&devLevel=4 200 in 6.2s (next.js: 154ms, application-code: 6.1s)
+ GET /habitat?snapshot=true&devLevel=5 200 in 5.8s (next.js: 203ms, application-code: 5.6s)
+ GET /habitat?snapshot=true&devLevel=6 200 in 6.3s (next.js: 47ms, application-code: 6.3s)
+ GET /habitat?snapshot=true&devLevel=7 200 in 7.0s (next.js: 197ms, application-code: 6.8s)
+ GET /habitat?snapshot=true&devLevel=8 200 in 10.4s (next.js: 264ms, application-code: 10.1s)
+ GET /habitat?snapshot=true&devLevel=9 200 in 7.8s (next.js: 199ms, application-code: 7.6s)
+ GET /signup 200 in 199ms (next.js: 8ms, proxy.ts: 22ms, application-code: 169ms)
+[2m2026-05-27T10:13:20.121Z[0m [31mERROR[0m [1m[Better Auth]:[0m Failed to create user Error: Failed query: insert into "user" ("id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage") values ($1, $2, $3, $4, default, $5, $6, $7) returning "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage"
+params: 3xoYbOJVOY8uobe2a1CsMrrhVmB6YzRa,QA Tester,qa+1779876781229+k1qf@test.local,false,2026-05-27T10:13:09.847Z,2026-05-27T10:13:09.847Z,en
+    at ignore-listed frames {
+  query: 'insert into "user" ("id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage") values ($1, $2, $3, $4, default, $5, $6, $7) returning "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage"',
+  params: [
+    '3xoYbOJVOY8uobe2a1CsMrrhVmB6YzRa',
+    'QA Tester',
+    'qa+1779876781229+k1qf@test.local',
+    false,
+    '2026-05-27T10:13:09.847Z',
+    '2026-05-27T10:13:09.847Z',
+    'en'
+  ],
+  [cause]: Error [NeonDbError]: Error connecting to database: TypeError: fetch failed
+      at ignore-listed frames {
+    severity: undefined,
+    code: undefined,
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: undefined,
+    line: undefined,
+    routine: undefined,
+    sourceError: [TypeError: fetch failed] { [cause]: [Error] }
+  }
+}
+[2m2026-05-27T10:13:21.293Z[0m [31mERROR[0m [1m[Better Auth]:[0m Failed to create user Error: Failed query: insert into "user" ("id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage") values ($1, $2, $3, $4, default, $5, $6, $7) returning "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage"
+params: 3xoYbOJVOY8uobe2a1CsMrrhVmB6YzRa,QA Tester,qa+1779876781229+k1qf@test.local,false,2026-05-27T10:13:09.847Z,2026-05-27T10:13:09.847Z,en
+    at ignore-listed frames {
+  query: 'insert into "user" ("id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage") values ($1, $2, $3, $4, default, $5, $6, $7) returning "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage"',
+  params: [
+    '3xoYbOJVOY8uobe2a1CsMrrhVmB6YzRa',
+    'QA Tester',
+    'qa+1779876781229+k1qf@test.local',
+    false,
+    '2026-05-27T10:13:09.847Z',
+    '2026-05-27T10:13:09.847Z',
+    'en'
+  ],
+  [cause]: Error [NeonDbError]: Error connecting to database: TypeError: fetch failed
+      at ignore-listed frames {
+    severity: undefined,
+    code: undefined,
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: undefined,
+    line: undefined,
+    routine: undefined,
+    sourceError: [TypeError: fetch failed] { [cause]: [Error] }
+  }
+}
+ POST /api/auth/sign-up/email 422 in 18.1s (next.js: 39ms, application-code: 18.1s)
+ GET /signup 200 in 167ms (next.js: 10ms, proxy.ts: 13ms, application-code: 144ms)
+[2m2026-05-27T10:14:05.653Z[0m [31mERROR[0m [1m[Better Auth]:[0m Error Error: Failed query: select "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage" from "user" where "user"."email" = $1
+params: qa+1779876832157+f4fj@test.local
+    at ignore-listed frames {
+  query: 'select "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage" from "user" where "user"."email" = $1',
+  params: [ 'qa+1779876832157+f4fj@test.local' ],
+  [cause]: Error [NeonDbError]: Error connecting to database: TypeError: fetch failed
+      at ignore-listed frames {
+    severity: undefined,
+    code: undefined,
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: undefined,
+    line: undefined,
+    routine: undefined,
+    sourceError: [TypeError: fetch failed] { [cause]: [Error] }
+  }
+}
+# SERVER_ERROR:  Error: Failed query: select "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage" from "user" where "user"."email" = $1
+params: qa+1779876832157+f4fj@test.local
+    at ignore-listed frames {
+  query: 'select "id", "name", "email", "emailVerified", "image", "createdAt", "updatedAt", "nativeLanguage" from "user" where "user"."email" = $1',
+  params: [ 'qa+1779876832157+f4fj@test.local' ],
+  [cause]: Error [NeonDbError]: Error connecting to database: TypeError: fetch failed
+      at ignore-listed frames {
+    severity: undefined,
+    code: undefined,
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: undefined,
+    line: undefined,
+    routine: undefined,
+    sourceError: [TypeError: fetch failed] { [cause]: [Error] }
+  }
+}
+ POST /api/auth/sign-up/email 500 in 11.9s (next.js: 66ms, application-code: 11.8s)
+ GET /signup 200 in 152ms (next.js: 9ms, proxy.ts: 9ms, application-code: 134ms)
+ POST /api/auth/sign-up/email 200 in 6.3s (next.js: 71ms, application-code: 6.3s)
+ GET /dashboard 200 in 2.6s (next.js: 22ms, proxy.ts: 47ms, application-code: 2.5s)
+ GET /dashboard 200 in 5.6s (next.js: 80ms, proxy.ts: 70ms, application-code: 5.4s)
+ GET /dashboard 200 in 5.6s (next.js: 10ms, proxy.ts: 6ms, application-code: 5.6s)
+ POST /dashboard 200 in 4.3s (next.js: 18ms, proxy.ts: 23ms, application-code: 4.3s)
+  └─ ƒ createDeck("fr") in 1839ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 2.3s (next.js: 13ms, proxy.ts: 16ms, application-code: 2.2s)
+ GET /habitat?snapshot=true&devLevel=1 200 in 1111ms (next.js: 13ms, application-code: 1099ms)
+ GET /habitat?snapshot=true&devLevel=2 200 in 7.2s (next.js: 133ms, application-code: 7.1s)
+ GET /habitat?snapshot=true&devLevel=3 200 in 8.6s (next.js: 152ms, application-code: 8.4s)
+ GET /habitat?snapshot=true&devLevel=4 200 in 8.5s (next.js: 301ms, application-code: 8.2s)
+ GET /habitat?snapshot=true&devLevel=5 200 in 5.0s (next.js: 152ms, application-code: 4.8s)
+ GET /habitat?snapshot=true&devLevel=6 200 in 6.5s (next.js: 165ms, application-code: 6.4s)
+ GET /habitat?snapshot=true&devLevel=7 200 in 5.8s (next.js: 42ms, application-code: 5.7s)
+ GET /habitat?snapshot=true&devLevel=8 200 in 9.4s (next.js: 11ms, application-code: 9.4s)
+ GET /habitat?snapshot=true&devLevel=9 200 in 6.9s (next.js: 388ms, application-code: 6.5s)
+ GET /signup 200 in 220ms (next.js: 12ms, proxy.ts: 13ms, application-code: 196ms)
+ POST /api/auth/sign-up/email 200 in 5.4s (next.js: 30ms, application-code: 5.3s)
+ GET /dashboard 200 in 1915ms (next.js: 24ms, proxy.ts: 61ms, application-code: 1830ms)
+ GET /dashboard 200 in 1882ms (next.js: 102ms, proxy.ts: 68ms, application-code: 1711ms)
+ GET /dashboard 200 in 1569ms (next.js: 6ms, proxy.ts: 6ms, application-code: 1556ms)
+ POST /dashboard 200 in 2.3s (next.js: 19ms, proxy.ts: 25ms, application-code: 2.3s)
+  └─ ƒ createDeck("fr") in 865ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 1346ms (next.js: 5ms, proxy.ts: 7ms, application-code: 1334ms)
+ GET /habitat?snapshot=true&devLevel=1 200 in 820ms (next.js: 21ms, application-code: 799ms)
+ GET /habitat?snapshot=true&devLevel=2 200 in 11.1s (next.js: 144ms, application-code: 11.0s)
+ GET /habitat?snapshot=true&devLevel=3 200 in 7.5s (next.js: 269ms, application-code: 7.2s)
+ GET /habitat?snapshot=true&devLevel=4 200 in 14.6s (next.js: 628ms, application-code: 14.0s)
+ GET /habitat?snapshot=true&devLevel=5 200 in 7.1s (next.js: 181ms, application-code: 7.0s)
+ GET /habitat?snapshot=true&devLevel=6 200 in 6.2s (next.js: 379ms, application-code: 5.8s)
+ GET /habitat?snapshot=true&devLevel=7 200 in 8.6s (next.js: 189ms, application-code: 8.4s)
+ GET /habitat?snapshot=true&devLevel=8 200 in 6.2s (next.js: 202ms, application-code: 6.0s)
+ GET /habitat?snapshot=true&devLevel=9 200 in 8.8s (next.js: 242ms, application-code: 8.6s)
+✓ Compiled in 262ms
+✓ Compiled in 584ms
+✓ Compiled in 219ms
+ GET /signup 200 in 437ms (next.js: 42ms, proxy.ts: 34ms, application-code: 361ms)
+ POST /api/auth/sign-up/email 200 in 6.1s (next.js: 78ms, application-code: 6.0s)
+ GET /dashboard 200 in 2.3s (next.js: 10ms, proxy.ts: 16ms, application-code: 2.3s)
+ GET /dashboard 200 in 3.0s (next.js: 93ms, proxy.ts: 77ms, application-code: 2.9s)
+ GET /dashboard 200 in 4.0s (next.js: 26ms, proxy.ts: 37ms, application-code: 3.9s)
+ POST /dashboard 200 in 2.4s (next.js: 11ms, proxy.ts: 16ms, application-code: 2.3s)
+  └─ ƒ createDeck("fr") in 763ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 1725ms (next.js: 12ms, proxy.ts: 16ms, application-code: 1697ms)
+ GET /habitat 200 in 4.6s (next.js: 1512ms, application-code: 3.1s)
+ GET /signup 200 in 331ms (next.js: 15ms, proxy.ts: 20ms, application-code: 296ms)
+ POST /api/auth/sign-up/email 200 in 6.8s (next.js: 37ms, application-code: 6.7s)
+ GET /dashboard 200 in 1422ms (next.js: 37ms, proxy.ts: 109ms, application-code: 1276ms)
+ GET /dashboard 200 in 1329ms (next.js: 5ms, proxy.ts: 8ms, application-code: 1316ms)
+ GET /dashboard 200 in 1893ms (next.js: 37ms, proxy.ts: 95ms, application-code: 1761ms)
+ POST /dashboard 200 in 1651ms (next.js: 16ms, proxy.ts: 19ms, application-code: 1616ms)
+  └─ ƒ createDeck("fr") in 645ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 977ms (next.js: 9ms, proxy.ts: 8ms, application-code: 960ms)
+ GET /habitat 200 in 982ms (next.js: 8ms, application-code: 974ms)
+ GET /signup 200 in 120ms (next.js: 5ms, proxy.ts: 9ms, application-code: 106ms)
+ POST /api/auth/sign-up/email 200 in 5.6s (next.js: 33ms, application-code: 5.5s)
+ GET /dashboard 200 in 1532ms (next.js: 15ms, proxy.ts: 45ms, application-code: 1472ms)
+ GET /dashboard 200 in 1352ms (next.js: 5ms, proxy.ts: 5ms, application-code: 1343ms)
+ GET /dashboard 200 in 1957ms (next.js: 9ms, proxy.ts: 29ms, application-code: 1919ms)
+ POST /dashboard 200 in 1489ms (next.js: 15ms, proxy.ts: 20ms, application-code: 1453ms)
+  └─ ƒ createDeck("fr") in 640ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 846ms (next.js: 2ms, proxy.ts: 4ms, application-code: 840ms)
+ GET /habitat 200 in 656ms (next.js: 6ms, application-code: 650ms)
+ GET /signup 200 in 91ms (next.js: 7ms, proxy.ts: 10ms, application-code: 74ms)
+ POST /api/auth/sign-up/email 200 in 3.5s (next.js: 51ms, application-code: 3.5s)
+ GET /dashboard 200 in 1189ms (next.js: 9ms, proxy.ts: 18ms, application-code: 1163ms)
+ GET /dashboard 200 in 1102ms (next.js: 3ms, proxy.ts: 5ms, application-code: 1094ms)
+ GET /dashboard 200 in 1592ms (next.js: 11ms, proxy.ts: 23ms, application-code: 1557ms)
+ POST /dashboard 200 in 1629ms (next.js: 12ms, proxy.ts: 14ms, application-code: 1602ms)
+  └─ ƒ createDeck("fr") in 721ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 856ms (next.js: 12ms, proxy.ts: 14ms, application-code: 830ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=1&snapshot=true 200 in 688ms (next.js: 7ms, application-code: 681ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.7&snapshot=true 200 in 4.0s (next.js: 140ms, application-code: 3.8s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.5&snapshot=true 200 in 1642ms (next.js: 10ms, application-code: 1632ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.4&snapshot=true 200 in 2.6s (next.js: 12ms, application-code: 2.6s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.3&snapshot=true 200 in 2.3s (next.js: 11ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.2&snapshot=true 200 in 2.7s (next.js: 10ms, application-code: 2.7s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.1&snapshot=true 200 in 2.1s (next.js: 10ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=1&snapshot=true 200 in 1822ms (next.js: 8ms, application-code: 1814ms)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.7&snapshot=true 200 in 3.2s (next.js: 10ms, application-code: 3.2s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.5&snapshot=true 200 in 2.0s (next.js: 13ms, application-code: 2.0s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.4&snapshot=true 200 in 2.2s (next.js: 12ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.3&snapshot=true 200 in 2.2s (next.js: 10ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.2&snapshot=true 200 in 2.4s (next.js: 9ms, application-code: 2.4s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.1&snapshot=true 200 in 2.7s (next.js: 10ms, application-code: 2.7s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=1&snapshot=true 200 in 2.1s (next.js: 10ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.7&snapshot=true 200 in 2.9s (next.js: 9ms, application-code: 2.9s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.5&snapshot=true 200 in 2.1s (next.js: 13ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.4&snapshot=true 200 in 2.2s (next.js: 12ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.3&snapshot=true 200 in 2.2s (next.js: 8ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.2&snapshot=true 200 in 3.0s (next.js: 9ms, application-code: 3.0s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.1&snapshot=true 200 in 3.1s (next.js: 110ms, application-code: 3.0s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=1&snapshot=true 200 in 2.2s (next.js: 12ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.7&snapshot=true 200 in 7.5s (next.js: 12ms, application-code: 7.5s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.5&snapshot=true 200 in 9.2s (next.js: 145ms, application-code: 9.0s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.4&snapshot=true 200 in 4.5s (next.js: 145ms, application-code: 4.4s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.3&snapshot=true 200 in 2.6s (next.js: 14ms, application-code: 2.6s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.2&snapshot=true 200 in 3.5s (next.js: 8ms, application-code: 3.5s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.1&snapshot=true 200 in 2.7s (next.js: 51ms, application-code: 2.7s)
+ GET /signup 200 in 123ms (next.js: 9ms, proxy.ts: 12ms, application-code: 102ms)
+ POST /api/auth/sign-up/email 200 in 3.9s (next.js: 17ms, application-code: 3.8s)
+ GET /dashboard 200 in 1559ms (next.js: 2ms, proxy.ts: 3ms, application-code: 1554ms)
+ GET /dashboard 200 in 1692ms (next.js: 11ms, proxy.ts: 21ms, application-code: 1659ms)
+ GET /dashboard 200 in 2.3s (next.js: 26ms, proxy.ts: 32ms, application-code: 2.3s)
+ POST /dashboard 200 in 1622ms (next.js: 13ms, proxy.ts: 16ms, application-code: 1593ms)
+  └─ ƒ createDeck("fr") in 650ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 820ms (next.js: 9ms, proxy.ts: 11ms, application-code: 800ms)
+ GET /habitat 200 in 747ms (next.js: 6ms, application-code: 741ms)
+ GET /signup 200 in 100ms (next.js: 6ms, proxy.ts: 8ms, application-code: 86ms)
+ POST /api/auth/sign-up/email 200 in 3.0s (next.js: 33ms, application-code: 3.0s)
+ GET /dashboard 200 in 1781ms (next.js: 11ms, proxy.ts: 14ms, application-code: 1756ms)
+ GET /dashboard 200 in 2.3s (next.js: 5ms, proxy.ts: 6ms, application-code: 2.3s)
+ GET /dashboard 200 in 2.4s (next.js: 6ms, proxy.ts: 17ms, application-code: 2.4s)
+ POST /dashboard 200 in 1440ms (next.js: 6ms, proxy.ts: 8ms, application-code: 1426ms)
+  └─ ƒ createDeck("fr") in 680ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 723ms (next.js: 3ms, proxy.ts: 2ms, application-code: 718ms)
+ GET /habitat 200 in 922ms (next.js: 5ms, application-code: 918ms)
+ GET /signup 200 in 80ms (next.js: 5ms, proxy.ts: 7ms, application-code: 68ms)
+ POST /api/auth/sign-up/email 200 in 3.7s (next.js: 8ms, application-code: 3.7s)
+ GET /dashboard 200 in 1494ms (next.js: 2ms, proxy.ts: 4ms, application-code: 1488ms)
+ GET /dashboard 200 in 1881ms (next.js: 7ms, proxy.ts: 6ms, application-code: 1868ms)
+ GET /dashboard 200 in 2.1s (next.js: 4ms, proxy.ts: 29ms, application-code: 2.1s)
+ POST /dashboard 200 in 1597ms (next.js: 14ms, proxy.ts: 20ms, application-code: 1562ms)
+  └─ ƒ createDeck("fr") in 729ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 778ms (next.js: 3ms, proxy.ts: 4ms, application-code: 771ms)
+ GET /habitat 200 in 648ms (next.js: 5ms, application-code: 643ms)
+ GET /signup 200 in 32ms (next.js: 2ms, proxy.ts: 5ms, application-code: 25ms)
+ POST /api/auth/sign-up/email 200 in 4.0s (next.js: 27ms, application-code: 4.0s)
+ GET /dashboard 200 in 807ms (next.js: 17ms, proxy.ts: 10ms, application-code: 780ms)
+ GET /dashboard 200 in 1155ms (next.js: 5ms, proxy.ts: 19ms, application-code: 1131ms)
+ GET /dashboard 200 in 1270ms (next.js: 4ms, proxy.ts: 5ms, application-code: 1261ms)
+ POST /dashboard 200 in 1610ms (next.js: 12ms, proxy.ts: 10ms, application-code: 1588ms)
+  └─ ƒ createDeck("fr") in 891ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 1237ms (next.js: 9ms, proxy.ts: 14ms, application-code: 1214ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=1&snapshot=true 200 in 651ms (next.js: 4ms, application-code: 647ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.7&snapshot=true 200 in 2.2s (next.js: 22ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.5&snapshot=true 200 in 2.3s (next.js: 17ms, application-code: 2.3s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.4&snapshot=true 200 in 1698ms (next.js: 9ms, application-code: 1690ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.3&snapshot=true 200 in 2.6s (next.js: 11ms, application-code: 2.6s)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.2&snapshot=true 200 in 1670ms (next.js: 10ms, application-code: 1660ms)
+ GET /habitat?devLevel=5&devMood=excited&devQuality=0.1&snapshot=true 200 in 2.4s (next.js: 10ms, application-code: 2.4s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=1&snapshot=true 200 in 2.4s (next.js: 10ms, application-code: 2.4s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.7&snapshot=true 200 in 1767ms (next.js: 19ms, application-code: 1748ms)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.5&snapshot=true 200 in 1781ms (next.js: 31ms, application-code: 1750ms)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.4&snapshot=true 200 in 2.2s (next.js: 10ms, application-code: 2.2s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.3&snapshot=true 200 in 1595ms (next.js: 9ms, application-code: 1586ms)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.2&snapshot=true 200 in 2.2s (next.js: 9ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=happy&devQuality=0.1&snapshot=true 200 in 2.3s (next.js: 8ms, application-code: 2.3s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=1&snapshot=true 200 in 2.0s (next.js: 22ms, application-code: 1998ms)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.7&snapshot=true 200 in 2.1s (next.js: 8ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.5&snapshot=true 200 in 2.1s (next.js: 7ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.4&snapshot=true 200 in 1808ms (next.js: 33ms, application-code: 1775ms)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.3&snapshot=true 200 in 1895ms (next.js: 7ms, application-code: 1888ms)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.2&snapshot=true 200 in 2.9s (next.js: 8ms, application-code: 2.9s)
+ GET /habitat?devLevel=5&devMood=neutral&devQuality=0.1&snapshot=true 200 in 2.4s (next.js: 30ms, application-code: 2.4s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=1&snapshot=true 200 in 1892ms (next.js: 10ms, application-code: 1881ms)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.7&snapshot=true 200 in 2.3s (next.js: 8ms, application-code: 2.3s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.5&snapshot=true 200 in 2.1s (next.js: 50ms, application-code: 2.1s)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.4&snapshot=true 200 in 2.0s (next.js: 31ms, application-code: 1974ms)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.3&snapshot=true 200 in 1858ms (next.js: 25ms, application-code: 1833ms)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.2&snapshot=true 200 in 1559ms (next.js: 10ms, application-code: 1549ms)
+ GET /habitat?devLevel=5&devMood=sad&devQuality=0.1&snapshot=true 200 in 2.3s (next.js: 24ms, application-code: 2.2s)
+ GET /signup 200 in 2.9s (next.js: 602ms, proxy.ts: 1191ms, application-code: 1137ms)
+ POST /api/auth/sign-up/email 200 in 5.3s (next.js: 570ms, application-code: 4.7s)
+ GET /dashboard 200 in 1282ms (next.js: 11ms, proxy.ts: 17ms, application-code: 1254ms)
+ GET /dashboard 200 in 2.5s (next.js: 423ms, proxy.ts: 57ms, application-code: 2.0s)
+ GET /dashboard 200 in 2.9s (next.js: 74ms, proxy.ts: 768ms, application-code: 2.1s)
+ POST /dashboard 200 in 1683ms (next.js: 16ms, proxy.ts: 23ms, application-code: 1644ms)
+  └─ ƒ createDeck("fr") in 433ms src/lib/deck-actions.ts
+ GET /dashboard 200 in 1280ms (next.js: 14ms, proxy.ts: 22ms, application-code: 1244ms)
+ GET /habitat?snapshot=true&devLevel=1 200 in 1770ms (next.js: 599ms, application-code: 1171ms)
+ GET /habitat?snapshot=true&devLevel=2 200 in 7.3s (next.js: 108ms, application-code: 7.1s)
+ GET /habitat?snapshot=true&devLevel=3 200 in 6.8s (next.js: 297ms, application-code: 6.5s)
+ GET /habitat?snapshot=true&devLevel=4 200 in 8.6s (next.js: 437ms, application-code: 8.2s)
+ GET /habitat?snapshot=true&devLevel=5 200 in 6.6s (next.js: 292ms, application-code: 6.3s)
+ GET /habitat?snapshot=true&devLevel=6 200 in 3.9s (next.js: 150ms, application-code: 3.7s)
+ GET /habitat?snapshot=true&devLevel=7 200 in 6.5s (next.js: 206ms, application-code: 6.3s)
+ GET /habitat?snapshot=true&devLevel=8 200 in 5.5s (next.js: 9ms, application-code: 5.5s)
+ GET /habitat?snapshot=true&devLevel=9 200 in 8.1s (next.js: 10ms, application-code: 8.1s)
