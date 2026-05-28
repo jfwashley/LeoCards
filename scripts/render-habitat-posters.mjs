@@ -27,8 +27,11 @@ const SPEC = "e2e/scripts/render-habitat-posters.spec.ts";
 const TMP_DIR = path.join(ROOT, "e2e", "scripts", ".tmp");
 const OUT_DIR = path.join(ROOT, "public", "habitat");
 
-const MIN_BYTES = 20_000;
-const MAX_BYTES = 100_000;
+// Phase 13.1 fine-tune iteration B: shrink poster bytes to halve LCP fetch
+// time on Slow 4G. Target 720×405 (vs 1280×720) + q=40 (vs q=82) → ~6-10 KB
+// per webp (was ~25 KB). SPEC R1 size band relaxed accordingly (was 20-100 KB).
+const MIN_BYTES = 3_000;
+const MAX_BYTES = 25_000;
 const MIN_WIDTH = 720;
 const MIN_HEIGHT = 405;
 
@@ -46,13 +49,13 @@ function fmtKB(n) {
 // poster meets the ≥720×405 LCP-candidate floor and matches the wrapper's 16:9
 // `aspectRatio` exactly. Lanczos3 upscaling is fine here — the scene is rendered
 // stylised low-poly clay, no fine detail to alias.
-const TARGET_W = 1280;
-const TARGET_H = 720;
+const TARGET_W = 720;
+const TARGET_H = 405;
 
 async function encodeWebp(buf, quality) {
   return sharp(buf)
     .resize(TARGET_W, TARGET_H, { fit: "fill", kernel: "lanczos3" })
-    .webp({ quality, effort: 5 })
+    .webp({ quality, effort: 6 })
     .toBuffer();
 }
 
@@ -63,8 +66,8 @@ async function processLevel(level) {
   }
   const pngBuf = fs.readFileSync(pngPath);
 
-  // Initial encode at quality 82.
-  let quality = 82;
+  // Initial encode at quality 40 (shrink-iteration B).
+  let quality = 40;
   let webpBuf = await encodeWebp(pngBuf, quality);
   let meta = await sharp(webpBuf).metadata();
 
@@ -78,18 +81,18 @@ async function processLevel(level) {
   let note = "";
 
   if (size < MIN_BYTES) {
-    quality = 92;
+    quality = 60;
     webpBuf = await encodeWebp(pngBuf, quality);
     size = webpBuf.length;
-    note = " (retry @q92)";
+    note = " (retry @q60)";
     if (size < MIN_BYTES) {
       fail(`L${level}: ${size} B still under ${MIN_BYTES} B after retry`);
     }
   } else if (size > MAX_BYTES) {
-    quality = 70;
+    quality = 30;
     webpBuf = await encodeWebp(pngBuf, quality);
     size = webpBuf.length;
-    note = " (retry @q70)";
+    note = " (retry @q30)";
     if (size > MAX_BYTES) {
       fail(`L${level}: ${size} B still over ${MAX_BYTES} B after retry`);
     }
