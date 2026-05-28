@@ -210,11 +210,23 @@ export function HabitatScene({
           receives. Opacity is NEVER 0 at SSR time — the parent controls the
           fade-out via canvasReady, which can only flip true after hydration.
         */}
+        {/*
+          Phase 13.1-04 Opt A: `unoptimized` makes Next emit a plain <img>
+          with `src="/habitat/hero-l{N}.webp"` instead of routing through
+          `/_next/image?url=...` (Vercel image-optimization Lambda). The
+          static webp at ~25 KB is already correctly sized + encoded; the
+          proxy added 100-300 ms Lambda cold-start to mobile LCP for zero
+          byte savings. Direct CDN delivery is strictly faster.
+
+          `priority` is preserved so Next still injects the preload <link>
+          in <head> (now pointing at the direct asset path, not the proxy).
+        */}
         <Image
           src={`/habitat/hero-l${sceneLevel}.webp`}
           alt={`Tiger habitat level ${sceneLevel}`}
           fill
           priority
+          unoptimized
           sizes="(max-width: 768px) 100vw, 720px"
           style={{
             objectFit: "cover",
