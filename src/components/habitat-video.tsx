@@ -130,39 +130,52 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
   const poster = posterSrc(level);
   const altLevel = clampLevel(level);
 
-  // Reduced-motion path: render the static poster still (the decay filter still
-  // applies). SSR + first render always emit the <video> below so there is no
-  // CLS and the server markup is deterministic; this swaps in only after mount.
+  // Phase 13.1-VIDEO-03 LCP FIX: the poster is ALWAYS rendered as an explicit
+  // `next/image priority` (bottom layer). `priority` emits a `<link rel=preload
+  // as=image>` in <head>, making the ~4 KB webp the unambiguous, prioritised LCP
+  // candidate that paints immediately — independent of video load. The old
+  // `<video poster>` attribute gave NO preload and Lighthouse reported "LCP
+  // element: none" (LCP got gated behind hydration → ~3 s on mobile).
+  //
+  // The poster sits permanently underneath; the autoplaying clip (top layer,
+  // later in DOM) simply covers it once frames decode. `preload="metadata"`
+  // (not "auto") keeps the clip from competing with the poster for the Slow-4G
+  // LCP-window bandwidth. Under reduced-motion the clip is omitted entirely and
+  // the poster IS the experience.
+  const Poster = (
+    <Image
+      src={poster}
+      alt={`Tiger habitat level ${altLevel}`}
+      fill
+      unoptimized
+      priority
+      sizes="(max-width: 768px) 100vw, 720px"
+      data-testid="habitat-video-still"
+      style={{ objectFit: "cover", filter }}
+    />
+  );
+
   if (reducedMotion) {
-    return (
-      <Image
-        src={poster}
-        alt={`Tiger habitat level ${altLevel}`}
-        fill
-        unoptimized
-        priority
-        sizes="(max-width: 768px) 100vw, 720px"
-        data-testid="habitat-video-still"
-        style={{ objectFit: "cover", filter }}
-      />
-    );
+    return Poster;
   }
 
   return (
-    <video
-      key={clipBasename(level, mood)}
-      data-testid="habitat-video"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-      poster={poster}
-      aria-label={`Tiger habitat level ${altLevel}`}
-      style={{ ...FILL_STYLE, filter }}
-    >
-      <source src={webmSrc(level, mood)} type="video/webm" />
-      <source src={mp4Src(level, mood)} type="video/mp4" />
-    </video>
+    <>
+      {Poster}
+      <video
+        key={clipBasename(level, mood)}
+        data-testid="habitat-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={`Tiger habitat level ${altLevel}`}
+        style={{ ...FILL_STYLE, filter }}
+      >
+        <source src={webmSrc(level, mood)} type="video/webm" />
+        <source src={mp4Src(level, mood)} type="video/mp4" />
+      </video>
+    </>
   );
 }

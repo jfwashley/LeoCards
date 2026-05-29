@@ -85,14 +85,25 @@ describe("HabitatVideo helpers (Plan VIDEO-02 Task 1)", () => {
 });
 
 describe("HabitatVideo JSX invariants (source grep)", () => {
-  it("V7: <video> is autoPlay + muted + loop + playsInline + preload=auto", () => {
+  it("V7: <video> is autoPlay + muted + loop + playsInline + preload=metadata", () => {
     const s = src();
     expect(s).toMatch(/<video[\s\S]*?>/);
     expect(s).toMatch(/\bautoPlay\b/);
     expect(s).toMatch(/\bmuted\b/);
     expect(s).toMatch(/\bloop\b/);
     expect(s).toMatch(/\bplaysInline\b/);
-    expect(s).toMatch(/preload="auto"/);
+    // VIDEO-03 LCP fix: clip drops to preload="metadata" so it doesn't compete
+    // with the preloaded priority poster for the Slow-4G LCP-window bandwidth.
+    expect(s).toMatch(/preload="metadata"/);
+  });
+
+  it("V7b: poster is a priority next/image LCP candidate (rendered on all paths)", () => {
+    const s = src();
+    // The shared `Poster` element carries `priority` (emits <link rel=preload>)
+    // and is returned for BOTH the reduced-motion path and beneath the video.
+    expect(s).toMatch(/const\s+Poster\s*=/);
+    expect(s).toMatch(/\bpriority\b/);
+    expect(s).toMatch(/src=\{poster\}/);
   });
 
   it("V8: <source> order is webm FIRST, mp4 SECOND (codec preference)", () => {
@@ -104,18 +115,18 @@ describe("HabitatVideo JSX invariants (source grep)", () => {
     expect(webmIdx).toBeLessThan(mp4Idx);
   });
 
-  it("V9: reduced-motion selects the still (poster <Image>), not an autoplaying <video>", () => {
+  it("V9: reduced-motion returns the still poster only (no autoplaying <video>)", () => {
     const s = src();
-    // The reduced-motion branch returns the still keyed by data-testid.
+    // The reduced-motion branch returns the shared `Poster` still — no <video>.
     expect(s).toMatch(/if\s*\(\s*reducedMotion\s*\)/);
     expect(s).toMatch(/data-testid="habitat-video-still"/);
-    // The still must NOT carry autoPlay (it's a static image). Slice from the
-    // reduced-motion branch to the start of the <video> JSX below it.
+    // Slice the reduced-motion branch body to the start of the <video> JSX below
+    // it; the branch must return Poster and NOT contain an autoplaying <video>.
     const branchStart = s.indexOf("if (reducedMotion)");
     const branchEnd = s.indexOf("<video", branchStart);
     const branch = s.slice(branchStart, branchEnd);
     expect(branch).not.toMatch(/autoPlay/);
-    expect(branch).toMatch(/src=\{poster\}/);
+    expect(branch).toMatch(/return\s+Poster/);
   });
 
   it("V10: the decay filter is applied to BOTH the video and the still", () => {
