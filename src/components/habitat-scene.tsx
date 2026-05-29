@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { HabitatVideo } from "@/components/habitat-video";
@@ -192,31 +191,27 @@ export function HabitatScene({
         <HabitatVideo habitatState={state} />
       </div>
 
-      {/* Offline indicator (D-24): shows when displaying cached data */}
+      {/*
+        Offline indicator (D-24): shows when displaying cached data.
+        Phase 13.1-VIDEO-03: CSS-only fade-in (tw-animate-css) replaces the old
+        `motion.div`. The `motion/react` library was the single largest cost on
+        /habitat mobile (~71 KB chunk, ~1.5 s script-eval under 4× CPU throttle,
+        the entire TBT budget). Removing the import drops it from /habitat's
+        bundle. Two simple fades do not justify the framer-motion runtime.
+      */}
       {offline && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm text-sm text-muted-foreground px-4 py-2 rounded-full border"
-        >
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm text-sm text-muted-foreground px-4 py-2 rounded-full border animate-in fade-in duration-300">
           You&apos;re offline — showing last known state
-        </motion.div>
+        </div>
       )}
 
       {/* Level-up celebration overlay (D-20): shown for 2.5s after leveling up */}
       {showLevelUp && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none animate-in fade-in zoom-in-95 duration-500">
           <span className="text-xl sm:text-[28px] font-semibold text-primary drop-shadow-lg">
             Level {state.level}!
           </span>
-        </motion.div>
+        </div>
       )}
     </div>
   );
