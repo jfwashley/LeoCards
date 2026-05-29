@@ -232,6 +232,15 @@ export interface MountHabitatSceneOpts {
    * Strict-Mode double-mount.
    */
   moodStateRef?: { current: MoodAnimState };
+  /**
+   * Plan 13.1-VIDEO-01 (dev-only capture mode): when true, the camera is
+   * LOCKED (auto-orbit frozen via orbit `reducedMotion`) while AMBIENT
+   * animation keeps RUNNING (world `updateWorld` is called with
+   * reducedMotion=false). Used by the offline video-clip render pipeline to
+   * bake looping ambient clips with a fixed, flattering camera angle. Has no
+   * effect in production (the URL flag that sets it is NODE_ENV-gated).
+   */
+  captureVideo?: boolean;
 }
 
 export interface MountedHabitatScene {
@@ -256,7 +265,15 @@ export function mountHabitatScene(
   const cfg = LEVEL_CONFIG[level] ??
     LEVEL_CONFIG[1] ?? { sky: "default" as const };
   const world = buildClayWorld(ctx, features, { sky: cfg.sky });
-  const orbit = attachOrbit(canvas, ctx.camera, { reducedMotion });
+  // Plan 13.1-VIDEO-01: in capture-video mode the camera is locked (auto-orbit
+  // frozen) but ambient motion still runs. We freeze the orbit by passing
+  // reducedMotion:true to attachOrbit ONLY; the world's updateWorld is called
+  // below with the live (non-frozen) reducedMotion so ambient keeps animating.
+  const captureVideo = opts.captureVideo === true;
+  const orbitReducedMotion = captureVideo ? true : reducedMotion;
+  const orbit = attachOrbit(canvas, ctx.camera, {
+    reducedMotion: orbitReducedMotion,
+  });
 
   // -- 1b. characters (Plan 13-04: required for applyMood to bind to Leo) ----
   // buildLionStorybook returns a rig; we mount its root into ctx.scene so it
@@ -331,7 +348,12 @@ export function mountHabitatScene(
     applyDecay(world, liveState.quality);
     lionState.speedMul = moodState.speedMul;
 
-    updateWorld(world, dt, now / 1000, { reducedMotion });
+    // Plan 13.1-VIDEO-01: capture-video mode forces ambient ON (reducedMotion
+    // false) even if the OS prefers reduced motion — the baked clip must show
+    // breathing/blinking/butterflies/water shimmer. Production paths are
+    // unaffected (captureVideo is only set via a NODE_ENV-gated URL flag).
+    const worldReducedMotion = captureVideo ? false : reducedMotion;
+    updateWorld(world, dt, now / 1000, { reducedMotion: worldReducedMotion });
     applyLionWalk(lionRig, world.lionCurve, dt, now / 1000, lionState);
 
     // Apply mood-driven head-droop and bounce on top of the walk driver.
@@ -470,6 +492,16 @@ function readSnapshotMode(): boolean {
   return new URLSearchParams(window.location.search).get("snapshot") === "true";
 }
 
+// Plan 13.1-VIDEO-01 dev-only capture-mode reader. `?capture=video` (alongside
+// `?snapshot=true`) locks the camera + keeps ambient running so the offline
+// render pipeline can bake looping clips. NODE_ENV-gated → tree-shaken from
+// production bundles, never affects real users.
+function readCaptureVideoMode(): boolean {
+  if (process.env.NODE_ENV === "production") return false;
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("capture") === "video";
+}
+
 export default function HabitatCanvas({
   habitatState,
   // celebratingLevel is plumbed for API parity with the v1.0 PixiJS canvas;
@@ -489,6 +521,9 @@ export default function HabitatCanvas({
   // ignore the gesture gate AND reduced-motion lockout so Phase 13 e2e specs
   // capturing mood/decay baselines still mount the canvas deterministically.
   const snapshotMode = readSnapshotMode();
+
+  // Plan 13.1-VIDEO-01: dev-only capture-video mode (camera locked, ambient on).
+  const captureVideoMode = readCaptureVideoMode();
 
   // R3 gesture gate: canvas does NOT mount until the first user gesture.
   // R4 reduced-motion lockout: reducedMotion users never mount the canvas.
@@ -571,12 +606,19 @@ export default function HabitatCanvas({
       reducedMotion,
       stateRef,
       moodStateRef,
+      captureVideo: captureVideoMode,
     });
     // Phase 13.1-04: notify parent so it can fade its SSR poster out.
     // mountHabitatScene sets data-ready="true" synchronously before returning.
     onCanvasReady?.();
     return () => handle.dispose();
-  }, [canvasMounted, sceneLevel, reducedMotion, onCanvasReady]);
+  }, [
+    canvasMounted,
+    sceneLevel,
+    reducedMotion,
+    onCanvasReady,
+    captureVideoMode,
+  ]);
 
   // Phase 13.1-04 SSR-POSTER-FIX:
   //   The SSR poster + the aspect-ratio sized outer wrapper now live in
@@ -606,6 +648,12 @@ export default function HabitatCanvas({
         <canvas
           ref={canvasRef}
           data-testid="habitat-3d-canvas"
+          // Plan 13.1-VIDEO-01: expose the effective mood/level on the canvas so
+          // the offline clip-render spec can assert the correct (level, mood)
+          // was injected before capturing frames. Harmless static attributes in
+          // production (they just reflect the live habitat state).
+          data-mood={effectiveState.mood}
+          data-level={sceneLevel}
           style={{
             position: "absolute",
             inset: 0,

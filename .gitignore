@@ -52,6 +52,9 @@ next-env.d.ts
 /playwright-report/
 /test-results/
 
+# habitat video render intermediates (frames are regenerated; final clips committed)
+/e2e/scripts/.tmp/
+
 # claude
 .claude/
 
