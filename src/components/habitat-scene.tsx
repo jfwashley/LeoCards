@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
+import { HabitatVideo } from "@/components/habitat-video";
 import { Button } from "@/components/ui/button";
 import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
 
@@ -23,31 +22,22 @@ const HabitatStateSchema = z.object({
   nextLevelThreshold: z.number().nullable(),
 });
 
-// Wrapper dimensions — single source of truth shared by the SSR poster wrapper
-// and the dynamic-imported canvas loading spinner so the hand-off is CLS=0.
+// Wrapper dimensions — single source of truth. Carries the intrinsic 16/9 size
+// BEFORE the video/poster paint so the hand-off is CLS=0. <HabitatVideo>
+// absolutely-positions its poster + video inside this wrapper.
 const WRAPPER_STYLE = {
   aspectRatio: "16/9",
   maxHeight: "min(70vh, 400px)",
   position: "relative" as const,
 };
 
-// Phase 13.1-04: no loading-spinner fallback. The dynamic-imported canvas
-// chunk only fetches AFTER a user gesture, and even then the SSR poster
-// below remains visible underneath until `canvasReady` flips. A spinner
-// would visually fight the poster and is no longer the LCP candidate.
-
-// SSR-safe: ssr:false only works inside "use client" modules (Next.js 16 rule).
-// Phase 13.1-04: the OUTER wrapper + SSR poster live in <HabitatScene> (this
-// file). The dynamic canvas now renders only the absolutely-positioned <canvas>
-// + hint overlay on top of the parent-owned poster.
-const HabitatCanvas = dynamic(() => import("@/components/habitat-3d-canvas"), {
-  ssr: false,
-  // No loading fallback: the SSR poster already occupies the wrapper, so an
-  // additional spinner would visually fight the poster. The dynamic chunk only
-  // fetches after a user gesture, by which point the poster has long since
-  // painted.
-  loading: () => null,
-});
+// Phase 13.1-VIDEO-02: the live Three.js canvas has been replaced by a
+// pre-rendered ambient loop clip (<HabitatVideo>). The dynamic({ssr:false})
+// canvas import, the SSR poster <Image>, and the `canvasReady` poster-fade
+// machinery are all GONE — <HabitatVideo> owns its own poster (the LCP
+// candidate) and its own reduced-motion still. No client import path reaches
+// `habitat-3d-canvas.tsx` or `src/lib/habitat-3d/*`, so three.js leaves the
+// client bundle entirely.
 
 // ============================================================
 // Mood indicator helpers
@@ -86,7 +76,11 @@ function MoodIndicator({ mood }: MoodIndicatorProps) {
 
 export function HabitatScene({
   habitatState,
-  celebratingLevel = null,
+  // Plan 13.1-VIDEO-02: kept for API parity with the caller in
+  // `habitat/page.tsx` (which threads `?celebrate=` through). The level-up
+  // celebration overlay is driven by prop-change detection on `state.level`,
+  // not by this prop, so it is intentionally unused in the body.
+  celebratingLevel: _celebratingLevel = null,
 }: {
   habitatState: HabitatState;
   celebratingLevel?: number | null;
@@ -95,9 +89,6 @@ export function HabitatScene({
   const [error, setError] = useState(false);
   const [offline, setOffline] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
-  // Phase 13.1-04: parent owns the SSR poster, so parent also owns the
-  // poster-fade trigger. The canvas signals readiness via `onCanvasReady`.
-  const [canvasReady, setCanvasReady] = useState(false);
   const prevLevelRef = useRef(habitatState.level);
 
   // Sync state when prop changes (BP3)
@@ -173,29 +164,23 @@ export function HabitatScene({
     );
   }
 
-  // Clamp level for poster filename — keeps the SSR <img src> in [1,9].
-  const sceneLevel = Math.max(1, Math.min(9, Math.floor(state.level)));
-
   return (
     <div className="relative w-full">
       {/*
-        Phase 13.1-04 SSR-POSTER-FIX:
-          The aspect-ratio wrapper + <Image priority fill> poster live OUTSIDE
-          the dynamic({ssr:false}) boundary so they appear in the server-rendered
-          HTML. This is the LCP candidate. The motion.div opacity-0 wrapper that
-          used to wrap the canvas+overlays is GONE — opacity-0 disqualifies the
-          element as an LCP candidate at SSR time, which broke the Phase 13.1-02
-          attempt (Lighthouse reported "NO LCP DETAILS" on the Vercel preview).
-
-          R6 CLS=0: wrapper carries intrinsic size BEFORE either the SSR poster
-          or the (later) Three.js canvas paints.
+        Phase 13.1-VIDEO-02:
+          The aspect-ratio wrapper carries the intrinsic 16/9 size so CLS=0
+          holds before anything paints. <HabitatVideo> renders its own poster
+          (the LCP candidate) + the autoplaying ambient loop clip (or a static
+          still under prefers-reduced-motion), both absolutely positioned
+          inside this wrapper. The old SSR <Image> poster + dynamic Three.js
+          canvas + canvasReady fade machinery are gone.
       */}
       <div
         className="w-full rounded-lg overflow-hidden"
         style={WRAPPER_STYLE}
         data-testid="habitat-scene-wrapper"
       >
-        {/* Level badge overlay (D-15, UI-SPEC) — z-10 so it sits above poster + canvas */}
+        {/* Level badge overlay (D-15, UI-SPEC) — z-10 so it sits above the video */}
         <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm font-semibold px-3 py-1 rounded-full z-10">
           Level {state.level}
         </div>
@@ -203,50 +188,8 @@ export function HabitatScene({
         {/* Mood indicator overlay (D-15, UI-SPEC) */}
         <MoodIndicator mood={state.mood} />
 
-        {/*
-          R2 LCP candidate: SSR-rendered <Image priority fill>. Lives at the
-          parent level (NOT inside dynamic({ssr:false})), so the <img> + the
-          preload <link> Next.js injects appear in the document the browser
-          receives. Opacity is NEVER 0 at SSR time — the parent controls the
-          fade-out via canvasReady, which can only flip true after hydration.
-        */}
-        {/*
-          Phase 13.1-04 Opt A: `unoptimized` makes Next emit a plain <img>
-          with `src="/habitat/hero-l{N}.webp"` instead of routing through
-          `/_next/image?url=...` (Vercel image-optimization Lambda). The
-          static webp at ~25 KB is already correctly sized + encoded; the
-          proxy added 100-300 ms Lambda cold-start to mobile LCP for zero
-          byte savings. Direct CDN delivery is strictly faster.
-
-          `priority` is preserved so Next still injects the preload <link>
-          in <head> (now pointing at the direct asset path, not the proxy).
-        */}
-        <Image
-          src={`/habitat/hero-l${sceneLevel}.webp`}
-          alt={`Tiger habitat level ${sceneLevel}`}
-          fill
-          priority
-          unoptimized
-          sizes="(max-width: 768px) 100vw, 720px"
-          style={{
-            objectFit: "cover",
-            transition: "opacity 200ms ease-out",
-            opacity: canvasReady ? 0 : 1,
-            pointerEvents: canvasReady ? "none" : "auto",
-          }}
-        />
-
-        {/*
-          Dynamic Three.js canvas. The component absolutely-positions its own
-          <canvas> over our poster. It owns the gesture gate, hint timer, and
-          dev affordances. It calls `onCanvasReady` when data-ready flips to
-          "true" so we can fade the SSR poster out.
-        */}
-        <HabitatCanvas
-          habitatState={state}
-          celebratingLevel={celebratingLevel}
-          onCanvasReady={() => setCanvasReady(true)}
-        />
+        {/* Pre-rendered ambient loop clip (poster = LCP candidate). */}
+        <HabitatVideo habitatState={state} />
       </div>
 
       {/* Offline indicator (D-24): shows when displaying cached data */}
