@@ -235,7 +235,6 @@ test.describe("Phase 13.1 VIDEO-01 — habitat ambient clip capture (MediaRecord
           bytes,
           `${clipName}: raw webm only ${bytes} B — likely black/empty capture`,
         ).toBeGreaterThan(8 * 1024);
-        // biome-ignore lint/suspicious/noConsole: capture progress log
         console.log(
           `[capture] ${clipName}.raw.webm ${(bytes / 1024).toFixed(1)} KB`,
         );
