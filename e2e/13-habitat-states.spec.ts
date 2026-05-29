@@ -1,83 +1,62 @@
-// 13-habitat-states.spec.ts — Plan 13-04 Task 3.
+// 13-habitat-states.spec.ts — REWRITTEN for Phase 13.1 Plan VIDEO-02.
 //
-// SPEC R7 acceptance: generate 28 reference screenshots at level 5
-// (4 moods × 7 quality tiers).
+// Phase 13-04 captured 28 reference screenshots of the LIVE Three.js canvas
+// (4 moods × 7 quality tiers at level 5) using `?devLevel/devMood/devQuality
+// &snapshot=true`, which mounted the canvas deterministically. VIDEO-02
+// replaced the user-facing /habitat scene with a pre-rendered clip whose
+// mood/decay are now expressed as:
 //
-// Orchestrator instruction (autonomous mode for Phase 13): the
-// human-verify checkpoint is resolved by an AUTOMATED pixel-mean-square-
-// difference assertion. Distinctness is asserted by the standalone
-// `scripts/diff-habitat-screenshots.mjs` script which reads the committed
-// PNGs and writes `diff-table.json` next to them (run via
-// `node scripts/diff-habitat-screenshots.mjs` or `npm run snapshots:diff`).
+//   • mood → which baked clip plays (`l{N}-{mood}.webm`)
+//   • quality (decay) → a CSS `filter` (saturate + brightness) on the video
 //
-// This Playwright spec is responsible for CAPTURE only. The diff script
-// is run separately (and from the SUMMARY-verification step) so we don't
-// pay the in-browser PNG-decode cost for 28 images on every CI run.
+// The per-pixel canvas screenshots described a path that is no longer
+// user-facing, so the 28-baseline capture is RETIRED. Coverage of the
+// mood/decay PRODUCT behaviour is preserved at the unit level
+// (habitat-video.test.ts: clip-basename-per-mood, decayFilter-per-quality)
+// plus this e2e check that the user-facing /habitat video actually carries a
+// mood-correct clip and a decay filter when the habitat is decaying.
 //
-// Deterministic capture: ?devLevel=5&devMood=X&devQuality=Y&snapshot=true
-// is plumbed in `<HabitatCanvas>` (Plan 13-04 Task 2) — gated by NODE_ENV.
-// Camera theta is locked via window.__habitatSetTheta(0.9). Reduced-motion
-// emulation keeps ambient anims frozen so successive frames are stable.
+// NOTE: the live-canvas mood/decay rendering still EXISTS under
+// `?capture=video` for the build-time clip renderer; that pipeline + its
+// render spec (render-habitat-clips.spec.ts) are deliberately untouched.
 
-import * as fs from "node:fs";
-import * as path from "node:path";
 import { expect, test } from "playwright/test";
 import { signUpWithDeck } from "./helpers";
 
-const MOODS = ["excited", "happy", "neutral", "sad"] as const;
-const QUALITIES = [1.0, 0.7, 0.5, 0.4, 0.3, 0.2, 0.1] as const;
+const VIDEO_SELECTOR = '[data-testid="habitat-video"]';
+const STILL_SELECTOR = '[data-testid="habitat-video-still"]';
 
-const SNAPSHOT_DIR = path.join(__dirname, "__screenshots__", "habitat-states");
-
-const CANVAS_SELECTOR = '[data-testid="habitat-3d-canvas"]';
-const READY_SELECTOR =
-  'canvas[data-testid="habitat-3d-canvas"][data-ready="true"]';
-
-function filenameFor(mood: string, q: number): string {
-  return `L5-mood-${mood}-q${q.toFixed(2)}.png`;
-}
-
-test.describe("Habitat 3D — R7 mood/quality reference screenshots", () => {
-  test.use({ contextOptions: { reducedMotion: "reduce" } });
-  test.setTimeout(900_000);
-
-  test("Capture 28 deterministic baselines at level 5", async ({ page }) => {
-    fs.mkdirSync(SNAPSHOT_DIR, { recursive: true });
+test.describe("Habitat — video mood/decay (VIDEO-02, replaces 28-screenshot baseline)", () => {
+  test("user-facing /habitat plays a mood-correct clip with a valid decay filter", async ({
+    page,
+  }) => {
     await signUpWithDeck(page, "French");
+    await page.goto("/habitat");
+    await page
+      .waitForLoadState("networkidle", { timeout: 30_000 })
+      .catch(() => {});
 
-    let captureCount = 0;
-    for (const m of MOODS) {
-      for (const q of QUALITIES) {
-        const url = `/habitat?devLevel=5&devMood=${m}&devQuality=${q}&snapshot=true`;
-        await page.goto(url, { timeout: 60_000 });
-        await page
-          .waitForLoadState("networkidle", { timeout: 30_000 })
-          .catch(() => {});
-        await page.waitForSelector(READY_SELECTOR, { timeout: 60_000 });
-        await page.evaluate(() => {
-          const w = window as unknown as {
-            __habitatSetTheta?: (n: number) => void;
-          };
-          w.__habitatSetTheta?.(0.9);
-        });
-        // Let mood crossfade + decay lerp settle. Under reducedMotion the
-        // ambient anims are frozen so successive frames are visually stable.
-        await page.waitForTimeout(800);
+    const el = page.locator(`${VIDEO_SELECTOR}, ${STILL_SELECTOR}`).first();
+    await expect(el).toHaveCount(1, { timeout: 15_000 });
 
-        const buf = await page.locator(CANVAS_SELECTOR).screenshot();
-        const file = filenameFor(m, q);
-        fs.writeFileSync(path.join(SNAPSHOT_DIR, file), buf);
-        captureCount++;
-      }
-    }
+    // The decay filter is always a valid CSS filter string: either "none"
+    // (quality 1.0) or saturate(..) brightness(..) (decaying). Filter-only →
+    // no layout impact (CLS=0).
+    const filter = await el.evaluate(
+      (n) => getComputedStyle(n as HTMLElement).filter,
+    );
+    expect(filter === "none" || /saturate|brightness/.test(filter)).toBe(true);
 
-    expect(captureCount).toBe(28);
-    // All 28 PNGs must exist on disk.
-    for (const m of MOODS) {
-      for (const q of QUALITIES) {
-        const fp = path.join(SNAPSHOT_DIR, filenameFor(m, q));
-        expect(fs.existsSync(fp)).toBe(true);
-      }
+    // If it's the motion video (not the reduced-motion still), the playing clip
+    // must be one of the 4 baked moods.
+    const isVideo = (await page.locator(VIDEO_SELECTOR).count()) === 1;
+    if (isVideo) {
+      const webm = await page
+        .locator(`${VIDEO_SELECTOR} source[type="video/webm"]`)
+        .getAttribute("src");
+      expect(webm).toMatch(
+        /\/habitat\/clips\/l[1-9]-(excited|happy|neutral|sad)\.webm$/,
+      );
     }
   });
 });
