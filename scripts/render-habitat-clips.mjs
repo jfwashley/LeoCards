@@ -6,20 +6,24 @@
 // (mood: excited|happy|neutral|sad) — as BOTH webm (VP9) and mp4 (H.264).
 // Output: public/habitat/clips/l{N}-{mood}.{webm,mp4}.
 //
-// Pipeline:
-//   1. Drive the Playwright spec e2e/scripts/render-habitat-clips.spec.ts,
-//      which captures 24fps × 5s = 120 PNG frames per clip into
-//      e2e/scripts/.tmp/clips/l{N}-{mood}/frame-####.png with a FIXED camera
-//      and AMBIENT motion running.
-//   2. For each clip dir, encode frames → seamless-looping webm + mp4 via
-//      the ffmpeg-static binary (ffmpeg is not installed system-wide).
+// ── Pipeline (REAL-TIME capture rework) ────────────────────────────────────
+// The capture spec (e2e/scripts/render-habitat-clips.spec.ts) now records the
+// live WebGL canvas in real time via the in-page MediaRecorder API, producing
+// ONE intermediate `*.raw.webm` per clip in e2e/scripts/.tmp/clips/. This
+// replaced per-frame Playwright screenshots (~10.8 min/clip → ~6s/clip). The
+// orchestrator's job is unchanged in spirit — re-encode + seamless-loop — but
+// its INPUT is now one raw webm per clip instead of a directory of PNGs.
+//
+//   1. Drive the Playwright spec → one `.tmp/clips/l{N}-{mood}.raw.webm` each.
+//   2. For each raw webm, ffmpeg-encode → seamless-looping webm + mp4:
+//      (a) trim to a clean ~5s, (b) apply the SAME tail→head xfade loop,
+//      (c) write public/habitat/clips/l{N}-{mood}.{webm,mp4}.
 //   3. Validate each output: exists, size within band, valid duration ≥ 4s.
-//   4. Write to public/habitat/clips/. Clean .tmp/clips/ on success.
+//   4. Clean .tmp/clips/ on a full successful batch.
 //
 // Seamless loop: a short crossfade masks the seam. We hold out the last
-// CROSSFADE_S of frames and `xfade` them over the first CROSSFADE_S, so the
-// final clip is (DURATION_S − CROSSFADE_S) long and its end blends smoothly
-// into its start. A tiny residual seam is acceptable for v1.
+// CROSSFADE_S and `xfade` it over the first CROSSFADE_S, so the final clip is
+// (DURATION_S − CROSSFADE_S) long and its end blends smoothly into its start.
 //
 // De-risk: pass `--only=l5-happy` to render a single clip end-to-end before
 // the full batch. The flag narrows BOTH the Playwright capture scope (via
@@ -44,15 +48,16 @@ const TMP_DIR = path.join(ROOT, "e2e", "scripts", ".tmp");
 const CLIPS_TMP = path.join(TMP_DIR, "clips");
 const OUT_DIR = path.join(ROOT, "public", "habitat", "clips");
 
-// Must match the spec's capture settings.
-const FPS = 24;
-const DURATION_S = 5;
+// Output timing. The raw webm is ~5.5s; we trim to TRIM_S then xfade-loop.
+const FPS = 30;
+const TRIM_S = 5; // clean body trimmed from the raw recording
 const CROSSFADE_S = 0.5; // tail→head blend that masks the loop seam
-const LOOP_DURATION_S = DURATION_S - CROSSFADE_S; // 4.5s final clip length
+const LOOP_DURATION_S = TRIM_S - CROSSFADE_S; // 4.5s final clip length
 
 // Size bands (per clip). webm (VP9) is the primary; mp4 (H.264) the fallback.
-const WEBM_MAX = 800 * 1024;
-const MP4_MAX = 900 * 1024;
+// Brief targets ~120–400 KB; keep a sane ceiling with headroom.
+const WEBM_MAX = 500 * 1024;
+const MP4_MAX = 600 * 1024;
 const MIN_BYTES = 5 * 1024; // guard against empty / broken encodes
 const MIN_DURATION_S = 4;
 
@@ -116,25 +121,23 @@ function probeDurationS(file) {
 }
 
 // Build the xfade filter that blends the clip's tail over its head so the loop
-// is seamless. Input is the raw frame sequence; we duplicate the stream and
-// xfade the second copy (offset to the loop point) over the first.
+// is seamless. We first normalize fps + trim the raw recording to TRIM_S, then
+// split that body and xfade the second copy (offset to the loop point) over
+// the first. Output is trimmed to LOOP_DURATION_S.
 //
-//   [0]trim=0:LOOP_DURATION_S            -> body that plays start..loop point
-//   [0]trim=LOOP_DURATION_S:DURATION_S   -> tail (CROSSFADE_S long)
-// We xfade the tail INTO the head region. Simplest reliable idiom: split the
-// full clip, offset, and xfade with transition=fade.
+//   fps,format,trim=0:TRIM_S            -> clean body
+//   split[a][b]                         -> two copies
+//   [a][b]xfade offset=LOOP_DURATION_S  -> tail blends over head
+//   trim=0:LOOP_DURATION_S              -> final loop length
 function buildXfadeFilter() {
-  // labels: split full clip into [a][b]; b is the same clip; xfade a over b
-  // at offset (LOOP_DURATION_S) for CROSSFADE_S. Output is LOOP_DURATION_S +
-  // we then trim to LOOP_DURATION_S. fps + format normalize the stream.
   return (
-    `fps=${FPS},format=yuv420p,split[a][b];` +
+    `fps=${FPS},format=yuv420p,trim=0:${TRIM_S},setpts=PTS-STARTPTS,split[a][b];` +
     `[a][b]xfade=transition=fade:duration=${CROSSFADE_S}:offset=${LOOP_DURATION_S},` +
     `trim=0:${LOOP_DURATION_S},setpts=PTS-STARTPTS`
   );
 }
 
-function encodeWebm(framesGlob, outPath) {
+function encodeWebm(rawInput, outPath) {
   const vf = buildXfadeFilter();
   runFfmpeg(
     [
@@ -142,10 +145,8 @@ function encodeWebm(framesGlob, outPath) {
       "-hide_banner",
       "-loglevel",
       "error",
-      "-framerate",
-      String(FPS),
       "-i",
-      framesGlob,
+      rawInput,
       "-vf",
       vf,
       "-an",
@@ -167,7 +168,7 @@ function encodeWebm(framesGlob, outPath) {
   );
 }
 
-function encodeMp4(framesGlob, outPath) {
+function encodeMp4(rawInput, outPath) {
   const vf = buildXfadeFilter();
   runFfmpeg(
     [
@@ -175,10 +176,8 @@ function encodeMp4(framesGlob, outPath) {
       "-hide_banner",
       "-loglevel",
       "error",
-      "-framerate",
-      String(FPS),
       "-i",
-      framesGlob,
+      rawInput,
       "-vf",
       vf,
       "-an",
@@ -202,6 +201,35 @@ function encodeMp4(framesGlob, outPath) {
   );
 }
 
+// Non-black sanity check: extract one mid-clip frame to PNG and confirm it is
+// not trivially tiny (a uniform/black frame compresses to a few hundred bytes;
+// a real clay scene is several KB+). Returns { ok, bytes } or { ok:null }.
+function checkNonBlack(clipFile, clipName) {
+  const probe = path.join(CLIPS_TMP, `__probe-${clipName}.png`);
+  const r = spawnSync(
+    ffmpegPath,
+    [
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-ss",
+      "2",
+      "-i",
+      clipFile,
+      "-frames:v",
+      "1",
+      probe,
+    ],
+    { cwd: ROOT, encoding: "utf8", maxBuffer: 1 << 24 },
+  );
+  if (r.status !== 0 || !fs.existsSync(probe)) return { ok: null, bytes: 0 };
+  const bytes = fs.statSync(probe).size;
+  fs.rmSync(probe, { force: true });
+  // A non-trivial 1280x720 PNG of a real scene is well over 4 KB.
+  return { ok: bytes > 4 * 1024, bytes };
+}
+
 function validate(outPath, maxBytes, label) {
   if (!fs.existsSync(outPath)) fail(`${label}: missing output ${outPath}`);
   const bytes = fs.statSync(outPath).size;
@@ -218,24 +246,36 @@ function validate(outPath, maxBytes, label) {
 }
 
 function encodeClip(clip) {
-  const frameDir = path.join(CLIPS_TMP, clip.name);
-  if (!fs.existsSync(frameDir)) {
-    fail(`missing frame dir for ${clip.name}: ${frameDir}`);
+  const rawInput = path.join(CLIPS_TMP, `${clip.name}.raw.webm`);
+  if (!fs.existsSync(rawInput)) {
+    fail(`missing raw webm for ${clip.name}: ${rawInput}`);
   }
-  const framesGlob = path.join(frameDir, "frame-%04d.png");
 
   const webmOut = path.join(OUT_DIR, `${clip.name}.webm`);
   const mp4Out = path.join(OUT_DIR, `${clip.name}.mp4`);
 
-  encodeWebm(framesGlob, webmOut);
+  encodeWebm(rawInput, webmOut);
   const webm = validate(webmOut, WEBM_MAX, `${clip.name}.webm`);
 
-  encodeMp4(framesGlob, mp4Out);
+  encodeMp4(rawInput, mp4Out);
   const mp4 = validate(mp4Out, MP4_MAX, `${clip.name}.mp4`);
+
+  // Non-black sanity check on the mp4 (cheap, deterministic decode).
+  const nb = checkNonBlack(mp4Out, clip.name);
+  if (nb.ok === false) {
+    fail(
+      `${clip.name}: mid-frame is ${nb.bytes} B — likely BLACK/uniform. ` +
+        `Verify the RAF ambient loop runs under ?capture=video.`,
+    );
+  }
+  const nbLabel =
+    nb.ok === null
+      ? "non-black: (probe skipped)"
+      : `non-black: ok (mid-frame ${fmtKB(nb.bytes)})`;
 
   console.log(
     `  ${clip.name}  webm ${fmtKB(webm.bytes)} (${webm.dur.toFixed(2)}s)` +
-      `  mp4 ${fmtKB(mp4.bytes)} (${mp4.dur.toFixed(2)}s)`,
+      `  mp4 ${fmtKB(mp4.bytes)} (${mp4.dur.toFixed(2)}s)  ${nbLabel}`,
   );
   return { name: clip.name, webm: webm.bytes, mp4: mp4.bytes };
 }
@@ -251,8 +291,9 @@ function main() {
     env.CLIP_MOODS = c.mood;
   }
 
+  const captureStart = Date.now();
   console.log(
-    `[render-habitat-clips] capturing frames for ${clips.length} clip(s)` +
+    `[render-habitat-clips] capturing (MediaRecorder) for ${clips.length} clip(s)` +
       `${onlyClip ? ` (--only=${onlyClip})` : ""}...`,
   );
   const capture = spawnSync(
@@ -263,6 +304,11 @@ function main() {
   if (capture.status !== 0) {
     fail(`Playwright capture spec exited with code ${capture.status}`);
   }
+  const captureS = (Date.now() - captureStart) / 1000;
+  console.log(
+    `[render-habitat-clips] capture done in ${captureS.toFixed(1)}s ` +
+      `(${(captureS / clips.length).toFixed(1)}s/clip avg incl. nav)`,
+  );
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
@@ -292,7 +338,7 @@ function main() {
       `mp4 ${fmtKB(totalMp4 / results.length)})`,
   );
 
-  // Clean .tmp/clips only on a FULL successful batch (keep frames around when
+  // Clean .tmp/clips only on a FULL successful batch (keep raws around when
   // running --only so a follow-up encode tweak doesn't require a recapture).
   if (!onlyClip) {
     fs.rmSync(CLIPS_TMP, { recursive: true, force: true });
