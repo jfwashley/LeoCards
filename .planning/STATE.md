@@ -52,7 +52,7 @@ Non-blocking, intentional deferrals:
 - **Strategy pivot:** after 3 failed attempts to make live Three.js perform on mobile (and it stopped rendering entirely on the user's device), `/habitat` was migrated to **pre-rendered per-level×mood ambient video clips** (36 clips, fixed camera, ambient motion). Three.js is now **build-time-only** — it renders the clips in CI and NO LONGER ships to the client (`grep WebGLRenderer .next/static/chunks` → none; −517 KB). Decay/quality = live CSS filter; reduced-motion = static poster.
 - **Final CWV (`13.1-PERF-VIDEO.md`):** `/habitat` **desktop** LCP 764 / TBT 49 / CLS 0 / **Perf 99 — full PASS**. `/habitat` **mobile** LCP **1860 ✅** / CLS **0 ✅** / TBT **377 ❌** (gate 200) / **Perf 90** (green). vs Phase-13 baseline (LCP 2989, TBT 646, Perf 57, + not rendering) this is a decisive win.
 - **Three habitat-specific fixes landed:** (1) Three.js → video (−517 KB); (2) dropped `motion/react` from habitat-scene → two CSS fades (TBT 1049→415, that 71 KB chunk was ~1512 ms script-eval); (3) preloaded priority poster as LCP candidate + clip `preload=metadata` (LCP 2729→1860, fixed "LCP element: none").
-- **Residual TBT 377 ms (mobile) = app-shell baseline**, NOT habitat-specific (React hydration + Next runtime + better-auth client; `/dashboard` carries the same class at ~286). → **Phase 999.1**: code-split/defer auth client + providers, trim shared vendor chunk, reduce hydration — against a whole-app baseline, not bolted onto /habitat.
+- **Residual TBT — RESOLVED (2026-05-29).** First Phase 999.1 slice: removed zod from `/habitat` (habitat-scene used it only to validate a localStorage cache object, pulling the whole 263 KB zod chunk onto the route → hand-written type guard instead). Combined with three.js + motion removals, ~900 KB of controllable JS is off the route. **Warm-production re-measurement: `/habitat` mobile LCP 2417 ✅ / TBT 97 ✅ / CLS 0 ✅ / Perf 96 — PASSES all CWV "Good" gates.** (The earlier 377 ms was cold-Vercel-preview serverless noise; lab variance on cold previews was ±300 ms TBT, larger than the gap — always certify on warm prod.) Shipped to prod.
 - D-28 cached dashboard widget unchanged (static image, untouched).
 - Obsolete live-canvas tests retired (gesture/hint/lockout); `habitat-3d-canvas.tsx` + `src/lib/habitat-3d/*` kept as the build-time renderer (`?capture=video`).
 - Throwaway test users in Neon to clean up (filter `@leocards-test.local`): multiple `cwv-*@leocards-test.local` from the measurement runs.
@@ -66,10 +66,11 @@ Non-blocking, intentional deferrals:
 
 ## Next Steps
 
-- **Phase 999.1 (perf initiative)** — now has a concrete first target: `/habitat` mobile TBT 377 ms (app-shell baseline: defer/split better-auth client + providers, trim shared vendor chunk, reduce hydration). `/gsd-review-backlog` to promote.
+- ✅ `/habitat` mobile CWV resolved on production (zod removal landed; LCP 2417 / TBT 97 / CLS 0 / Perf 96). Phase 13 R9 fully closed.
+- ✅ Neon test-user cleanup done (15 `@leocards-test.local` users deleted; `scripts/cleanup-test-users.mjs` kept for reuse).
 - `/gsd-new-milestone` — start v3.0 (wraps Phases 12 + 13 + 13.1 + whatever ships next).
-- Clean up `@leocards-test.local` throwaway users in Neon.
-- Confirm real-user CWV on prod (CrUX / Vercel Analytics) once traffic accrues.
+- **Phase 999.1 (perf initiative)** still open for *app-wide* perf (other routes' CWV, RSC/hydration) — `/habitat` no longer needs it. `/gsd-review-backlog` to promote when ready.
+- Confirm real-user CWV on prod (CrUX / Vercel Speed Insights) once traffic accrues — lab medians look green, field data is the final word.
 
 ## Accumulated Context
 
