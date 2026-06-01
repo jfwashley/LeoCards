@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
 import { HabitatVideo } from "@/components/habitat-video";
 import { Button } from "@/components/ui/button";
 import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
@@ -9,17 +8,41 @@ import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
 // localStorage cache key for offline support (Pattern 8 from RESEARCH.md)
 const CACHE_KEY = "leocards:habitat-state";
 
-// Zod schema for validating cached habitat state from localStorage
-const HabitatStateSchema = z.object({
-  level: z.number().int().min(1).max(9),
-  quality: z.number().min(0.1).max(1),
-  mood: z.enum(["excited", "happy", "neutral", "sad"]),
-  learnedCardCount: z.number().int().nonnegative(),
-  effectiveCardCount: z.number().int().nonnegative(),
-  isDecaying: z.boolean(),
-  minutesSinceActivity: z.number().nullable(),
-  nextLevelThreshold: z.number().nullable(),
-});
+// Phase 999.1: validate the cached habitat-state with a hand-written type guard
+// instead of zod. habitat-scene was the only zod consumer on /habitat, and it
+// pulled the entire ~263 KB zod chunk onto the route just to validate one
+// localStorage object — pure main-thread cost on mobile. The shape is small and
+// fully knowable; a guard is equivalent for "is this cached blob still usable".
+const MOODS: readonly TigerMood[] = ["excited", "happy", "neutral", "sad"];
+
+function isFiniteNum(v: unknown): v is number {
+  return typeof v === "number" && Number.isFinite(v);
+}
+
+function isValidHabitatState(v: unknown): v is HabitatState {
+  if (typeof v !== "object" || v === null) return false;
+  const o = v as Record<string, unknown>;
+  return (
+    isFiniteNum(o.level) &&
+    Number.isInteger(o.level) &&
+    o.level >= 1 &&
+    o.level <= 9 &&
+    isFiniteNum(o.quality) &&
+    o.quality >= 0.1 &&
+    o.quality <= 1 &&
+    typeof o.mood === "string" &&
+    MOODS.includes(o.mood as TigerMood) &&
+    isFiniteNum(o.learnedCardCount) &&
+    Number.isInteger(o.learnedCardCount) &&
+    o.learnedCardCount >= 0 &&
+    isFiniteNum(o.effectiveCardCount) &&
+    Number.isInteger(o.effectiveCardCount) &&
+    o.effectiveCardCount >= 0 &&
+    typeof o.isDecaying === "boolean" &&
+    (o.minutesSinceActivity === null || isFiniteNum(o.minutesSinceActivity)) &&
+    (o.nextLevelThreshold === null || isFiniteNum(o.nextLevelThreshold))
+  );
+}
 
 // Wrapper dimensions — single source of truth. Carries the intrinsic 16/9 size
 // BEFORE the video/poster paint so the hand-off is CLS=0. <HabitatVideo>
@@ -133,9 +156,9 @@ export function HabitatScene({
       // Try cached data with Zod validation
       try {
         const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          const parsed = HabitatStateSchema.parse(JSON.parse(cached));
-          setState(parsed as HabitatState);
+        const parsed: unknown = cached ? JSON.parse(cached) : null;
+        if (isValidHabitatState(parsed)) {
+          setState(parsed);
           setOffline(true);
         } else {
           setError(true);
