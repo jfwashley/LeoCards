@@ -118,17 +118,17 @@ Plans:
 **Status:** Complete — PASS-WITH-KNOWN-PERF-REGRESSION (R9 originally FAIL; addressed in Phase 13.1 — `/habitat` mobile LCP improved 2989 → 2561 ms median, desktop went to Perf 100. 61 ms over lab gate; 3/6 lab runs pass. Field-data CWV needed to fully close. See `13-PERF-REAL.md` + `13.1-PERF.md`.)
 </content>
 
-### Phase 13.1: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster
+### Phase 13.1: habitat-mobile-perf — VIDEO MIGRATION (pivoted from live-3D defer)
 
-**Goal:** Bring `/habitat` mobile back into CWV "Good" by deferring Three.js init past LCP using a full-resolution static poster as the LCP element and a gesture-only canvas mount. (Closes Phase 13 R9 carried regression.)
-**Requirements:** P13.1-R1..P13.1-R8 (8 falsifiable requirements locked in `13.1-SPEC.md`)
+**Goal:** Bring `/habitat` mobile back into CWV "Good" and fix the on-device rendering failure. **Pivoted mid-phase:** after the gesture-mounted-poster approach (and 3 live-3D attempts) failed to perform on mobile, `/habitat` was migrated to **pre-rendered per-level×mood ambient video clips**. Three.js is now build-time-only (renders clips in CI; never ships to the client). (Closes Phase 13 R9 carried regression.)
+**Requirements:** P13.1-R1..P13.1-R8 (`13.1-SPEC.md`; the video migration satisfies the same CWV intent via a different method)
 **Depends on:** Phase 13
-**Plans:** 4 plans (all complete) + 4 iteration commits
+**Plans:** 4 original plans (gesture-poster, superseded) + VIDEO-01/02/03 migration
 
 Plans:
-- [x] 13.1-01-PLAN.md — Full-resolution poster generation script + 9 hero webps (R1)
-- [x] 13.1-02-PLAN.md — Canvas defer + gesture gate + reduced-motion lockout + zero-CLS wrapper (R2/R3/R4/R6)
-- [x] 13.1-03-PLAN.md — "Tap to animate" hint (R5)
-- [x] 13.1-04-PLAN.md — Measurement + SSR-poster fix + CDN-direct + poster shrink (R7/R8)
+- [x] 13.1-VIDEO-01 — 36 clip render pipeline (9 levels × 4 moods, fixed-camera ambient); MediaRecorder capture (~60× faster than frame-screenshots); ffmpeg webm+mp4 seamless loops
+- [x] 13.1-VIDEO-02 — `HabitatVideo` client swap; Three.js removed from client bundle (−517 KB); obsolete live-canvas tests retired
+- [x] 13.1-VIDEO-03 — perf fixes: dropped `motion/react` from /habitat (TBT 1049→415); preloaded priority poster as LCP candidate (LCP 2729→1860)
+- [~] 13.1-01..04 (original gesture-poster plans) — superseded by the video migration; SPEC requirements re-satisfied
 
-**Status:** Complete — PASS-WITH-LAB-VARIANCE. `/habitat` desktop Perf **100** (LCP 578); `/habitat` mobile LCP median 2561 ms (3/6 lab runs pass; 61 ms over gate; min 1862). −14% LCP, −16% TBT vs Phase 13 baseline. CLS 0 across all 15 Lighthouse runs. Architecturally correct (SSR `<link rel=preload as=image>`, direct CDN delivery, opacity:1, Lighthouse identifies LCP element). See `13.1-PERF.md` + `13.1-VERIFICATION.md` + `13.1-SUMMARY.md`. Recommended next: field-data CWV monitoring + Phase 999.1 for residual TBT optimization.
+**Status:** Complete — SHIPPED. `/habitat` **desktop**: LCP 764 / TBT 49 / CLS 0 / **Perf 99 — full PASS**. `/habitat` **mobile**: LCP **1860 ✅** / CLS **0 ✅** / TBT **377 ❌** (gate 200) / **Perf 90** (green). Renders reliably (on-device WebGL bug eliminated — no client WebGL). Residual mobile TBT is app-shell baseline (React hydration + better-auth + Next runtime; `/dashboard` ~286 for the same reason) → **Phase 999.1**. D-28 cached widget unchanged. See `13.1-PERF-VIDEO.md` + `13.1-VIDEO-0{1,2}-SUMMARY.md`.

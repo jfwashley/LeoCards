@@ -47,28 +47,29 @@ Non-blocking, intentional deferrals:
 - Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright regression spec, keep/delete decision outstanding.
 - `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
 
-**From Phase 13.1 (2026-05-28, ships with carried lab-variance concerns):**
+**From Phase 13.1 — VIDEO MIGRATION (2026-05-28, shipped):**
 
-- Phase 13.1 closed Phase 13's R9 carried regression — `/habitat` mobile LCP improved 2989 → **2561 ms** median (−14%), TBT 646 → 542 ms (−16%), desktop went Perf 98 → **100** (LCP 931 → 578). CLS 0 across all 15 Lighthouse runs.
-- R7 (CWV "Good" on `/habitat`) is PARTIAL: desktop PASS outright; mobile median **61 ms over** 2500 ms gate; 3 of 6 lab runs pass. Architecture is correct (SSR `<link rel=preload>`, direct CDN, opacity:1, Lighthouse identifies LCP element). Field-data CWV (CrUX or Vercel Analytics) needed to validate real-user perf vs lab simulation.
-- R8 (`/dashboard` non-regression) is PARTIAL: code byte-identical to baseline; mobile measurement regressed 2151 → 3354 LCP but attributable to Vercel-edge cold-cache variance, not real regression. Confirm post-ship.
-- D-28 cached widget stays correct.
-- Throwaway test users in preview Neon DB to clean up: `cwv-test-1779866703@…`, `cwv-test-1779873404@…`, plus 4 more from 13.1 iterations (`cwv-test-…`, `cwv-rerun-…`, `cwv-rest-…`, `cwv-warmer-…`, `cwv-cdn-…`, `cwv-shrunk-…`). Filter on `@leocards-test.local`.
-- Phase 13.1 ships PASS-WITH-LAB-VARIANCE. Production deploy + real-user CWV monitoring as next steps.
+- **Strategy pivot:** after 3 failed attempts to make live Three.js perform on mobile (and it stopped rendering entirely on the user's device), `/habitat` was migrated to **pre-rendered per-level×mood ambient video clips** (36 clips, fixed camera, ambient motion). Three.js is now **build-time-only** — it renders the clips in CI and NO LONGER ships to the client (`grep WebGLRenderer .next/static/chunks` → none; −517 KB). Decay/quality = live CSS filter; reduced-motion = static poster.
+- **Final CWV (`13.1-PERF-VIDEO.md`):** `/habitat` **desktop** LCP 764 / TBT 49 / CLS 0 / **Perf 99 — full PASS**. `/habitat` **mobile** LCP **1860 ✅** / CLS **0 ✅** / TBT **377 ❌** (gate 200) / **Perf 90** (green). vs Phase-13 baseline (LCP 2989, TBT 646, Perf 57, + not rendering) this is a decisive win.
+- **Three habitat-specific fixes landed:** (1) Three.js → video (−517 KB); (2) dropped `motion/react` from habitat-scene → two CSS fades (TBT 1049→415, that 71 KB chunk was ~1512 ms script-eval); (3) preloaded priority poster as LCP candidate + clip `preload=metadata` (LCP 2729→1860, fixed "LCP element: none").
+- **Residual TBT 377 ms (mobile) = app-shell baseline**, NOT habitat-specific (React hydration + Next runtime + better-auth client; `/dashboard` carries the same class at ~286). → **Phase 999.1**: code-split/defer auth client + providers, trim shared vendor chunk, reduce hydration — against a whole-app baseline, not bolted onto /habitat.
+- D-28 cached dashboard widget unchanged (static image, untouched).
+- Obsolete live-canvas tests retired (gesture/hint/lockout); `habitat-3d-canvas.tsx` + `src/lib/habitat-3d/*` kept as the build-time renderer (`?capture=video`).
+- Throwaway test users in Neon to clean up (filter `@leocards-test.local`): multiple `cwv-*@leocards-test.local` from the measurement runs.
 - Phase 13/13.1 not yet wrapped in a milestone (v3.0 TBD).
-- Residual perf debt → Phase 999.1: closing the last 61 ms LCP gap, reducing TBT below 200 (Three.js chunk is route-prefetched even when execution is gesture-gated).
 
 ## Roadmap Evolution
 
 - 2026-05-20 — Phase 12 added: Pause cards in active deck review (no milestone wrapper)
 - 2026-05-21 — Phase 13 (3D habitat migration) shipped to PASS-WITH-CARRIED-CONCERNS — 6 plans, ~25 commits, PixiJS fully removed, Three.js code-split
+- 2026-05-28 — Phase 13.1 inserted (habitat-mobile-perf); pivoted from live-3D-defer to **video migration** — /habitat now plays pre-rendered clips, Three.js build-time-only, mobile LCP/CLS pass + Perf 90, residual TBT → 999.1
 
 ## Next Steps
 
-- **Resolve R9 carried concern** — run real-device CWV on `/habitat` mobile; if clean, flip R9 to PASS and consider re-evaluating D-28 (live widget option).
-- `/gsd-new-milestone` — start v3.0 (wraps Phase 13 + whatever ships next).
-- `/gsd-review-backlog` — promote Phase 999.1 (perf initiative) if performance work should be the next focus.
-- `/gsd-discuss-phase` for any new phase, OR `/gsd-explore` to ideate.
+- **Phase 999.1 (perf initiative)** — now has a concrete first target: `/habitat` mobile TBT 377 ms (app-shell baseline: defer/split better-auth client + providers, trim shared vendor chunk, reduce hydration). `/gsd-review-backlog` to promote.
+- `/gsd-new-milestone` — start v3.0 (wraps Phases 12 + 13 + 13.1 + whatever ships next).
+- Clean up `@leocards-test.local` throwaway users in Neon.
+- Confirm real-user CWV on prod (CrUX / Vercel Analytics) once traffic accrues.
 
 ## Accumulated Context
 
