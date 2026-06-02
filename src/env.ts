@@ -8,6 +8,11 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1).optional(),
     DEEPL_API_KEY: z.string().min(1).optional(),
     ANTHROPIC_API_KEY: z.string().min(1).optional(),
+    // Phase 13.2 QA cheat console. The debug feature (force habitat level/mood/
+    // quality via /debug) is ENABLED iff this secret is set. Unset = endpoints
+    // 404 and /debug shows "disabled". Set it on Vercel preview + production
+    // for QA; mints the HMAC-signed override cookie (see src/lib/debug-cheat.ts).
+    DEBUG_CHEAT_SECRET: z.string().min(16).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
@@ -19,6 +24,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     DEEPL_API_KEY: process.env.DEEPL_API_KEY,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    DEBUG_CHEAT_SECRET: process.env.DEBUG_CHEAT_SECRET,
   },
   // Coerce empty strings to undefined BEFORE Zod runs so optional keys
   // (RESEND/DEEPL/ANTHROPIC) gracefully fall through to their existing

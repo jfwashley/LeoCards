@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { HabitatScene } from "@/components/habitat-scene";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { readHabitatOverride } from "@/lib/debug-cheat";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 
@@ -21,7 +22,12 @@ export default async function HabitatPage({
   const celebratingLevel = params.celebrate ? Number(params.celebrate) : null;
 
   const facts = await getHabitatFacts(session.user.id as UserId);
-  const habitatState = computeHabitatState(facts, new Date());
+  const override = await readHabitatOverride();
+  const habitatState = computeHabitatState(
+    facts,
+    new Date(),
+    override ?? undefined,
+  );
 
   return (
     <main className="w-full">

@@ -4,6 +4,7 @@ import { FirstVisitPicker } from "@/components/first-visit-picker";
 import { HabitatWidget } from "@/components/habitat-widget";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { readHabitatOverride } from "@/lib/debug-cheat";
 import {
   getDeckCards,
   getUserDecks,
@@ -40,7 +41,12 @@ export default async function DashboardPage({
       getLanguageBreakdown(session.user.id as UserId),
     ]);
 
-  const habitatState = computeHabitatState(habitatFacts, new Date());
+  const habitatOverride = await readHabitatOverride();
+  const habitatState = computeHabitatState(
+    habitatFacts,
+    new Date(),
+    habitatOverride ?? undefined,
+  );
 
   if (decks.length === 0) {
     return (

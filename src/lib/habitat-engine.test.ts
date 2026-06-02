@@ -332,3 +332,56 @@ describe("computeHabitatState", () => {
     expect(state.learnedCardCount).toBe(42);
   });
 });
+
+describe("computeHabitatState — debug override (Phase 13.2 cheat console)", () => {
+  it("forces level independently and recomputes nextLevelThreshold", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 0 }); // real level 1
+    const state = computeHabitatState(facts, NOW, { level: 9 });
+    expect(state.level).toBe(9);
+    expect(state.nextLevelThreshold).toBeNull(); // LEVEL_THRESHOLDS[8] undefined → null
+  });
+
+  it("forces mood independently of quality", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 100 }); // real mood happy
+    const state = computeHabitatState(facts, NOW, { mood: "sad" });
+    expect(state.mood).toBe("sad");
+  });
+
+  it("supports the naturally-impossible combo level 9 + sad", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 0 });
+    const state = computeHabitatState(facts, NOW, { level: 9, mood: "sad" });
+    expect(state.level).toBe(9);
+    expect(state.mood).toBe("sad");
+  });
+
+  it("forces quality, recomputes effectiveCardCount, moves level when level not forced", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 100 });
+    const state = computeHabitatState(facts, NOW, { quality: 0.2 });
+    expect(state.quality).toBe(0.2);
+    expect(state.effectiveCardCount).toBe(20); // floor(0.2 * 100)
+    expect(state.level).toBe(3); // 15 <= 20 < 30
+  });
+
+  it("clamps out-of-range override values", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 0 });
+    const hi = computeHabitatState(facts, NOW, { level: 99, quality: 5 });
+    expect(hi.level).toBe(9);
+    expect(hi.quality).toBe(1);
+    const lo = computeHabitatState(facts, NOW, { level: 0, quality: 0 });
+    expect(lo.level).toBe(1);
+    expect(lo.quality).toBe(DECAY_FLOOR);
+  });
+
+  it("preserves the REAL learnedCardCount even when overriding (readout truth)", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 7 });
+    const state = computeHabitatState(facts, NOW, { level: 9 });
+    expect(state.learnedCardCount).toBe(7);
+  });
+
+  it("no override (undefined) is identical to the un-overridden call", () => {
+    const facts = makeFacts({ lastActivityAt: null, learnedCardCount: 50 });
+    expect(computeHabitatState(facts, NOW, undefined)).toEqual(
+      computeHabitatState(facts, NOW),
+    );
+  });
+});

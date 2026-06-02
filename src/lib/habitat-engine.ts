@@ -32,9 +32,7 @@ export const DECAY_FLOOR = 0.1;
  * Level content / unlock mapping is locked by Phase 13's 3D habitat designs
  * (see `.planning/design/animations/habitat-clay-styles.jsx → ALL_UNLOCKS`).
  */
-export const LEVEL_THRESHOLDS = [
-  5, 15, 30, 50, 80, 120, 170, 230,
-] as const;
+export const LEVEL_THRESHOLDS = [5, 15, 30, 50, 80, 120, 170, 230] as const;
 
 /** "Excited" mood window: 60 minutes after completing a study session (D-13) */
 export const EXCITED_WINDOW_MINUTES = 60;
@@ -44,6 +42,24 @@ export const EXCITED_WINDOW_MINUTES = 60;
 // ============================================================
 
 export type TigerMood = "excited" | "happy" | "neutral" | "sad";
+
+/**
+ * Debug-only virtual override (Phase 13.2 cheat console). When present, forces
+ * level / mood / quality in `computeHabitatState` WITHOUT mutating any real
+ * data — used by QA to inspect any habitat state (incl. naturally-impossible
+ * combos like level 9 + sad) on the deployed app. Minted only by the
+ * secret-gated `/api/debug/cheat` endpoint as a signed cookie; see
+ * `src/lib/debug-cheat.ts`. Every field is optional — omitted fields fall back
+ * to the real computed value.
+ */
+export interface HabitatOverride {
+  /** Force habitat level (clamped 1-9). */
+  level?: number;
+  /** Force tiger mood. */
+  mood?: TigerMood;
+  /** Force quality (clamped to [DECAY_FLOOR, 1]). */
+  quality?: number;
+}
 
 /**
  * Raw facts fetched from the DB — inputs to the pure computation functions.
@@ -198,17 +214,27 @@ export function classifyMood(
 export function computeHabitatState(
   facts: HabitatFacts,
   now: Date,
+  override?: HabitatOverride,
 ): HabitatState {
   const { lastActivityAt, learnedCardCount } = facts;
 
-  // Compute quality from decay rules
-  const quality = computeQuality(lastActivityAt, now);
+  // Compute quality from decay rules. A debug override (if present) wins and is
+  // clamped to the same [DECAY_FLOOR, 1] band the real model produces.
+  let quality = computeQuality(lastActivityAt, now);
+  if (override?.quality !== undefined) {
+    quality = Math.max(DECAY_FLOOR, Math.min(1, override.quality));
+  }
 
   // effectiveCardCount drives level — uses Math.floor to avoid float boundary issues
   const effectiveCardCount = Math.floor(quality * learnedCardCount);
 
-  // Derive level from effective card count
-  const level = habitatLevel(effectiveCardCount);
+  // Derive level from effective card count. A debug override (if present) wins,
+  // clamped to 1-9; otherwise level follows the (possibly quality-overridden)
+  // effective count so forcing quality alone still moves the level naturally.
+  let level = habitatLevel(effectiveCardCount);
+  if (override?.level !== undefined) {
+    level = Math.max(1, Math.min(9, Math.floor(override.level)));
+  }
 
   // Compute minutes since last activity for mood and UI
   const minutesSinceActivity =
@@ -216,17 +242,20 @@ export function computeHabitatState(
       ? Math.floor((now.getTime() - lastActivityAt.getTime()) / (60 * 1000))
       : null;
 
-  // Classify tiger's mood
-  const mood = classifyMood(quality, minutesSinceActivity);
+  // Classify tiger's mood (debug override wins if present).
+  let mood = classifyMood(quality, minutesSinceActivity);
+  if (override?.mood !== undefined) {
+    mood = override.mood;
+  }
 
   // isDecaying: past grace period AND user has started studying (lastActivityAt not null)
   const isDecaying =
     lastActivityAt !== null &&
     now.getTime() - lastActivityAt.getTime() > GRACE_PERIOD_MS;
 
-  // nextLevelThreshold: find the first threshold that exceeds effectiveCardCount
-  // LEVEL_THRESHOLDS[i] represents the threshold to reach level i+2
-  // So if we're at level L, we need LEVEL_THRESHOLDS[L-1] for next level
+  // nextLevelThreshold: derived from the final (possibly overridden) level so
+  // the UI progress bar never contradicts a forced level.
+  // LEVEL_THRESHOLDS[i] represents the threshold to reach level i+2.
   let nextLevelThreshold: number | null = null;
   if (level < 10) {
     // level is 1-9, so the threshold for the next level is LEVEL_THRESHOLDS[level-1]

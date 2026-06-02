@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { readHabitatOverride } from "@/lib/debug-cheat";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 
@@ -30,8 +31,11 @@ export async function GET() {
   // 2. Fetch raw facts from DB
   const facts = await getHabitatFacts(session.user.id as UserId);
 
-  // 3. Compute habitat state (pure function, no side effects)
-  const state = computeHabitatState(facts, new Date());
+  // 3. Compute habitat state (pure function, no side effects). A dev-only
+  // signed-cookie override (QA cheat console) is applied when present + valid;
+  // null in production unless DEBUG_CHEAT_SECRET is set.
+  const override = await readHabitatOverride();
+  const state = computeHabitatState(facts, new Date(), override ?? undefined);
 
   // 4. Return typed JSON
   return Response.json(state);
