@@ -32,16 +32,21 @@ describe("Phase 13.1-VIDEO-02 — scene swapped to video", () => {
     expect(SCENE_SRC).toMatch(/<HabitatVideo\s+habitatState=\{state\}\s*\/>/);
   });
 
-  it("VS2: habitat-scene.tsx no longer imports the live Three.js canvas (no client path to three.js)", () => {
-    // Inspect only import statements — the doc-comment legitimately names the
-    // module it no longer imports.
-    const imports = SCENE_SRC.split("\n")
-      .filter((l) => /^\s*import\b/.test(l))
-      .join("\n");
-    expect(imports).not.toMatch(/habitat-3d-canvas/);
-    expect(imports).not.toMatch(/from\s+["']next\/dynamic["']/);
-    // The canvasReady poster-fade machinery is gone (it referenced the canvas's
-    // onCanvasReady readiness signal). Assert no live state binding remains.
+  it("VS2: the live Three.js canvas is imported ONLY behind a NODE_ENV dev gate (tree-shaken from production)", () => {
+    // Phase 13.1-VIDEO-03: the clip render pipeline needs the live canvas, so
+    // habitat-scene mounts it via a dynamic import GATED by
+    // `process.env.NODE_ENV !== "production"` → dead-code-eliminated in
+    // `next build` (verified separately: `grep WebGLRenderer .next/static/chunks`
+    // is empty). Production users always get <HabitatVideo>; no client path to
+    // three.js ships. Assert the gate co-occurs with the dynamic canvas import.
+    expect(SCENE_SRC).toMatch(
+      /process\.env\.NODE_ENV\s*!==\s*["']production["']/,
+    );
+    expect(SCENE_SRC).toMatch(
+      /dynamic\(\s*\(\)\s*=>\s*import\(\s*["']@\/components\/habitat-3d-canvas["']\s*\)/,
+    );
+    // The canvasReady poster-fade machinery stays gone — the capture canvas is
+    // mounted WITHOUT an onCanvasReady binding.
     expect(SCENE_SRC).not.toMatch(/\[canvasReady,\s*setCanvasReady\]/);
     expect(SCENE_SRC).not.toMatch(/onCanvasReady=/);
   });

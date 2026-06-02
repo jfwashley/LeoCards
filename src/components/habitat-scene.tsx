@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { HabitatVideo } from "@/components/habitat-video";
 import { Button } from "@/components/ui/button";
@@ -54,12 +55,19 @@ const WRAPPER_STYLE = {
 };
 
 // Phase 13.1-VIDEO-02: the live Three.js canvas has been replaced by a
-// pre-rendered ambient loop clip (<HabitatVideo>). The dynamic({ssr:false})
-// canvas import, the SSR poster <Image>, and the `canvasReady` poster-fade
-// machinery are all GONE — <HabitatVideo> owns its own poster (the LCP
-// candidate) and its own reduced-motion still. No client import path reaches
-// `habitat-3d-canvas.tsx` or `src/lib/habitat-3d/*`, so three.js leaves the
-// client bundle entirely.
+// pre-rendered ambient loop clip (<HabitatVideo>). <HabitatVideo> owns its own
+// poster (the LCP candidate) and its own reduced-motion still.
+//
+// Phase 13.1-VIDEO-03: dev-only capture mount. The offline clip render pipeline
+// (scripts/render-habitat-clips.mjs) needs the LIVE Three.js canvas to record.
+// This is gated by `process.env.NODE_ENV !== "production"` so `next build`
+// dead-code-eliminates the dynamic import — three.js never enters the
+// PRODUCTION client bundle and real users always get <HabitatVideo>. It only
+// mounts when the dev-only `?capture=video` flag is present (see captureMode).
+const HabitatCanvasCapture =
+  process.env.NODE_ENV !== "production"
+    ? dynamic(() => import("@/components/habitat-3d-canvas"), { ssr: false })
+    : null;
 
 // ============================================================
 // Mood indicator helpers
@@ -112,6 +120,20 @@ export function HabitatScene({
   const [offline, setOffline] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const prevLevelRef = useRef(habitatState.level);
+
+  // Plan 13.1-VIDEO-03: dev-only — detect `?capture=video` to mount the live
+  // canvas for the clip render pipeline. SSR-safe (defaults false; set after
+  // mount, so no hydration mismatch). Tree-shaken in production.
+  const [captureMode, setCaptureMode] = useState(false);
+  useEffect(() => {
+    if (
+      process.env.NODE_ENV !== "production" &&
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("capture") === "video"
+    ) {
+      setCaptureMode(true);
+    }
+  }, []);
 
   // Sync state when prop changes (BP3)
   useEffect(() => {
@@ -210,8 +232,14 @@ export function HabitatScene({
         {/* Mood indicator overlay (D-15, UI-SPEC) */}
         <MoodIndicator mood={state.mood} />
 
-        {/* Pre-rendered ambient loop clip (poster = LCP candidate). */}
-        <HabitatVideo habitatState={state} />
+        {/* Pre-rendered ambient loop clip (poster = LCP candidate). In dev
+            capture mode we mount the live Three.js canvas instead so the clip
+            render pipeline can record it (tree-shaken from production). */}
+        {captureMode && HabitatCanvasCapture ? (
+          <HabitatCanvasCapture habitatState={state} />
+        ) : (
+          <HabitatVideo habitatState={state} />
+        )}
       </div>
 
       {/*

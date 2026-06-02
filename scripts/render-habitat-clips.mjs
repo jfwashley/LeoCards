@@ -16,14 +16,16 @@
 //
 //   1. Drive the Playwright spec → one `.tmp/clips/l{N}-{mood}.raw.webm` each.
 //   2. For each raw webm, ffmpeg-encode → seamless-looping webm + mp4:
-//      (a) trim to a clean ~5s, (b) apply the SAME tail→head xfade loop,
-//      (c) write public/habitat/clips/l{N}-{mood}.{webm,mp4}.
-//   3. Validate each output: exists, size within band, valid duration ≥ 4s.
+//      (a) scale to 1280×720 + trim to a clean 16.0s,
+//      (b) write public/habitat/clips/l{N}-{mood}.{webm,mp4}.
+//   3. Validate each output: exists, size within band, valid duration ≥ 15s.
 //   4. Clean .tmp/clips/ on a full successful batch.
 //
-// Seamless loop: a short crossfade masks the seam. We hold out the last
-// CROSSFADE_S and `xfade` it over the first CROSSFADE_S, so the final clip is
-// (DURATION_S − CROSSFADE_S) long and its end blends smoothly into its start.
+// Seamless loop (Plan 13.1-VIDEO-03): the capture does a full 360° camera
+// revolution over exactly 16s, which loops on its own — NO crossfade. (An xfade
+// would blend a θ≈2π frame over θ≈0 and break the camera's rotational
+// continuity.) Ambient particle periods don't all divide 16s, but the dominant
+// orbit masks any faint discontinuity.
 //
 // De-risk: pass `--only=l5-happy` to render a single clip end-to-end before
 // the full batch. The flag narrows BOTH the Playwright capture scope (via
@@ -48,18 +50,21 @@ const TMP_DIR = path.join(ROOT, "e2e", "scripts", ".tmp");
 const CLIPS_TMP = path.join(TMP_DIR, "clips");
 const OUT_DIR = path.join(ROOT, "public", "habitat", "clips");
 
-// Output timing. The raw webm is ~5.5s; we trim to TRIM_S then xfade-loop.
+// Plan 13.1-VIDEO-03 output timing. The raw webm is ~16.5s; we trim to exactly
+// TRIM_S = one full 360° camera revolution. The capture orbit is continuous +
+// phase-invariant, so the loop is seamless with NO crossfade (an xfade would
+// blend a θ≈2π frame over θ≈0 and break camera continuity).
 const FPS = 30;
-const TRIM_S = 5; // clean body trimmed from the raw recording
-const CROSSFADE_S = 0.5; // tail→head blend that masks the loop seam
-const LOOP_DURATION_S = TRIM_S - CROSSFADE_S; // 4.5s final clip length
+const TRIM_S = 16; // final clip length = one full revolution
+const LOOP_DURATION_S = TRIM_S;
 
 // Size bands (per clip). webm (VP9) is the primary; mp4 (H.264) the fallback.
-// Brief targets ~120–400 KB; keep a sane ceiling with headroom.
-const WEBM_MAX = 500 * 1024;
-const MP4_MAX = 600 * 1024;
+// Raised for the 16s high-quality clips — only ONE pair lazy-loads per visit
+// (after the priority poster), so the per-clip ceiling can be generous.
+const WEBM_MAX = 900 * 1024;
+const MP4_MAX = 1100 * 1024;
 const MIN_BYTES = 5 * 1024; // guard against empty / broken encodes
-const MIN_DURATION_S = 4;
+const MIN_DURATION_S = 15;
 
 // --- arg parsing -----------------------------------------------------------
 const args = process.argv.slice(2);
@@ -120,25 +125,20 @@ function probeDurationS(file) {
   return Number(h) * 3600 + Number(mm) * 60 + Number(ss);
 }
 
-// Build the xfade filter that blends the clip's tail over its head so the loop
-// is seamless. We first normalize fps + trim the raw recording to TRIM_S, then
-// split that body and xfade the second copy (offset to the loop point) over
-// the first. Output is trimmed to LOOP_DURATION_S.
-//
-//   fps,format,trim=0:TRIM_S            -> clean body
-//   split[a][b]                         -> two copies
-//   [a][b]xfade offset=LOOP_DURATION_S  -> tail blends over head
-//   trim=0:LOOP_DURATION_S              -> final loop length
-function buildXfadeFilter() {
+// Build the loop filter. NO xfade: a full 360° camera revolution loops
+// seamlessly on its own, and an xfade would blend a θ≈2π frame over θ≈0 and
+// break camera continuity. We normalise fps, force scale=1280:720 (collapses
+// any DPR-inflated capture buffer to the target), set yuv420p, and trim to
+// exactly LOOP_DURATION_S.
+function buildLoopFilter() {
   return (
-    `fps=${FPS},format=yuv420p,trim=0:${TRIM_S},setpts=PTS-STARTPTS,split[a][b];` +
-    `[a][b]xfade=transition=fade:duration=${CROSSFADE_S}:offset=${LOOP_DURATION_S},` +
+    `fps=${FPS},scale=1280:720:flags=lanczos,format=yuv420p,` +
     `trim=0:${LOOP_DURATION_S},setpts=PTS-STARTPTS`
   );
 }
 
 function encodeWebm(rawInput, outPath) {
-  const vf = buildXfadeFilter();
+  const vf = buildLoopFilter();
   runFfmpeg(
     [
       "-y",
@@ -157,9 +157,13 @@ function encodeWebm(rawInput, outPath) {
       "-b:v",
       "0",
       "-crf",
-      "34",
+      "30",
       "-row-mt",
       "1",
+      "-deadline",
+      "good",
+      "-cpu-used",
+      "2",
       "-r",
       String(FPS),
       outPath,
@@ -169,7 +173,7 @@ function encodeWebm(rawInput, outPath) {
 }
 
 function encodeMp4(rawInput, outPath) {
-  const vf = buildXfadeFilter();
+  const vf = buildLoopFilter();
   runFfmpeg(
     [
       "-y",
@@ -188,7 +192,7 @@ function encodeMp4(rawInput, outPath) {
       "-pix_fmt",
       "yuv420p",
       "-crf",
-      "28",
+      "22",
       "-preset",
       "slow",
       "-movflags",

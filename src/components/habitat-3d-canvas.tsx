@@ -255,8 +255,20 @@ export function mountHabitatScene(
 ): MountedHabitatScene {
   const { canvas, wrapper, habitatState, reducedMotion } = opts;
 
-  const w = opts.width ?? (wrapper.clientWidth || 960);
-  const h = opts.height ?? (wrapper.clientHeight || 540);
+  // Plan 13.1-VIDEO-03: capture-video mode bakes the offline clip. Force a true
+  // 1280×720 (16:9) backing store so the recorded drawing buffer is full
+  // resolution + correct aspect — NOT the production canvas's CSS-clamped
+  // ~1280×400 (which made earlier clips low-res + DAR 16:5). Production paths
+  // are unaffected (captureVideo is only ever set via a NODE_ENV-gated flag).
+  const captureVideo = opts.captureVideo === true;
+  const CAPTURE_W = 1280;
+  const CAPTURE_H = 720;
+  const w = captureVideo
+    ? CAPTURE_W
+    : (opts.width ?? (wrapper.clientWidth || 960));
+  const h = captureVideo
+    ? CAPTURE_H
+    : (opts.height ?? (wrapper.clientHeight || 540));
 
   // -- 1. scene host + world + orbit -----------------------------------------
   const ctx = buildSceneHost(canvas, w, h, {});
@@ -265,11 +277,10 @@ export function mountHabitatScene(
   const cfg = LEVEL_CONFIG[level] ??
     LEVEL_CONFIG[1] ?? { sky: "default" as const };
   const world = buildClayWorld(ctx, features, { sky: cfg.sky });
-  // Plan 13.1-VIDEO-01: in capture-video mode the camera is locked (auto-orbit
-  // frozen) but ambient motion still runs. We freeze the orbit by passing
-  // reducedMotion:true to attachOrbit ONLY; the world's updateWorld is called
-  // below with the live (non-frozen) reducedMotion so ambient keeps animating.
-  const captureVideo = opts.captureVideo === true;
+  // Plan 13.1-VIDEO-03: in capture-video mode we drive a deterministic
+  // constant-velocity 360° orbit ourselves (see tick), so the built-in
+  // idle-gated auto-orbit is frozen via reducedMotion:true. Ambient motion
+  // still runs (updateWorld below uses the live reducedMotion).
   const orbitReducedMotion = captureVideo ? true : reducedMotion;
   const orbit = attachOrbit(canvas, ctx.camera, {
     reducedMotion: orbitReducedMotion,
@@ -336,11 +347,24 @@ export function mountHabitatScene(
   let raf = 0;
   let last =
     typeof performance !== "undefined" ? performance.now() : Date.now();
+  // Plan 13.1-VIDEO-03: capture-mode orbit clock. A full 360° over the 16s loop
+  // → any 16s window is one revolution → seamless loop (no crossfade needed).
+  const CAPTURE_ORBIT_OMEGA = (2 * Math.PI) / 16; // rad/s
+  let captureStart =
+    typeof performance !== "undefined" ? performance.now() : Date.now();
   const tick = (now: number) => {
     if (disposedRef.current) return;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    orbit.tick(dt);
+    if (captureVideo) {
+      // Deterministic constant-velocity rotation. theta = elapsed % 2π is
+      // phase-invariant; frame 0 (after __habitatResetOrbitClock) = θ=0 = the
+      // poster's locked angle, for a clean poster→video fade-in handoff.
+      const elapsed = (now - captureStart) / 1000;
+      orbit.setTheta?.((elapsed * CAPTURE_ORBIT_OMEGA) % (2 * Math.PI));
+    } else {
+      orbit.tick(dt);
+    }
 
     // Plan 13-04: per-frame mood + decay binding (no scene rebuild).
     const liveState = opts.stateRef?.current ?? habitatState;
@@ -404,6 +428,13 @@ export function mountHabitatScene(
     ) => {
       orbit.setTheta?.(n);
     };
+    // Plan 13.1-VIDEO-03: reset the capture-orbit clock so the recorder can
+    // align frame 0 with θ=0 (= poster angle) right before it starts.
+    (window as unknown as Record<string, unknown>).__habitatResetOrbitClock =
+      () => {
+        captureStart =
+          typeof performance !== "undefined" ? performance.now() : Date.now();
+      };
   }
 
   // -- 6. dispose ------------------------------------------------------------
@@ -435,6 +466,8 @@ export function mountHabitatScene(
     if (isDev && typeof window !== "undefined") {
       delete (window as unknown as Record<string, unknown>).__habitatCameraPos;
       delete (window as unknown as Record<string, unknown>).__habitatSetTheta;
+      delete (window as unknown as Record<string, unknown>)
+        .__habitatResetOrbitClock;
     }
   };
 

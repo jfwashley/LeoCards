@@ -25,13 +25,14 @@
 //   (c) records a real-time MediaRecorder stream (not a frame sequence) into
 //       e2e/scripts/.tmp/clips/l{N}-{mood}.raw.webm.
 //
-// Capture settings (documented in SUMMARY):
-//   • captureStream(30) → 30fps source. MediaRecorder VP9 @ 2.5 Mbps. The raw
-//     webm is an INTERMEDIATE; the orchestrator's ffmpeg pass controls final
-//     size/quality. Record ~5500 ms so the orchestrator can trim a clean ~5s
-//     and still have headroom for the tail→head xfade loop.
-//   • Camera locked to a fixed flattering isometric angle (theta = π/4, the
-//     scene's default 45° view) via window.__habitatSetTheta.
+// Capture settings (Plan 13.1-VIDEO-03):
+//   • captureStream(30) → 30fps source. MediaRecorder VP9 @ ~7 Mbps. The raw
+//     webm is a high-quality INTERMEDIATE; the orchestrator's ffmpeg pass sets
+//     final size/quality. Record ~16500 ms so the orchestrator can trim a clean
+//     16.0s = exactly one camera revolution (no xfade needed).
+//   • Camera does a deterministic constant-velocity 360° orbit (driven in
+//     habitat-3d-canvas capture mode); we call __habitatResetOrbitClock() right
+//     before recording so frame 0 ≈ θ=0 (the poster's angle).
 //
 // This spec writes ONLY to .tmp/clips/ — the orchestrator owns encoding +
 // the final write to public/habitat/clips/.
@@ -76,11 +77,13 @@ const MOODS = parseMoods();
 
 // Real-time MediaRecorder capture settings.
 const CAPTURE_FPS = 30; // captureStream fps
-const RECORD_MS = 5500; // record ~5.5s; orchestrator trims to a clean ~5s
-const RECORD_BITRATE = 2_500_000; // VP9 intermediate bitrate (ffmpeg controls final size)
-
-// Fixed flattering isometric camera angle (scene default 45° view).
-const FIXED_THETA = Math.PI / 4;
+// Plan 13.1-VIDEO-03: record one full 360° revolution (16s) + headroom; the
+// orchestrator trims to a clean 16.0s. The camera now does a deterministic
+// constant-velocity 360° orbit (driven in habitat-3d-canvas capture mode), so
+// any 16s window is a seamless loop. Bitrate raised so the VP9 intermediate is
+// high quality before the ffmpeg pass (final size/quality set in the orchestrator).
+const RECORD_MS = 16500; // ~16.5s → one 16s loop + headroom
+const RECORD_BITRATE = 7_000_000; // ~7 Mbps high-quality intermediate
 
 const TMP_DIR = path.resolve(__dirname, ".tmp");
 const CLIPS_DIR = path.join(TMP_DIR, "clips");
@@ -197,17 +200,18 @@ test.describe("Phase 13.1 VIDEO-01 — habitat ambient clip capture (MediaRecord
         await expect(canvas).toHaveAttribute("data-mood", mood);
         await expect(canvas).toHaveAttribute("data-level", String(level));
 
-        // Lock the camera to the fixed flattering angle. In capture-video mode
-        // auto-orbit is frozen, so this theta holds for the whole recording.
-        await page.evaluate((theta) => {
-          const w = window as unknown as {
-            __habitatSetTheta?: (n: number) => void;
-          };
-          w.__habitatSetTheta?.(theta);
-        }, FIXED_THETA);
-
         // Let ambient settle one beat so the recording doesn't start mid-mount.
         await page.waitForTimeout(300);
+
+        // Reset the capture-orbit clock so frame 0 ≈ θ=0 (= the poster's locked
+        // angle), aligning the poster→video fade-in handoff. The 360° orbit is
+        // continuous + phase-invariant, so the loop is seamless regardless.
+        await page.evaluate(() => {
+          const w = window as unknown as {
+            __habitatResetOrbitClock?: () => void;
+          };
+          w.__habitatResetOrbitClock?.();
+        });
 
         const dataUrl = await recordCanvasInPage(
           page,
