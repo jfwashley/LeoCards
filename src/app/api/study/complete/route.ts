@@ -8,12 +8,26 @@ import { auth } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 // 10 requests per minute per user — one session completion per minute is generous
-const studyCompleteLimiter = createRateLimiter({ windowMs: 60_000, maxRequests: 10 });
+const studyCompleteLimiter = createRateLimiter({
+  windowMs: 60_000,
+  maxRequests: 10,
+});
+
+import { env } from "@/env";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
 import type { GradeEntry } from "@/lib/study-engine";
-import { computeCardUpdate } from "@/lib/study-engine";
+import { computeCardUpdate, DEFAULT_COOLDOWN_MS } from "@/lib/study-engine";
+
+// QA: zero the spaced-repetition cooldowns so a card can progress 0->learned
+// across reloaded sessions in one sitting. Auto-on in local dev; on Vercel
+// preview via STUDY_NO_COOLDOWN=true; OFF in production (real 12h/24h).
+const NO_COOLDOWN =
+  process.env.NODE_ENV !== "production" || env.STUDY_NO_COOLDOWN === "true";
+const COOLDOWN_CONFIG: Record<number, number | null> = NO_COOLDOWN
+  ? { 0: 0, 1: 0, 2: null }
+  : DEFAULT_COOLDOWN_MS;
 
 // ============================================================
 // Validation schemas
@@ -58,7 +72,12 @@ export async function POST(request: Request) {
   if (!limit.allowed) {
     return Response.json(
       { error: "Too many requests" },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)) } },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)),
+        },
+      },
     );
   }
 
@@ -139,6 +158,7 @@ export async function POST(request: Request) {
       card.masteryRound,
       cardGrades,
       now,
+      COOLDOWN_CONFIG,
     );
 
     return {

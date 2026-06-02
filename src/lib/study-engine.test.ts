@@ -220,67 +220,88 @@ describe("computeCardUpdate", () => {
     return entries.map((e) => ({ cardId, ...e }));
   }
 
-  it("advances round 0 -> 1 when 2 n2t correct + 2 t2n correct, sets 12h cooldown", () => {
-    const grades = makeGrades(CARD_ID, [
-      { direction: "n2t", correct: true },
-      { direction: "n2t", correct: true },
-      { direction: "t2n", correct: true },
-      { direction: "t2n", correct: true },
-    ]);
+  // REGRESSION (2026-05-29): a real session presents a round-0 card ONCE in the
+  // n2t direction and grades it once. The card MUST advance on that single
+  // correct n2t — the old `2 n2t + 2 t2n` threshold made this impossible, so
+  // every card was permanently stuck at round 0 and nothing ever became learned.
+  it("advances round 0 -> 1 on a SINGLE correct n2t (realistic session), sets 12h cooldown", () => {
+    const grades = makeGrades(CARD_ID, [{ direction: "n2t", correct: true }]);
     const result = computeCardUpdate(CARD_ID, 0, grades, NOW);
     expect(result.newRound).toBe(1);
-    expect(result.cooldownUntil).not.toBeNull();
-    // 12h = 43200000ms
     const diffMs = (result.cooldownUntil as Date).getTime() - NOW.getTime();
     expect(diffMs).toBe(12 * 3600 * 1000);
   });
 
-  it("stays round 0 when only 1 n2t correct + 2 t2n correct (threshold not met)", () => {
-    const grades = makeGrades(CARD_ID, [
-      { direction: "n2t", correct: true },
-      { direction: "t2n", correct: true },
-      { direction: "t2n", correct: true },
-    ]);
+  it("stays round 0 when the single n2t grade is INCORRECT", () => {
+    const grades = makeGrades(CARD_ID, [{ direction: "n2t", correct: false }]);
     const result = computeCardUpdate(CARD_ID, 0, grades, NOW);
     expect(result.newRound).toBe(0);
     expect(result.cooldownUntil).toBeNull();
   });
 
-  it("advances round 1 -> 2 when 1 n2t correct + 1 t2n correct, sets 24h cooldown", () => {
-    const grades = makeGrades(CARD_ID, [
-      { direction: "n2t", correct: true },
-      { direction: "t2n", correct: true },
-    ]);
+  it("advances round 1 -> 2 on a SINGLE correct t2n (the round-1 direction), 24h cooldown", () => {
+    const grades = makeGrades(CARD_ID, [{ direction: "t2n", correct: true }]);
     const result = computeCardUpdate(CARD_ID, 1, grades, NOW);
     expect(result.newRound).toBe(2);
-    expect(result.cooldownUntil).not.toBeNull();
-    // 24h = 86400000ms
     const diffMs = (result.cooldownUntil as Date).getTime() - NOW.getTime();
     expect(diffMs).toBe(24 * 3600 * 1000);
   });
 
-  it("advances round 2 -> 3 (LEARNED) when 1 n2t correct + 1 t2n correct, no cooldown", () => {
-    const grades = makeGrades(CARD_ID, [
-      { direction: "n2t", correct: true },
-      { direction: "t2n", correct: true },
-    ]);
-    const result = computeCardUpdate(CARD_ID, 2, grades, NOW);
-    expect(result.newRound).toBe(3);
-    expect(result.cooldownUntil).toBeNull();
+  it("advances round 2 -> 3 (LEARNED) on a single correct in EITHER direction, no cooldown", () => {
+    // Round 2 is presented in a random direction — a single correct in whichever
+    // direction was shown must complete it.
+    const n2t = computeCardUpdate(
+      CARD_ID,
+      2,
+      makeGrades(CARD_ID, [{ direction: "n2t", correct: true }]),
+      NOW,
+    );
+    expect(n2t.newRound).toBe(3);
+    expect(n2t.cooldownUntil).toBeNull();
+    const t2n = computeCardUpdate(
+      CARD_ID,
+      2,
+      makeGrades(CARD_ID, [{ direction: "t2n", correct: true }]),
+      NOW,
+    );
+    expect(t2n.newRound).toBe(3);
+  });
+
+  it("full progression 0 -> 3 across single-grade sessions reaches LEARNED", () => {
+    let round = 0;
+    const stages: Array<"n2t" | "t2n"> = ["n2t", "t2n", "n2t"]; // round 0,1,2 presentation
+    for (let i = 0; i < 3; i++) {
+      const r = computeCardUpdate(
+        CARD_ID,
+        round,
+        makeGrades(CARD_ID, [
+          { direction: stages[i] as "n2t" | "t2n", correct: true },
+        ]),
+        NOW,
+      );
+      round = r.newRound;
+    }
+    expect(round).toBe(3); // LEARNED (counts toward habitat learnedCardCount)
   });
 
   it("does not advance beyond currentRound + 1 in a single session (anti-inflation)", () => {
-    // Round 0 with extra grades — should only advance to round 1, not beyond
     const grades = makeGrades(CARD_ID, [
       { direction: "n2t", correct: true },
-      { direction: "n2t", correct: true },
-      { direction: "n2t", correct: true }, // extra
-      { direction: "t2n", correct: true },
-      { direction: "t2n", correct: true },
-      { direction: "t2n", correct: true }, // extra
+      { direction: "n2t", correct: true }, // extra correct in same session
     ]);
     const result = computeCardUpdate(CARD_ID, 0, grades, NOW);
     expect(result.newRound).toBe(1); // not 2 or 3
+  });
+
+  it("respects a cooldown override (QA dev/preview zeroes cooldowns)", () => {
+    const grades = makeGrades(CARD_ID, [{ direction: "n2t", correct: true }]);
+    const result = computeCardUpdate(CARD_ID, 0, grades, NOW, {
+      0: 0,
+      1: 0,
+      2: null,
+    });
+    expect(result.newRound).toBe(1);
+    expect(result.cooldownUntil).toBeNull(); // zeroed → immediately due again
   });
 
   it("recallCountDelta sums all correct grades regardless of round advancement", () => {

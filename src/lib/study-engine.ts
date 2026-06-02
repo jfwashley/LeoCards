@@ -163,22 +163,37 @@ export function getCardStage(card: CardForSession): "n2t" | "t2n" {
 // ============================================================
 
 /**
- * Round completion thresholds (D-14):
- * - Round 0 -> 1: need 2 n2t correct + 2 t2n correct
- * - Round 1 -> 2: need 1 n2t correct + 1 t2n correct
- * - Round 2 -> 3: need 1 n2t correct + 1 t2n correct
+ * Round advancement requirement (D-14 — corrected 2026-05-29).
+ *
+ * A card is presented in exactly ONE direction per session (see getCardStage):
+ *   - round 0 → n2t
+ *   - round 1 → t2n
+ *   - round 2 → random (n2t OR t2n)
+ * and a correctly-answered card is graded exactly ONCE per session (wrong cards
+ * requeue, but in the SAME direction). A round therefore advances on a SINGLE
+ * correct answer in the direction actually presented.
+ *
+ * THE BUG THIS REPLACES: the old table required correct answers in directions a
+ * round never presents (e.g. round 0 needed `2 n2t + 2 t2n`, but round-0 cards
+ * are only ever shown n2t, once). With per-session evaluation and one grade per
+ * card, the threshold was unreachable — every card was permanently stuck at
+ * masteryRound 0, nothing ever became "learned", and the habitat could never
+ * leave level 1.
  */
-const ROUND_THRESHOLDS: Record<number, { n2t: number; t2n: number }> = {
-  0: { n2t: 2, t2n: 2 },
-  1: { n2t: 1, t2n: 1 },
-  2: { n2t: 1, t2n: 1 },
+type RoundRequirement = "n2t" | "t2n" | "either";
+const ROUND_REQUIREMENT: Record<number, RoundRequirement> = {
+  0: "n2t",
+  1: "t2n",
+  2: "either",
 };
 
 /**
- * Cooldown durations in milliseconds.
- * Round 0->1: 12h, Round 1->2: 24h, Round 2->3: null (LEARNED, no cooldown)
+ * Default cooldown durations in milliseconds between rounds (spaced repetition).
+ * Round 0->1: 12h, Round 1->2: 24h, Round 2->3: null (LEARNED, no cooldown).
+ * Overridable per call (e.g. zeroed in dev/preview so QA can verify the full
+ * 0->learned progression in one sitting — see /api/study/complete).
  */
-const COOLDOWN_MS: Record<number, number | null> = {
+export const DEFAULT_COOLDOWN_MS: Record<number, number | null> = {
   0: 12 * 3600 * 1000,
   1: 24 * 3600 * 1000,
   2: null,
@@ -187,9 +202,13 @@ const COOLDOWN_MS: Record<number, number | null> = {
 /**
  * Computes the card state update based on grades collected during a session.
  *
- * Anti-inflation (Pitfall 4): capped at +1 round per session — grades beyond
- * threshold do not count toward further advancement.
+ * A round advances when the card was answered correctly at least once in the
+ * direction its current round presents (ROUND_REQUIREMENT). Advancement is
+ * capped at +1 round per session (anti-inflation) — this function is called
+ * once per card per session and never advances more than one round.
  *
+ * @param cooldownMsByRound - cooldown durations by current round; defaults to
+ *   DEFAULT_COOLDOWN_MS. A value of 0 (or null) yields no cooldown.
  * @returns newRound, cooldownUntil (null if not advanced or learned), recallCountDelta
  */
 export function computeCardUpdate(
@@ -197,11 +216,12 @@ export function computeCardUpdate(
   currentRound: number,
   grades: GradeEntry[],
   now: Date,
+  cooldownMsByRound: Record<number, number | null> = DEFAULT_COOLDOWN_MS,
 ): { newRound: number; cooldownUntil: Date | null; recallCountDelta: number } {
   // Filter grades for this card only
   const cardGrades = grades.filter((g) => g.cardId === cardId);
 
-  // Count correct grades per direction (uncapped for recallCountDelta)
+  // Count correct grades per direction
   const n2tCorrect = cardGrades.filter(
     (g) => g.direction === "n2t" && g.correct,
   ).length;
@@ -212,29 +232,29 @@ export function computeCardUpdate(
   // Total correct for recallCountDelta (uncapped, for habitat progression)
   const recallCountDelta = n2tCorrect + t2nCorrect;
 
-  // Check if round can advance (anti-inflation: only +1 per session)
-  const threshold = ROUND_THRESHOLDS[currentRound];
-
-  if (!threshold) {
+  const requirement = ROUND_REQUIREMENT[currentRound];
+  if (requirement === undefined) {
     // Already at max round (3 = learned) or unknown round — no advancement
     return { newRound: currentRound, cooldownUntil: null, recallCountDelta };
   }
 
-  // Cap counts at threshold to prevent multi-round skipping (Pitfall 4)
-  const cappedN2t = Math.min(n2tCorrect, threshold.n2t);
-  const cappedT2n = Math.min(t2nCorrect, threshold.t2n);
+  // Advance when the card was answered correctly in the presented direction.
+  const advanced =
+    requirement === "n2t"
+      ? n2tCorrect >= 1
+      : requirement === "t2n"
+        ? t2nCorrect >= 1
+        : n2tCorrect + t2nCorrect >= 1; // "either" (round 2 random stage)
 
-  const thresholdMet = cappedN2t >= threshold.n2t && cappedT2n >= threshold.t2n;
-
-  if (!thresholdMet) {
+  if (!advanced) {
     return { newRound: currentRound, cooldownUntil: null, recallCountDelta };
   }
 
-  // Advance round
+  // Advance exactly one round (anti-inflation).
   const newRound = currentRound + 1;
-  const cooldownDurationMs = COOLDOWN_MS[currentRound] ?? null;
+  const cooldownDurationMs = cooldownMsByRound[currentRound] ?? null;
   const cooldownUntil =
-    cooldownDurationMs !== null
+    cooldownDurationMs !== null && cooldownDurationMs > 0
       ? new Date(now.getTime() + cooldownDurationMs)
       : null;
 

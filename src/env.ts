@@ -13,6 +13,11 @@ export const env = createEnv({
     // 404 and /debug shows "disabled". Set it on Vercel preview + production
     // for QA; mints the HMAC-signed override cookie (see src/lib/debug-cheat.ts).
     DEBUG_CHEAT_SECRET: z.string().min(16).optional(),
+    // QA: when "true", study-round cooldowns are zeroed so a card can progress
+    // 0->learned across reloaded sessions in one sitting. Local dev (NODE_ENV !=
+    // production) zeroes them automatically; set this on Vercel PREVIEW only.
+    // Leave UNSET on production so real 12h/24h spaced-repetition applies.
+    STUDY_NO_COOLDOWN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
@@ -25,6 +30,7 @@ export const env = createEnv({
     DEEPL_API_KEY: process.env.DEEPL_API_KEY,
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     DEBUG_CHEAT_SECRET: process.env.DEBUG_CHEAT_SECRET,
+    STUDY_NO_COOLDOWN: process.env.STUDY_NO_COOLDOWN,
   },
   // Coerce empty strings to undefined BEFORE Zod runs so optional keys
   // (RESEND/DEEPL/ANTHROPIC) gracefully fall through to their existing
