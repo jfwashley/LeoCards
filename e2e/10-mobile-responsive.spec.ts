@@ -114,4 +114,40 @@ test.describe("Mobile responsiveness", () => {
     expect(frBox).not.toBeNull();
     expect(frBox!.y).toBeGreaterThan(engBox!.y);
   });
+
+  // Mobile card-management affordances live in the stacked-card layout
+  // (card-list.tsx `md:hidden`), NOT the desktop table. This verifies the
+  // mobile Pause + Edit buttons are actually visible + usable on a phone
+  // viewport (the table-based 05/12 specs are desktop-only and skip on mobile).
+  test("card management affordances (pause, edit) are usable on mobile", async ({
+    page,
+  }) => {
+    await signUpWithDeck(page, "French");
+    await addWordsFromBrowser(page, 2);
+
+    // Pause: the VISIBLE button (mobile layout), not the hidden desktop table.
+    const pause = page
+      .locator('[aria-label="Pause this card"]:visible')
+      .first();
+    await expect(pause).toBeVisible();
+    await pause.click();
+    // The visible (mobile-layout) "Paused" badge — the desktop table also has a
+    // hidden one, so scope to :visible rather than DOM-order .first().
+    await expect(
+      page.locator('span:text-is("Paused"):visible').first(),
+    ).toBeVisible();
+
+    // Resume toggles back.
+    const resume = page
+      .locator('[aria-label="Resume this card"]:visible')
+      .first();
+    await expect(resume).toBeVisible();
+    await resume.click();
+
+    // Edit: opens the dialog on mobile.
+    const edit = page.locator('[aria-label="Edit card"]:visible').first();
+    await expect(edit).toBeVisible();
+    await edit.click();
+    await expect(page.locator("#card-front")).toBeVisible({ timeout: 3_000 });
+  });
 });

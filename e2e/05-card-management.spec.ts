@@ -2,7 +2,14 @@ import { expect, test } from "playwright/test";
 import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
 
 test.describe("Card management — search, edit, delete", () => {
-  test.beforeEach(async ({ page }) => {
+  // These assert the DESKTOP <table> layout (card-list.tsx `hidden md:table`).
+  // On mobile the list renders as stacked cards (`md:hidden`) with its own
+  // buttons — covered by 10-mobile-responsive "card management affordances".
+  test.beforeEach(async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name === "mobile",
+      "Desktop table layout — mobile covered in 10-mobile-responsive",
+    );
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
   });

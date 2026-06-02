@@ -22,7 +22,14 @@ import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
  * No arbitrary sleeps — Playwright's web-first auto-waiting assertions only.
  */
 test.describe("Pause cards — Phase 12", () => {
-  test.beforeEach(async ({ page }) => {
+  // These assert the DESKTOP <table> row structure (td, opacity-50 row class).
+  // The mobile stacked-card layout has its own Pause/Resume buttons — covered
+  // by 10-mobile-responsive "card management affordances".
+  test.beforeEach(async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name === "mobile",
+      "Desktop table layout — mobile covered in 10-mobile-responsive",
+    );
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
   });

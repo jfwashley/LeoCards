@@ -48,10 +48,15 @@ test.describe("Habitat — user-facing video (VIDEO-02)", () => {
     const video = page.locator(VIDEO_SELECTOR);
     await expect(video).toHaveCount(1, { timeout: 15_000 });
 
-    // It has a poster (the hero LCP candidate) and webm-first sources.
-    const poster = await video.getAttribute("poster");
-    expect(poster).toMatch(/\/habitat\/hero-l[1-9]\.webp$/);
+    // The hero poster is the LCP candidate, rendered as a separate priority
+    // next/image (data-testid=habitat-video-still) UNDER the video — VIDEO-03
+    // moved it off the <video poster> attr so it gets a <link rel=preload>.
+    const still = page.locator(STILL_SELECTOR);
+    await expect(still).toHaveCount(1, { timeout: 15_000 });
+    const posterSrc = await still.getAttribute("src");
+    expect(posterSrc).toMatch(/hero-l[1-9]\.webp/);
 
+    // webm-first sources.
     const sources = await video.locator("source").evaluateAll((els) =>
       els.map((e) => ({
         src: (e as HTMLSourceElement).src,
