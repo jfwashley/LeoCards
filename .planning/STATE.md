@@ -63,6 +63,8 @@ Non-blocking, intentional deferrals:
 - 2026-05-20 — Phase 12 added: Pause cards in active deck review (no milestone wrapper)
 - 2026-05-21 — Phase 13 (3D habitat migration) shipped to PASS-WITH-CARRIED-CONCERNS — 6 plans, ~25 commits, PixiJS fully removed, Three.js code-split
 - 2026-05-28 — Phase 13.1 inserted (habitat-mobile-perf); pivoted from live-3D-defer to **video migration** — /habitat now plays pre-rendered clips, Three.js build-time-only, mobile LCP/CLS pass + Perf 90, residual TBT → 999.1
+- 2026-05-29 — Habitat clip **quality upgrade**: regenerated all 36 clips at 1280×720 / 16s / slow 360° orbit (was 1280×400 / 4.5s / fixed) for a real "3D animation" feel; seamless via full-revolution loop (no xfade). Capture forces a 1280×720 backing store + deterministic orbit in `?capture=video`; orchestrator 16s no-xfade + scale + higher bitrate. ~47 MB for 72 files; one ~1.3 MB pair lazy-loads per visit.
+- 2026-05-29 — **Phase 13.2: QA cheat console** (`/debug`) shipped to prod. Signed-cookie *virtual override* in `computeHabitatState` forces level/mood/quality (any combo, incl. impossible) without touching real data; flows through /habitat clip + dashboard widget + badges; instantly reversible. Live real-state readout for confirming real card→level progression. Secret-gated (`DEBUG_CHEAT_SECRET`); HMAC-signed cookie (not forgeable); feature OFF when the env var is unset. `src/lib/debug-cheat.ts`, `/api/debug/{cheat,state}`, `src/app/(protected)/debug/page.tsx`.
 
 ## Next Steps
 
@@ -71,6 +73,7 @@ Non-blocking, intentional deferrals:
 - `/gsd-new-milestone` — start v3.0 (wraps Phases 12 + 13 + 13.1 + whatever ships next).
 - **Phase 999.1 (perf initiative)** still open for *app-wide* perf (other routes' CWV, RSC/hydration) — `/habitat` no longer needs it. `/gsd-review-backlog` to promote when ready.
 - Confirm real-user CWV on prod (CrUX / Vercel Speed Insights) once traffic accrues — lab medians look green, field data is the final word.
+- **`/debug` cheat console** is live on production (`leocards.vercel.app/debug`). `DEBUG_CHEAT_SECRET` is set on the Production scope only; to use it on Vercel **preview** URLs too, add the same var to the Preview scope via the Vercel dashboard (CLI non-interactive add failed in this shell). Local dev: the secret is in `.env.local`.
 
 ## Accumulated Context
 
