@@ -1,12 +1,12 @@
 ---
 gsd_state_version: 1.0
-milestone: none
-milestone_name: "Between milestones — v2.1 closed, v3.0 Performance & QA pending /gsd-new-milestone"
-status: Awaiting next milestone
-last_updated: "2026-06-12T09:04:19.322Z"
-last_activity: 2026-06-12 — Milestone v2.1 completed and archived
+milestone: v3.0
+milestone_name: Performance & QA
+status: planning
+last_updated: "2026-06-12T00:00:00.000Z"
+last_activity: 2026-06-12
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12 after v2.1 Living Habitat)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Defining v3.0 Performance & QA (`/gsd-new-milestone`)
+**Current focus:** v3.0 Performance & QA — roadmap created (Phases 14-18)
 
 ## Current Position
 
-Phase: Milestone v2.1 complete
+Phase: Phase 14 of 18: QA observability foundations — Not started
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-12 — Milestone v2.1 completed and archived
+Status: Ready to plan Phase 14
+Last activity: 2026-06-12 — v3.0 roadmap created (Phases 14-18; QA-first ordering so the harness protects the core journey before perf refactors)
 
 ## Shipped Milestones
 
@@ -43,7 +43,7 @@ Non-blocking, intentional deferrals:
 
 - `10-HUMAN-UAT.md` (status: partial) — offline vision eval reference-dataset; blocked on real photos + FR/ES tutor. Archived under `milestones/v2.0-phases/`.
 - `11-HUMAN-UAT.md` (status: partial) — live 6-step browser walkthrough; blocked on real DeepL + billing-enabled Anthropic keys. Archived under `milestones/v2.0-phases/`.
-- `gsd-sdk phase.complete` upstream bug — ROADMAP-fallback scan can mispick backlog 999.1 as next_phase; defused once 999.1 is absorbed into v3.0; worth upstream report.
+- `gsd-sdk phase.complete` upstream bug — ROADMAP-fallback scan could mispick backlog `999.x` headings (`phase.cjs` ~1292–1306); trigger removed locally (999.1 absorbed into v3.0); worth an upstream report.
 
 **Resolved at v2.1 close (2026-06-12 debt sweep):** Nyquist flags 9/10/11 flipped (retroactive audit; suites green); `e2e/11-phase9-image-upload.spec.ts` confirmed tracked + passing (KEEP); biome ci → 0 errors; vitest no longer collects e2e specs; 186 e2e test users purged; stale biome debug session resolved; GitHub PAT relocated out of the repo.
 
@@ -67,10 +67,11 @@ Non-blocking, intentional deferrals:
 - 2026-05-29 — **Phase 13.2: QA cheat console** (`/debug`) shipped to prod. Signed-cookie *virtual override* in `computeHabitatState` forces level/mood/quality (any combo, incl. impossible) without touching real data; flows through /habitat clip + dashboard widget + badges; instantly reversible. Live real-state readout for confirming real card→level progression. Secret-gated (`DEBUG_CHEAT_SECRET`); HMAC-signed cookie (not forgeable); feature OFF when the env var is unset. `src/lib/debug-cheat.ts`, `/api/debug/{cheat,state}`, `src/app/(protected)/debug/page.tsx`. **Now enabled on Vercel PREVIEW too** (set via Vercel REST API — project has no connected Git repo + a CLI bug blocks `env add preview`; the REST API with `target:["preview"]` is the working path; token at `~/AppData/Roaming/com.vercel.cli/Data/auth.json`).
 - 2026-05-29 — **CRITICAL FIX: cards never recorded as "learned".** The core study loop was broken since Phase 3: a round-0 card is shown once per session in n2t only, but `ROUND_THRESHOLDS[0]` required `2 n2t + 2 t2n` correct → unreachable → every card stuck at `masteryRound 0` → `learnedCardCount` always 0 → habitat hard-stuck at level 1 for ALL real users. Old unit tests passed by hand-feeding `computeCardUpdate` idealized grades the real session can't produce (integration gap). **Fix:** a round advances on a single correct answer in the presented direction (round0=n2t, round1=t2n, round2=either), matching `getCardStage`. Round cooldowns made env-configurable: auto-zeroed in dev (NODE_ENV) + on preview (`STUDY_NO_COOLDOWN=true`) so QA sees 0→learned in one sitting; real 12h/24h in prod. Verified 3 ways (rewritten realistic unit tests, real-pipeline API script masteryRound 0→3, browser e2e `e2e/study-progression.spec.ts`); prod smoke confirmed 0→1 + 12h cooldown. `src/lib/study-engine.ts`, `src/app/api/study/complete/route.ts`, `src/env.ts`.
 - 2026-05-29 — QA: all 9 levels × 4 moods (72 clips) + posters verified present/working; force any state via `/debug`. Cleaned 416 accumulated test users (`@leocards-test.local` + e2e `@test.local`).
+- 2026-06-12 — **v3.0 roadmap created**: Phases 14-18 (QA observability foundations → core-journey QA harness → perf baseline → perf optimization → field validation & guardrails). 16/16 requirements mapped. Backlog 999.1 absorbed into Phases 16-18.
 
 ## Next Steps
 
-- `/gsd-new-milestone` — define **v3.0 Performance & QA**: (a) app-wide perf initiative (absorbs backlog 999.1; measure → optimize → field-validate on /dashboard, /study, /deck/new-card, /deck/browse); (b) extensive core-journey QA harness — scripted QA for card learning / round progression / learned states / habitat level-ups, time-resumable scripts (learn → re-check state 10-60 min later), and QA-only observability (state codes on cards etc., env/secret-gated, never customer-visible).
-- After roadmap approval: `/gsd-review-backlog` → remove 999.1 (absorbed into v3.0), defusing the next_phase bug.
-- Confirm real-user CWV on prod (CrUX / Vercel Speed Insights) once traffic accrues — lab medians look green, field data is the final word.
-- **`/debug` cheat console** is live on production (`leocards.vercel.app/debug`), secret-gated on Production + Preview scopes; local dev secret in `.env.local`.
+- `/gsd:plan-phase 14` — plan **Phase 14: QA observability foundations** (QAOB-01..04: state codes on cards, `STUDY_COOLDOWN_MINUTES`, /debug per-card state table, prod-parity gating test)
+- `/gsd-review-backlog` housekeeping done at roadmap creation: 999.1 removed from Backlog (absorbed into v3.0 Phases 16-18), defusing the `phase.complete` next_phase bug locally
+- Confirm real-user CWV on prod (CrUX / Vercel Speed Insights) once traffic accrues — formalized as PERF-05 (Phase 18)
+- **`/debug` cheat console** is live on production (`leocards.vercel.app/debug`), secret-gated on Production + Preview scopes; local dev secret in `.env.local`

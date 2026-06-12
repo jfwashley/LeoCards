@@ -18,9 +18,17 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 **v2.1 highlights:** Per-card pause/unpause with exact cadence preservation. Habitat is now 3D: 72 pre-rendered Soft-Clay ambient clips (9 levels × 4 moods, seamless 360° orbit loops) with live CSS decay/mood filters — Three.js renders clips at build time and ships zero WebGL to the client. `/habitat` mobile passes all CWV "Good" gates on warm prod (LCP 2417 / TBT 97 / CLS 0 / Perf 96). Secret-gated `/debug` QA console with HMAC-signed virtual state override. Critical study-loop fix: cards can actually reach "learned" (round thresholds were unreachable since Phase 3).
 
-## Next Milestone Goals
+## Current Milestone: v3.0 Performance & QA
 
-**v3.0 Performance & QA** (decided 2026-06-12):
+**Goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
+
+**Target features:**
+- App-wide performance: warm-prod baselines → measured optimizations → per-route CWV gates → field validation (absorbs backlog Phase 999.1)
+- Core-journey QA scripts: card learning, round/mastery progression, remembering states, habitat level transitions
+- Time-resumable QA sessions: learn a card, resume the script 10–60 min later, assert the card landed in the correct state
+- QA-only observability: state codes on cards, /debug extensions, QA-configurable cooldowns — env/secret-gated, never customer-visible
+
+**Scope detail (from milestone decision 2026-06-12):**
 
 1. **App-wide performance** — promote backlog Phase 999.1: measure warm-prod baselines on `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse`, then optimize toward near-instant (<~100ms perceived) warm navigation with per-route CWV gates, closing with field-data validation. `/habitat` is already done (fixed in 13.1).
 2. **Core-journey QA harness** — extensive, scripted QA at the heart of the product: learning cards, round/mastery progression, card remembering states (cooldowns, decay), habitat level transitions (1→2 … 8→9), pause cadence. Includes **time-resumable test scripts** (learn a card, resume the script 10–60 min later, assert the card is in the correct state) and **QA-only observability features** that never ship to customers — e.g. state "codes" on cards signalling learnt state/round/cooldown, extending the `/debug` console pattern (env/secret-gated, like `STUDY_NO_COOLDOWN` + `DEBUG_CHEAT_SECRET`). Motivated by the v2.1 lesson: the study-loop bug survived 2 months behind green unit tests.
