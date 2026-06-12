@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: planning
-last_updated: "2026-06-12T00:00:00.000Z"
-last_activity: 2026-06-12
+last_updated: "2026-06-12T15:56:18.350Z"
+last_activity: 2026-06-12 — v3.0 roadmap created (Phases 14-18; QA-first ordering so the harness protects the core journey before perf refactors)
 progress:
   total_phases: 5
   completed_phases: 0
