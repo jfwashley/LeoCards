@@ -1,11 +1,13 @@
 ---
 phase: 13-3d-habitat
 verified: 2026-05-21T01:40:00Z
-re_verified: 2026-05-27T07:30:00Z
-status: gaps_found
-score: 9/10 PASS, 0 PARTIAL, 1 FAIL (R9 — /habitat mobile)
-overall_verdict: PASS-WITH-KNOWN-PERF-REGRESSION
+re_verified: 2026-06-12T00:00:00Z
+status: passed
+score: 10/10 PASS (R9 closed retroactively via Phase 13.1)
+overall_verdict: PASS
 ---
+
+> **2026-06-12 update — R9 CLOSED.** The `/habitat` mobile FAIL described below was resolved by Phase 13.1's video migration (Three.js → pre-rendered clips, −517 KB client JS) plus the 2026-05-29 zod removal (−263 KB). Warm-production re-measurement (see `13.1-PERF-VIDEO.md` + STATE.md 2026-05-29): `/habitat` mobile **LCP 2417 ✅ / TBT 97 ✅ / CLS 0 ✅ / Perf 96** — all CWV "Good" gates pass. Status flipped gaps_found → passed during the v2.1 pre-close debt sweep. The 2026-05-27 note below is retained as history.
 
 > **2026-05-27 update — R9 re-measured.** Non-instrumented Lighthouse 13.3.0 vs Vercel preview with real auth cookie (see `13-PERF-REAL.md`). 3 of 4 route×profile cells PASS; **`/habitat` mobile FAILS** CWV (LCP median 2989 ms > 2500 gate; TBT median 646 ms > 200 gate; CLS 0). The instrument-inflation hypothesis was directionally right for INP but the underlying mobile perf on `/habitat` is genuinely below the gate. R9 row downgraded from PARTIAL → **FAIL** for `/habitat` mobile (PASS for the other 3 cells). Overall verdict upgraded from PASS-WITH-CARRIED-CONCERNS to **PASS-WITH-KNOWN-PERF-REGRESSION** — phase still ships (D-28 cached widget is correct; dashboard CWV is fully green), but `/habitat` mobile needs a perf follow-up (likely Phase 13.1 or rolled into Phase 999.1). See `13-PERF-REAL.md` for full matrix + optimization candidates. D-28 re-evaluation: **stays cached** (dashboard mobile LCP 2151 ms / Perf 93 — no reason to revert).
 

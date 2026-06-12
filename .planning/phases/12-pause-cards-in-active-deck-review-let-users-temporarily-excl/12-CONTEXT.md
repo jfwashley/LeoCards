@@ -122,10 +122,12 @@ Captured but explicitly **not** part of Phase 12. Promote via `/gsd-phase` when 
 
 ## Open Questions for Planner / Researcher
 
-- Confirm `lucide-react` exact icon names (`Pause`, `Play`) in the installed version — `AGENTS.md` warns against training-data assumptions for Next.js; same prudence applies to icon libs.
-- Confirm whether `(deckId, pausedAt)` partial index is worth adding now vs after first measurement.
-- Confirm Next.js 16.2 idiomatic shape for the pause/unpause route handlers — **read `node_modules/next/dist/docs/` before writing route handler code** (per `AGENTS.md`).
-- Confirm Playwright spec lives in `e2e/` matching the existing `11-phase9-image-upload.spec.ts` naming pattern.
+*All resolved during Phase 12 execution (phase shipped 2026-05-20; annotated 2026-06-12 at v2.1 close):*
+
+- ~~Confirm `lucide-react` exact icon names (`Pause`, `Play`) in the installed version~~ — RESOLVED: `Pause`/`Play` confirmed and shipped (`src/components/card-list.tsx` imports them from `lucide-react`).
+- ~~Confirm whether `(deckId, pausedAt)` partial index is worth adding now vs after first measurement~~ — RESOLVED: deferred per measurement-first policy; `pausedAt` column shipped without partial index (`src/db/schema.ts`), no query-perf issue observed.
+- ~~Confirm Next.js 16.2 idiomatic shape for the pause/unpause route handlers~~ — RESOLVED: handlers shipped at `/api/cards/{id}/pause` + `/unpause` following the installed Next.js docs.
+- ~~Confirm Playwright spec lives in `e2e/` matching naming pattern~~ — RESOLVED: `e2e/12-pause-cards.spec.ts` shipped.
 
 ---
 
