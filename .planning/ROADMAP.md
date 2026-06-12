@@ -71,7 +71,10 @@ QA comes first deliberately: the harness must protect the core journey before pe
   2. QA can set short non-zero cooldowns via env (e.g. `STUDY_COOLDOWN_MINUTES=15`) so 12h/24h round transitions — including the "still cooling down" rejection state — are testable within a 10–60 minute window
   3. `/debug` shows a live per-card state table (card id, word, round, direction, cooldownUntil, pausedAt, learned) sourced from real data, not the virtual override
   4. An automated prod-parity gating test passes: with secrets/env unset, no state codes appear in the DOM and no QA endpoints are reachable
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 14-01-PLAN.md — QA-mode cookie, STUDY_COOLDOWN_MINUTES precedence, /debug per-card SRS table (QAOB-02, QAOB-03)
+- [ ] 14-02-PLAN.md — QaStateBadge component + RSC-gated wiring onto study cards and dashboard rows (QAOB-01)
+- [ ] 14-03-PLAN.md — prod-parity gating e2e: no badges in customer DOM, QA endpoints 404 when secret unset (QAOB-04)
 **UI hint**: yes
 
 ### Phase 15: Core-journey QA harness
@@ -131,7 +134,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 14. QA observability foundations | 0/TBD | Not started | - |
+| 14. QA observability foundations | 0/3 | Planned | - |
 | 15. Core-journey QA harness | 0/TBD | Not started | - |
 | 16. Performance baseline (Measure) | 0/TBD | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |
