@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 // imageFlowReducer will be exported from image-upload-flow.tsx in 10-03 — RED until then
 import { imageFlowReducer } from "@/components/image-upload-flow";
 
-const mockFile = new File(["mock-content"], "photo.jpg", { type: "image/jpeg" });
+const mockFile = new File(["mock-content"], "photo.jpg", {
+  type: "image/jpeg",
+});
 
 const baseState = {
   step: "deck" as const,
@@ -17,7 +19,11 @@ const baseState = {
 
 describe("imageFlowReducer — extraction actions", () => {
   it("EXTRACT_START sets extracting: true, clears error and words", () => {
-    const state = { ...baseState, extractError: { status: 429, message: "Too many" }, extractWords: ["chien"] };
+    const state = {
+      ...baseState,
+      extractError: { status: 429, message: "Too many" },
+      extractWords: ["chien"],
+    };
     const next = imageFlowReducer(state, { type: "EXTRACT_START" });
     expect(next.extracting).toBe(true);
     expect(next.extractError).toBeNull();
@@ -26,7 +32,10 @@ describe("imageFlowReducer — extraction actions", () => {
 
   it("EXTRACT_SUCCESS sets extractWords and clears extracting", () => {
     const state = { ...baseState, extracting: true };
-    const next = imageFlowReducer(state, { type: "EXTRACT_SUCCESS", words: ["chien", "chat"] });
+    const next = imageFlowReducer(state, {
+      type: "EXTRACT_SUCCESS",
+      words: ["chien", "chat"],
+    });
     expect(next.extracting).toBe(false);
     expect(next.extractWords).toEqual(["chien", "chat"]);
   });
@@ -41,14 +50,25 @@ describe("imageFlowReducer — extraction actions", () => {
 
   it("EXTRACT_ERROR sets extractError with status and message", () => {
     const state = { ...baseState, extracting: true };
-    const next = imageFlowReducer(state, { type: "EXTRACT_ERROR", status: 429, message: "Too many requests" });
+    const next = imageFlowReducer(state, {
+      type: "EXTRACT_ERROR",
+      status: 429,
+      message: "Too many requests",
+    });
     expect(next.extracting).toBe(false);
-    expect(next.extractError).toEqual({ status: 429, message: "Too many requests" });
+    expect(next.extractError).toEqual({
+      status: 429,
+      message: "Too many requests",
+    });
   });
 
   it("EXTRACT_ERROR preserves file, previewUrl, and selectedDeckId (EXT-04 / D-16)", () => {
     const state = { ...baseState, extracting: true };
-    const next = imageFlowReducer(state, { type: "EXTRACT_ERROR", status: 413, message: "Image too large" });
+    const next = imageFlowReducer(state, {
+      type: "EXTRACT_ERROR",
+      status: 413,
+      message: "Image too large",
+    });
     // toBe identity checks: these exact references must be preserved
     expect(next.file).toBe(mockFile);
     expect(next.previewUrl).toBe("blob:x");
@@ -56,7 +76,11 @@ describe("imageFlowReducer — extraction actions", () => {
   });
 
   it("EXTRACT_RETRY behaves identically to EXTRACT_START", () => {
-    const state = { ...baseState, extractError: { status: 502, message: "Vision error" }, extractWords: null };
+    const state = {
+      ...baseState,
+      extractError: { status: 502, message: "Vision error" },
+      extractWords: null,
+    };
     const next = imageFlowReducer(state, { type: "EXTRACT_RETRY" });
     expect(next.extracting).toBe(true);
     expect(next.extractError).toBeNull();

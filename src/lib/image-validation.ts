@@ -1,8 +1,6 @@
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/image-constants";
 
-export type ValidationResult =
-  | { ok: true }
-  | { ok: false; message: string };
+export type ValidationResult = { ok: true } | { ok: false; message: string };
 
 export function validateImageFile(file: File): ValidationResult {
   // NOTE: file.type is browser-supplied (derived from extension or OS MIME

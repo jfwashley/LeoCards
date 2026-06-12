@@ -34,12 +34,16 @@ describe("validateImageFile — size validation", () => {
   const FIVE_MB = 5 * 1024 * 1024;
 
   it("accepts a file at exactly 5MB", () => {
-    const file = new File([new Uint8Array(FIVE_MB)], "ok.jpg", { type: "image/jpeg" });
+    const file = new File([new Uint8Array(FIVE_MB)], "ok.jpg", {
+      type: "image/jpeg",
+    });
     expect(validateImageFile(file)).toEqual({ ok: true });
   });
 
   it("rejects a file over 5MB and names the size in the message", () => {
-    const file = new File([new Uint8Array(FIVE_MB + 1)], "big.jpg", { type: "image/jpeg" });
+    const file = new File([new Uint8Array(FIVE_MB + 1)], "big.jpg", {
+      type: "image/jpeg",
+    });
     const result = validateImageFile(file);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.message).toMatch(/MB/);

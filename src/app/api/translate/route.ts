@@ -6,7 +6,10 @@ import { auth } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 // 30 requests per minute per user — generous for auto-translate, prevents key abuse
-const translateLimiter = createRateLimiter({ windowMs: 60_000, maxRequests: 30 });
+const translateLimiter = createRateLimiter({
+  windowMs: 60_000,
+  maxRequests: 30,
+});
 
 const RequestSchema = z.object({
   text: z.string().min(1).max(500),
@@ -32,7 +35,12 @@ export async function POST(request: Request) {
   if (!limit.allowed) {
     return Response.json(
       { error: "Too many requests" },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)) } },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)),
+        },
+      },
     );
   }
 
@@ -61,7 +69,10 @@ export async function POST(request: Request) {
 
   // Instantiate DeepL client inside handler — never at module scope
   if (!env.DEEPL_API_KEY) {
-    return Response.json({ error: "Translation service not configured" }, { status: 503 });
+    return Response.json(
+      { error: "Translation service not configured" },
+      { status: 503 },
+    );
   }
   const client = new deepl.DeepLClient(env.DEEPL_API_KEY);
 

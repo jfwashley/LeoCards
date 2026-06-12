@@ -25,14 +25,16 @@ export const auth = betterAuth({
       // Import Resend inside the function to avoid top-level side effects
       const { Resend } = await import("resend");
       const resend = new Resend(process.env.RESEND_API_KEY);
-      resend.emails.send({
-        from: "LeoCards <noreply@leocards.com>",
-        to: user.email,
-        subject: "Reset your LeoCards password",
-        text: `Reset your password: ${url}`,
-      }).catch((err) => {
-        console.error("[auth] Failed to send password reset email:", err);
-      });
+      resend.emails
+        .send({
+          from: "LeoCards <noreply@leocards.com>",
+          to: user.email,
+          subject: "Reset your LeoCards password",
+          text: `Reset your password: ${url}`,
+        })
+        .catch((err) => {
+          console.error("[auth] Failed to send password reset email:", err);
+        });
     },
     revokeSessionsOnPasswordReset: true,
   },

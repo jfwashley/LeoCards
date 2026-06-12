@@ -3,6 +3,5 @@
 // when tests import components that transitively import src/db/index.ts.
 // The actual DB is always mocked in tests that need it (vi.mock("@/db")).
 if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL =
-    "postgresql://test:test@localhost:5432/test_db";
+  process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test_db";
 }

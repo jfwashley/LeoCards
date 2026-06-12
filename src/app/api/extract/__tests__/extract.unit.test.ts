@@ -1,13 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // vi.hoisted runs before vi.mock factories — use it to create shared mocks
-const { mockGetSession, mockLimiterCheck, mockGenerateText } = vi.hoisted(() => {
-  return {
-    mockGetSession: vi.fn(),
-    mockLimiterCheck: vi.fn(),
-    mockGenerateText: vi.fn(),
-  };
-});
+const { mockGetSession, mockLimiterCheck, mockGenerateText } = vi.hoisted(
+  () => {
+    return {
+      mockGetSession: vi.fn(),
+      mockLimiterCheck: vi.fn(),
+      mockGenerateText: vi.fn(),
+    };
+  },
+);
 
 vi.mock("next/headers", () => ({
   headers: vi.fn().mockResolvedValue(new Headers()),
@@ -58,15 +60,18 @@ function makeRequestRaw(text: string) {
 
 // Minimal valid JPEG data-URL: starts with JPEG magic bytes (FF D8 FF E0)
 const VALID_JPEG_DATA_URL =
-  "data:image/jpeg;base64," + btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0));
+  "data:image/jpeg;base64," +
+  btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0));
 
 // Minimal valid PNG data-URL: starts with PNG magic bytes (89 50 4E 47)
 const VALID_PNG_DATA_URL =
-  "data:image/png;base64," + btoa(String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0, 0, 0, 0));
+  "data:image/png;base64," +
+  btoa(String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0, 0, 0, 0));
 
 // Bad magic bytes: declared as PNG but starts with JPEG bytes
 const BAD_MAGIC_DATA_URL =
-  "data:image/png;base64," + btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0));
+  "data:image/png;base64," +
+  btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0));
 
 // Oversized base64 string: > 7MB decoded (~9.4MB string)
 const OVERSIZED_BASE64_DATA_URL =
@@ -158,7 +163,11 @@ describe("POST /api/extract", () => {
     mockSession();
     mockAllowed();
     const res = await POST(
-      makeRequest({ ...VALID_BODY, mimeType: "image/gif", image: VALID_JPEG_DATA_URL }),
+      makeRequest({
+        ...VALID_BODY,
+        mimeType: "image/gif",
+        image: VALID_JPEG_DATA_URL,
+      }),
     );
     expect(res.status).toBe(415);
     const body = await res.json();
@@ -169,7 +178,11 @@ describe("POST /api/extract", () => {
     mockSession();
     mockAllowed();
     const res = await POST(
-      makeRequest({ ...VALID_BODY, mimeType: "image/png", image: BAD_MAGIC_DATA_URL }),
+      makeRequest({
+        ...VALID_BODY,
+        mimeType: "image/png",
+        image: BAD_MAGIC_DATA_URL,
+      }),
     );
     expect(res.status).toBe(415);
     const body = await res.json();
@@ -199,11 +212,15 @@ describe("POST /api/extract", () => {
   it("returns 200 { words } for valid request", async () => {
     mockSession();
     mockAllowed();
-    mockGenerateText.mockResolvedValue({ output: { words: ["chien", "chat"], detectedLanguage: "fr" } });
+    mockGenerateText.mockResolvedValue({
+      output: { words: ["chien", "chat"], detectedLanguage: "fr" },
+    });
     const res = await POST(makeRequest(VALID_BODY));
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body).toMatchObject({ words: expect.arrayContaining(["chien", "chat"]) });
+    expect(body).toMatchObject({
+      words: expect.arrayContaining(["chien", "chat"]),
+    });
   });
 
   it("returns 200 { words: [] } for no-words result (EXT-03)", async () => {
