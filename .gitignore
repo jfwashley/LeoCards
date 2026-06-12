@@ -59,3 +59,11 @@ next-env.d.ts
 .claude/
 
 .vercel
+
+# local credentials — never commit
+.github/token/
+
+# throwaway run outputs
+.playwright-full-run.log
+.preview-url.tmp
+.planning/dev-server.log

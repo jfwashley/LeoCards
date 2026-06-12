@@ -2,24 +2,24 @@
   {
     "route": "/dashboard",
     "profile": "desktop",
-    "lcp": 672,
+    "lcp": 1100,
     "cls": 0,
-    "inp": 0,
+    "inp": 168,
     "widgetColdLoadTti": -1,
     "widgetSustainedFps": 60
   },
   {
     "route": "/habitat",
     "profile": "desktop",
-    "lcp": 1252,
+    "lcp": 1508,
     "cls": 0,
-    "inp": 240
+    "inp": 0
   },
   {
     "route": "/dashboard",
     "profile": "mobile",
-    "lcp": 2364,
-    "cls": 0.003,
+    "lcp": 1592,
+    "cls": 0,
     "inp": 0,
     "widgetColdLoadTti": -1,
     "widgetSustainedFps": 60
@@ -27,8 +27,8 @@
   {
     "route": "/habitat",
     "profile": "mobile",
-    "lcp": 0,
+    "lcp": 1688,
     "cls": 0,
-    "inp": 208
+    "inp": 0
   }
 ]
