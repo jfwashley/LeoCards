@@ -120,7 +120,7 @@ Captured but explicitly **not** part of Phase 12. Promote via `/gsd-phase` when 
 
 ---
 
-## Open Questions for Planner / Researcher
+## Resolved Questions (formerly Open Questions for Planner / Researcher)
 
 *All resolved during Phase 12 execution (phase shipped 2026-05-20; annotated 2026-06-12 at v2.1 close):*
 
