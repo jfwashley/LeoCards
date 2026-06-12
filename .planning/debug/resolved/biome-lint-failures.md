@@ -1,10 +1,11 @@
 ---
-status: diagnosed
+status: resolved
 trigger: "Investigate Biome lint failures in the LeoCards project - 102 errors and 12 warnings across 75 files"
 created: 2026-03-28T00:00:00Z
-updated: 2026-03-28T00:00:00Z
+updated: 2026-06-12T00:00:00Z
 symptoms_prefilled: true
 goal: find_root_cause_only
+resolution: "Root causes (CRLF, format style, unsorted imports) fixed by formatting passes during Phases 8-13. Residual drift (9 errors in 8 files) auto-fixed 2026-06-12 via `biome check --write src/` during the v2.1 pre-close debt sweep; `npx biome ci src/` now reports 0 errors (5 warnings, non-blocking)."
 ---
 
 ## Current Focus
