@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-8 (shipped 2026-04-15)
 - ✅ **v2.0 Image-to-Flashcards** — Phases 9-11 (shipped 2026-05-20)
-- 🚧 **v2.1 Living Habitat** — Phases 12-13.2 (all shipped to prod by 2026-05-29; milestone close in progress)
+- ✅ **v2.1 Living Habitat** — Phases 12-13.2 (shipped 2026-05-29; closed 2026-06-12)
 
 ## Phases
 
@@ -35,6 +35,18 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 
 </details>
 
+<details>
+<summary>✅ v2.1 Living Habitat (Phases 12-13.2) — SHIPPED 2026-05-29, closed 2026-06-12</summary>
+
+- [x] Phase 12: Pause cards in active deck review (5/5 plans) — completed 2026-05-20
+- [x] Phase 13: 3D habitat — PixiJS → Three.js Soft-Clay scenes (6/6 plans) — completed 2026-05-21
+- [x] Phase 13.1: Habitat mobile perf — video migration, Three.js build-time-only (3 VIDEO plans; 4 gesture-poster plans superseded) — completed 2026-05-29
+- [x] Phase 13.2: QA cheat console (/debug) — quick phase, no phase dir — completed 2026-05-29
+
+Full details: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
+
+</details>
+
 ## Progress
 
 | Milestone | Phases | Plans | Status | Shipped |
@@ -42,84 +54,6 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 | v1.0 MVP | 1-8 | 25/25 | Complete | 2026-04-15 |
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
-
-## 🚧 v2.1 Living Habitat (Phases 12–13.2)
-
-### Phase 12: Pause cards in active deck review — let users temporarily exclude a card from study sessions without losing its scheduling state; when unpaused, cadence resumes as if the pause never happened
-
-**Goal:** Add per-card pause/unpause on the dashboard's active-deck review screen. Paused cards are excluded from study sessions and from dashboard due-counts / cooldown countdowns, but their SRS scheduling state is preserved; on unpause, `cooldownUntil` shifts forward by exactly `(now − pausedAt)` so cadence resumes as if the pause never happened.
-**Requirements**: P12-01, P12-02, P12-03, P12-04, P12-05, P12-06, P12-07, P12-08
-**Depends on:** Phase 11
-**Plans:** 5 plans
-
-Plans:
-- [x] 12-01-PLAN.md — Add nullable `pausedAt timestamp` column to `cards`; generate + apply Drizzle migration (BLOCKING human checkpoint to apply against Neon)
-- [x] 12-02-PLAN.md — Append pure `computeUnpauseUpdate` to study-engine.ts (+ 4 Vitest cases); add `isNull(cards.pausedAt)` filter to `getStudyCards`
-- [x] 12-03-PLAN.md — POST /api/cards/[id]/pause and /unpause route handlers (auth + ownership + 30/min rate-limit, idempotent, single-UPDATE writeback); STRIDE threat model in-plan
-- [x] 12-04-PLAN.md — Thread `pausedAt` through dashboard → DeckView → CardList; per-row Pause/Play icon button with paused styling; all-paused empty-state copy
-- [x] 12-05-PLAN.md — Playwright e2e spec (`e2e/12-pause-cards.spec.ts`) + full quality gate (lint, typecheck, unit, build, e2e); BLOCKING verification checkpoint
-
-### Phase 13: 3D habitat — replace 2D PixiJS sprite habitat with cute-stylized 3D scenes
-
-**Goal:** Migrate the habitat render pipeline from PixiJS 2D sprite atlases to 3D scenes. Renderer = plain Three.js (locked by existing designer artifacts at `.planning/design/animations/`). All 9 habitat levels become 3D scenes (level 1 = Leo on mound; level 9 = endgame: songbirds + golden-hour). Tiger and milestone animals are 3D actors in the same scene for visual coherence (not 2D overlays). Mini-widget direction (live 3D vs. cached image) gated on perf measurement (D-28).
-
-**Requirements**: P13-R1..P13-R10 (10 falsifiable requirements locked in `.planning/phases/13-3d-habitat/13-SPEC.md`)
-**Depends on:** Phase 11 (no functional coupling); Phase 12 to ship first per researcher recommendation
-**Plans:** 6 plans (CONTEXT.md, SPEC.md, RESEARCH.md, 13-01..13-06 PLAN.md all written and committed)
-
-**Resolved (post-artifact-inspection, 2026-05-20):**
-- Renderer: **plain Three.js 0.160.x** (locked by designer artifacts)
-- Asset format: **code, not files** — Three.js JSX gets ported into TypeScript modules
-- Scene structure: **single base scene + level-gated feature flags** (D-09 implemented in code via `featuresForLevel()`)
-- Camera: orbit + auto-orbit-on-idle (D-26) — already implemented in `habitats-shared.jsx`
-- Art style: Soft Clay (locked over lowpoly + voxel explorations)
-- Level count: 9 (level 9 = endgame; engine reconciled)
-
-**Still open for discuss / research:**
-- Performance budget targets (CWV "Good" gate locked; concrete frame-rate floor on mobile TBD)
-- Decay visual implementation (designer code doesn't yet do quality < 1.0)
-- `prefers-reduced-motion` handling
-- Mini-widget D-28 gate (live 3D vs. cached image — measure to decide)
-- v1.0 PixiJS deprecation (assume full removal unless 2D fallback needed for low-end devices)
-- Phase 12 ↔ 13 sequencing recommendation
-- Milestone wrapper question (does Phase 13 sit inside a v3.0 milestone?)
-- D-29 re-check: existing designer code has subtle character idle baked in — does that close D-29?
-
-Plans:
-- [x] 13-01-PLAN.md — Three.js ESM port of scaffolding; D-29 closed (designer idle sufficient) — completed 2026-05-20
-- [x] 13-02-PLAN.md — Clay world + lion + elephant + animation/ambient ported — completed 2026-05-20
-- [x] 13-03-PLAN.md — React shell rewire (habitat-3d-canvas) + keyboard orbit + reduced-motion — completed 2026-05-20
-- [x] 13-04-PLAN.md — Mood + decay binding + 28 reference screenshots (126/126 pairs distinct via automated pixel-diff) — completed 2026-05-20
-- [x] 13-05-PLAN.md — Live 3D 80px widget (later superseded by 13-06 D-28 cached decision) — completed 2026-05-20
-- [x] 13-06-PLAN.md — D-28 = **cached** (live widget FPS 21/18 < 30 gate); 9 hero `.webp`s + image variant; PixiJS removed; Three.js code-split (504 KB chunk) — completed 2026-05-21
-
-**Status:** Complete — PASS (R9 originally FAIL, closed by Phase 13.1's video migration; verification re-stamped 2026-06-12. See `13-PERF-REAL.md` + `13.1-PERF-VIDEO.md`.)
-
-### Phase 13.1: habitat-mobile-perf — VIDEO MIGRATION (pivoted from live-3D defer)
-
-**Goal:** Bring `/habitat` mobile back into CWV "Good" and fix the on-device rendering failure. **Pivoted mid-phase:** after the gesture-mounted-poster approach (and 3 live-3D attempts) failed to perform on mobile, `/habitat` was migrated to **pre-rendered per-level×mood ambient video clips**. Three.js is now build-time-only (renders clips in CI; never ships to the client). (Closes Phase 13 R9 carried regression.)
-**Requirements:** P13.1-R1..P13.1-R8 (`13.1-SPEC.md`; the video migration satisfies the same CWV intent via a different method)
-**Depends on:** Phase 13
-**Plans:** 4 original plans (gesture-poster, superseded) + VIDEO-01/02/03 migration
-
-Plans:
-- [x] 13.1-VIDEO-01 — 36 clip render pipeline (9 levels × 4 moods, fixed-camera ambient); MediaRecorder capture (~60× faster than frame-screenshots); ffmpeg webm+mp4 seamless loops
-- [x] 13.1-VIDEO-02 — `HabitatVideo` client swap; Three.js removed from client bundle (−517 KB); obsolete live-canvas tests retired
-- [x] 13.1-VIDEO-03 — perf fixes: dropped `motion/react` from /habitat (TBT 1049→415); preloaded priority poster as LCP candidate (LCP 2729→1860)
-- [~] 13.1-01..04 (original gesture-poster plans) — superseded by the video migration; SPEC requirements re-satisfied
-
-**Status:** Complete — SHIPPED & CWV-PASSING ON PRODUCTION. After the video migration + a Phase-999.1 follow-up (removed the 263 KB zod chunk from the route), warm-production `/habitat` **mobile**: LCP **2417 ✅** / TBT **97 ✅** / CLS **0 ✅** / **Perf 96** — passes all CWV "Good" gates. **Desktop**: Perf 99. Renders reliably (no client WebGL). ~900 KB controllable JS removed from the route (three.js −517 / motion −132 / zod −263). The interim "TBT 377" was cold-Vercel-preview serverless noise (lab variance ±300 ms > the gap); certified on warm prod. D-28 cached widget unchanged. See `13.1-PERF-VIDEO.md`.
-
-### Phase 13.2: QA cheat console (/debug)
-
-**Goal:** Secret-gated QA console for forcing any habitat state (level/mood/quality, incl. impossible combos) without touching real data — signed-cookie *virtual override* flowing through `computeHabitatState` into the /habitat clip, dashboard widget, and badges; instantly reversible; plus a live real-state readout for confirming card→level progression.
-**Requirements:** ad-hoc (no SPEC; executed as a quick phase, no phase directory)
-**Depends on:** Phase 13.1
-**Plans:** 0 tracked plans (shipped directly to prod 2026-05-29)
-
-Key artifacts: `src/lib/debug-cheat.ts`, `/api/debug/{cheat,state}`, `src/app/(protected)/debug/page.tsx`. HMAC-signed cookie (not forgeable); feature OFF when `DEBUG_CHEAT_SECRET` unset; enabled on Vercel Production + Preview.
-
-**Status:** Complete — SHIPPED 2026-05-29. Used same-day to QA all 9 levels × 4 moods (72 clips) + posters.
 
 ## Backlog
 

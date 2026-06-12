@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: none
 milestone_name: "- VALIDATION.md `nyquist_compliant: false` flag-flip on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping only. Candidate for `/gsd-validate-phase 9 / 10 / 11`."
-status: Phase 13 closed; R9 carried concern (mobile CWV unmeasured/marginal — instrument-inflated)
-last_updated: "2026-05-27T09:50:10.127Z"
-last_activity: 2026-05-21 -- Phase 13 verified (8 PASS, R9 PARTIAL)
+status: Awaiting next milestone
+last_updated: "2026-06-12T09:04:19.322Z"
+last_activity: 2026-06-12 — Milestone v2.1 completed and archived
 progress:
-  total_phases: 4
-  completed_phases: 2
-  total_plans: 11
-  completed_plans: 11
-  percent: 50
+  total_phases: 5
+  completed_phases: 3
+  total_plans: 15
+  completed_plans: 17
+  percent: 60
 ---
 
 # Project State
@@ -24,11 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-20 for v2.0 shipping)
 
 ## Current Position
 
-Milestone: — (v2.0 shipped, v3.0 not yet defined)
-Phase: 13 — COMPLETE (PASS-WITH-CARRIED-CONCERNS)
-Plan: 6 of 6
-Status: Phase 13 closed; R9 carried concern (mobile CWV unmeasured/marginal — instrument-inflated)
-Last activity: 2026-05-21 -- Phase 13 verified (8 PASS, R9 PARTIAL)
+Phase: Milestone v2.1 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-12 — Milestone v2.1 completed and archived
 
 ## Shipped Milestones
 
@@ -82,3 +81,7 @@ Non-blocking, intentional deferrals:
 ### Roadmap Evolution
 
 - Phase 13.1 inserted after Phase 13: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster (fixes R9 carried regression) (URGENT)
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
