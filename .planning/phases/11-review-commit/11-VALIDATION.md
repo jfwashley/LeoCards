@@ -1,9 +1,9 @@
 ---
 phase: 11
 slug: review-commit
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: verified
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-19
 ---
 
@@ -40,15 +40,15 @@ created: 2026-05-19
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 11-W0-01 | TBD | 0 | RVW-05a | — | `isDuplicate` case/trim correctness | unit (pure) | `npx vitest run src/components/review-list.test.ts -t "dedupe"` | ❌ W0 | ⬜ pending |
-| 11-W0-02 | TBD | 0 | RVW-01,02 | — | `reviewListReducer` step-A transitions/interactions | unit (reducer) | `...review-list.test.ts -t "reviewListReducer"` | ❌ W0 | ⬜ pending |
-| 11-W0-03 | TBD | 0 | RVW-03 | — | translation fan-out: per-row success/failure mapping | unit (async) | `...review-list.test.ts -t "translation fan-out"` | ❌ W0 | ⬜ pending |
-| 11-W0-04 | TBD | 0 | RVW-04 | T-authz | batch commit: mixed outcomes, continue-on-failure, accurate counts | unit (mocked saveCard) | `...review-list.test.ts -t "batch commit"` | ❌ W0 | ⬜ pending |
-| 11-W0-05 | TBD | 0 | RVW-05b | T-authz | cancel at Step A & B: onCancel called, zero saveCard | unit (spy) | `...review-list.test.ts -t "cancel"` | ❌ W0 | ⬜ pending |
-| 11-W0-06 | TBD | 0 | RVW-05a, D-11 | T-authz | `getSameLanguageDeckBackWords` ownership + same-language filter + lowercased/trimmed Set | unit (mocked auth+db) | `npx vitest run src/lib/deck-actions.test.ts -t "getSameLanguageDeckBackWords"` | ❌ W0 | ⬜ pending |
-| 11-XX-01 | TBD | 1+ | D-11 | — | `saveCard` accepts `"image"` source (type) | typecheck | `npx tsc --noEmit` | n/a | ⬜ pending |
-| 11-XX-02 | TBD | 1+ | RVW-01..05 | — | full ReviewList wired into image-upload-flow EXTRACT_SUCCESS; suite green | unit+typecheck+lint | `npm test && npx tsc --noEmit && npx biome check` | ❌ W0 | ⬜ pending |
-| 11-XX-03 | TBD | 1+ | RVW-01..05 | — | browser walkthrough: Step A prune → translate → Step B edit → commit → summary; already-learned section; cancel | manual | visual inspection | — | ⬜ pending |
+| 11-W0-01 | TBD | 0 | RVW-05a | — | `isDuplicate` case/trim correctness | unit (pure) | `npx vitest run src/components/review-list.test.ts -t "dedupe"` | ✅ | ✅ green |
+| 11-W0-02 | TBD | 0 | RVW-01,02 | — | `reviewListReducer` step-A transitions/interactions | unit (reducer) | `...review-list.test.ts -t "reviewListReducer"` | ✅ | ✅ green |
+| 11-W0-03 | TBD | 0 | RVW-03 | — | translation fan-out: per-row success/failure mapping | unit (async) | `...review-list.test.ts -t "translation fan-out"` | ✅ | ✅ green |
+| 11-W0-04 | TBD | 0 | RVW-04 | T-authz | batch commit: mixed outcomes, continue-on-failure, accurate counts | unit (mocked saveCard) | `...review-list.test.ts -t "batch commit"` | ✅ | ✅ green |
+| 11-W0-05 | TBD | 0 | RVW-05b | T-authz | cancel at Step A & B: onCancel called, zero saveCard | unit (spy) | `...review-list.test.ts -t "cancel"` | ✅ | ✅ green |
+| 11-W0-06 | TBD | 0 | RVW-05a, D-11 | T-authz | `getSameLanguageDeckBackWords` ownership + same-language filter + lowercased/trimmed Set | unit (mocked auth+db) | `npx vitest run src/lib/deck-actions.test.ts -t "getSameLanguageDeckBackWords"` | ✅ | ✅ green |
+| 11-XX-01 | TBD | 1+ | D-11 | — | `saveCard` accepts `"image"` source (type) | typecheck | `npx tsc --noEmit` | n/a | ✅ green |
+| 11-XX-02 | TBD | 1+ | RVW-01..05 | — | full ReviewList wired into image-upload-flow EXTRACT_SUCCESS; suite green | unit+typecheck+lint | `npm test && npx tsc --noEmit && npx biome check` | ✅ | ✅ green |
+| 11-XX-03 | TBD | 1+ | RVW-01..05 | — | browser walkthrough: Step A prune → translate → Step B edit → commit → summary; already-learned section; cancel | manual | visual inspection | — | manual-only (see 11-HUMAN-UAT.md) |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -56,9 +56,9 @@ created: 2026-05-19
 
 ## Wave 0 Requirements
 
-- [ ] `src/components/review-list.test.ts` — `reviewListReducer` (all actions: Step A toggle/edit/remove/select-all/none, Step B transitions, commit outcomes), `isDuplicate` pure fn (case-insensitive + trim), translation fan-out (per-row success/failure), batch-commit orchestration (mocked `saveCard`, continue-on-failure, count accuracy), cancel spies (Step A & B → `onCancel`, zero `saveCard`)
-- [ ] `src/lib/deck-actions.test.ts` — `getSameLanguageDeckBackWords` (mock `auth.api.getSession` + `db` per the `extract.unit.test.ts` mock pattern): ownership check, `deck.language` filter, trimmed-lowercase Set output
-- [ ] Type gate: `saveCard` source union widened to include `"image"` — caught by `npx tsc --noEmit`
+- [x] `src/components/review-list.test.ts` — `reviewListReducer` (all actions: Step A toggle/edit/remove/select-all/none, Step B transitions, commit outcomes), `isDuplicate` pure fn (case-insensitive + trim), translation fan-out (per-row success/failure), batch-commit orchestration (mocked `saveCard`, continue-on-failure, count accuracy), cancel spies (Step A & B → `onCancel`, zero `saveCard`)
+- [x] `src/lib/deck-actions.test.ts` — `getSameLanguageDeckBackWords` (mock `auth.api.getSession` + `db` per the `extract.unit.test.ts` mock pattern): ownership check, `deck.language` filter, trimmed-lowercase Set output
+- [x] Type gate: `saveCard` source union widened to include `"image"` — caught by `npx tsc --noEmit`
 
 **Existing regression gates — DO NOT BREAK:** the full prior suite (Phases 1–10) must stay green; `src/lib/image-validation.test.ts` (8) and the Phase 10 extract tests (12 + 6) included.
 
@@ -77,11 +77,26 @@ created: 2026-05-19
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references (review-list.test.ts, deck-actions.test.ts, type gate)
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 30s (quick)
-- [ ] `nyquist_compliant: true` set after Wave 0 lands
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references (review-list.test.ts, deck-actions.test.ts, type gate)
+- [x] No watch-mode flags
+- [x] Feedback latency < 30s (quick)
+- [x] `nyquist_compliant: true` set after Wave 0 lands
 
-**Approval:** pending
+**Approval:** verified 2026-06-12
+
+---
+
+## Validation Audit 2026-06-12
+
+| Metric | Count |
+|--------|-------|
+| Requirements total | 5 (RVW-01..05) + D-11 |
+| Automated coverage | 5 (review-list reducer/fan-out/commit/cancel units, deck-actions unit, type gate) |
+| Manual-only | 4 (live browser walkthrough rows) — tracked in 11-HUMAN-UAT.md (status: partial, blocked on real DeepL + billing-enabled Anthropic keys) |
+| Gaps found | 2 (infrastructure, both fixed during this audit) |
+| Resolved | 2 |
+| Escalated | 0 |
+
+Retroactive audit (carried v2.0 debt): the validation draft was never updated after execution. Verified 2026-06-12 — `npm test` 1892 passed / 0 failed, `npx tsc --noEmit` clean, `npx biome ci src/` 0 errors. Two infrastructure gaps found and fixed during the audit: (1) bare `vitest run` was collecting Playwright e2e specs (19 file-level collection errors) — added `e2e/**` to vitest.config.ts exclude; (2) biome formatting/import-sort drift in 8 files — auto-fixed via `biome check --write`. The live 6-step browser walkthrough remains manual-only, tracked in `11-HUMAN-UAT.md`.
