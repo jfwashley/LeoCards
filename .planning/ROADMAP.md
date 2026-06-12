@@ -4,6 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-8 (shipped 2026-04-15)
 - ✅ **v2.0 Image-to-Flashcards** — Phases 9-11 (shipped 2026-05-20)
+- 🚧 **v2.1 Living Habitat** — Phases 12-13.2 (all shipped to prod by 2026-05-29; milestone close in progress)
 
 ## Phases
 
@@ -40,32 +41,9 @@ Full details: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 |-----------|--------|-------|--------|---------|
 | v1.0 MVP | 1-8 | 25/25 | Complete | 2026-04-15 |
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
+| v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 
-## Backlog
-
-### Phase 999.1: Perf initiative — near-instant navigation (BACKLOG)
-
-**Goal:** Cross-cutting app performance work to make navigations near-instant. Its own evidence-driven discuss→research→plan→execute cycle.
-
-**Scope (captured for future planning):**
-- *Phase A — Measure:* `next build && next start` baseline; Lighthouse + Core Web Vitals on key routes (dashboard, deck view, /deck/new-card, study session); `next build` bundle report; server TTFB / RSC route timings. Identify whether slowness is bundle size, RSC data-fetch waterfalls, or hydration.
-- *Phase B — Optimize against baseline:* route-level code splitting, RSC/data-fetch parallelization, prefetch-on-intent, image/asset optimization, bundle trimming — every change tied to a measured before/after.
-
-**Success criterion:** warm navigations <~100ms perceived in a production build, with defined LCP/TTI targets per key route.
-
-**Context:** Raised 2026-05-18 during Phase 9 execution. Observed dev slowness was `next dev` cold-compile + a freshly cleared `.next` cache, NOT proven production slowness — so a real production baseline (Phase A) must precede any optimization.
-
-**Requirements:** TBD
-**Plans:** TBD
-
-- [ ] TBD (promote with /gsd-review-backlog when ready)
-
-### Carried tech debt from v2.0
-
-- VALIDATION.md `nyquist_compliant: false` flag-flip on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping only. Candidate for `/gsd-validate-phase 9 / 10 / 11`.
-- `10-HUMAN-UAT.md` — offline vision eval reference-dataset (needs real photos + FR/ES tutor).
-- `11-HUMAN-UAT.md` — live 6-step browser walkthrough (needs real DeepL + billing-enabled Anthropic keys).
-- Untracked `e2e/11-phase9-image-upload.spec.ts` — keep/delete decision outstanding.
+## 🚧 v2.1 Living Habitat (Phases 12–13.2)
 
 ### Phase 12: Pause cards in active deck review — let users temporarily exclude a card from study sessions without losing its scheduling state; when unpaused, cadence resumes as if the pause never happened
 
@@ -115,8 +93,7 @@ Plans:
 - [x] 13-05-PLAN.md — Live 3D 80px widget (later superseded by 13-06 D-28 cached decision) — completed 2026-05-20
 - [x] 13-06-PLAN.md — D-28 = **cached** (live widget FPS 21/18 < 30 gate); 9 hero `.webp`s + image variant; PixiJS removed; Three.js code-split (504 KB chunk) — completed 2026-05-21
 
-**Status:** Complete — PASS-WITH-KNOWN-PERF-REGRESSION (R9 originally FAIL; addressed in Phase 13.1 — `/habitat` mobile LCP improved 2989 → 2561 ms median, desktop went to Perf 100. 61 ms over lab gate; 3/6 lab runs pass. Field-data CWV needed to fully close. See `13-PERF-REAL.md` + `13.1-PERF.md`.)
-</content>
+**Status:** Complete — PASS (R9 originally FAIL, closed by Phase 13.1's video migration; verification re-stamped 2026-06-12. See `13-PERF-REAL.md` + `13.1-PERF-VIDEO.md`.)
 
 ### Phase 13.1: habitat-mobile-perf — VIDEO MIGRATION (pivoted from live-3D defer)
 
@@ -132,3 +109,39 @@ Plans:
 - [~] 13.1-01..04 (original gesture-poster plans) — superseded by the video migration; SPEC requirements re-satisfied
 
 **Status:** Complete — SHIPPED & CWV-PASSING ON PRODUCTION. After the video migration + a Phase-999.1 follow-up (removed the 263 KB zod chunk from the route), warm-production `/habitat` **mobile**: LCP **2417 ✅** / TBT **97 ✅** / CLS **0 ✅** / **Perf 96** — passes all CWV "Good" gates. **Desktop**: Perf 99. Renders reliably (no client WebGL). ~900 KB controllable JS removed from the route (three.js −517 / motion −132 / zod −263). The interim "TBT 377" was cold-Vercel-preview serverless noise (lab variance ±300 ms > the gap); certified on warm prod. D-28 cached widget unchanged. See `13.1-PERF-VIDEO.md`.
+
+### Phase 13.2: QA cheat console (/debug)
+
+**Goal:** Secret-gated QA console for forcing any habitat state (level/mood/quality, incl. impossible combos) without touching real data — signed-cookie *virtual override* flowing through `computeHabitatState` into the /habitat clip, dashboard widget, and badges; instantly reversible; plus a live real-state readout for confirming card→level progression.
+**Requirements:** ad-hoc (no SPEC; executed as a quick phase, no phase directory)
+**Depends on:** Phase 13.1
+**Plans:** 0 tracked plans (shipped directly to prod 2026-05-29)
+
+Key artifacts: `src/lib/debug-cheat.ts`, `/api/debug/{cheat,state}`, `src/app/(protected)/debug/page.tsx`. HMAC-signed cookie (not forgeable); feature OFF when `DEBUG_CHEAT_SECRET` unset; enabled on Vercel Production + Preview.
+
+**Status:** Complete — SHIPPED 2026-05-29. Used same-day to QA all 9 levels × 4 moods (72 clips) + posters.
+
+## Backlog
+
+### Phase 999.1: Perf initiative — near-instant navigation (BACKLOG)
+
+**Goal:** Cross-cutting app performance work to make navigations near-instant. Its own evidence-driven discuss→research→plan→execute cycle.
+
+**Scope (captured for future planning):**
+- *Phase A — Measure:* `next build && next start` baseline; Lighthouse + Core Web Vitals on key routes (dashboard, deck view, /deck/new-card, study session); `next build` bundle report; server TTFB / RSC route timings. Identify whether slowness is bundle size, RSC data-fetch waterfalls, or hydration.
+- *Phase B — Optimize against baseline:* route-level code splitting, RSC/data-fetch parallelization, prefetch-on-intent, image/asset optimization, bundle trimming — every change tied to a measured before/after.
+
+**Success criterion:** warm navigations <~100ms perceived in a production build, with defined LCP/TTI targets per key route.
+
+**Context:** Raised 2026-05-18 during Phase 9 execution. Observed dev slowness was `next dev` cold-compile + a freshly cleared `.next` cache, NOT proven production slowness — so a real production baseline (Phase A) must precede any optimization. 2026-05-29: first slice already landed ahead of promotion (zod removed from `/habitat`); remaining scope targets the other routes.
+
+**Requirements:** TBD
+**Plans:** TBD
+
+- [ ] TBD (promote with /gsd-review-backlog when ready — slated for absorption into v3.0 Performance)
+
+### Carried tech debt from v2.0
+
+- `10-HUMAN-UAT.md` — offline vision eval reference-dataset (needs real photos + FR/ES tutor).
+- `11-HUMAN-UAT.md` — live 6-step browser walkthrough (needs real DeepL + billing-enabled Anthropic keys).
+- `gsd-sdk phase.complete` upstream bug — ROADMAP-fallback scan can still mispick backlog `999.x` as next_phase (directory scan fixed upstream; `phase.cjs` ~lines 1292–1306 unpatched). Defused locally once 999.1 is absorbed into v3.0.
