@@ -20,7 +20,10 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Next Milestone Goals
 
-**v3.0 Performance** (decided 2026-06-12): promote backlog Phase 999.1 — measure warm-prod baselines on `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse`, then optimize toward near-instant (<~100ms perceived) warm navigation with per-route CWV gates, closing with field-data validation. `/habitat` is already done (fixed in 13.1).
+**v3.0 Performance & QA** (decided 2026-06-12):
+
+1. **App-wide performance** — promote backlog Phase 999.1: measure warm-prod baselines on `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse`, then optimize toward near-instant (<~100ms perceived) warm navigation with per-route CWV gates, closing with field-data validation. `/habitat` is already done (fixed in 13.1).
+2. **Core-journey QA harness** — extensive, scripted QA at the heart of the product: learning cards, round/mastery progression, card remembering states (cooldowns, decay), habitat level transitions (1→2 … 8→9), pause cadence. Includes **time-resumable test scripts** (learn a card, resume the script 10–60 min later, assert the card is in the correct state) and **QA-only observability features** that never ship to customers — e.g. state "codes" on cards signalling learnt state/round/cooldown, extending the `/debug` console pattern (env/secret-gated, like `STUDY_NO_COOLDOWN` + `DEBUG_CHEAT_SECRET`). Motivated by the v2.1 lesson: the study-loop bug survived 2 months behind green unit tests.
 
 ## Requirements
 

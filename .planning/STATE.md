@@ -1,26 +1,26 @@
 ---
 gsd_state_version: 1.0
 milestone: none
-milestone_name: "- VALIDATION.md `nyquist_compliant: false` flag-flip on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping only. Candidate for `/gsd-validate-phase 9 / 10 / 11`."
+milestone_name: "Between milestones — v2.1 closed, v3.0 Performance & QA pending /gsd-new-milestone"
 status: Awaiting next milestone
 last_updated: "2026-06-12T09:04:19.322Z"
 last_activity: 2026-06-12 — Milestone v2.1 completed and archived
 progress:
-  total_phases: 5
-  completed_phases: 3
-  total_plans: 15
-  completed_plans: 17
-  percent: 60
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-20 for v2.0 shipping)
+See: .planning/PROJECT.md (updated 2026-06-12 after v2.1 Living Habitat)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 13 — 3D habitat (shipped to PASS-WITH-CARRIED-CONCERNS)
+**Current focus:** Defining v3.0 Performance & QA (`/gsd-new-milestone`)
 
 ## Current Position
 
@@ -33,6 +33,7 @@ Last activity: 2026-06-12 — Milestone v2.1 completed and archived
 
 - ✅ v1.0 MVP (2026-04-15) — Phases 1-8, 25 plans, 23 requirements satisfied
 - ✅ v2.0 Image-to-Flashcards (2026-05-20) — Phases 9-11, 10 plans, 15 requirements satisfied, 33/33 verifications passed, 20/20 code-review findings fixed, 32/32 STRIDE threats accounted for
+- ✅ v2.1 Living Habitat (2026-05-29, closed 2026-06-12) — Phases 12-13.2, 14 plans: pause cards, 3D habitat via pre-rendered clips, /debug QA console, critical study-loop fix
 
 ## Carried Tech Debt
 
@@ -40,11 +41,11 @@ Non-blocking, intentional deferrals:
 
 **From v2.0:**
 
-- VALIDATION.md `nyquist_compliant: false` on Phases 9, 10, 11 — Wave-0 tests green, bookkeeping flag-flip pending. Candidate for `/gsd-validate-phase 9 / 10 / 11`.
-- `10-HUMAN-UAT.md` (status: partial) — offline vision eval reference-dataset; blocked on real photos + FR/ES tutor.
-- `11-HUMAN-UAT.md` (status: partial) — live 6-step browser walkthrough; blocked on real DeepL + billing-enabled Anthropic keys.
-- Untracked `e2e/11-phase9-image-upload.spec.ts` — Playwright regression spec, keep/delete decision outstanding.
-- `gsd-sdk phase.complete` upstream bug — mispicks backlog 999.1 as next_phase; worth upstream report.
+- `10-HUMAN-UAT.md` (status: partial) — offline vision eval reference-dataset; blocked on real photos + FR/ES tutor. Archived under `milestones/v2.0-phases/`.
+- `11-HUMAN-UAT.md` (status: partial) — live 6-step browser walkthrough; blocked on real DeepL + billing-enabled Anthropic keys. Archived under `milestones/v2.0-phases/`.
+- `gsd-sdk phase.complete` upstream bug — ROADMAP-fallback scan can mispick backlog 999.1 as next_phase; defused once 999.1 is absorbed into v3.0; worth upstream report.
+
+**Resolved at v2.1 close (2026-06-12 debt sweep):** Nyquist flags 9/10/11 flipped (retroactive audit; suites green); `e2e/11-phase9-image-upload.spec.ts` confirmed tracked + passing (KEEP); biome ci → 0 errors; vitest no longer collects e2e specs; 186 e2e test users purged; stale biome debug session resolved; GitHub PAT relocated out of the repo.
 
 **From Phase 13.1 — VIDEO MIGRATION (2026-05-28, shipped):**
 
@@ -69,19 +70,7 @@ Non-blocking, intentional deferrals:
 
 ## Next Steps
 
-- ✅ `/habitat` mobile CWV resolved on production (zod removal landed; LCP 2417 / TBT 97 / CLS 0 / Perf 96). Phase 13 R9 fully closed.
-- ✅ Neon test-user cleanup done (15 `@leocards-test.local` users deleted; `scripts/cleanup-test-users.mjs` kept for reuse).
-- `/gsd-new-milestone` — start v3.0 (wraps Phases 12 + 13 + 13.1 + whatever ships next).
-- **Phase 999.1 (perf initiative)** still open for *app-wide* perf (other routes' CWV, RSC/hydration) — `/habitat` no longer needs it. `/gsd-review-backlog` to promote when ready.
+- `/gsd-new-milestone` — define **v3.0 Performance & QA**: (a) app-wide perf initiative (absorbs backlog 999.1; measure → optimize → field-validate on /dashboard, /study, /deck/new-card, /deck/browse); (b) extensive core-journey QA harness — scripted QA for card learning / round progression / learned states / habitat level-ups, time-resumable scripts (learn → re-check state 10-60 min later), and QA-only observability (state codes on cards etc., env/secret-gated, never customer-visible).
+- After roadmap approval: `/gsd-review-backlog` → remove 999.1 (absorbed into v3.0), defusing the next_phase bug.
 - Confirm real-user CWV on prod (CrUX / Vercel Speed Insights) once traffic accrues — lab medians look green, field data is the final word.
-- **`/debug` cheat console** is live on production (`leocards.vercel.app/debug`). `DEBUG_CHEAT_SECRET` is set on the Production scope only; to use it on Vercel **preview** URLs too, add the same var to the Preview scope via the Vercel dashboard (CLI non-interactive add failed in this shell). Local dev: the secret is in `.env.local`.
-
-## Accumulated Context
-
-### Roadmap Evolution
-
-- Phase 13.1 inserted after Phase 13: habitat-mobile-perf — defer Three.js init past LCP via gesture-mounted full-resolution poster (fixes R9 carried regression) (URGENT)
-
-## Operator Next Steps
-
-- Start the next milestone with /gsd-new-milestone
+- **`/debug` cheat console** is live on production (`leocards.vercel.app/debug`), secret-gated on Production + Preview scopes; local dev secret in `.env.local`.
