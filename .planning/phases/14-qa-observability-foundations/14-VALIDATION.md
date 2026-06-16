@@ -20,7 +20,7 @@ created: 2026-06-12
 | **Framework** | vitest 4.x (unit) + Playwright 1.58 (e2e) |
 | **Config file** | `vitest.config.ts` / `playwright.config.ts` |
 | **Quick run command** | `npx vitest run src/lib/debug-cheat.test.ts src/env.test.ts src/app/api/study/__tests__/cooldown-config.test.ts src/components/__tests__/qa-state-badge.test.ts` |
-| **Full suite command** | `npx vitest run && npx tsc --noEmit && npx run lint` |
+| **Full suite command** | `npx vitest run && npx tsc --noEmit && npm run lint` |
 | **E2e command** | `DEBUG_CHEAT_SECRET="" npx playwright test e2e/14-qa-parity.spec.ts` (against running dev server) |
 | **Estimated runtime** | ~60s unit+typecheck+lint; e2e on demand |
 
@@ -29,7 +29,7 @@ created: 2026-06-12
 ## Sampling Rate
 
 - **After every task commit:** Run `npx vitest run src/lib/debug-cheat.test.ts src/env.test.ts src/app/api/study/__tests__/cooldown-config.test.ts src/components/__tests__/qa-state-badge.test.ts`
-- **After every plan wave:** Run `npx vitest run && npx tsc --noEmit && npx run lint`
+- **After every plan wave:** Run `npx vitest run && npx tsc --noEmit && npm run lint`
 - **Before `/gsd:verify-work`:** Full suite green + `DEBUG_CHEAT_SECRET="" npx playwright test e2e/14-qa-parity.spec.ts`
 - **Max feedback latency:** 90 seconds (unit); e2e on demand
 
@@ -41,10 +41,10 @@ created: 2026-06-12
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
 | 01-T1 | 14-01 | 1 | QAOB-02 (env), QAOB-03 (gate foundation) | T-14-01, T-14-02, T-14-04 | QA cookie HMAC round-trips + tamper-rejects; STUDY_COOLDOWN_MINUTES coerces/validates (min 1) | unit | `npx vitest run src/lib/debug-cheat.test.ts src/env.test.ts` | ❌ Wave 0 (extend existing) | ⬜ pending |
 | 01-T2 | 14-01 | 1 | QAOB-02 | T-14-04, T-14-05 | buildCooldownConfig precedence (minutes wins over NO_COOLDOWN/dev-zero; never < 1) | unit | `npx vitest run src/app/api/study/__tests__/cooldown-config.test.ts && npx tsc --noEmit` | ❌ Wave 0 | ⬜ pending |
-| 01-T3 | 14-01 | 1 | QAOB-03 | T-14-06 | cards[] scoped to session.user.id, 200-row cap, ISO/null fields | unit + manual | `npx tsc --noEmit && npx vitest run` | ⚠️ manual (see below) | ⬜ pending |
+| 01-T3 | 14-01 | 1 | QAOB-03 | T-14-06 | cards[] scoped to session.user.id, 200-row cap, ISO/null fields | typecheck + manual | `npx tsc --noEmit && npx vitest run src/lib/debug-cheat.test.ts src/env.test.ts` | ⚠️ manual (see below) | ⬜ pending |
 | 02-T1 | 14-02 | 2 | QAOB-01 | T-14-09, T-14-10 | formatCd + token assembly; data-qa-badge present; hydration-safe lazy init | unit | `npx vitest run src/components/__tests__/qa-state-badge.test.ts && npx tsc --noEmit` | ❌ Wave 0 | ⬜ pending |
 | 02-T2 | 14-02 | 2 | QAOB-01 | T-14-07, T-14-08 | Badge omitted (not CSS-hidden) when qaMode false; RSC gate only | typecheck + e2e (03-T1 covers DOM-absence) | `npx tsc --noEmit && npx vitest run` | ✅ (DOM absence in 03-T1) | ⬜ pending |
-| 02-T3 | 14-02 | 2 | QAOB-01 | T-14-07 | Dashboard row badge omitted for customers; cooldownUntil gated on qaMode | typecheck + e2e (03-T1) | `npx tsc --noEmit && npx vitest run && npx run lint` | ✅ (DOM absence in 03-T1) | ⬜ pending |
+| 02-T3 | 14-02 | 2 | QAOB-01 | T-14-07 | Dashboard row badge omitted for customers; cooldownUntil gated on qaMode | typecheck + e2e (03-T1) | `npx tsc --noEmit && npx vitest run && npm run lint` | ✅ (DOM absence in 03-T1) | ⬜ pending |
 | 03-T1 | 14-03 | 3 | QAOB-04 | T-14-11, T-14-12, T-14-13 | No [data-qa-badge] in customer DOM (dashboard+study); /api/debug/* 404 when secret unset; *test.local self-clean | e2e | `DEBUG_CHEAT_SECRET="" npx playwright test e2e/14-qa-parity.spec.ts` | ❌ Wave 0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*

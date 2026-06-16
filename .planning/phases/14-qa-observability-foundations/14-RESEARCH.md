@@ -654,7 +654,7 @@ Not a rename/refactor/migration phase — this section is omitted per guidelines
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Deck scope for `/api/debug/state` cards array (QAOB-03)**
    - What we know: endpoint is session-gated; user may have multiple decks
