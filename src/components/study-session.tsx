@@ -181,13 +181,14 @@ function computeStats(
 interface StudySessionProps {
   initialCards: SessionCard[];
   deckId: string;
+  qaMode?: boolean;
 }
 
 // ============================================================
 // Component
 // ============================================================
 
-export function StudySession({ initialCards, deckId }: StudySessionProps) {
+export function StudySession({ initialCards, deckId, qaMode = false }: StudySessionProps) {
   const router = useRouter();
 
   const [showLevelUp, setShowLevelUp] = useState<number | null>(null);
@@ -440,7 +441,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
           className="relative w-full max-w-sm mx-auto"
           style={{ perspective: 1000 }}
         >
-          <CardStack remainingCount={remainingCount} />
+          <CardStack remainingCount={remainingCount} qaMode={qaMode} />
           <AnimatePresence mode="popLayout">
             <StudyCard
               key={`${String(current.id)}-${currentIndex}`}
@@ -452,6 +453,7 @@ export function StudySession({ initialCards, deckId }: StudySessionProps) {
                 dispatch({ type: "SWIPE_GRADE", direction: dir })
               }
               exitDirection={lastGradeDirection}
+              qaMode={qaMode}
             />
           </AnimatePresence>
         </div>

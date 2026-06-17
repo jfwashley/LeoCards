@@ -6,6 +6,7 @@ import { db } from "@/db";
 import type { DeckId } from "@/db/schema";
 import { decks } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { readQaAuth } from "@/lib/debug-cheat";
 import type { CardForSession } from "@/lib/study-engine";
 import { assembleSession } from "@/lib/study-engine";
 import { getStudyCards } from "@/lib/study-queries";
@@ -58,5 +59,7 @@ export default async function StudyPage(props: {
     redirect(`/dashboard?deck=${deckId}`);
   }
 
-  return <StudySession initialCards={sessionCards} deckId={deckId} />;
+  const qaMode = await readQaAuth();
+
+  return <StudySession initialCards={sessionCards} deckId={deckId} qaMode={qaMode} />;
 }

@@ -2,6 +2,8 @@
 
 import { motion, useMotionValue, useTransform } from "motion/react";
 
+import { QaStateBadge } from "@/components/qa-state-badge";
+import type { QaCardData } from "@/components/qa-state-badge";
 import type { SessionCard } from "@/lib/study-engine";
 
 interface StudyCardProps {
@@ -11,6 +13,7 @@ interface StudyCardProps {
   onFlip: () => void;
   onGrade: (direction: "left" | "right") => void;
   exitDirection: "left" | "right" | null;
+  qaMode?: boolean;
 }
 
 export function StudyCard({
@@ -20,7 +23,19 @@ export function StudyCard({
   onFlip,
   onGrade,
   exitDirection,
+  qaMode = false,
 }: StudyCardProps) {
+  // Build QA badge data only when QA-authed (RSC sets qaMode=true via readQaAuth()).
+  // qaCardData is null for customers — badge component never renders (QAOB-04 / T-14-07).
+  // SessionCard has no pausedAt (paused cards are filtered before session); use null.
+  const qaCardData: QaCardData | null = qaMode
+    ? {
+        masteryRound: card.masteryRound,
+        stage: card.stage,
+        cooldownUntil: card.cooldownUntil,
+        pausedAt: null,
+      }
+    : null;
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 0, 200], [-12, 0, 12]);
   const bgColorRight = useTransform(
@@ -92,6 +107,9 @@ export function StudyCard({
         className="absolute inset-0 rounded-xl pointer-events-none z-10"
         style={{ backgroundColor: bgColorLeft }}
       />
+
+      {/* QA state badge — only mounts when QA-authed; absent from customer DOM (T-14-07) */}
+      {qaCardData && <QaStateBadge data={qaCardData} />}
 
       {/* Card container with 3D perspective */}
       {/* biome-ignore lint/a11y/useSemanticElements: div required for preserve-3d CSS; <button> does not reliably support transformStyle:preserve-3d across browsers */}

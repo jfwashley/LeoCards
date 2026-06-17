@@ -2,6 +2,7 @@
 
 interface CardStackProps {
   remainingCount: number;
+  qaMode?: boolean;
 }
 
 export function CardStack({ remainingCount }: CardStackProps) {
