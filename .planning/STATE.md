@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: executing
-last_updated: "2026-06-17T11:33:17.212Z"
+status: verifying
+last_updated: "2026-06-17T12:05:32.405Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 20
 ---
 
 # Project State
@@ -20,13 +20,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-12 after v2.1 Living Habitat)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 14 — qa-observability-foundations
+**Current focus:** Phase 14 — qa-observability-foundations (COMPLETE — all 3 plans done; ready for Phase 15)
 
 ## Current Position
 
-Phase: 14 (qa-observability-foundations) — EXECUTING
-Plan: 3 of 3
-Status: Ready to execute
+Phase: 14 (qa-observability-foundations) — COMPLETE
+Plan: 3 of 3 (all complete)
+Status: Phase complete — QAOB-01/02/04 all satisfied; ready for Phase 15
 Last activity: 2026-06-17
 
 ## Shipped Milestones
@@ -69,18 +69,20 @@ Non-blocking, intentional deferrals:
 - 2026-05-29 — QA: all 9 levels × 4 moods (72 clips) + posters verified present/working; force any state via `/debug`. Cleaned 416 accumulated test users (`@leocards-test.local` + e2e `@test.local`).
 - 2026-06-12 — **v3.0 roadmap created**: Phases 14-18 (QA observability foundations → core-journey QA harness → perf baseline → perf optimization → field validation & guardrails). 16/16 requirements mapped. Backlog 999.1 absorbed into Phases 16-18.
 
-## Key Decisions (Phase 14 Plan 01)
+## Key Decisions (Phase 14 Plans 01-03)
 
 - QA_MODE_COOKIE uses fixed-sentinel HMAC (no schema parse step) — eliminates payload injection surface (T-14-01)
 - buildCooldownConfig() exported from complete/route.ts for unit testability (mirrors computeCardUpdate export pattern)
 - QA-mode cookie set on both clear AND set paths in cheat/route.ts — any secret verification establishes QA mode (D-01/D-02)
 - cards query in state/route.ts verifies deck ownership before fetching (T-14-06 mitigation)
 - vi.doMock() with top-level DB/auth mocks chosen — avoids restructuring the route file + prevents test suite timeout
+- Pre-sign-up feature-state probe to /api/debug/state (no session) — 404=disabled; featureDisabled flag guards endpoint assertions in QAOB-04 spec
+- DOM badge-absence assertions always run unconditionally — customer has no QA cookie so [data-qa-badge] is always absent
 
 ## Next Steps
 
-- **14-02: QA state badges on study cards and CardList rows** — consumes `readQaAuth()` from 14-01
-- **14-03: QAOB-04 prod-parity gating test** — Playwright e2e proving 404s when secret unset
+- **Phase 15: Core-journey QA harness** — next milestone phase
 - Set `STUDY_COOLDOWN_MINUTES=15` in `.env.local` for local QA testing of short cooldowns
 - Confirm real-user CWV on prod (CrUX / Vercel Speed Insights) once traffic accrues — formalized as PERF-05 (Phase 18)
 - **`/debug` cheat console** is live on production (`leocards.vercel.app/debug`), secret-gated on Production + Preview scopes; local dev secret in `.env.local`
+- CI should run `e2e/14-qa-parity.spec.ts` against a secret-disabled server to enforce QAOB-04 regression gate

@@ -12,7 +12,7 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 - [x] **QAOB-01**: QA can see per-card state codes in the UI — a compact marker on each card (e.g. `R2·t2n·cd:14m`) showing mastery round, next direction, cooldown remaining, learned/paused flags — rendered only when QA mode is active (gated like `DEBUG_CHEAT_SECRET`); completely absent from the customer experience
 - [x] **QAOB-02**: QA can set short non-zero cooldowns via env (e.g. `STUDY_COOLDOWN_MINUTES=15`) so 12h/24h round transitions are testable within a 10–60 minute window — `STUDY_NO_COOLDOWN` alone hides cooldown bugs because it never exercises the "still cooling down" state
 - [x] **QAOB-03**: QA can read a live per-card state table on `/debug` (card id, word, round, direction, cooldownUntil, pausedAt, learned) sourced from real data — extending the existing real-state readout
-- [ ] **QAOB-04**: A gating test proves QA affordances are absent when secrets/env are unset (prod-parity check: no state codes in DOM, no QA endpoints reachable)
+- [x] **QAOB-04**: A gating test proves QA affordances are absent when secrets/env are unset (prod-parity check: no state codes in DOM, no QA endpoints reachable)
 
 ### Core-Journey QA Scripts (scripted, repeatable, against real pipeline — no virtual overrides)
 
@@ -59,7 +59,7 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 | QAOB-01 | Phase 14 | Complete |
 | QAOB-02 | Phase 14 | Complete |
 | QAOB-03 | Phase 14 | Complete |
-| QAOB-04 | Phase 14 | Pending |
+| QAOB-04 | Phase 14 | Complete |
 | QAJ-01 | Phase 15 | Pending |
 | QAJ-02 | Phase 15 | Pending |
 | QAJ-03 | Phase 15 | Pending |

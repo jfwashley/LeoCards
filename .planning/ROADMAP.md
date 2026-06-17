@@ -54,7 +54,7 @@ Full details: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 
 QA comes first deliberately: the harness must protect the core journey before perf refactors begin. Motivation: v2.1's study-loop bug survived 2 months behind green unit tests — only real-pipeline integration scripts catch that class of gap.
 
-- [ ] **Phase 14: QA observability foundations** - QA can see exact card state and compress time, with affordances provably absent for customers
+- [x] **Phase 14: QA observability foundations** - QA can see exact card state and compress time, with affordances provably absent for customers (completed 2026-06-17)
 - [ ] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline
 - [ ] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization
 - [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
@@ -74,7 +74,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 **Plans**: 3 plans
 - [x] 14-01-PLAN.md — QA-mode cookie, STUDY_COOLDOWN_MINUTES precedence, /debug per-card SRS table (QAOB-02, QAOB-03)
 - [x] 14-02-PLAN.md — QaStateBadge component + RSC-gated wiring onto study cards and dashboard rows (QAOB-01)
-- [ ] 14-03-PLAN.md — prod-parity gating e2e: no badges in customer DOM, QA endpoints 404 when secret unset (QAOB-04)
+- [x] 14-03-PLAN.md — prod-parity gating e2e: no badges in customer DOM, QA endpoints 404 when secret unset (QAOB-04)
 **UI hint**: yes
 
 ### Phase 15: Core-journey QA harness
@@ -134,7 +134,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 14. QA observability foundations | 2/3 | In Progress|  |
+| 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 0/TBD | Not started | - |
 | 16. Performance baseline (Measure) | 0/TBD | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |
