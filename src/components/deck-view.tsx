@@ -24,6 +24,7 @@ export interface CardRow {
   createdAt: Date;
   masteryRound?: number;
   pausedAt: Date | null;
+  cooldownUntil?: Date | null; // QA-only: populated when QA-authed
 }
 
 function formatCountdown(ms: number): string {
@@ -100,6 +101,7 @@ interface DeckViewProps {
   habitatState: HabitatState;
   celebratingLevel?: number | null;
   languageBreakdown: Array<{ language: string; count: number }>;
+  qaMode?: boolean;
 }
 
 export function DeckView({
@@ -112,6 +114,7 @@ export function DeckView({
   habitatState,
   celebratingLevel = null,
   languageBreakdown,
+  qaMode = false,
 }: DeckViewProps) {
   const router = useRouter();
   const activeDeck = decks.find((d) => d.id === activeDeckId) ?? decks[0];
@@ -208,6 +211,7 @@ export function DeckView({
           cards={initialCards}
           nativeLangLabel={nativeLangLabel}
           targetLangLabel={targetLangLabel}
+          qaMode={qaMode}
         />
       </main>
     </div>

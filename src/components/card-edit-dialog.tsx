@@ -20,6 +20,7 @@ export interface CardRow {
   createdAt: Date;
   masteryRound?: number; // 0|1|2|3, undefined for backward compat
   pausedAt: Date | null;
+  cooldownUntil?: Date | null; // QA-only: populated when QA-authed, null otherwise
 }
 
 interface CardEditDialogProps {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState, useTransition } from "react";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
+import { QaStateBadge } from "@/components/qa-state-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -12,12 +13,14 @@ interface CardListProps {
   cards: CardRow[];
   nativeLangLabel: string;
   targetLangLabel: string;
+  qaMode?: boolean;
 }
 
 export const CardList = React.memo(function CardList({
   cards,
   nativeLangLabel,
   targetLangLabel,
+  qaMode = false,
 }: CardListProps) {
   const [query, setQuery] = useState("");
   const [editCard, setEditCard] = useState<CardRow | null>(null);
@@ -141,142 +144,176 @@ export const CardList = React.memo(function CardList({
               </tr>
             </thead>
             <tbody>
-              {filtered.map((card) => (
-                <tr
-                  key={card.id}
-                  className={`border-b border-border min-h-[48px] hover:bg-secondary transition-colors ${card.pausedAt ? "opacity-50" : ""}`}
-                >
-                  <td className="text-base py-3 pr-4">{card.front}</td>
-                  <td className="text-base py-3 pr-4">{card.back}</td>
-                  <td className="py-3 pr-4">
-                    <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                      {card.pausedAt
-                        ? "Paused"
-                        : card.source === "wordlist"
-                          ? "word list"
-                          : "manual"}
-                    </span>
-                  </td>
-                  <td className="py-3 pr-4">
-                    <div
-                      className="flex items-center gap-1"
-                      title={`${card.masteryRound ?? 0} of 3 rounds complete`}
-                    >
-                      {[0, 1, 2].map((round) => (
-                        <span
-                          key={round}
-                          className={`inline-block w-2 h-2 rounded-full ${
-                            (card.masteryRound ?? 0) > round
-                              ? "bg-primary"
-                              : "border border-border"
-                          }`}
-                          title={
-                            (card.masteryRound ?? 0) > round
-                              ? `Round ${round + 1} of 3 complete`
-                              : `Round ${round + 1} of 3 not yet complete`
-                          }
-                        />
-                      ))}
-                    </div>
-                  </td>
-                  <td className="py-3">
-                    <Button
-                      variant="ghost"
-                      className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
-                      aria-label={
-                        card.pausedAt ? "Resume this card" : "Pause this card"
-                      }
-                      title={
-                        card.pausedAt ? "Resume this card" : "Pause this card"
-                      }
-                      disabled={pendingCardIds.has(card.id)}
-                      onClick={() => togglePause(card)}
-                    >
-                      {card.pausedAt ? (
-                        <Play className="size-4" />
-                      ) : (
-                        <Pause className="size-4" />
-                      )}
-                    </Button>
-                  </td>
-                  <td className="py-3">
-                    <Button
-                      variant="ghost"
-                      className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
-                      aria-label="Edit card"
-                      onClick={() => setEditCard(card)}
-                    >
-                      <Pencil className="size-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((card) => {
+                // Derive stage from masteryRound for browse context (no per-session stage).
+                // Round 1 → t2n (second direction), all others → n2t; learned (R3) shows L.
+                const browseStage: "n2t" | "t2n" =
+                  (card.masteryRound ?? 0) === 1 ? "t2n" : "n2t";
+
+                return (
+                  <tr
+                    key={card.id}
+                    className={`relative border-b border-border min-h-[48px] hover:bg-secondary transition-colors ${card.pausedAt ? "opacity-50" : ""}`}
+                  >
+                    {qaMode && (
+                      <QaStateBadge
+                        data={{
+                          masteryRound: card.masteryRound ?? 0,
+                          stage: browseStage,
+                          cooldownUntil: card.cooldownUntil ?? null,
+                          pausedAt: card.pausedAt,
+                        }}
+                      />
+                    )}
+                    <td className="text-base py-3 pr-4">{card.front}</td>
+                    <td className="text-base py-3 pr-4">{card.back}</td>
+                    <td className="py-3 pr-4">
+                      <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
+                        {card.pausedAt
+                          ? "Paused"
+                          : card.source === "wordlist"
+                            ? "word list"
+                            : "manual"}
+                      </span>
+                    </td>
+                    <td className="py-3 pr-4">
+                      <div
+                        className="flex items-center gap-1"
+                        title={`${card.masteryRound ?? 0} of 3 rounds complete`}
+                      >
+                        {[0, 1, 2].map((round) => (
+                          <span
+                            key={round}
+                            className={`inline-block w-2 h-2 rounded-full ${
+                              (card.masteryRound ?? 0) > round
+                                ? "bg-primary"
+                                : "border border-border"
+                            }`}
+                            title={
+                              (card.masteryRound ?? 0) > round
+                                ? `Round ${round + 1} of 3 complete`
+                                : `Round ${round + 1} of 3 not yet complete`
+                            }
+                          />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-3">
+                      <Button
+                        variant="ghost"
+                        className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
+                        aria-label={
+                          card.pausedAt ? "Resume this card" : "Pause this card"
+                        }
+                        title={
+                          card.pausedAt ? "Resume this card" : "Pause this card"
+                        }
+                        disabled={pendingCardIds.has(card.id)}
+                        onClick={() => togglePause(card)}
+                      >
+                        {card.pausedAt ? (
+                          <Play className="size-4" />
+                        ) : (
+                          <Pause className="size-4" />
+                        )}
+                      </Button>
+                    </td>
+                    <td className="py-3">
+                      <Button
+                        variant="ghost"
+                        className="h-11 w-11 opacity-60 hover:opacity-100 p-0"
+                        aria-label="Edit card"
+                        onClick={() => setEditCard(card)}
+                      >
+                        <Pencil className="size-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 
           {/* Mobile card layout (hidden on desktop) */}
           <div className="flex flex-col gap-2 md:hidden">
-            {filtered.map((card) => (
-              <div
-                key={card.id}
-                className={`border border-border rounded-lg p-3 flex items-center gap-3 ${card.pausedAt ? "opacity-50" : ""}`}
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{card.front}</p>
-                  <p className="text-sm text-muted-foreground truncate">
-                    {card.back}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                      {card.pausedAt
-                        ? "Paused"
-                        : card.source === "wordlist"
-                          ? "word list"
-                          : "manual"}
-                    </span>
-                    <div
-                      className="flex items-center gap-1"
-                      title={`${card.masteryRound ?? 0} of 3 rounds complete`}
-                    >
-                      {[0, 1, 2].map((round) => (
-                        <span
-                          key={round}
-                          className={`inline-block w-2 h-2 rounded-full ${
-                            (card.masteryRound ?? 0) > round
-                              ? "bg-primary"
-                              : "border border-border"
-                          }`}
-                        />
-                      ))}
+            {filtered.map((card) => {
+              const browseStage: "n2t" | "t2n" =
+                (card.masteryRound ?? 0) === 1 ? "t2n" : "n2t";
+
+              return (
+                <div
+                  key={card.id}
+                  className={`relative border border-border rounded-lg p-3 flex items-center gap-3 ${card.pausedAt ? "opacity-50" : ""}`}
+                >
+                  {qaMode && (
+                    <QaStateBadge
+                      data={{
+                        masteryRound: card.masteryRound ?? 0,
+                        stage: browseStage,
+                        cooldownUntil: card.cooldownUntil ?? null,
+                        pausedAt: card.pausedAt,
+                      }}
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{card.front}</p>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {card.back}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
+                        {card.pausedAt
+                          ? "Paused"
+                          : card.source === "wordlist"
+                            ? "word list"
+                            : "manual"}
+                      </span>
+                      <div
+                        className="flex items-center gap-1"
+                        title={`${card.masteryRound ?? 0} of 3 rounds complete`}
+                      >
+                        {[0, 1, 2].map((round) => (
+                          <span
+                            key={round}
+                            className={`inline-block w-2 h-2 rounded-full ${
+                              (card.masteryRound ?? 0) > round
+                                ? "bg-primary"
+                                : "border border-border"
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
+                    aria-label={
+                      card.pausedAt ? "Resume this card" : "Pause this card"
+                    }
+                    title={
+                      card.pausedAt ? "Resume this card" : "Pause this card"
+                    }
+                    disabled={pendingCardIds.has(card.id)}
+                    onClick={() => togglePause(card)}
+                  >
+                    {card.pausedAt ? (
+                      <Play className="size-4" />
+                    ) : (
+                      <Pause className="size-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
+                    aria-label="Edit card"
+                    onClick={() => setEditCard(card)}
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
-                  aria-label={
-                    card.pausedAt ? "Resume this card" : "Pause this card"
-                  }
-                  title={card.pausedAt ? "Resume this card" : "Pause this card"}
-                  disabled={pendingCardIds.has(card.id)}
-                  onClick={() => togglePause(card)}
-                >
-                  {card.pausedAt ? (
-                    <Play className="size-4" />
-                  ) : (
-                    <Pause className="size-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="h-11 w-11 shrink-0 opacity-60 hover:opacity-100 p-0"
-                  aria-label="Edit card"
-                  onClick={() => setEditCard(card)}
-                >
-                  <Pencil className="size-4" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       )}

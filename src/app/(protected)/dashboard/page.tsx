@@ -4,7 +4,7 @@ import { FirstVisitPicker } from "@/components/first-visit-picker";
 import { HabitatWidget } from "@/components/habitat-widget";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { readHabitatOverride } from "@/lib/debug-cheat";
+import { readHabitatOverride, readQaAuth } from "@/lib/debug-cheat";
 import {
   getDeckCards,
   getUserDecks,
@@ -42,6 +42,7 @@ export default async function DashboardPage({
     ]);
 
   const habitatOverride = await readHabitatOverride();
+  const qaMode = await readQaAuth();
   const habitatState = computeHabitatState(
     habitatFacts,
     new Date(),
@@ -116,6 +117,12 @@ export default async function DashboardPage({
     createdAt: c.createdAt,
     masteryRound: masteryByCardId.get(c.id) ?? 0,
     pausedAt: c.pausedAt,
+    // QA-only: pass cooldownUntil when QA-authed so CardList can render the badge.
+    // studyCards is already fetched and includes cooldownUntil — no extra DB query.
+    // Customers receive null (no extra payload, no badge prop threaded down).
+    cooldownUntil: qaMode
+      ? (studyCards.find((s) => s.id === c.id)?.cooldownUntil ?? null)
+      : null,
   }));
 
   return (
@@ -129,6 +136,7 @@ export default async function DashboardPage({
       habitatState={habitatState}
       celebratingLevel={celebratingLevel}
       languageBreakdown={languageBreakdown}
+      qaMode={qaMode}
     />
   );
 }

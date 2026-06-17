@@ -1,9 +1,8 @@
 "use client";
 
 import { motion, useMotionValue, useTransform } from "motion/react";
-
-import { QaStateBadge } from "@/components/qa-state-badge";
 import type { QaCardData } from "@/components/qa-state-badge";
+import { QaStateBadge } from "@/components/qa-state-badge";
 import type { SessionCard } from "@/lib/study-engine";
 
 interface StudyCardProps {

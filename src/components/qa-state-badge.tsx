@@ -70,10 +70,11 @@ export function QaStateBadge({ data }: { data: QaCardData }) {
   );
 
   useEffect(() => {
-    if (!data.cooldownUntil) return;
+    const target = data.cooldownUntil;
+    if (!target) return;
 
     const tick = () => {
-      const ms = data.cooldownUntil!.getTime() - Date.now();
+      const ms = target.getTime() - Date.now();
       setCdLabel(ms > 0 ? formatCd(ms) : "");
     };
 
@@ -81,7 +82,7 @@ export function QaStateBadge({ data }: { data: QaCardData }) {
 
     // Fine-grained tick for short QA cooldowns (< 5 min), coarser otherwise (D-06)
     const intervalMs =
-      data.cooldownUntil.getTime() - Date.now() < 5 * 60_000 ? 10_000 : 60_000;
+      target.getTime() - Date.now() < 5 * 60_000 ? 10_000 : 60_000;
     const id = setInterval(tick, intervalMs);
     return () => clearInterval(id);
   }, [data.cooldownUntil]);
