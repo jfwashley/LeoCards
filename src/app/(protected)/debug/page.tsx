@@ -31,9 +31,20 @@ const QUALITY_PRESETS = [
 
 const REAL = "real";
 
+interface CardDebugEntry {
+  id: string;
+  word: string;
+  masteryRound: number;
+  direction: "n2t" | "t2n" | "either";
+  cooldownUntil: string | null;
+  pausedAt: string | null;
+  learned: boolean;
+}
+
 interface DebugStateResponse {
   real: HabitatState;
   forced: { level?: number; mood?: TigerMood; quality?: number } | null;
+  cards?: CardDebugEntry[];
 }
 
 const selectClass =
@@ -315,6 +326,87 @@ export default function DebugPage() {
           </div>
         </Card>
       )}
+
+      {data?.cards && data.cards.length > 0 && (
+        <Card className="p-4 flex flex-col gap-2">
+          <h2 className="text-lg font-semibold">
+            Card SRS state ({data.cards.length})
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Real card state from your active deck. Cooldown shows remaining
+            time; — means no cooldown active. Sorted: in-progress first, then
+            learned.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr>
+                  <th className="text-left text-muted-foreground font-normal pb-2 pr-3">
+                    Word
+                  </th>
+                  <th className="text-left text-muted-foreground font-normal pb-2 pr-3">
+                    R
+                  </th>
+                  <th className="text-left text-muted-foreground font-normal pb-2 pr-3">
+                    Dir
+                  </th>
+                  <th className="text-left text-muted-foreground font-normal pb-2 pr-3">
+                    Cooldown
+                  </th>
+                  <th className="text-left text-muted-foreground font-normal pb-2 pr-3">
+                    Paused
+                  </th>
+                  <th className="text-left text-muted-foreground font-normal pb-2">
+                    Learned
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...data.cards]
+                  .sort((a, b) => {
+                    // Unlearned first, then learned
+                    const aLearned = a.learned ? 1 : 0;
+                    const bLearned = b.learned ? 1 : 0;
+                    if (aLearned !== bLearned) return aLearned - bLearned;
+                    // Within group: nulls (no cooldown) first, then by cooldown end
+                    if (!a.cooldownUntil && !b.cooldownUntil) return 0;
+                    if (!a.cooldownUntil) return -1;
+                    if (!b.cooldownUntil) return 1;
+                    return (
+                      new Date(a.cooldownUntil).getTime() -
+                      new Date(b.cooldownUntil).getTime()
+                    );
+                  })
+                  .map((c) => {
+                    const cdMs = c.cooldownUntil
+                      ? new Date(c.cooldownUntil).getTime() - Date.now()
+                      : null;
+                    const cdLabel =
+                      cdMs !== null && cdMs > 0
+                        ? formatCooldownRemaining(cdMs)
+                        : "—";
+                    return (
+                      <tr key={c.id} className="border-b border-border">
+                        <td className="py-1 pr-3 font-medium">{c.word}</td>
+                        <td className="py-1 pr-3 tabular-nums">
+                          {c.masteryRound}
+                        </td>
+                        <td className="py-1 pr-3 font-mono text-xs">
+                          {c.learned ? "—" : c.direction}
+                        </td>
+                        <td className="py-1 pr-3 tabular-nums text-xs">
+                          {cdLabel}
+                        </td>
+                        <td className="py-1 pr-3">{c.pausedAt ? "✓" : "—"}</td>
+                        <td className="py-1">{c.learned ? "✓" : "—"}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
     </main>
   );
 }
@@ -326,4 +418,13 @@ function Stat({ k, v }: { k: string; v: string | number }) {
       <dd className="font-medium tabular-nums">{v}</dd>
     </>
   );
+}
+
+/** Format a remaining cooldown duration in milliseconds as "Xh Ym" or "Ym". */
+function formatCooldownRemaining(ms: number): string {
+  if (ms <= 0) return "—";
+  const totalMin = Math.ceil(ms / 60_000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
