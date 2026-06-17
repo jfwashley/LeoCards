@@ -27,6 +27,13 @@ import type { HabitatOverride, TigerMood } from "@/lib/habitat-engine";
 /** Cookie name for the signed habitat override. */
 export const CHEAT_COOKIE = "leo-habitat-cheat";
 
+/**
+ * Cookie name for the persistent QA-mode authentication token.
+ * Set on any successful DEBUG_CHEAT_SECRET verification — persists
+ * independently of any habitat override (D-03).
+ */
+export const QA_MODE_COOKIE = "leo-qa-mode";
+
 const MOODS = ["excited", "happy", "neutral", "sad"] as const;
 
 /**
@@ -143,4 +150,66 @@ export async function readHabitatOverride(): Promise<HabitatOverride | null> {
   if (!cheatEnabled()) return null;
   const store = await cookies();
   return verifyOverride(store.get(CHEAT_COOKIE)?.value);
+}
+
+// ============================================================
+// QA-mode persistent cookie helpers (Phase 14)
+// ============================================================
+
+/**
+ * Fixed sentinel payload for the QA-mode cookie. The payload is a constant
+ * object — it signals presence only, no user-controlled fields.
+ * Threat T-14-01: fixed payload prevents injection attacks.
+ */
+const QA_SENTINEL = { qaMode: true } as const;
+
+/**
+ * Sign a QA-mode authentication cookie value: `<payloadB64>.<sigB64>`.
+ * Mirrors `signOverride` exactly — uses the same HMAC-SHA256 helpers.
+ * Throws if DEBUG_CHEAT_SECRET is unset — callers must gate first.
+ * Server-only (imports `@/env`).
+ */
+export function signQaMode(): string {
+  const secret = env.DEBUG_CHEAT_SECRET;
+  if (!secret) throw new Error("DEBUG_CHEAT_SECRET not set");
+  const payloadB64 = base64url(
+    Buffer.from(JSON.stringify(QA_SENTINEL), "utf8"),
+  );
+  return `${payloadB64}.${hmac(payloadB64, secret)}`;
+}
+
+/**
+ * Verify a QA-mode cookie value via constant-time HMAC comparison.
+ * Returns true iff the signature is valid. No schema parse needed — the
+ * payload is a fixed sentinel (Threat T-14-01 mitigation).
+ * Returns false when the feature is disabled, `raw` is null/undefined/empty,
+ * or contains no dot, or the signature does not match.
+ */
+export function verifyQaMode(raw: string | null | undefined): boolean {
+  const secret = env.DEBUG_CHEAT_SECRET;
+  if (!secret || typeof raw !== "string" || !raw.includes(".")) return false;
+
+  const dot = raw.lastIndexOf(".");
+  const payloadB64 = raw.slice(0, dot);
+  const sig = raw.slice(dot + 1);
+  if (!payloadB64 || !sig) return false;
+
+  // Constant-time signature check (Threat T-14-01 mitigation).
+  const expected = hmac(payloadB64, secret);
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/**
+ * Read + verify the QA-mode authentication cookie. Server-only
+ * (uses next/headers `cookies()`). Returns true iff QA mode is active
+ * (valid signed `leo-qa-mode` cookie present). Returns false when the
+ * feature is disabled, no cookie is present, or the signature is invalid.
+ * Call from RSC pages to decide whether to pass QA SRS data to client components.
+ */
+export async function readQaAuth(): Promise<boolean> {
+  if (!cheatEnabled()) return false;
+  const store = await cookies();
+  return verifyQaMode(store.get(QA_MODE_COOKIE)?.value);
 }

@@ -18,6 +18,18 @@ export const env = createEnv({
     // production) zeroes them automatically; set this on Vercel PREVIEW only.
     // Leave UNSET on production so real 12h/24h spaced-repetition applies.
     STUDY_NO_COOLDOWN: z.string().optional(),
+    // QA (QAOB-02): set a short non-zero cooldown (in minutes) for all rounds
+    // so 12h/24h transitions are testable in a 10-60 minute window.
+    // D-09: when set, wins over STUDY_NO_COOLDOWN and the dev auto-zero.
+    // D-10: no code-level prod block — Vercel env scoping controls production
+    // (set on Preview only, never Production).
+    // Must be an integer ≥ 1. Transform/pipe required (env vars are strings).
+    // Threat T-14-04: z.number().int().min(1) rejects 0/negatives/NaN.
+    STUDY_COOLDOWN_MINUTES: z
+      .string()
+      .optional()
+      .transform((v) => (v !== undefined ? parseInt(v, 10) : undefined))
+      .pipe(z.number().int().min(1).optional()),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
@@ -31,6 +43,7 @@ export const env = createEnv({
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
     DEBUG_CHEAT_SECRET: process.env.DEBUG_CHEAT_SECRET,
     STUDY_NO_COOLDOWN: process.env.STUDY_NO_COOLDOWN,
+    STUDY_COOLDOWN_MINUTES: process.env.STUDY_COOLDOWN_MINUTES,
   },
   // Coerce empty strings to undefined BEFORE Zod runs so optional keys
   // (RESEND/DEEPL/ANTHROPIC) gracefully fall through to their existing
