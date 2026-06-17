@@ -155,17 +155,21 @@ export const CardList = React.memo(function CardList({
                     key={card.id}
                     className={`relative border-b border-border min-h-[48px] hover:bg-secondary transition-colors ${card.pausedAt ? "opacity-50" : ""}`}
                   >
-                    {qaMode && (
-                      <QaStateBadge
-                        data={{
-                          masteryRound: card.masteryRound ?? 0,
-                          stage: browseStage,
-                          cooldownUntil: card.cooldownUntil ?? null,
-                          pausedAt: card.pausedAt,
-                        }}
-                      />
-                    )}
-                    <td className="text-base py-3 pr-4">{card.front}</td>
+                    <td className="text-base py-3 pr-4">
+                      {/* Badge lives inside the first <td> (valid HTML); the
+                          relative <tr> is its positioning context. WR-02. */}
+                      {qaMode && (
+                        <QaStateBadge
+                          data={{
+                            masteryRound: card.masteryRound ?? 0,
+                            stage: browseStage,
+                            cooldownUntil: card.cooldownUntil ?? null,
+                            pausedAt: card.pausedAt,
+                          }}
+                        />
+                      )}
+                      {card.front}
+                    </td>
                     <td className="text-base py-3 pr-4">{card.back}</td>
                     <td className="py-3 pr-4">
                       <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
