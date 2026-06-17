@@ -139,13 +139,18 @@ describe("signQaMode / verifyQaMode — when secret is unset", () => {
   });
 
   it("signQaMode throws when DEBUG_CHEAT_SECRET is unset", async () => {
+    // Re-import the module with a secret-less env to exercise the real throw path.
+    // resetModules + doMock makes the dynamic import below pick up env={} instead
+    // of the secret-bearing top-level mock.
+    vi.resetModules();
     vi.doMock("@/env", () => ({ env: {} }));
-    // We test this indirectly: with the mock above in the outer scope still active,
-    // we rely on verifyQaMode returning false when secret is undefined
-    // This test verifies the guard path: verifyQaMode returns false when no secret
-    // We already verified the throw by documenting the expected behavior in the action block.
-    // Actual throw test is integration-level (requires module re-import).
-    expect(true).toBe(true); // Placeholder — throw tested via readQaAuth guard below
+    try {
+      const mod = await import("./debug-cheat");
+      expect(() => mod.signQaMode()).toThrow("DEBUG_CHEAT_SECRET not set");
+    } finally {
+      vi.doUnmock("@/env");
+      vi.resetModules();
+    }
   });
 
   it("verifyQaMode returns false when secret is missing (no dot string guard)", () => {
