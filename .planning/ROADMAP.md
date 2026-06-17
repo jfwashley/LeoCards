@@ -73,7 +73,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
   4. An automated prod-parity gating test passes: with secrets/env unset, no state codes appear in the DOM and no QA endpoints are reachable
 **Plans**: 3 plans
 - [x] 14-01-PLAN.md — QA-mode cookie, STUDY_COOLDOWN_MINUTES precedence, /debug per-card SRS table (QAOB-02, QAOB-03)
-- [ ] 14-02-PLAN.md — QaStateBadge component + RSC-gated wiring onto study cards and dashboard rows (QAOB-01)
+- [x] 14-02-PLAN.md — QaStateBadge component + RSC-gated wiring onto study cards and dashboard rows (QAOB-01)
 - [ ] 14-03-PLAN.md — prod-parity gating e2e: no badges in customer DOM, QA endpoints 404 when secret unset (QAOB-04)
 **UI hint**: yes
 
@@ -134,7 +134,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 14. QA observability foundations | 1/3 | In Progress|  |
+| 14. QA observability foundations | 2/3 | In Progress|  |
 | 15. Core-journey QA harness | 0/TBD | Not started | - |
 | 16. Performance baseline (Measure) | 0/TBD | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |

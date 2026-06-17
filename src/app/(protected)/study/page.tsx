@@ -61,5 +61,7 @@ export default async function StudyPage(props: {
 
   const qaMode = await readQaAuth();
 
-  return <StudySession initialCards={sessionCards} deckId={deckId} qaMode={qaMode} />;
+  return (
+    <StudySession initialCards={sessionCards} deckId={deckId} qaMode={qaMode} />
+  );
 }

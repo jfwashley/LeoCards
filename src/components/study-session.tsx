@@ -188,7 +188,11 @@ interface StudySessionProps {
 // Component
 // ============================================================
 
-export function StudySession({ initialCards, deckId, qaMode = false }: StudySessionProps) {
+export function StudySession({
+  initialCards,
+  deckId,
+  qaMode = false,
+}: StudySessionProps) {
   const router = useRouter();
 
   const [showLevelUp, setShowLevelUp] = useState<number | null>(null);
