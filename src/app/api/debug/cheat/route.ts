@@ -3,10 +3,12 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import {
   CHEAT_COOKIE,
+  QA_MODE_COOKIE,
   cheatEnabled,
   checkSecret,
   overrideSchema,
   signOverride,
+  signQaMode,
 } from "@/lib/debug-cheat";
 import { createRateLimiter } from "@/lib/rate-limit";
 
@@ -72,9 +74,19 @@ export async function POST(req: Request) {
 
   const cookieStore = await cookies();
 
-  // 5. Clear → delete the override cookie.
+  // 5. Clear → delete the override cookie, but retain QA-mode auth (D-01/D-02):
+  //    Any successful secret verification establishes persistent QA mode,
+  //    independent of whether a habitat override is active.
   if (parsed.data.clear) {
     cookieStore.delete(CHEAT_COOKIE);
+    // Refresh the QA-mode cookie — the user just re-proved secret knowledge.
+    cookieStore.set(QA_MODE_COOKIE, signQaMode(), {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 1 week — matches CHEAT_COOKIE
+    });
     return Response.json({ ok: true, cleared: true });
   }
 
@@ -101,6 +113,17 @@ export async function POST(req: Request) {
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 1 week
+  });
+
+  // Also set/refresh the QA-mode cookie (D-01/D-02): any successful secret
+  // verification establishes persistent QA mode independent of the override.
+  // Threat T-14-02: httpOnly prevents client JS from reading the secret.
+  cookieStore.set(QA_MODE_COOKIE, signQaMode(), {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 1 week — matches CHEAT_COOKIE
   });
 
   return Response.json({ ok: true, forced: override });

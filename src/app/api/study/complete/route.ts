@@ -20,14 +20,26 @@ import { markMilestonesSeen } from "@/lib/milestone-queries";
 import type { GradeEntry } from "@/lib/study-engine";
 import { computeCardUpdate, DEFAULT_COOLDOWN_MS } from "@/lib/study-engine";
 
-// QA: zero the spaced-repetition cooldowns so a card can progress 0->learned
-// across reloaded sessions in one sitting. Auto-on in local dev; on Vercel
-// preview via STUDY_NO_COOLDOWN=true; OFF in production (real 12h/24h).
-const NO_COOLDOWN =
-  process.env.NODE_ENV !== "production" || env.STUDY_NO_COOLDOWN === "true";
-const COOLDOWN_CONFIG: Record<number, number | null> = NO_COOLDOWN
-  ? { 0: 0, 1: 0, 2: null }
-  : DEFAULT_COOLDOWN_MS;
+// QA (QAOB-02): compute the cooldown configuration with D-09 precedence:
+//   1. STUDY_COOLDOWN_MINUTES (when set) wins over everything — short non-zero
+//      cooldowns for testing 12h/24h transitions in 10-60 min window.
+//   2. STUDY_NO_COOLDOWN / dev auto-zero when STUDY_COOLDOWN_MINUTES is unset.
+//   3. Real 12h/24h defaults in production with no overrides.
+// Exported for unit testing — mirrors how computeCardUpdate is exported from study-engine.ts.
+export function buildCooldownConfig(): Record<number, number | null> {
+  // D-09: STUDY_COOLDOWN_MINUTES wins when set — overrides NO_COOLDOWN and dev auto-zero
+  if (env.STUDY_COOLDOWN_MINUTES !== undefined) {
+    const ms = env.STUDY_COOLDOWN_MINUTES * 60 * 1000;
+    // Round 2->3 is always null (learned) — never apply minutes value to round 2
+    return { 0: ms, 1: ms, 2: null };
+  }
+  // Existing: dev auto-zero or STUDY_NO_COOLDOWN override (unchanged behavior when unset)
+  const useNoCooldown =
+    process.env.NODE_ENV !== "production" || env.STUDY_NO_COOLDOWN === "true";
+  return useNoCooldown ? { 0: 0, 1: 0, 2: null } : DEFAULT_COOLDOWN_MS;
+}
+
+const COOLDOWN_CONFIG = buildCooldownConfig();
 
 // ============================================================
 // Validation schemas
