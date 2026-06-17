@@ -9,9 +9,9 @@ vi.mock("next/headers", () => ({
 }));
 
 import {
-  QA_MODE_COOKIE,
   cheatEnabled,
   checkSecret,
+  QA_MODE_COOKIE,
   readQaAuth,
   signOverride,
   signQaMode,
@@ -118,10 +118,7 @@ describe("signQaMode / verifyQaMode", () => {
   it("verifyQaMode with tampered payload (real sig, forged payload) returns false", () => {
     const cookie = signQaMode();
     const [, sig] = cookie.split(".");
-    const forgedPayload = Buffer.from(
-      JSON.stringify({ qaMode: false }),
-      "utf8",
-    )
+    const forgedPayload = Buffer.from(JSON.stringify({ qaMode: false }), "utf8")
       .toString("base64")
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
@@ -173,8 +170,14 @@ describe("readQaAuth", () => {
     const { cookies } = await import("next/headers");
     vi.mocked(cookies).mockResolvedValueOnce({
       get: (name: string) =>
-        name === QA_MODE_COOKIE ? { name: QA_MODE_COOKIE, value: validCookie } : undefined,
-    } as ReturnType<typeof import("next/headers").cookies> extends Promise<infer T> ? T : never);
+        name === QA_MODE_COOKIE
+          ? { name: QA_MODE_COOKIE, value: validCookie }
+          : undefined,
+    } as ReturnType<typeof import("next/headers").cookies> extends Promise<
+      infer T
+    >
+      ? T
+      : never);
     const result = await readQaAuth();
     expect(result).toBe(true);
   });
