@@ -445,7 +445,7 @@ export function StudySession({
           className="relative w-full max-w-sm mx-auto"
           style={{ perspective: 1000 }}
         >
-          <CardStack remainingCount={remainingCount} qaMode={qaMode} />
+          <CardStack remainingCount={remainingCount} />
           <AnimatePresence mode="popLayout">
             <StudyCard
               key={`${String(current.id)}-${currentIndex}`}
