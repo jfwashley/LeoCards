@@ -4,9 +4,45 @@ import { DEFAULT_COOLDOWN_MS } from "@/lib/study-engine";
 // Test all four STUDY_COOLDOWN_MINUTES precedence branches (D-09) for
 // buildCooldownConfig() exported from the study/complete route.
 //
+// Because the route imports heavy dependencies (db, auth, rate-limit), we mock
+// those at the top level to prevent real connections during unit testing.
 // Because buildCooldownConfig reads env and process.env.NODE_ENV at call time,
-// and vi.mock() is hoisted (runs before module scope), we use vi.doMock()
-// (not hoisted) with vi.resetModules() + dynamic import for per-test isolation.
+// we use vi.doMock() (not hoisted) with vi.resetModules() + dynamic import
+// per branch to get fresh module evaluation with the right mock values.
+
+// Top-level mocks to prevent DB connections and auth initialization
+vi.mock("@/db", () => ({
+  db: {},
+}));
+
+vi.mock("@/lib/auth", () => ({
+  auth: { api: { getSession: vi.fn() } },
+}));
+
+vi.mock("@/lib/rate-limit", () => ({
+  createRateLimiter: vi.fn().mockReturnValue({ check: vi.fn() }),
+}));
+
+vi.mock("next/headers", () => ({
+  headers: vi.fn().mockResolvedValue(new Headers()),
+}));
+
+vi.mock("@/lib/habitat-engine", () => ({
+  computeHabitatState: vi.fn(),
+}));
+
+vi.mock("@/lib/habitat-queries", () => ({
+  getHabitatFacts: vi.fn(),
+}));
+
+vi.mock("@/lib/study-engine", async (importOriginal) => {
+  const original = await importOriginal<typeof import("@/lib/study-engine")>();
+  return original;
+});
+
+vi.mock("@/lib/milestone-queries", () => ({
+  markMilestonesSeen: vi.fn(),
+}));
 
 describe("buildCooldownConfig — STUDY_COOLDOWN_MINUTES precedence (D-09)", () => {
   afterEach(() => {
