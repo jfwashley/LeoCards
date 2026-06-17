@@ -231,6 +231,15 @@ export function StudySession({
     }
   }, [state.phase, isFlipped, isSwipeReady]);
 
+  // Stable per-session idempotency key. A retried commit (RETRY_COMMIT) re-POSTs
+  // the SAME commitId, so the server treats the replay as a no-op instead of
+  // double-applying grades (see /api/study/complete, WR-04). Initialized lazily
+  // once per mount — survives the studying→committing→error→committing cycle.
+  const commitIdRef = useRef<string>("");
+  if (!commitIdRef.current) {
+    commitIdRef.current = crypto.randomUUID();
+  }
+
   // Commit grades when entering "committing" phase
   // Uses ref to capture graded data, avoiding dependency on entire state object
   const gradedRef = useRef<GradeEntry[]>([]);
@@ -250,6 +259,7 @@ export function StudySession({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             deckId,
+            commitId: commitIdRef.current,
             grades: graded.map((g) => ({
               cardId: String(g.cardId),
               direction: g.direction,

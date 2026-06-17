@@ -103,6 +103,12 @@ export const cards = pgTable("cards", {
   masteryRound: integer("masteryRound").notNull().default(0), // 0=new, 1=round1done, 2=round2done, 3=learned
   cooldownUntil: timestamp("cooldownUntil"), // null = available now
   lastStudiedAt: timestamp("lastStudiedAt"),
+  // Idempotency guard for POST /api/study/complete (WR-04): the commitId of the
+  // study session whose grades were last applied to this card. The per-card
+  // UPDATE is gated on this (apply only when lastCommitId differs), so a retried
+  // batch never double-advances masteryRound or double-increments recallCount.
+  // null = never committed against; legacy rows are null and apply on first write.
+  lastCommitId: text("lastCommitId"),
   pausedAt: timestamp("pausedAt"), // null = active, non-null = paused at this instant
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),

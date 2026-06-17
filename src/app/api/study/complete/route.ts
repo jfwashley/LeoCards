@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, ne, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/db";
@@ -53,8 +53,26 @@ const GradeSchema = z.object({
 
 const CommitSchema = z.object({
   deckId: z.string(),
+  // Per-session idempotency key (UUID from the client, stable across retries).
+  // Required so a replayed batch (study-session.tsx RETRY_COMMIT) is a no-op
+  // rather than a double-apply (WR-04). Bounded because it is concatenated into
+  // recall_events primary keys.
+  commitId: z.string().min(1).max(100),
   grades: z.array(GradeSchema).min(1).max(500),
 });
+
+/**
+ * Deterministic recall_events primary key derived from the per-session commitId
+ * and the grade's position in the (ordered, append-only) batch. A replayed batch
+ * carries the same commitId and the same grade order, so every row resolves to an
+ * identical id — the insert's onConflictDoNothing then makes the replay a no-op
+ * instead of duplicating rows. Distinct indices keep legitimate repeats (a card
+ * answered wrong then right in the same direction) as separate events.
+ * Exported for unit testing (mirrors how buildCooldownConfig is exported).
+ */
+export function recallEventId(commitId: string, index: number): RecallEventId {
+  return `${commitId}:${index}` as RecallEventId;
+}
 
 // ============================================================
 // POST /api/study/complete
@@ -70,7 +88,9 @@ const CommitSchema = z.object({
  * 4. Load current card states
  * 5. Compute mastery updates via study engine
  * 6. Execute writes sequentially (Neon HTTP driver does not support transactions;
- *    a mid-sequence failure may result in partial writes)
+ *    a mid-sequence failure may result in partial writes). Writes are idempotent
+ *    and keyed on the per-session commitId, so the client may safely retry the
+ *    full batch — a replay converges instead of double-applying (WR-04).
  * 7. Return success with level-up info
  */
 export async function POST(request: Request) {
@@ -106,7 +126,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid input" }, { status: 400 });
   }
 
-  const { deckId, grades } = parsed.data;
+  const { deckId, commitId, grades } = parsed.data;
 
   // 3. Verify deck ownership — single query checks both existence and ownership
   const [ownedDeck] = await db
@@ -181,19 +201,36 @@ export async function POST(request: Request) {
     };
   });
 
-  // 6. Execute all writes (neon-http driver does not support transactions)
+  // 6. Execute all writes (neon-http driver does not support transactions).
+  //
+  // The driver has no transactions, so a mid-sequence failure leaves a partial
+  // write and the client "Retry saving session" button (study-session.tsx →
+  // RETRY_COMMIT) re-POSTs the FULL grade batch. Each write below is therefore
+  // made idempotent so a replay converges instead of double-applying (WR-04):
+  //   a. recall_events ids are deterministic (commitId + index) + onConflictDoNothing
+  //      → a replayed row hits the PK and is skipped, no duplicate events.
+  //   b. each card UPDATE is gated on lastCommitId → the masteryRound advance and
+  //      recallCount increment apply at most once per commitId. A card NOT yet
+  //      written by a prior partial attempt still has a differing lastCommitId, so
+  //      it is updated on replay (no lost writes); an already-written card is a
+  //      no-op (no double advance / double count).
+  //   c. habitat_metadata upsert is already idempotent (onConflictDoUpdate).
   try {
-    // a. Batch insert all recall_events
-    await db.insert(recall_events).values(
-      grades.map((g) => ({
-        id: crypto.randomUUID() as RecallEventId,
-        cardId: g.cardId as CardId,
-        direction: g.direction,
-        correct: g.correct,
-      })),
-    );
+    // a. Batch insert all recall_events (idempotent via deterministic ids).
+    await db
+      .insert(recall_events)
+      .values(
+        grades.map((g, i) => ({
+          id: recallEventId(commitId, i),
+          cardId: g.cardId as CardId,
+          direction: g.direction,
+          correct: g.correct,
+        })),
+      )
+      .onConflictDoNothing();
 
-    // b. Update each card with new mastery state
+    // b. Update each card with new mastery state, guarded on commitId so a
+    //    replayed commit is a per-card no-op.
     for (const update of cardUpdates) {
       await db
         .update(cards)
@@ -202,8 +239,14 @@ export async function POST(request: Request) {
           cooldownUntil: update.cooldownUntil,
           recallCount: sql`"recallCount" + ${update.recallCountDelta}`,
           lastStudiedAt: now,
+          lastCommitId: commitId,
         })
-        .where(eq(cards.id, update.cardId));
+        .where(
+          and(
+            eq(cards.id, update.cardId),
+            or(isNull(cards.lastCommitId), ne(cards.lastCommitId, commitId)),
+          ),
+        );
     }
 
     // c. Upsert habitat_metadata — row may not exist yet
