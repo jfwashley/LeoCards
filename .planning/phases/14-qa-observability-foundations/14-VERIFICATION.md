@@ -1,7 +1,8 @@
 ---
 phase: 14-qa-observability-foundations
 verified: 2026-06-17T12:30:00Z
-status: human_needed
+status: passed
+human_verified: 2026-06-18 (live UAT — all 3 human-verification items pass; see 14-HUMAN-UAT.md)
 score: 14/14 must-haves verified
 overrides_applied: 0
 human_verification:
