@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Daybreak Onboarding & Auth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&amp;family=Figtree:wght@400;600;700&amp;family=Albert+Sans:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+  @keyframes lc-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes hab-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+  .hab-breathe { animation: hab-breathe 3.6s ease-in-out infinite; }
+  @keyframes hab-sway { 0%,100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  .hab-sway { animation: hab-sway 4.2s ease-in-out infinite; }
+  @keyframes hab-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .hab-float { animation: hab-float 4.5s ease-in-out infinite; }
+  @keyframes hab-flap { 0%,100% { transform: scaleX(1); } 50% { transform: scaleX(0.55); } }
+  .hab-flap { animation: hab-flap 0.5s ease-in-out infinite; }
+  @keyframes hab-drift { 0% { transform: translateX(-8px); } 100% { transform: translateX(14px); } }
+  .hab-drift { animation: hab-drift 9s ease-in-out infinite alternate; }
+  @keyframes hab-glow { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.92; } }
+  .hab-glow { animation: hab-glow 5s ease-in-out infinite; }
+  @keyframes hab-shimmer { 0%,100% { opacity: 0.25; transform: translateX(0); } 50% { opacity: 0.7; transform: translateX(4px); } }
+  .hab-shimmer { animation: hab-shimmer 3s ease-in-out infinite; }
+  .hab-shimmer2 { animation: hab-shimmer 3.6s ease-in-out infinite 0.6s; }
+  @media (prefers-reduced-motion: reduce) { [class^="hab-"] { animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="hifi-shared.jsx"></script>
+<script type="text/babel" src="hifi-daybreak.jsx"></script>
+<script type="text/babel" src="daybreak-habitat-scene.jsx"></script>
+<script type="text/babel" src="daybreak-auth.jsx"></script>
+<script type="text/babel" src="daybreak-onboarding.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="signup" title="Signup — Daybreak hi-fi" subtitle="The account-creation counterpart to Login, in the locked shell A: brand block, ghost-card peeks, and a habitat-flashcard whose scene tops the form (sign up = sunrise). Account basics only — name, email, password; languages are chosen in the welcome that follows. Inline per-field validation, single primary, cross-link to sign in.">
+          <DCArtboard id="su-default" label="1 · Default" width={390} height={844}><AuSignup variant="default" /></DCArtboard>
+          <DCArtboard id="su-errors" label="2 · Per-field validation" width={390} height={844}><AuSignup variant="errors" /></DCArtboard>
+          <DCArtboard id="su-taken" label="3 · Email already in use" width={390} height={844}><AuSignup variant="taken" /></DCArtboard>
+          <DCArtboard id="su-sub" label="4 · Submitting" width={390} height={844}><AuSignup variant="submitting" /></DCArtboard>
+        </DCSection>
+        <DCSection id="forgot" title="Forgot password — Daybreak hi-fi" subtitle="Requests a reset link (scene = daylight). The confirmation is privacy-safe — it shows for any address rather than revealing whether an account exists — and warm rather than terse.">
+          <DCArtboard id="fp-default" label="1 · Default" width={390} height={844}><AuForgot variant="default" /></DCArtboard>
+          <DCArtboard id="fp-invalid" label="2 · Invalid email" width={390} height={844}><AuForgot variant="invalid" /></DCArtboard>
+          <DCArtboard id="fp-sub" label="3 · Submitting" width={390} height={844}><AuForgot variant="submitting" /></DCArtboard>
+          <DCArtboard id="fp-sent" label="4 · Sent confirmation" width={390} height={844}><AuForgot variant="sent" /></DCArtboard>
+        </DCSection>
+        <DCSection id="reset" title="Reset password — Daybreak hi-fi" subtitle="Reached from the emailed link (scene = dusk). New password + confirm, with “passwords do not match” inline. Includes the expired/used-link dead-end with a “Request a new link” recovery path — never a trap.">
+          <DCArtboard id="rp-default" label="1 · Default" width={390} height={844}><AuReset variant="default" /></DCArtboard>
+          <DCArtboard id="rp-mismatch" label="2 · Passwords don't match" width={390} height={844}><AuReset variant="mismatch" /></DCArtboard>
+          <DCArtboard id="rp-sub" label="3 · Submitting" width={390} height={844}><AuReset variant="submitting" /></DCArtboard>
+          <DCArtboard id="rp-expired" label="4 · Expired / invalid link" width={390} height={844}><AuReset variant="expired" /></DCArtboard>
+        </DCSection>
+        <DCSection id="welcome" title="First-visit welcome — richer 3-step" subtitle="The dedicated onboarding after signup: meet Leo, see the learn→grow promise (a real mini-habitat preview), then choose languages. Native + target are picked together here via dropdowns, with the target list excluding the chosen native.">
+          <DCArtboard id="ob-meet" label="1 · Meet Leo" width={390} height={844}><ObMeet /></DCArtboard>
+          <DCArtboard id="ob-promise" label="2 · The promise" width={390} height={844}><ObPromise /></DCArtboard>
+          <DCArtboard id="ob-choose" label="3 · Choose languages" width={390} height={844}><ObChoose /></DCArtboard>
+        </DCSection>
+        <DCSection id="ob-states" title="First-visit — states & empty states" subtitle="Choosing a language creates the first deck and drops into the Dashboard. Creating + recoverable error, plus the two lightweight empty states (empty deck, no search results) kept consistent with the onboarding warmth.">
+          <DCArtboard id="ob-creating" label="Creating deck" width={390} height={844}><ObCreating /></DCArtboard>
+          <DCArtboard id="ob-error" label="Error (retry)" width={390} height={844}><ObError /></DCArtboard>
+          <DCArtboard id="ob-empty" label="Empty deck" width={390} height={844}><ObEmptyDeck /></DCArtboard>
+          <DCArtboard id="ob-nosearch" label="No search results" width={390} height={844}><ObNoSearch /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

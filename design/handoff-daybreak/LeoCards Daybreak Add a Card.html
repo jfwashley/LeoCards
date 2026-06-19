@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Daybreak Add a Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&amp;family=Figtree:wght@400;600;700&amp;family=Albert+Sans:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+  @keyframes lc-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .ac-shimmer { background: linear-gradient(90deg, #EFE1CB 25%, #FBEFD9 50%, #EFE1CB 75%); background-size: 200% 100%; animation: ac-shimmer 1.3s ease-in-out infinite; }
+  @keyframes ac-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .ac-indeterminate { animation: ac-indeterminate 1.5s ease-in-out infinite; }
+  @keyframes ac-indeterminate { 0% { left: -45%; } 100% { left: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .ac-shimmer, .ac-indeterminate { animation: none; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="hifi-shared.jsx"></script>
+<script type="text/babel" src="hifi-daybreak.jsx"></script>
+<script type="text/babel" src="daybreak-dashboard.jsx"></script>
+<script type="text/babel" src="daybreak-addcard.jsx"></script>
+<script type="text/babel" src="daybreak-addcard-boards.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="type" title="Add a Card — “Type a word” (Daybreak hi-fi)" subtitle="One destination, two modes via a segmented toggle. The type path is a fast single-card loop: two linked fields with an auto-translate badge between them, Save unlocks once both sides have content, then the form clears for the next. The EN→ES context line keeps language + destination deck unambiguous; “‹ My deck” always escapes.">
+          <DCArtboard id="t-empty" label="1 · Empty / default" width={390} height={844}><ACTypeEmpty /></DCArtboard>
+          <DCArtboard id="t-translating" label="2 · Translating (pending)" width={390} height={844}><ACTypeTranslating /></DCArtboard>
+          <DCArtboard id="t-errors" label="3 · Translate fail + save fail" width={390} height={844}><ACTypeErrors /></DCArtboard>
+          <DCArtboard id="t-saved" label="4 · Saved (form cleared)" width={390} height={844}><ACTypeSaved /></DCArtboard>
+        </DCSection>
+        <DCSection id="image" title="Add a Card — “From an image” (Daybreak hi-fi)" subtitle="The bulk path as a full-screen stepper: Image → Extract → Review → Translate → Add. Pick supports browse / drag-and-drop / paste; the ~30s extraction gets a calm, honest progress moment with the lion; nothing is saved until the explicit “Add N cards” commit; every error is specific, recoverable, and preserves the chosen image, deck, and edited words.">
+          <DCArtboard id="i-pick" label="A · Pick an image" width={390} height={844}><ACPick /></DCArtboard>
+          <DCArtboard id="i-over" label="A · Drag-over + validation" width={390} height={844}><ACPickOver /></DCArtboard>
+          <DCArtboard id="i-confirm" label="B · Confirm + choose deck" width={390} height={844}><ACConfirm /></DCArtboard>
+          <DCArtboard id="i-extract" label="C · Extracting (calm wait)" width={390} height={844}><ACExtracting /></DCArtboard>
+          <DCArtboard id="i-nowords" label="C · No words / error" width={390} height={844}><ACNoWords /></DCArtboard>
+          <DCArtboard id="i-review" label="D · Review extracted words" width={390} height={844}><ACReview /></DCArtboard>
+          <DCArtboard id="i-translating" label="E · Translating (progress)" width={390} height={844}><ACTranslating /></DCArtboard>
+          <DCArtboard id="i-check" label="E · Check translations" width={390} height={844}><ACCheck /></DCArtboard>
+          <DCArtboard id="i-success" label="F · Result — success" width={390} height={844}><ACResultSuccess /></DCArtboard>
+          <DCArtboard id="i-partial" label="F · Result — partial / failed" width={390} height={844}><ACResultPartial /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Daybreak Habitat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&amp;family=Figtree:wght@400;600;700&amp;family=Albert+Sans:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+  @keyframes hab-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+  .hab-breathe { animation: hab-breathe 3.6s ease-in-out infinite; }
+  @keyframes hab-sway { 0%,100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  .hab-sway { animation: hab-sway 4.2s ease-in-out infinite; }
+  @keyframes hab-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .hab-float { animation: hab-float 4.5s ease-in-out infinite; }
+  @keyframes hab-flap { 0%,100% { transform: scaleX(1); } 50% { transform: scaleX(0.55); } }
+  .hab-flap { animation: hab-flap 0.5s ease-in-out infinite; }
+  @keyframes hab-drift { 0% { transform: translateX(-8px); } 100% { transform: translateX(14px); } }
+  .hab-drift { animation: hab-drift 9s ease-in-out infinite alternate; }
+  @keyframes hab-glow { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.92; } }
+  .hab-glow { animation: hab-glow 5s ease-in-out infinite; }
+  @keyframes hab-shimmer { 0%,100% { opacity: 0.25; transform: translateX(0); } 50% { opacity: 0.7; transform: translateX(4px); } }
+  .hab-shimmer { animation: hab-shimmer 3s ease-in-out infinite; }
+  .hab-shimmer2 { animation: hab-shimmer 3.6s ease-in-out infinite 0.6s; }
+  @keyframes hab-fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 8% { opacity: 1; } 100% { transform: translateY(780px) rotate(420deg); opacity: 1; } }
+  .hab-fall { animation: hab-fall 2.6s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .hab-breathe,.hab-sway,.hab-float,.hab-flap,.hab-drift,.hab-glow,.hab-shimmer,.hab-shimmer2,.hab-fall { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="hifi-shared.jsx"></script>
+<script type="text/babel" src="hifi-daybreak.jsx"></script>
+<script type="text/babel" src="daybreak-habitat-scene.jsx"></script>
+<script type="text/babel" src="daybreak-habitat.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="arc" title="Habitat — the growth arc (Daybreak hi-fi)" subtitle="Leo's living, flat-geometric world — a direct mirror of the learning habit. It starts as a bare mound and fills in level by level (lake → trees → flowers → an elephant → mushrooms → a cave → toys → songbirds + golden light). Gentle ambient motion: Leo breathes, water shimmers, clouds drift, butterflies float. Progress uses the locked bottom card.">
+          <DCArtboard id="h-new" label="New user · Level 1" width={390} height={844}><HabNew /></DCArtboard>
+          <DCArtboard id="h-mid" label="Mid · Level 5 (default)" width={390} height={844}><HabMid /></DCArtboard>
+          <DCArtboard id="h-lush" label="Lush · Level 9 (endgame)" width={390} height={844}><HabLush /></DCArtboard>
+        </DCSection>
+        <DCSection id="states" title="Habitat — emotional & system states" subtitle="The mood/health side of the mirror plus graceful degradation. Mood reads from Leo's expression + ambient cues + the label chip, independent of level. Decay is encouraging not punishing; offline and error never show a blank screen; reduced-motion gets a calm static version.">
+          <DCArtboard id="h-celebrate" label="Level-up celebration" width={390} height={844}><HabCelebrate /></DCArtboard>
+          <DCArtboard id="h-decay" label="Decaying / sad" width={390} height={844}><HabDecay /></DCArtboard>
+          <DCArtboard id="h-offline" label="Offline (cached)" width={390} height={844}><HabOffline /></DCArtboard>
+          <DCArtboard id="h-error" label="Error (no data)" width={390} height={844}><HabError /></DCArtboard>
+          <DCArtboard id="h-reduced" label="Reduced motion" width={390} height={844}><HabReduced /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Add a Card Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&amp;family=Caveat:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="wf-shared.jsx"></script>
+<script type="text/babel" src="wf-addcard.jsx"></script>
+<script type="text/babel" src="wf-addcard-boards.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="type" title="Add a Card — “Type a word” mode" subtitle="One destination, two modes switched by a segmented toggle. The type path is a fast single-card loop: two linked fields (native + target), auto-translate fills the other side, Save unlocks once both have content, then the form clears for the next. A context line keeps the languages + destination deck unambiguous, and a “‹ My deck” escape is always present.">
+          <DCArtboard id="t-empty" label="1 · Empty / default" width={596} height={760}><AddTypeEmpty /></DCArtboard>
+          <DCArtboard id="t-translating" label="2 · Translating (pending)" width={596} height={760}><AddTypeTranslating /></DCArtboard>
+          <DCArtboard id="t-errors" label="3 · Translate fail + save fail" width={596} height={760}><AddTypeErrors /></DCArtboard>
+          <DCArtboard id="t-saved" label="4 · Saved (form cleared)" width={596} height={760}><AddTypeSaved /></DCArtboard>
+        </DCSection>
+        <DCSection id="image" title="Add a Card — “From an image” mode" subtitle="A bulk path as a full-screen stepper: Image → Extract → Review → Translate → Add. Pick supports browse / drag-and-drop / paste; the ~30s extraction gets an honest, calm progress moment; nothing is saved until the explicit “Add N cards” commit; and every error is specific, recoverable, and preserves the chosen image, deck, and edited words.">
+          <DCArtboard id="i-pick" label="A · Pick an image" width={596} height={788}><AddPick /></DCArtboard>
+          <DCArtboard id="i-over" label="A · Drag-over + validation" width={596} height={788}><AddPickOver /></DCArtboard>
+          <DCArtboard id="i-confirm" label="B · Confirm + choose deck" width={596} height={788}><AddConfirm /></DCArtboard>
+          <DCArtboard id="i-extract" label="C · Extracting (calm wait)" width={596} height={788}><AddExtracting /></DCArtboard>
+          <DCArtboard id="i-nowords" label="C · No words / error" width={596} height={788}><AddNoWords /></DCArtboard>
+          <DCArtboard id="i-review" label="D · Review extracted words" width={596} height={788}><AddReview /></DCArtboard>
+          <DCArtboard id="i-translating" label="E · Translating (progress)" width={596} height={788}><AddTranslating /></DCArtboard>
+          <DCArtboard id="i-check" label="E · Check translations" width={596} height={788}><AddCheck /></DCArtboard>
+          <DCArtboard id="i-success" label="F · Result — success" width={596} height={788}><AddResultSuccess /></DCArtboard>
+          <DCArtboard id="i-partial" label="F · Result — partial / failed" width={596} height={788}><AddResultPartial /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

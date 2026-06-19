@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Browse Words Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&amp;family=Caveat:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="wf-shared.jsx"></script>
+<script type="text/babel" src="wf-browse.jsx"></script>
+<script type="text/babel" src="wf-browse-boards.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="cat" title="Browse Words — category navigation (3 directions)" subtitle="14 categories is a lot, so how they're presented matters. Three ways to navigate them, each shown in context with the difficulty segmented control and the word list. Pick one to carry into hi-fi.">
+          <DCArtboard id="cat-pills" label="Option 1 · Scrolling pills" width={596} height={788}><BrowseCatPills /></DCArtboard>
+          <DCArtboard id="cat-tiles" label="Option 2 · Topic tiles grid" width={596} height={788}><BrowseCatTiles /></DCArtboard>
+          <DCArtboard id="cat-dropdown" label="Option 3 · Dropdown picker" width={596} height={788}><BrowseCatDropdown /></DCArtboard>
+        </DCSection>
+        <DCSection id="row" title="Browse Words — word row & add / remove (3 directions)" subtitle="Each row shows the pair (English primary, Spanish beneath) + a CEFR level tag, and a single tap toggles in-deck membership. Three treatments for that toggle and for how an in-deck row reads against a not-yet-added one.">
+          <DCArtboard id="row-icon" label="Row A · +/check icon" width={596} height={788}><BrowseRowIcon /></DCArtboard>
+          <DCArtboard id="row-pill" label="Row B · Add / In-deck pill" width={596} height={788}><BrowseRowPill /></DCArtboard>
+          <DCArtboard id="row-tint" label="Row C · Whole-row tint" width={596} height={788}><BrowseRowTint /></DCArtboard>
+        </DCSection>
+        <DCSection id="states" title="Browse Words — core states" subtitle="Happy-path states shown with the recommended combo (scrolling pills + “Add / In deck” pill rows): a default browse, the same filtered to a difficulty, and an empty result. Per-row loading/failed states follow in the edge-case pass.">
+          <DCArtboard id="st-default" label="1 · Default browse (All)" width={596} height={788}><BrowseDefault /></DCArtboard>
+          <DCArtboard id="st-filtered" label="2 · Filtered to A1" width={596} height={788}><BrowseFiltered /></DCArtboard>
+          <DCArtboard id="st-empty" label="3 · Empty result" width={596} height={788}><BrowseEmpty /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

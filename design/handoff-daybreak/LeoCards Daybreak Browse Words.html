@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Daybreak Browse Words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&amp;family=Figtree:wght@400;600;700&amp;family=Albert+Sans:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+  @keyframes lc-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="hifi-shared.jsx"></script>
+<script type="text/babel" src="hifi-daybreak.jsx"></script>
+<script type="text/babel" src="daybreak-dashboard.jsx"></script>
+<script type="text/babel" src="daybreak-browse.jsx"></script>
+<script type="text/babel" src="daybreak-browse-boards.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="browse" title="Browse Words — Daybreak hi-fi" subtitle="The curated catalogue, locked direction: topic tiles to navigate the 14 categories (each with a geometric icon + word count), CEFR difficulty as its own LEVEL tile row, and Row A word rows — English primary / Spanish beneath, with a + to add and a filled ✓ when it's in your deck. Add/remove is optimistic and instant; in-deck rows read warm and lifted.">
+          <DCArtboard id="bw-tiles" label="1 · Topic tiles (landing)" width={390} height={844}><BrowseTiles /></DCArtboard>
+          <DCArtboard id="bw-list" label="2 · Word list — All levels" width={390} height={844}><BrowseList /></DCArtboard>
+          <DCArtboard id="bw-a1" label="3 · Filtered to A1" width={390} height={844}><BrowseListA1 /></DCArtboard>
+          <DCArtboard id="bw-empty" label="4 · Empty result" width={390} height={844}><BrowseEmpty /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

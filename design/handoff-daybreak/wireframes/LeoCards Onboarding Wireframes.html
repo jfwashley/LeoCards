@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<title>LeoCards — Onboarding Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"></link>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&amp;family=Caveat:wght@400;600&amp;display=swap" rel="stylesheet"></link>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #root { height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="wf-shared.jsx"></script>
+<script type="text/babel" src="wf-auth.jsx"></script>
+<script type="text/babel" src="wf-onboarding.jsx"></script>
+<script type="text/babel" src="wf-onboarding-boards.jsx"></script>
+<script type="text/babel">
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="framing" title="First-visit — minimal vs richer (framing)" subtitle="The first thing a brand-new user sees after signup, as its own dedicated full-screen onboarding. Two framings: a single warm screen that gets them in fast, or a short 3-step guided welcome that introduces Leo and the learn→grow promise before the language pick.">
+          <DCArtboard id="fv-min" label="Minimal · one screen" width={556} height={788}><FvMinimal /></DCArtboard>
+          <DCArtboard id="fv-r1" label="Richer · 1 — meet Leo" width={556} height={788}><FvRich1 /></DCArtboard>
+          <DCArtboard id="fv-r2" label="Richer · 2 — the promise" width={556} height={788}><FvRich2 /></DCArtboard>
+          <DCArtboard id="fv-r3" label="Richer · 3 — choose languages" width={556} height={788}><FvRich3 /></DCArtboard>
+        </DCSection>
+        <DCSection id="langs" title="Choose your languages — presentation (3 options)" subtitle="Native + target are chosen together on this one page (moved out of Create account). The target list always excludes the chosen native. Three ways to present the picks — pick one for hi-fi.">
+          <DCArtboard id="lang-flag" label="Option 1 · Flag cards" width={556} height={788}><LangFlags /></DCArtboard>
+          <DCArtboard id="lang-motif" label="Option 2 · Leo-motif cards" width={556} height={788}><LangMotif /></DCArtboard>
+          <DCArtboard id="lang-drop" label="Option 3 · Dropdowns" width={556} height={788}><LangDropdown /></DCArtboard>
+        </DCSection>
+        <DCSection id="states" title="First-visit — states" subtitle="Choosing a language creates the first deck and drops the user into the Dashboard. The two non-default states: a brief creating/loading moment, and a recoverable error.">
+          <DCArtboard id="fv-creating" label="Creating deck" width={556} height={788}><FvCreating /></DCArtboard>
+          <DCArtboard id="fv-error" label="Error (retry)" width={556} height={788}><FvError /></DCArtboard>
+        </DCSection>
+        <DCSection id="empty" title="Empty states (related, lightweight)" subtitle="Two empty states that belong to the entry experience and should feel consistent with it. Their primary home is the Dashboard — shown here for family consistency.">
+          <DCArtboard id="empty-deck" label="Empty deck (no cards)" width={556} height={788}><EmptyDeck /></DCArtboard>
+          <DCArtboard id="empty-search" label="No search results" width={556} height={788}><EmptySearch /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
