@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Performance & QA
-status: verifying
-last_updated: "2026-06-17T12:05:32.405Z"
-last_activity: 2026-06-17
+milestone: v4.0
+milestone_name: Daybreak
+status: planning
+last_updated: "2026-06-19T21:19:01.636Z"
+last_activity: 2026-06-19
 progress:
-  total_phases: 5
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 20
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-12 after v2.1 Living Habitat)
 
 ## Current Position
 
-Phase: 14 (qa-observability-foundations) — COMPLETE
-Plan: 3 of 3 (all complete)
-Status: Phase complete — QAOB-01/02/04 all satisfied; ready for Phase 15
-Last activity: 2026-06-17
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-06-19 — Milestone v4.0 started
 
 ## Shipped Milestones
 

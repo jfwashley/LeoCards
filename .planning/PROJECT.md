@@ -10,7 +10,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Current State
 
-**Version:** v2.1 Living Habitat — closed 2026-06-12 (all features live on prod by 2026-05-29)
+**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). Now starting **v4.0 Daybreak** UI redesign (2026-06-19).
 **Live at:** https://leocards.vercel.app
 **Tech stack:** Next.js 16, React 19, Better Auth, Drizzle ORM, Neon Postgres, Three.js 0.160 (build-time only — renders habitat clips; never ships to client), Motion 12, Tailwind v4, DeepL, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3 (Claude vision), Vitest, Playwright, Biome
 **Tests:** 1892 unit tests green; 15+ Playwright e2e specs
@@ -18,20 +18,25 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 **v2.1 highlights:** Per-card pause/unpause with exact cadence preservation. Habitat is now 3D: 72 pre-rendered Soft-Clay ambient clips (9 levels × 4 moods, seamless 360° orbit loops) with live CSS decay/mood filters — Three.js renders clips at build time and ships zero WebGL to the client. `/habitat` mobile passes all CWV "Good" gates on warm prod (LCP 2417 / TBT 97 / CLS 0 / Perf 96). Secret-gated `/debug` QA console with HMAC-signed virtual state override. Critical study-loop fix: cards can actually reach "learned" (round thresholds were unreachable since Phase 3).
 
-## Current Milestone: v3.0 Performance & QA
+## Current Milestone: v4.0 Daybreak (UI redesign)
 
-**Goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
+**Goal:** Replace LeoCards' utilitarian UI with the warm, cohesive "Daybreak" design system across every primary screen — a friendly, mobile-first visual identity anchored by Leo the lion.
 
-**Target features:**
-- App-wide performance: warm-prod baselines → measured optimizations → per-route CWV gates → field validation (absorbs backlog Phase 999.1)
-- Core-journey QA scripts: card learning, round/mastery progression, remembering states, habitat level transitions
-- Time-resumable QA sessions: learn a card, resume the script 10–60 min later, assert the card landed in the correct state
-- QA-only observability: state codes on cards, /debug extensions, QA-configurable cooldowns — env/secret-gated, never customer-visible
+**Target features (per the design handoff in `design/handoff-daybreak/`):**
+- **Onboarding & Auth** — signup, forgot/reset password, first-visit welcome (3-step), empty states (Login redesign already prototyped)
+- **Dashboard ("My Deck")** — habitat hero, "Start studying" action line, "Your words" inline accordion
+- **Add a Card** — type-a-word + from-an-image stepper flows
+- **Browse Words** — curated topic tiles → CEFR-filtered word list
+- **Habitat** — the living, flat-geometric scene (level-by-level composition; light on mobile + reduced-motion safe)
 
-**Scope detail (from milestone decision 2026-06-12):**
+**Design system:** "Daybreak" — warm cream `#FFF6E9` + amber `#F28A1F`, Baloo 2 (display) + Figtree (body), flat-geometric Leo lion mark. Tokens originate in `design/handoff-daybreak/` (`d1` theme + habitat `PAL`).
 
-1. **App-wide performance** — promote backlog Phase 999.1: measure warm-prod baselines on `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse`, then optimize toward near-instant (<~100ms perceived) warm navigation with per-route CWV gates, closing with field-data validation. `/habitat` is already done (fixed in 13.1).
-2. **Core-journey QA harness** — extensive, scripted QA at the heart of the product: learning cards, round/mastery progression, card remembering states (cooldowns, decay), habitat level transitions (1→2 … 8→9), pause cadence. Includes **time-resumable test scripts** (learn a card, resume the script 10–60 min later, assert the card is in the correct state) and **QA-only observability features** that never ship to customers — e.g. state "codes" on cards signalling learnt state/round/cooldown, extending the `/debug` console pattern (env/secret-gated, like `STUDY_NO_COOLDOWN` + `DEBUG_CHEAT_SECRET`). Motivated by the v2.1 lesson: the study-loop bug survived 2 months behind green unit tests.
+**Constraints carried in:**
+- Leo + habitat/topic art are **CSS-drawn placeholders** — shippable as-is or swappable for commissioned/icon-library art later, but **keep the Daybreak palette + the level-by-level habitat composition**.
+- Habitat ambient motion must stay **light on mobile** and **pause under `prefers-reduced-motion`**.
+- **Validated design-system spike already in the tree** (do not re-derive): Daybreak tokens remapped into the Tailwind/shadcn theme, Baloo 2 + Figtree fonts, `src/components/daybreak/` (LionFace + auth scene/card), the auth shell, and the redesigned Login — all verified against the mock.
+
+**Predecessor:** v3.0 Performance & QA shipped Phase 14 (QAOB-01..04) only; QAJ-01..06 + PERF-01..06 are **deferred** (see `MILESTONES.md` and `milestones/v3.0-*`).
 
 ## Requirements
 
@@ -67,7 +72,9 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ### Active
 
-- [ ] v3.0 Performance requirements (PERF-xx) — to be defined at `/gsd-new-milestone`; scope sketch: per-route warm-prod baselines, optimization with measured before/afters, <~100ms perceived warm navigation, field-data validation
+- [ ] v4.0 Daybreak UI-redesign requirements (UI-xx) — being defined during this `/gsd-new-milestone` run (requirements → roadmap); roughly one phase per primary screen, all to the Daybreak design system
+- ✓ Validated in v3.0 (partial, Phase 14): QAOB-01..04 — QA observability (QA-mode cookie + `readQaAuth()` gate, per-card state badges, `/debug` SRS table, prod-parity gating)
+- ⏸ Deferred to a future milestone: QAJ-01..06 (core-journey QA harness) + PERF-01..06 (performance) — preserved in `milestones/v3.0-REQUIREMENTS.md`
 
 ## Out of Scope
 
@@ -153,4 +160,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-12 after v2.1 Living Habitat milestone*
+*Last updated: 2026-06-19 — started v4.0 Daybreak UI redesign (v3.0 Performance & QA closed partial: Phase 14 shipped; QAJ/PERF deferred)*

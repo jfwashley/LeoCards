@@ -1,5 +1,25 @@
 # Milestones
 
+## v3.0 Performance & QA (Partial — closed 2026-06-19; superseded by v4.0 Daybreak)
+
+**Status:** Partially delivered. **Phase 14 (QA Observability) shipped**; the Core-Journey QA harness and the Performance phases were **deferred to a future milestone** to prioritise the v4.0 Daybreak UI redesign.
+
+**Phases completed:** 1 of 5 planned (Phase 14 — QA observability foundations), 3 plans
+
+**Key accomplishments:**
+
+- **QA observability foundations (Phase 14):** HMAC-signed `leo-qa-mode` QA-mode cookie + `readQaAuth()` RSC gate; per-card SRS state badges (`R2·t2n·cd:14m`) on study + dashboard, rendered only when QA-authed and provably absent for customers (e2e prod-parity test); `STUDY_COOLDOWN_MINUTES` env override for testable cooldowns; `/debug` per-card SRS state table. Requirements **QAOB-01..04**. Verified (14/14 must-haves), security-audited (14/14 threats closed), Nyquist-validated, and live-UAT passed (also surfaced + fixed a `cards.lastCommitId` schema-drift crash).
+
+**Deferred to a future milestone (carried forward, NOT abandoned):**
+
+- **Core-Journey QA scripts (QAJ-01..06)** — scripted, time-resumable learning-journey QA against the real pipeline
+- **Performance (PERF-01..06)** — warm-prod CWV measurement → optimization → field validation for `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse`
+- Roadmap phases **15–18 are reserved** for this work; full text preserved in `milestones/v3.0-ROADMAP.md` + `milestones/v3.0-REQUIREMENTS.md`. They will be re-roadmapped when that milestone revives.
+
+Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
+
+---
+
 ## v2.1 Living Habitat (Shipped: 2026-06-12; all features live on prod by 2026-05-29)
 
 **Phases completed:** 4 phases (12, 13, 13.1, 13.2), 14 executed plans (+4 superseded gesture-poster plans in 13.1)
