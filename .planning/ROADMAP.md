@@ -5,7 +5,8 @@
 - ✅ **v1.0 MVP** — Phases 1-8 (shipped 2026-04-15)
 - ✅ **v2.0 Image-to-Flashcards** — Phases 9-11 (shipped 2026-05-20)
 - ✅ **v2.1 Living Habitat** — Phases 12-13.2 (shipped 2026-05-29; closed 2026-06-12)
-- 🚧 **v3.0 Performance & QA** — Phases 14-18 (in progress)
+- ⏸ **v3.0 Performance & QA** — Phases 14-18 (Phase 14 shipped; Phases 15-18 deferred; reserved)
+- 🚧 **v4.0 Daybreak** — Phases 19-24 (in progress)
 
 ## Phases
 
@@ -48,78 +49,103 @@ Full details: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 
 </details>
 
-## 🚧 v3.0 Performance & QA (Phases 14-18)
+<details>
+<summary>⏸ v3.0 Performance & QA (Phases 14-18) — Phase 14 shipped; Phases 15-18 deferred</summary>
 
-**Milestone goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
+- [x] **Phase 14: QA observability foundations** — completed 2026-06-17
+- [ ] **Phase 15: Core-journey QA harness** — DEFERRED (reserved)
+- [ ] **Phase 16: Performance baseline (Measure)** — DEFERRED (reserved)
+- [ ] **Phase 17: Performance optimization** — DEFERRED (reserved)
+- [ ] **Phase 18: Field validation & guardrails** — DEFERRED (reserved)
 
-QA comes first deliberately: the harness must protect the core journey before perf refactors begin. Motivation: v2.1's study-loop bug survived 2 months behind green unit tests — only real-pipeline integration scripts catch that class of gap.
+Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 
-- [x] **Phase 14: QA observability foundations** - QA can see exact card state and compress time, with affordances provably absent for customers (completed 2026-06-17)
-- [ ] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline
-- [ ] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization
-- [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
-- [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
+</details>
 
-## Phase Details (v3.0)
+## 🚧 v4.0 Daybreak (Phases 19-24)
 
-### Phase 14: QA observability foundations
-**Goal**: QA can see exact per-card SRS state and compress cooldown time, with every QA affordance env/secret-gated and provably absent from the customer experience
-**Depends on**: Nothing (first phase of v3.0; extends existing `/debug` + `DEBUG_CHEAT_SECRET` / `STUDY_NO_COOLDOWN` patterns)
-**Requirements**: QAOB-01, QAOB-02, QAOB-03, QAOB-04
+**Milestone goal:** Replace LeoCards' utilitarian UI with the warm, cohesive "Daybreak" design system across every primary screen — friendly, mobile-first, anchored by Leo the lion.
+
+- [ ] **Phase 19: Daybreak Foundation + Onboarding & Auth** — Design system tokens + shared components + all auth/onboarding screens in Daybreak
+- [ ] **Phase 20: Study Screen** — Study card and session result screen in Daybreak
+- [ ] **Phase 21: Dashboard — "My Deck"** — Full dashboard experience in Daybreak (header, habitat hero, action line, word accordion)
+- [ ] **Phase 22: Add a Card** — Type-a-word and from-an-image flows in Daybreak
+- [ ] **Phase 23: Browse Words** — Topic tiles and word-list screens in Daybreak
+- [ ] **Phase 24: Habitat** — Living flat-geometric Habitat scene with ambient motion, all states, reduced-motion safety
+
+## Phase Details (v4.0 Daybreak)
+
+### Phase 19: Daybreak Foundation + Onboarding & Auth
+**Goal**: The Daybreak design system is live app-wide and every auth/onboarding screen — Login, Signup, Forgot Password, Reset Password, First-Visit Welcome, and empty states — matches the hi-fi mocks; building on the spike already in the tree
+**Depends on**: Nothing (first phase of v4.0; extends the validated design-system spike: globals.css, layout.tsx, src/components/daybreak/)
+**Requirements**: DSY-01, DSY-02, DSY-03, ONB-01, ONB-02, ONB-03, ONB-04, ONB-05, ONB-06
 **Success Criteria** (what must be TRUE):
-  1. With QA mode active, each card shows a compact state code (e.g. `R2·t2n·cd:14m`) revealing mastery round, next direction, cooldown remaining, and learned/paused flags
-  2. QA can set short non-zero cooldowns via env (e.g. `STUDY_COOLDOWN_MINUTES=15`) so 12h/24h round transitions — including the "still cooling down" rejection state — are testable within a 10–60 minute window
-  3. `/debug` shows a live per-card state table (card id, word, round, direction, cooldownUntil, pausedAt, learned) sourced from real data, not the virtual override
-  4. An automated prod-parity gating test passes: with secrets/env unset, no state codes appear in the DOM and no QA endpoints are reachable
-**Plans**: 3 plans
-- [x] 14-01-PLAN.md — QA-mode cookie, STUDY_COOLDOWN_MINUTES precedence, /debug per-card SRS table (QAOB-02, QAOB-03)
-- [x] 14-02-PLAN.md — QaStateBadge component + RSC-gated wiring onto study cards and dashboard rows (QAOB-01)
-- [x] 14-03-PLAN.md — prod-parity gating e2e: no badges in customer DOM, QA endpoints 404 when secret unset (QAOB-04)
+  1. Daybreak tokens (cream/amber palette, Baloo 2 + Figtree fonts, type scale, spacing, radii, shadows) are applied app-wide; the Login screen matches the approved spike mock
+  2. Shared Daybreak atoms (LionFace, TField, TBtn, pill/chip, card surface, GhostPeek) exist in src/components/daybreak/ and are reused across all auth screens
+  3. Signup matches the Daybreak hi-fi including all states: default, per-field validation (red border + helper after submit, not toasts), email-already-exists, and submitting spinner
+  4. Forgot Password shows the privacy-safe sent confirmation ("If an account exists…") and Reset Password handles the expired-link dead-end routing back to Forgot; both match the Daybreak hi-fi
+  5. First-visit welcome completes all three steps (Meet Leo, the promise with animated mini-habitat, choose native + target languages via dropdowns), creates the first deck, and routes to Dashboard — including the creating/error states; empty-deck and no-search-results empty states match Daybreak
+**Plans**: TBD
 **UI hint**: yes
 
-### Phase 15: Core-journey QA harness
-**Goal**: The core learning journey — learn, master, cool down, decay, level up — is provably correct via scripted, repeatable, time-resumable QA that drives the app's REAL pipeline (own API routes / browser flows), never the `/debug` virtual override
-**Depends on**: Phase 14 (state codes, configurable cooldowns, and the `/debug` state table are the harness's observability surface)
-**Requirements**: QAJ-01, QAJ-02, QAJ-03, QAJ-04, QAJ-05, QAJ-06
+### Phase 20: Study Screen
+**Goal**: The study card and session-result screen are fully redesigned to Daybreak, preserving the existing study engine and QA state badge
+**Depends on**: Phase 19 (Daybreak atoms and tokens)
+**Requirements**: STU-01, STU-02
 **Success Criteria** (what must be TRUE):
-  1. A scripted "learn a card" run creates user/deck/card, completes a real study session via the app's own API path, and asserts round 0→1 with the correct next direction and cooldown
-  2. A scripted full mastery progression covers rounds 0→1→2→3→learned, including wrong-answer reset/hold paths and direction rules (round0=n2t, round1=t2n, round2=either)
-  3. A time-resumable session persists a manifest, exits, and on resume 10–60 minutes later asserts every card landed in its expected state (cooldown expired vs still cooling, due-counts correct)
-  4. A habitat progression script crosses the level 1→2 threshold (plus one representative higher transition) through real learning and asserts `computeHabitatState`, the dashboard widget, and `/habitat` all agree on the new level
-  5. Decay/grace behavior (2-day grace + 5%/day, including pause interactions) is verified via a QA-gated time-shift, and every QA run self-cleans — all test users use `*test.local` so `scripts/cleanup-test-users.mjs` leaves zero residue in prod data
+  1. The study card matches the Daybreak hi-fi: big flashcard over a ghost-peek stack, "WHAT'S THE TRANSLATION?" prompt, tap-to-reveal, swipe left/right with green/red color feedback and the hint line; QA state badge (Phase 14) is still visible when QA-authed
+  2. The session-result/end screen (cards studied, % correct, learned count, "Back to deck", and level-up celebration hand-off) matches the Daybreak visual language
 **Plans**: TBD
+**UI hint**: yes
 
-### Phase 16: Performance baseline (Measure)
-**Goal**: A codified, repeatable warm-prod measurement harness establishes per-route truth on where time goes for `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse` — strictly NO optimization in this phase
-**Depends on**: Phase 15 (the QA harness is in place before any perf refactoring cycle begins)
-**Requirements**: PERF-01, PERF-02
+### Phase 21: Dashboard — "My Deck"
+**Goal**: The full Dashboard experience — persistent header, habitat hero medallion, action line, and "Your words" accordion — is redesigned to Daybreak across all seven requirement states
+**Depends on**: Phase 19 (Daybreak atoms and tokens)
+**Requirements**: DSH-01, DSH-02, DSH-03, DSH-04, DSH-05, DSH-06, DSH-07
 **Success Criteria** (what must be TRUE):
-  1. One npm script (`scripts/measure-cwv.mjs`) produces warm-prod (leocards.vercel.app) Lighthouse medians at n≥5 for mobile + desktop presets across all four key routes — replacing the ad-hoc shell commands from 13-PERF-REAL.md
-  2. Each key route has a written baseline report: median CWV numbers plus bundle composition (per-route first-load JS, chunk fingerprinting via `page_client-reference-manifest`)
-  3. Each route has a ranked bottleneck classification (bundle vs RSC waterfall vs hydration) naming its top optimization target for Phase 17
-  4. No optimization changes land in this phase — the baseline is the immutable before-reference for every Phase 17 change
+  1. The persistent header shows LionFace + "LeoCards" wordmark, a working deck picker (active-language chip, switch decks, inline create-deck picker with per-language creating/error states), and logout — matching the Daybreak hi-fi
+  2. The habitat hero medallion shows Leo on a sunrise disc with a conic progress ring, level badge, "X of Y cards to Level N+1" (absent at max level), and links to the Habitat screen
+  3. The action line renders "Start studying" (dimmed when nothing due) with a live-updating status row ("12 due" / "0 due" / "Resting · 2h 15m" countdown / "All paused") and "Add a card" alongside
+  4. "Your words" expands inline (height/opacity transition, not a swipe gesture); word rows show native/translation/source tag/3-segment mastery meter/pause+edit actions; paused rows are de-emphasised; edit-card modal supports Save/Discard/Delete-with-confirmation; search shows no-results state
+  5. Dashboard covers all required states in Daybreak: cards-due, none-due, resting, all-paused, empty deck, brand-new-user first-visit, and search-active-no-results
 **Plans**: TBD
+**UI hint**: yes
 
-### Phase 17: Performance optimization
-**Goal**: Every key route meets CWV "Good" gates on warm prod and warm client-side navigation feels instant — each change measured before/after, never assumed
-**Depends on**: Phase 16 (baseline + bottleneck ranking dictate what to optimize), Phase 15 (harness guards against core-journey regressions during refactors)
-**Requirements**: PERF-03, PERF-04
+### Phase 22: Add a Card
+**Goal**: The Add a Card destination — both the type-a-word and from-an-image flows — is redesigned to Daybreak, preserving the existing translation and extraction pipelines
+**Depends on**: Phase 19 (Daybreak atoms and tokens)
+**Requirements**: ADC-01, ADC-02, ADC-03
 **Success Criteria** (what must be TRUE):
-  1. Each key route meets warm-prod mobile gates: LCP ≤2500 ms, TBT ≤200 ms, CLS ≤0.1, Perf ≥90 (n≥5 medians; never gated on cold Vercel previews — ±300 ms TBT noise)
-  2. Every optimization lands with a measured before/after vs the Phase 16 baseline using the same `measure-cwv` harness
-  3. Warm client-side navigation between key routes measures <~100 ms perceived, instrumented via Playwright navigation timing extending the `e2e/13-perf.spec.ts` pattern
-  4. The Phase 15 core-journey harness still passes after all perf refactors — no learning-pipeline regressions
+  1. A single Add-a-Card destination with a segmented toggle ("Type a word | From an image"), a persistent context line (e.g. "EN → ES · saves to your Spanish deck"), and a working "My deck" escape link matches the Daybreak hi-fi
+  2. Type-a-word shows linked native/target fields with auto-translate shimmer, handles all states (empty, translating, translate-fail, save-fail, saved "Card saved" banner + form clear), and Save remains locked until both fields are filled
+  3. From-an-image completes the full six-step stepper (Pick, Confirm+deck, Extracting with calm long-wait progress and Cancel, Review words with keep/exclude list, Check translations with editable pairs, Result) across all outcome states (success, partial counts, all-failed); nothing saves until the explicit "Add N cards" commit
 **Plans**: TBD
+**UI hint**: yes
 
-### Phase 18: Field validation & guardrails
-**Goal**: Real-user data confirms the lab wins, and a permanent one-command gate prevents perf regressions from shipping
-**Depends on**: Phase 17 (gates must be green in lab before field confirmation and guardrail lock-in)
-**Requirements**: PERF-05, PERF-06
+### Phase 23: Browse Words
+**Goal**: The Browse Words experience — topic-tiles landing and per-topic word list with CEFR filtering — is redesigned to Daybreak with optimistic add/remove
+**Depends on**: Phase 19 (Daybreak atoms and tokens)
+**Requirements**: BRW-01, BRW-02, BRW-03, BRW-04
 **Success Criteria** (what must be TRUE):
-  1. Field p75 data (Vercel Speed Insights / CrUX) confirms lab medians on the key routes once traffic accrues, or the variance is documented with an explanation
-  2. A single command re-certifies all perf gates (warm-prod lab regression guardrail across the four routes), runnable on demand before any release
-  3. The re-certification gate fails loudly when any route regresses below its gates — demonstrated, not assumed
+  1. The topic-tiles landing shows all 14 category tiles with a geometric amber icon on a medallion and word count, matching the Daybreak hi-fi
+  2. The per-topic word list shows back-to-topics navigation, topic header, a CEFR level-filter tile row (All / A1 / A2 / B1), and the language context line
+  3. Word rows match the Daybreak "Row A" spec: English primary / target beneath with language marker, CEFR level chip, trailing circular toggle (outlined + to add, filled amber check when in deck); in-deck rows get a warm tint; add/remove is optimistic and instant with row-local error recovery that never loses scroll position
+  4. Browse covers all states in Daybreak: full list (All), level-filtered, and empty result ("No words at this level" + "Show all levels")
 **Plans**: TBD
+**UI hint**: yes
+
+### Phase 24: Habitat
+**Goal**: The Habitat screen is a living flat-geometric scene in Daybreak — level-by-level cumulative composition, mood-driven Leo, ambient motion that is light on mobile and fully paused under prefers-reduced-motion — covering all required states
+**Depends on**: Phase 19 (Daybreak atoms and tokens), Phase 21 (Dashboard links to Habitat)
+**Requirements**: HAB-01, HAB-02, HAB-03, HAB-04, HAB-05
+**Success Criteria** (what must be TRUE):
+  1. The habitat scene renders the correct cumulative set of flat-geometric elements for the current level (L1 bare mound through L9 songbirds + golden-hour) using the Daybreak PAL palette; Leo's seated expression reflects the current mood
+  2. Mood is expressed three independent ways: Leo's expression, ambient light tint, and a mood chip label (Excited / Happy / Neutral / Sad) — visibly different across moods at the same level
+  3. The bottom progress card shows "Level N · <name>", a progress bar, and the named next unlock ("Next at L6: mushrooms"); at L9 it reads "Course 1 complete"
+  4. Ambient motion (Leo breathing, water shimmer, cloud drift, butterfly float, sun glow) plays on desktop; on mobile it is visibly lighter (reduced or absent); under prefers-reduced-motion the scene is fully static and a "Motion paused" label appears
+  5. All required states render correctly in Daybreak: new-user L1, mid L5, lush L9, level-up confetti celebration (~2.5s then settles), decaying/sad (desaturated + "Leo misses you"), offline (cached banner, scene still shown), error (friendly + Try again), and reduced-motion static
+**Plans**: TBD
+**UI hint**: yes
 
 ## Progress
 
@@ -128,17 +154,19 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | v1.0 MVP | 1-8 | 25/25 | Complete | 2026-04-15 |
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
-| v3.0 Performance & QA | 14-18 | 0/TBD | In progress | - |
+| v3.0 Performance & QA | 14-18 | 3/TBD | Partial (Phase 14 done; 15-18 deferred) | — |
+| v4.0 Daybreak | 19-24 | 0/TBD | In progress | — |
 
-### v3.0 Performance & QA
+### v4.0 Daybreak
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
-| 15. Core-journey QA harness | 0/TBD | Not started | - |
-| 16. Performance baseline (Measure) | 0/TBD | Not started | - |
-| 17. Performance optimization | 0/TBD | Not started | - |
-| 18. Field validation & guardrails | 0/TBD | Not started | - |
+| 19. Daybreak Foundation + Onboarding & Auth | 0/TBD | Not started | - |
+| 20. Study Screen | 0/TBD | Not started | - |
+| 21. Dashboard — "My Deck" | 0/TBD | Not started | - |
+| 22. Add a Card | 0/TBD | Not started | - |
+| 23. Browse Words | 0/TBD | Not started | - |
+| 24. Habitat | 0/TBD | Not started | - |
 
 ## Backlog
 

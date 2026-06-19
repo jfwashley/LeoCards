@@ -77,4 +77,33 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (to be filled by the roadmapper) | — | — |
+| DSY-01 | Phase 19 | Pending |
+| DSY-02 | Phase 19 | Pending |
+| DSY-03 | Phase 19 | Pending |
+| ONB-01 | Phase 19 | Pending |
+| ONB-02 | Phase 19 | Pending |
+| ONB-03 | Phase 19 | Pending |
+| ONB-04 | Phase 19 | Pending |
+| ONB-05 | Phase 19 | Pending |
+| ONB-06 | Phase 19 | Pending |
+| STU-01 | Phase 20 | Pending |
+| STU-02 | Phase 20 | Pending |
+| DSH-01 | Phase 21 | Pending |
+| DSH-02 | Phase 21 | Pending |
+| DSH-03 | Phase 21 | Pending |
+| DSH-04 | Phase 21 | Pending |
+| DSH-05 | Phase 21 | Pending |
+| DSH-06 | Phase 21 | Pending |
+| DSH-07 | Phase 21 | Pending |
+| ADC-01 | Phase 22 | Pending |
+| ADC-02 | Phase 22 | Pending |
+| ADC-03 | Phase 22 | Pending |
+| BRW-01 | Phase 23 | Pending |
+| BRW-02 | Phase 23 | Pending |
+| BRW-03 | Phase 23 | Pending |
+| BRW-04 | Phase 23 | Pending |
+| HAB-01 | Phase 24 | Pending |
+| HAB-02 | Phase 24 | Pending |
+| HAB-03 | Phase 24 | Pending |
+| HAB-04 | Phase 24 | Pending |
+| HAB-05 | Phase 24 | Pending |
