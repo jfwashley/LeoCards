@@ -37,20 +37,22 @@ export default function SignupPage() {
     setIsPending(true);
     setEmailError(null);
 
-    const { error } = await authClient.signUp.email({
-      email: values.email,
-      password: values.password,
-      name: values.name,
-    });
+    try {
+      const { error } = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+      });
 
-    setIsPending(false);
+      if (error) {
+        setEmailError("An account with this email already exists.");
+        return;
+      }
 
-    if (error) {
-      setEmailError("An account with this email already exists.");
-      return;
+      router.push("/welcome");
+    } finally {
+      setIsPending(false);
     }
-
-    router.push("/welcome");
   }
 
   return (

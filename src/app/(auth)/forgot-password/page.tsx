@@ -33,15 +33,18 @@ export default function ForgotPasswordPage() {
   async function onSubmit(values: ForgotPasswordFormValues) {
     setIsPending(true);
 
-    // Better Auth maps forgetPassword -> requestPasswordReset in the client
-    await authClient.requestPasswordReset({
-      email: values.email,
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
+    try {
+      // Better Auth maps forgetPassword -> requestPasswordReset in the client
+      await authClient.requestPasswordReset({
+        email: values.email,
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
 
-    setIsPending(false);
-    setSentEmail(values.email);
-    setSent(true);
+      setSentEmail(values.email);
+      setSent(true);
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (

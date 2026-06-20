@@ -86,19 +86,21 @@ function ResetPasswordForm() {
     setIsPending(true);
     setTokenError(null);
 
-    const { error } = await authClient.resetPassword({
-      newPassword: values.password,
-      token,
-    });
+    try {
+      const { error } = await authClient.resetPassword({
+        newPassword: values.password,
+        token,
+      });
 
-    setIsPending(false);
+      if (error) {
+        setTokenError("This reset link has expired. Request a new one.");
+        return;
+      }
 
-    if (error) {
-      setTokenError("This reset link has expired. Request a new one.");
-      return;
+      router.push("/login");
+    } finally {
+      setIsPending(false);
     }
-
-    router.push("/login");
   }
 
   if (tokenError) {

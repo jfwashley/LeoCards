@@ -37,26 +37,28 @@ function LoginForm() {
     setIsPending(true);
     setAuthError(null);
 
-    const { error } = await authClient.signIn.email({
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      const { error } = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+      });
 
-    setIsPending(false);
+      if (error) {
+        setAuthError("Incorrect email or password.");
+        return;
+      }
 
-    if (error) {
-      setAuthError("Incorrect email or password.");
-      return;
+      const callbackUrl = searchParams.get("callbackUrl");
+      // Only follow same-origin relative paths — reject absolute/protocol-relative
+      // URLs to prevent an open redirect via ?callbackUrl=https://evil.com (CR-01).
+      const safeCallback =
+        callbackUrl?.startsWith("/") && !callbackUrl.startsWith("//")
+          ? callbackUrl
+          : "/dashboard";
+      router.push(safeCallback);
+    } finally {
+      setIsPending(false);
     }
-
-    const callbackUrl = searchParams.get("callbackUrl");
-    // Only follow same-origin relative paths — reject absolute/protocol-relative
-    // URLs to prevent an open redirect via ?callbackUrl=https://evil.com (CR-01).
-    const safeCallback =
-      callbackUrl?.startsWith("/") && !callbackUrl.startsWith("//")
-        ? callbackUrl
-        : "/dashboard";
-    router.push(safeCallback);
   }
 
   return (
