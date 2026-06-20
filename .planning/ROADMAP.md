@@ -100,7 +100,9 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **Success Criteria** (what must be TRUE):
   1. The study card matches the Daybreak hi-fi: big flashcard over a ghost-peek stack, "WHAT'S THE TRANSLATION?" prompt, tap-to-reveal, swipe left/right with green/red color feedback and the hint line; QA state badge (Phase 14) is still visible when QA-authed
   2. The session-result/end screen (cards studied, % correct, learned count, "Back to deck", and level-up celebration hand-off) matches the Daybreak visual language
-**Plans**: TBD
+**Plans**: 2 plans (2 waves)
+- [ ] 20-01-PLAN.md — Study card + count-aware ghost-peek stack reskinned to Daybreak (surface, ALL-CAPS prompt, amber Tap-to-reveal pill, green/red swipe feedback), interaction model + QA badge preserved (STU-01)
+- [ ] 20-02-PLAN.md — Session chrome + end screen (LionFace, Baloo 2 numerals, amber learned + TBtn) + level-up overlay (Soft-Clay Leo + recolored confetti, reduced-motion gate) (STU-02)
 **UI hint**: yes
 
 ### Phase 21: Dashboard — "My Deck"
@@ -172,7 +174,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
-| 20. Study Screen | 0/TBD | Not started | - |
+| 20. Study Screen | 0/2 | Planned | - |
 | 21. Dashboard — "My Deck" | 0/TBD | Not started | - |
 | 22. Add a Card | 0/TBD | Not started | - |
 | 23. Browse Words | 0/TBD | Not started | - |
