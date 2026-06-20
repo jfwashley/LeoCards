@@ -11,9 +11,9 @@
 
 ### Design System (DSY) — shared foundation, reused by every screen
 
-- [ ] **DSY-01**: The Daybreak tokens (cream `#FFF6E9` / amber `#F28A1F` palette, type scale, spacing, radii, shadows) and fonts (Baloo 2 display + Figtree body) are applied app-wide via the theme system. *(Prototyped in the spike: `src/app/globals.css`, `src/app/layout.tsx`.)*
-- [ ] **DSY-02**: Shared Daybreak components exist and are reused across screens: the flat-geometric Leo `LionFace` mark, labeled field, primary button (with spinner/disabled state), pill/chip, and card surface — matching the handoff atoms. *(Prototyped: `src/components/daybreak/`.)*
-- [ ] **DSY-03**: Every redesigned screen is mobile-first single-column, one-hand reachable, touch targets ≥44px, with inline per-field validation (red border + helper after submit, never toasts) and a single full-width primary action that shows a spinner + disables the form while submitting.
+- [x] **DSY-01**: The Daybreak tokens (cream `#FFF6E9` / amber `#F28A1F` palette, type scale, spacing, radii, shadows) and fonts (Baloo 2 display + Figtree body) are applied app-wide via the theme system. *(Prototyped in the spike: `src/app/globals.css`, `src/app/layout.tsx`.)*
+- [x] **DSY-02**: Shared Daybreak components exist and are reused across screens: the flat-geometric Leo `LionFace` mark, labeled field, primary button (with spinner/disabled state), pill/chip, and card surface — matching the handoff atoms. *(Prototyped: `src/components/daybreak/`.)*
+- [x] **DSY-03**: Every redesigned screen is mobile-first single-column, one-hand reachable, touch targets ≥44px, with inline per-field validation (red border + helper after submit, never toasts) and a single full-width primary action that shows a spinner + disables the form while submitting.
 
 ### Onboarding & Auth (ONB)
 
@@ -77,9 +77,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSY-01 | Phase 19 | Pending |
-| DSY-02 | Phase 19 | Pending |
-| DSY-03 | Phase 19 | Pending |
+| DSY-01 | Phase 19 | Complete |
+| DSY-02 | Phase 19 | Complete |
+| DSY-03 | Phase 19 | Complete |
 | ONB-01 | Phase 19 | Pending |
 | ONB-02 | Phase 19 | Pending |
 | ONB-03 | Phase 19 | Pending |
