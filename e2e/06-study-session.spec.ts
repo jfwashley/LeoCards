@@ -34,7 +34,7 @@ test.describe("Study session — flashcard loop", () => {
     await page.waitForSelector('text="Tap to reveal"', { timeout: 5_000 });
     await page.getByRole("button", { name: /Question:/ }).click();
 
-    await expect(page.getByText(/Swipe right/)).toBeVisible({
+    await expect(page.getByTestId("card-back-hint")).toBeVisible({
       timeout: 2_000,
     });
   });

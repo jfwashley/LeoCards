@@ -77,7 +77,7 @@ test.describe("Pause cards — Phase 12", () => {
       const promptName = (await promptButton.getAttribute("aria-label")) ?? "";
       seenPrompts.add(promptName);
       await promptButton.click();
-      const swipeHint = page.getByText(/Swipe right/);
+      const swipeHint = page.getByTestId("card-back-hint");
       if (await swipeHint.isVisible({ timeout: 2_000 }).catch(() => false)) {
         await page.keyboard.press("ArrowRight");
       }
