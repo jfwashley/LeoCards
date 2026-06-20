@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 19 — daybreak-foundation-onboarding-auth
+**Current focus:** Phase 19 COMPLETE (verify + code-review + secure + validate + UAT all passed) — next: Phase 20 (Study Screen)
 
 ## Current Position
 
-Phase: 19 (daybreak-foundation-onboarding-auth) — EXECUTING
-Plan: 5 of 5 (Plan 01 complete)
-Status: Phase complete — ready for verification
+Phase: 19 (daybreak-foundation-onboarding-auth) — COMPLETE (all gates + UAT passed)
+Plan: 5 of 5 complete
+Status: Fully gated (verify · code-review · secure · validate · UAT); 2 dashboard findings deferred to Phase 21. Next: Phase 20 (Study Screen).
 Last activity: 2026-06-20
 
 Progress: [██████████] 100%
@@ -55,7 +55,8 @@ Progress: [██████████] 100%
 
 ### Pending Todos
 
-None yet.
+- **[→ Phase 21 / DSH-02] Dashboard habitat hero medallion** — replace the legacy 80px `.webp` thumbnail (`habitat-widget.tsx` → `habitat-3d-widget-image.tsx`) with the `HabitatHero`/`HabitatMedallion` (LionFace on sunrise disc + conic progress ring + level badge). Phase 19 empty-deck UAT carry-forward; recorded in ROADMAP Phase 21.
+- **[→ Phase 21 / DSH-03] Remove "Browse words" from the populated-deck action line** (`deck-view.tsx` ~L195) — keep it only in the empty-deck state (`card-list.tsx`). Phase 19 UAT carry-forward.
 
 ### Blockers/Concerns
 

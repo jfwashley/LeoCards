@@ -113,6 +113,11 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
   3. The action line renders "Start studying" (dimmed when nothing due) with a live-updating status row ("12 due" / "0 due" / "Resting · 2h 15m" countdown / "All paused") and "Add a card" alongside
   4. "Your words" expands inline (height/opacity transition, not a swipe gesture); word rows show native/translation/source tag/3-segment mastery meter/pause+edit actions; paused rows are de-emphasised; edit-card modal supports Save/Discard/Delete-with-confirmation; search shows no-results state
   5. Dashboard covers all required states in Daybreak: cards-due, none-due, resting, all-paused, empty deck, brand-new-user first-visit, and search-active-no-results
+
+> **UAT carry-forward (from Phase 19 empty-deck UAT, 2026-06-20):** Two dashboard issues surfaced — both already covered by the criteria above; recording precise current-code targets for this phase:
+> - **DSH-02 (habitat hero):** the dashboard still shows the legacy 80px `.webp` thumbnail (`src/components/habitat-widget.tsx` → `habitat-3d-widget-image.tsx`). Replace with the `HabitatHero`/`HabitatMedallion` from `design/handoff-daybreak/daybreak-dashboard.jsx` — LionFace on a sunrise disc + conic progress ring + level badge.
+> - **DSH-03 (action line):** remove the "Browse words" link from the populated-deck action line (`src/components/deck-view.tsx` ~line 195). The Daybreak action line is Start studying + status + Add a card only; "Browse words" stays solely in the empty-deck state (`src/components/card-list.tsx`).
+
 **Plans**: TBD
 **UI hint**: yes
 
