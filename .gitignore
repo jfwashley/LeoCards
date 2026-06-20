@@ -67,3 +67,4 @@ next-env.d.ts
 .playwright-full-run.log
 .preview-url.tmp
 .planning/dev-server.log
+.e2e-dev.log
