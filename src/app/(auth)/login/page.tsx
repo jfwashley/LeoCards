@@ -50,7 +50,13 @@ function LoginForm() {
     }
 
     const callbackUrl = searchParams.get("callbackUrl");
-    router.push(callbackUrl ?? "/dashboard");
+    // Only follow same-origin relative paths — reject absolute/protocol-relative
+    // URLs to prevent an open redirect via ?callbackUrl=https://evil.com (CR-01).
+    const safeCallback =
+      callbackUrl?.startsWith("/") && !callbackUrl.startsWith("//")
+        ? callbackUrl
+        : "/dashboard";
+    router.push(safeCallback);
   }
 
   return (
