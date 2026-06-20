@@ -120,11 +120,11 @@ export async function completeWelcomeFlow(
   await waitForCompilation(page);
 
   // Step 1: Meet Leo — click Next
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
   await page.waitForTimeout(300);
 
   // Step 2: The promise — click Next
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
   await page.waitForTimeout(300);
 
   // Step 3: Choose languages
