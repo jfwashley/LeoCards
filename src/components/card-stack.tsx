@@ -17,11 +17,15 @@ export function CardStack({ remainingCount }: CardStackProps) {
         <div
           // biome-ignore lint/suspicious/noArrayIndexKey: static positional layers, never reordered
           key={i}
-          className="absolute inset-0 rounded-xl bg-card border border-border"
+          className="absolute inset-0"
           style={{
             transform: `translateY(${(i + 1) * 8}px) scale(${1 - (i + 1) * 0.03})`,
             zIndex: -(i + 1),
             opacity: opacities[i],
+            borderRadius: 22,
+            background: "#FFFFFF",
+            border: "1px solid #F0E3CF",
+            boxSizing: "border-box",
           }}
         />
       ))}
