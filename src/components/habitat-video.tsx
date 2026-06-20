@@ -26,8 +26,8 @@
 //     16/9 size; the video/still are `position:absolute; inset:0` inside it.
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import type { HabitatState } from "@/lib/habitat-engine";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 // ---------------------------------------------------------------------------
 // Pure helpers (exported for node-env Vitest — no jsdom in this repo)
@@ -83,30 +83,6 @@ export function decayFilter(quality: number): string {
   const sat = q.toFixed(3);
   const bright = (0.6 + 0.4 * q).toFixed(3);
   return `saturate(${sat}) brightness(${bright})`;
-}
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-// ---------------------------------------------------------------------------
-// usePrefersReducedMotion — SSR-safe (defaults false on server + first render)
-// ---------------------------------------------------------------------------
-
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      typeof window.matchMedia !== "function"
-    ) {
-      return;
-    }
-    const mql = window.matchMedia(REDUCED_MOTION_QUERY);
-    setReduced(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mql.addEventListener?.("change", onChange);
-    return () => mql.removeEventListener?.("change", onChange);
-  }, []);
-  return reduced;
 }
 
 // ---------------------------------------------------------------------------
