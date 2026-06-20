@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { DeckView } from "@/components/deck-view";
-import { FirstVisitPicker } from "@/components/first-visit-picker";
 import { HabitatWidget } from "@/components/habitat-widget";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -50,16 +50,7 @@ export default async function DashboardPage({
   );
 
   if (decks.length === 0) {
-    return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <div className="flex-1 px-8 py-8 max-w-4xl mx-auto w-full">
-          <div className="mb-6">
-            <HabitatWidget habitatState={habitatState} />
-          </div>
-          <FirstVisitPicker nativeLang={nativeLang} />
-        </div>
-      </div>
-    );
+    redirect("/welcome");
   }
 
   const params = await searchParams;
