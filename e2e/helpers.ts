@@ -9,17 +9,39 @@ export function testEmail(): string {
 
 /**
  * Wait for the Next.js dev server to finish compiling.
- * Checks that no "Compiling..." or "Rendering..." indicator is visible.
+ * Waits until the "Compiling..." overlay in the bottom-left disappears.
  */
-async function waitForCompilation(page: Page): Promise<void> {
-  // Wait for networkidle first
-  await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => {});
-  // Then wait briefly to ensure any compilation overlay clears
-  await page.waitForTimeout(1000);
+export async function waitForCompilation(page: Page): Promise<void> {
+  // NOTE: Do NOT use page.waitForLoadState("networkidle") here.
+  // In Next.js dev mode (Turbopack), the HMR WebSocket keeps the connection
+  // alive permanently — networkidle never fires, causing 30s timeouts per call.
+  //
+  // Instead, just wait for the "Compiling ..." text overlay to disappear.
+  // This is the real signal that Turbopack is done compiling the current route.
+  try {
+    await page.waitForFunction(
+      () => {
+        // Look for any element containing "Compiling" text in the DOM
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let node: Text | null;
+        while ((node = walker.nextNode() as Text | null)) {
+          if (node.nodeValue?.includes("Compiling")) return false;
+        }
+        return true;
+      },
+      { timeout: 30_000 },
+    );
+  } catch {
+    // If still compiling after 30s, continue anyway — the route may already be
+    // compiled and the overlay may not be visible on this page.
+  }
+  // Brief settle time for React hydration to complete
+  await page.waitForTimeout(300);
 }
 
 /**
- * Sign up a fresh user and land on the dashboard.
+ * Sign up a fresh user and land on /welcome (post-D-05).
+ * Fills Name / Email / Password and waits for the /welcome redirect.
  */
 export async function signUpFreshUser(
   page: Page,
@@ -29,6 +51,17 @@ export async function signUpFreshUser(
   const name = opts?.name ?? "QA Tester";
   const password = opts?.password ?? "TestPass123!";
 
+  // Clear any existing session so retries start from an unauthenticated state.
+  // Without this, a retry after a timeout-on-redirect would re-use the previously
+  // created session, causing authClient.signUp to return an error ("already authenticated"
+  // manifests as "account already exists" in the signup UI).
+  await page.context().clearCookies();
+
+  // Pre-warm /welcome route so compilation completes before signup redirect hits it
+  // (unauthenticated GET → 307 /login, but triggers Next.js RSC compilation of /welcome)
+  await page.goto("/welcome").catch(() => {});
+  await waitForCompilation(page);
+
   await page.goto("/signup");
   await waitForCompilation(page);
 
@@ -36,8 +69,13 @@ export async function signUpFreshUser(
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill(password);
 
+  // Wait for any compilation to finish before submitting (first cold route load in dev)
+  await waitForCompilation(page);
+
   await page.getByRole("button", { name: "Create account" }).click();
-  await page.waitForURL(/\/dashboard/, { timeout: 45_000 });
+  // After D-05: signup redirects to /welcome (not /dashboard)
+  // Extended timeout: first load of /welcome triggers RSC compilation
+  await page.waitForURL(/\/welcome/, { timeout: 90_000 });
   await waitForCompilation(page);
 
   return { email };
@@ -63,34 +101,56 @@ export async function signIn(
 }
 
 /**
- * Create a deck via the first-visit picker (fresh user with 0 decks).
+ * Complete the 3-step welcome flow and land on /dashboard.
+ * Steps:
+ *   1. Meet Leo  → click Next
+ *   2. The promise → click Next
+ *   3. Choose languages → select native + target → Start learning → wait for /dashboard
+ *
+ * NOTE: 19-03's e2e/03-forgot-reset-password.spec.ts imports testEmail/waitForCompilation
+ * from this file — those exports are preserved above.
  */
-export async function pickFirstDeckLanguage(
+export async function completeWelcomeFlow(
   page: Page,
-  language: "French" | "Spanish",
+  target: "French" | "Spanish" = "French",
+  native = "English",
 ): Promise<void> {
-  await page.waitForSelector('text="What language do you want to learn?"', {
-    timeout: 15_000,
-  });
+  // Must already be on /welcome
+  await page.waitForURL(/\/welcome/, { timeout: 15_000 });
+  await waitForCompilation(page);
 
-  const btn = page.getByRole("button", { name: language });
-  await btn.waitFor({ state: "visible", timeout: 5_000 });
-  await btn.click();
+  // Step 1: Meet Leo — click Next
+  await page.getByRole("button", { name: "Next" }).click();
+  await page.waitForTimeout(300);
 
-  // Wait for deck creation + dashboard re-render
-  await page.waitForSelector('text="My Deck"', { timeout: 30_000 });
+  // Step 2: The promise — click Next
+  await page.getByRole("button", { name: "Next" }).click();
+  await page.waitForTimeout(300);
+
+  // Step 3: Choose languages
+  // Select native language (I speak)
+  await page.getByLabel("I speak").selectOption({ label: native });
+  // Select target language (I want to learn)
+  await page.getByLabel("I want to learn").selectOption({ label: target });
+
+  // Click Start learning
+  await page.getByRole("button", { name: /Start learning|Try again/ }).click();
+
+  // Wait for deck creation + dashboard redirect (authClient.updateUser + createDeck)
+  await page.waitForURL(/\/dashboard/, { timeout: 90_000 });
   await waitForCompilation(page);
 }
 
 /**
  * Sign up AND create a deck — the common setup for most tests.
+ * Preserved for backward compat with e2e/03-word-list-browser.spec.ts and other callers.
  */
 export async function signUpWithDeck(
   page: Page,
   language: "French" | "Spanish" = "French",
 ): Promise<{ email: string }> {
   const result = await signUpFreshUser(page);
-  await pickFirstDeckLanguage(page, language);
+  await completeWelcomeFlow(page, language);
   return result;
 }
 
@@ -118,6 +178,5 @@ export async function addWordsFromBrowser(
 
   // Navigate back via direct URL — more reliable than clicking "Back"
   await page.goto("/dashboard");
-  await page.waitForSelector('text="My Deck"', { timeout: 15_000 });
   await waitForCompilation(page);
 }

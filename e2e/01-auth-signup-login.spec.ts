@@ -10,7 +10,9 @@ test.describe("Authentication — signup and login", () => {
     await expect(page.getByRole("link", { name: "Sign up" })).toBeVisible();
   });
 
-  test("signup page renders with all fields", async ({ page }) => {
+  test("signup page renders with all fields (no native language field — ONB-02)", async ({
+    page,
+  }) => {
     await page.goto("/signup");
     await expect(page.getByLabel("Name")).toBeVisible();
     await expect(page.getByLabel("Email")).toBeVisible();
@@ -18,11 +20,14 @@ test.describe("Authentication — signup and login", () => {
     await expect(
       page.getByRole("button", { name: "Create account" }),
     ).toBeVisible();
+    // ONB-02: signup form must NOT have a "Native language" field (moved to /welcome)
+    await expect(page.getByLabel("Native language")).not.toBeVisible();
   });
 
   test("can create a new account and reach dashboard", async ({ page }) => {
     await signUpWithDeck(page);
-    await expect(page.getByText("My Deck")).toBeVisible();
+    // After completing the welcome flow, the deck view is visible
+    await expect(page.getByText("French")).toBeVisible({ timeout: 10_000 });
   });
 
   test("shows error for duplicate email signup", async ({ page }) => {
