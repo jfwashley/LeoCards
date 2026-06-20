@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState, useTransition } from "react";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
+import { LionFace } from "@/components/daybreak/lion-face";
 import { QaStateBadge } from "@/components/qa-state-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,17 +71,49 @@ export const CardList = React.memo(function CardList({
 
   if (cards.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-4">
-        <h2 className="text-lg font-semibold">Your deck is empty</h2>
-        <p className="text-sm text-muted-foreground text-center">
-          Browse the word list or add a card to get started.
-        </p>
-        <Link
-          href="/deck/browse"
-          className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-10 text-sm hover:bg-muted transition-colors"
+      <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+        {/* Leo medallion — 110px #FFF1DC circle (ObEmptyDeck) */}
+        <div
+          className="flex items-center justify-center rounded-full flex-none"
+          style={{ width: 110, height: 110, background: "#FFF1DC" }}
         >
-          Browse words
-        </Link>
+          <LionFace
+            size={66}
+            mane="#E8973B"
+            face="#FFD9A6"
+            muzzle="#FFF1DC"
+            ink="#4A331C"
+          />
+        </div>
+        <h2 className="font-display text-[22px] font-bold text-foreground">
+          Your deck is empty
+        </h2>
+        <p className="text-[14.5px] text-muted-foreground leading-[1.5] max-w-[240px] text-center">
+          Add a few words and Leo&rsquo;s habitat starts to grow.
+        </p>
+        {/* 80%-width action column */}
+        <div className="flex flex-col gap-[11px] w-[80%]">
+          {/* Primary: Browse words */}
+          <Link
+            href="/deck/browse"
+            className="flex items-center justify-center w-full rounded-[14px] bg-primary text-primary-foreground font-display text-[16px] font-bold shadow-[var(--db-btn-shadow)] hover:brightness-[0.97] transition-[filter]"
+            style={{ height: 50 }}
+          >
+            Browse words
+          </Link>
+          {/* Ghost: + Add a card */}
+          <Link
+            href="/deck/new-card"
+            className="flex items-center justify-center w-full rounded-[14px] font-display text-[16px] font-bold text-foreground hover:brightness-[0.97] transition-[filter]"
+            style={{
+              height: 50,
+              background: "var(--background)",
+              border: "1.5px solid #EDDFC9",
+            }}
+          >
+            + Add a card
+          </Link>
+        </div>
       </div>
     );
   }
@@ -108,15 +141,41 @@ export const CardList = React.memo(function CardList({
         )}
       </div>
 
-      {/* No results */}
+      {/* No results — Daybreak ObNoSearch */}
       {filtered.length === 0 && query && (
-        <div className="py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            No cards match &ldquo;{query}&rdquo;.
+        <div className="flex flex-col items-center justify-center py-12 gap-[13px] text-center">
+          {/* Leo medallion — 96px #F3E3C6 circle (ObNoSearch) */}
+          <div
+            className="flex items-center justify-center rounded-full flex-none"
+            style={{ width: 96, height: 96, background: "#F3E3C6" }}
+          >
+            <LionFace
+              size={56}
+              mane="#E8973B"
+              face="#FFD9A6"
+              muzzle="#FFF1DC"
+              ink="#4A331C"
+            />
+          </div>
+          <h2 className="font-display text-[20px] font-bold text-foreground">
+            No words match &ldquo;{query}&rdquo;
+          </h2>
+          <p className="text-[14px] text-muted-foreground leading-[1.45] max-w-[230px]">
+            Try a different spelling, or clear the search.
           </p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Try a different word.
-          </p>
+          {/* Ghost: Clear search */}
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="flex items-center justify-center rounded-[14px] font-display text-[15px] font-bold text-foreground hover:brightness-[0.97] transition-[filter] px-[18px]"
+            style={{
+              height: 44,
+              background: "var(--background)",
+              border: "1.5px solid #EDDFC9",
+            }}
+          >
+            Clear search
+          </button>
         </div>
       )}
 
