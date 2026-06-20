@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
-status: executing
+status: verifying
 stopped_at: Phase 19 Plan 03 complete
-last_updated: "2026-06-20T11:27:26.888Z"
+last_updated: "2026-06-20T12:42:04.295Z"
 last_activity: 2026-06-20
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
-  percent: 0
+  completed_plans: 5
+  percent: 17
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 
 Phase: 19 (daybreak-foundation-onboarding-auth) — EXECUTING
 Plan: 5 of 5 (Plan 01 complete)
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-06-20
 
-Progress: [████████░░] 80%
+Progress: [██████████] 100%
 
 ## Shipped Milestones
 
@@ -48,6 +48,10 @@ Progress: [████████░░] 80%
 - Phases 15-18 are reserved for the deferred v3.0 Performance & QA work; do not reuse those numbers for Daybreak.
 - Habitat (Phase 24) is last: richest visual, most perf-sensitive, must stay light on mobile + pause under prefers-reduced-motion.
 - [Phase ?]: Phase 19 Plan 03: Privacy-safe confirmation and expired-link dead-end patterns established for Forgot/Reset auth screens
+- [Phase ?]: 19-04: Language pick mandatory — Skip on steps 1+2 jumps to step 3, not dashboard
+- [Phase ?]: 19-04: Playwright test timeout 60s→180s; networkidle removed from waitForCompilation (HMR WebSocket blocks networkidle)
+- [Phase ?]: 19-04: D-04 ordering — updateUser before createDeck ensures nativeLanguage persisted even if deck creation fails
+- [Phase ?]: 19-04: T-19-04-INJ — z.enum(['en','fr','es']) validates at call site before authClient.updateUser
 
 ### Pending Todos
 
@@ -68,6 +72,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-20T11:27:26.879Z
+Last session: 2026-06-20T12:42:04.276Z
 Stopped at: Phase 19 Plan 03 complete
 Resume file: None
