@@ -1,16 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { AuthCard, DaybreakAuthScene } from "@/components/daybreak/auth-card";
+import { TBtn } from "@/components/daybreak/t-btn";
+import { TField } from "@/components/daybreak/t-field";
 import { authClient } from "@/lib/auth-client";
 
 const forgotPasswordSchema = z.object({
@@ -47,57 +45,81 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <Card className="w-full max-w-sm rounded-xl shadow-sm p-4 sm:p-6">
-      <h2 className="text-xl font-semibold leading-[1.2] mb-1">
-        Reset your password
-      </h2>
-      <p className="text-sm text-muted-foreground mb-4">
-        Enter your email and we&apos;ll send you a reset link.
-      </p>
-
-      {sent ? (
-        <p className="text-sm text-muted-foreground">
-          Check your email — we sent a reset link to{" "}
-          <span className="font-medium text-foreground">{sentEmail}</span>.
-        </p>
-      ) : (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="space-y-4">
-            <div className="grid gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
+    <>
+      <AuthCard scene={<DaybreakAuthScene variant="daylight" tagline="We'll send a link." />}>
+        {sent ? (
+          <>
+            <h2 className="font-display text-[22px] font-bold text-foreground">
+              Check your email
+            </h2>
+            <div className="flex flex-col items-center gap-3 text-center py-0.5">
+              <div
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: "50%",
+                  background: "#FFF1DC",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 24,
+                }}
+              >
+                ✉
+              </div>
+              <p className="text-[14.5px] text-muted-foreground leading-relaxed">
+                If an account exists, we&rsquo;ve sent a reset link to{" "}
+                <strong className="font-bold text-foreground">{sentEmail}</strong>.
+              </p>
+              <p className="text-[13px] text-muted-foreground">
+                Didn&rsquo;t get it? Check spam, or{" "}
+                <button
+                  type="button"
+                  onClick={() => setSent(false)}
+                  className="font-bold text-[var(--db-link)] hover:underline"
+                >
+                  resend
+                </button>
+                .
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className="font-display text-[22px] font-bold text-foreground">
+              Reset your password
+            </h2>
+            <p className="text-[14px] text-muted-foreground leading-[1.45]">
+              Enter your email and we&rsquo;ll send you a reset link.
+            </p>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              className="flex flex-col gap-[15px]"
+            >
+              <TField
+                label="Email"
                 type="email"
                 placeholder="you@example.com"
-                className={
-                  isSubmitted && errors.email ? "border-destructive" : ""
-                }
+                error={isSubmitted ? errors.email?.message : undefined}
                 {...register("email")}
               />
-              {isSubmitted && errors.email && (
-                <p className="text-sm text-destructive">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
+              <TBtn type="submit" isPending={isPending}>
+                Send reset link
+              </TBtn>
+            </form>
+          </>
+        )}
+      </AuthCard>
 
-            <Button type="submit" className="w-full h-11" disabled={isPending}>
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "Send reset link"
-              )}
-            </Button>
-          </div>
-        </form>
-      )}
-
-      <Link
-        href="/login"
-        className="text-sm text-muted-foreground underline-offset-4 hover:underline block text-center mt-4"
-      >
-        Back to sign in
-      </Link>
-    </Card>
+      <p className="text-center text-sm text-muted-foreground">
+        <Link
+          href="/login"
+          className="font-bold text-[var(--db-link)] hover:underline"
+        >
+          &lsaquo; Back to sign in
+        </Link>
+      </p>
+    </>
   );
 }
