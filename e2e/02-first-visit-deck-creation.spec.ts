@@ -155,4 +155,19 @@ test.describe("First visit — welcome flow + ONB-06 empty states", () => {
     await expect(page.getByLabel("I speak")).toBeVisible();
     await expect(page.getByLabel("I want to learn")).toBeVisible();
   });
+
+  // -------------------------------------------------------------------------
+  // Test 6: A user who already has a deck is bounced away from /welcome (D-05)
+  // -------------------------------------------------------------------------
+  test("a user with a deck visiting /welcome is redirected to /dashboard (D-05)", async ({
+    page,
+  }) => {
+    // Create a user who already completed onboarding (has ≥1 deck)
+    await signUpWithDeck(page, "French");
+
+    // Navigating back to /welcome must bounce to /dashboard — no re-onboarding
+    await page.goto("/welcome");
+    await page.waitForURL(/\/dashboard/, { timeout: 15_000 });
+    await expect(page).toHaveURL(/\/dashboard/);
+  });
 });

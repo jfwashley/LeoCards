@@ -1,5 +1,5 @@
 import { expect, test } from "playwright/test";
-import { signIn, signUpWithDeck, testEmail } from "./helpers";
+import { signIn, signUpWithDeck, testEmail, waitForCompilation } from "./helpers";
 
 test.describe("Authentication — signup and login", () => {
   test("login page renders with form fields", async ({ page }) => {
@@ -76,5 +76,29 @@ test.describe("Authentication — signup and login", () => {
   test("unauthenticated user is redirected to login", async ({ page }) => {
     await page.goto("/dashboard");
     await page.waitForURL(/\/login/, { timeout: 10_000 });
+  });
+
+  // ONB-01 / CR-01: a crafted ?callbackUrl must not redirect off-site after login.
+  test("login callbackUrl cannot open-redirect off-site (CR-01)", async ({
+    page,
+  }) => {
+    const password = "TestPass123!";
+    const { email } = await signUpWithDeck(page);
+
+    // Sign out so we hit a fresh, unauthenticated login form
+    await page.getByText("Sign out").click();
+    await page.waitForURL(/\/login/, { timeout: 10_000 });
+
+    // Attempt an open redirect via the ?callbackUrl query param
+    await page.goto("/login?callbackUrl=https://evil.example.com");
+    await waitForCompilation(page);
+    await page.getByLabel("Email").fill(email);
+    await page.getByLabel("Password").fill(password);
+    await page.getByRole("button", { name: "Sign in" }).click();
+
+    // Must land on the same-origin dashboard, never the external URL
+    await page.waitForURL(/\/dashboard/, { timeout: 45_000 });
+    expect(page.url()).toContain("/dashboard");
+    expect(page.url()).not.toContain("evil.example.com");
   });
 });
