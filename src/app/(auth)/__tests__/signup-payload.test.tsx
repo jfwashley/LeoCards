@@ -56,7 +56,9 @@ describe("SignupPage — payload smoke (D-04)", () => {
       expect(mockSignUpEmail).toHaveBeenCalledTimes(1);
     });
 
-    const arg = mockSignUpEmail.mock.calls[0][0] as Record<string, unknown>;
+    const call = mockSignUpEmail.mock.calls[0];
+    expect(call).toBeDefined();
+    const arg = call![0] as Record<string, unknown>;
 
     // The three expected keys are present with correct values
     expect(arg).toMatchObject({
