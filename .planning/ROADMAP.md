@@ -90,7 +90,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 - [x] 19-02-PLAN.md — Login refactor onto primitives + Signup restyle, language field removed, redirect to /welcome (ONB-01/02)
 - [x] 19-03-PLAN.md — Forgot (privacy-safe) + Reset (expired-link dead-end) restyle + e2e spec (ONB-03/04)
 - [ ] 19-04-PLAN.md — /welcome 3-step flow, updateUser native-language persistence, 0-deck redirect, e2e harness (ONB-05)
-- [ ] 19-05-PLAN.md — Daybreak empty-deck + no-search-results states (ONB-06)
+- [x] 19-05-PLAN.md — Daybreak empty-deck + no-search-results states (ONB-06)
 **UI hint**: yes
 
 ### Phase 20: Study Screen
@@ -166,7 +166,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 19. Daybreak Foundation + Onboarding & Auth | 3/5 | In Progress|  |
+| 19. Daybreak Foundation + Onboarding & Auth | 4/5 | In Progress|  |
 | 20. Study Screen | 0/TBD | Not started | - |
 | 21. Dashboard — "My Deck" | 0/TBD | Not started | - |
 | 22. Add a Card | 0/TBD | Not started | - |

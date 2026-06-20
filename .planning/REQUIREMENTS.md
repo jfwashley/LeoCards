@@ -22,7 +22,7 @@
 - [x] **ONB-03**: Forgot password ("Reset your password": explainer + Email + "Send reset link") is redesigned, including the privacy-safe sent confirmation ("If an account exists, we've sent a link…" — never reveals registration) and invalid-email/submitting states.
 - [x] **ONB-04**: Reset password ("Set a new password": New + Confirm, min-8, "Passwords do not match") is redesigned, including the expired/invalid-link dead-end ("Request a new link" → Forgot) and submitting states.
 - [ ] **ONB-05**: First-visit welcome is a dedicated 3-step flow — (1) Meet Leo, (2) the promise with an animated mini-habitat preview, (3) choose native + target languages via dropdowns (target list excludes the chosen native) — that creates the first deck and routes to Dashboard, with "creating…" and error (picks preserved) states.
-- [ ] **ONB-06**: The shared empty states match Daybreak — empty deck (Leo + "Your deck is empty" + Browse words / Add a card) and no-search-results ("No words match '…'" + Clear search).
+- [x] **ONB-06**: The shared empty states match Daybreak — empty deck (Leo + "Your deck is empty" + Browse words / Add a card) and no-search-results ("No words match '…'" + Clear search).
 
 ### Study (STU)
 
@@ -85,7 +85,7 @@
 | ONB-03 | Phase 19 | Complete |
 | ONB-04 | Phase 19 | Complete |
 | ONB-05 | Phase 19 | Pending |
-| ONB-06 | Phase 19 | Pending |
+| ONB-06 | Phase 19 | Complete |
 | STU-01 | Phase 20 | Pending |
 | STU-02 | Phase 20 | Pending |
 | DSH-01 | Phase 21 | Pending |
