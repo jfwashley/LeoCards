@@ -19,8 +19,8 @@
 
 - [x] **ONB-01**: Login is redesigned to Daybreak — brand block + habitat-flashcard card (sunrise scene + form) over ghost-peek edges + "Sign up" cross-link. *(Done in the spike — verified against the mock.)*
 - [x] **ONB-02**: Signup ("Create your account": Name, Email, Password min-8 with helper) is redesigned to Daybreak, covering default, per-field validation, "account with this email already exists", and submitting states. No language field (chosen in welcome).
-- [ ] **ONB-03**: Forgot password ("Reset your password": explainer + Email + "Send reset link") is redesigned, including the privacy-safe sent confirmation ("If an account exists, we've sent a link…" — never reveals registration) and invalid-email/submitting states.
-- [ ] **ONB-04**: Reset password ("Set a new password": New + Confirm, min-8, "Passwords do not match") is redesigned, including the expired/invalid-link dead-end ("Request a new link" → Forgot) and submitting states.
+- [x] **ONB-03**: Forgot password ("Reset your password": explainer + Email + "Send reset link") is redesigned, including the privacy-safe sent confirmation ("If an account exists, we've sent a link…" — never reveals registration) and invalid-email/submitting states.
+- [x] **ONB-04**: Reset password ("Set a new password": New + Confirm, min-8, "Passwords do not match") is redesigned, including the expired/invalid-link dead-end ("Request a new link" → Forgot) and submitting states.
 - [ ] **ONB-05**: First-visit welcome is a dedicated 3-step flow — (1) Meet Leo, (2) the promise with an animated mini-habitat preview, (3) choose native + target languages via dropdowns (target list excludes the chosen native) — that creates the first deck and routes to Dashboard, with "creating…" and error (picks preserved) states.
 - [ ] **ONB-06**: The shared empty states match Daybreak — empty deck (Leo + "Your deck is empty" + Browse words / Add a card) and no-search-results ("No words match '…'" + Clear search).
 
@@ -82,8 +82,8 @@
 | DSY-03 | Phase 19 | Complete |
 | ONB-01 | Phase 19 | Complete |
 | ONB-02 | Phase 19 | Complete |
-| ONB-03 | Phase 19 | Pending |
-| ONB-04 | Phase 19 | Pending |
+| ONB-03 | Phase 19 | Complete |
+| ONB-04 | Phase 19 | Complete |
 | ONB-05 | Phase 19 | Pending |
 | ONB-06 | Phase 19 | Pending |
 | STU-01 | Phase 20 | Pending |
