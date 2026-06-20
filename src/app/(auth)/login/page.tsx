@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -9,9 +8,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { AuthCard, DaybreakAuthScene } from "@/components/daybreak/auth-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { TBtn } from "@/components/daybreak/t-btn";
+import { TField } from "@/components/daybreak/t-field";
 import { authClient } from "@/lib/auth-client";
 
 const loginSchema = z.object({
@@ -20,14 +18,6 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
-
-// Daybreak field — labeled input, warm fill, 1.5px border (red on error).
-function fieldClass(error?: boolean) {
-  return (
-    "h-12 rounded-xl border-[1.5px] bg-[var(--db-field-bg)] px-3.5 text-[15px] shadow-none focus-visible:ring-2 focus-visible:ring-primary/40 " +
-    (error ? "border-destructive" : "border-[#EDDFC9]")
-  );
-}
 
 function LoginForm() {
   const router = useRouter();
@@ -69,53 +59,26 @@ function LoginForm() {
       noValidate
       className="flex flex-col gap-[15px]"
     >
-      <div className="grid gap-1.5">
-        <Label
-          htmlFor="email"
-          className="text-[13px] font-semibold text-foreground"
-        >
-          Email
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="you@example.com"
-          className={fieldClass(isSubmitted && !!errors.email)}
-          {...register("email")}
-        />
-        {isSubmitted && errors.email && (
-          <p className="text-[13px] font-semibold text-destructive">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
+      <TField
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        error={isSubmitted ? errors.email?.message : undefined}
+        {...register("email")}
+      />
 
-      <div className="grid gap-2">
-        <Label
-          htmlFor="password"
-          className="text-[13px] font-semibold text-foreground"
-        >
-          Password
-        </Label>
-        <Input
-          id="password"
+      <div className="flex flex-col gap-1.5">
+        <TField
+          label="Password"
           type="password"
           placeholder="••••••••"
-          className={fieldClass(
-            isSubmitted && (!!errors.password || !!authError),
-          )}
+          error={
+            isSubmitted
+              ? (errors.password?.message ?? authError ?? undefined)
+              : undefined
+          }
           {...register("password")}
         />
-        {isSubmitted && errors.password && (
-          <p className="text-[13px] font-semibold text-destructive">
-            {errors.password.message}
-          </p>
-        )}
-        {authError && (
-          <p className="text-[13px] font-semibold text-destructive">
-            {authError}
-          </p>
-        )}
         <Link
           href="/forgot-password"
           className="self-end text-[13px] font-semibold text-[var(--db-link)] hover:underline"
@@ -124,13 +87,9 @@ function LoginForm() {
         </Link>
       </div>
 
-      <Button
-        type="submit"
-        disabled={isPending}
-        className="h-[50px] w-full rounded-[14px] text-[16px] font-bold shadow-[var(--db-btn-shadow)] hover:brightness-[0.97]"
-      >
-        {isPending ? <Loader2 className="animate-spin" /> : "Sign in"}
-      </Button>
+      <TBtn type="submit" isPending={isPending}>
+        Sign in
+      </TBtn>
     </form>
   );
 }
