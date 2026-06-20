@@ -8,8 +8,8 @@ import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { AuthCard, DaybreakAuthScene } from "@/components/daybreak/auth-card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
@@ -20,6 +20,14 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
+
+// Daybreak field — labeled input, warm fill, 1.5px border (red on error).
+function fieldClass(error?: boolean) {
+  return (
+    "h-12 rounded-xl border-[1.5px] bg-[var(--db-field-bg)] px-3.5 text-[15px] shadow-none focus-visible:ring-2 focus-visible:ring-primary/40 " +
+    (error ? "border-destructive" : "border-[#EDDFC9]")
+  );
+}
 
 function LoginForm() {
   const router = useRouter();
@@ -56,84 +64,102 @@ function LoginForm() {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className="space-y-4">
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              className={
-                isSubmitted && errors.email ? "border-destructive" : ""
-              }
-              {...register("email")}
-            />
-            {isSubmitted && errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="grid gap-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              className={
-                isSubmitted && (errors.password || authError)
-                  ? "border-destructive"
-                  : ""
-              }
-              {...register("password")}
-            />
-            {isSubmitted && errors.password && (
-              <p className="text-sm text-destructive">
-                {errors.password.message}
-              </p>
-            )}
-            {authError && (
-              <p className="text-sm text-destructive">{authError}</p>
-            )}
-            <Link
-              href="/forgot-password"
-              className="text-sm text-muted-foreground underline-offset-4 hover:underline block text-right"
-            >
-              Forgot password?
-            </Link>
-          </div>
-
-          <Button type="submit" className="w-full h-11" disabled={isPending}>
-            {isPending ? <Loader2 className="animate-spin" /> : "Sign in"}
-          </Button>
-        </div>
-      </form>
-
-      <p className="text-sm text-center text-muted-foreground mt-4">
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/signup"
-          className="underline underline-offset-4 hover:text-foreground"
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="flex flex-col gap-[15px]"
+    >
+      <div className="grid gap-1.5">
+        <Label
+          htmlFor="email"
+          className="text-[13px] font-semibold text-foreground"
         >
-          Sign up
+          Email
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          className={fieldClass(isSubmitted && !!errors.email)}
+          {...register("email")}
+        />
+        {isSubmitted && errors.email && (
+          <p className="text-[13px] font-semibold text-destructive">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
+
+      <div className="grid gap-2">
+        <Label
+          htmlFor="password"
+          className="text-[13px] font-semibold text-foreground"
+        >
+          Password
+        </Label>
+        <Input
+          id="password"
+          type="password"
+          placeholder="••••••••"
+          className={fieldClass(
+            isSubmitted && (!!errors.password || !!authError),
+          )}
+          {...register("password")}
+        />
+        {isSubmitted && errors.password && (
+          <p className="text-[13px] font-semibold text-destructive">
+            {errors.password.message}
+          </p>
+        )}
+        {authError && (
+          <p className="text-[13px] font-semibold text-destructive">
+            {authError}
+          </p>
+        )}
+        <Link
+          href="/forgot-password"
+          className="self-end text-[13px] font-semibold text-[var(--db-link)] hover:underline"
+        >
+          Forgot password?
         </Link>
-      </p>
-    </>
+      </div>
+
+      <Button
+        type="submit"
+        disabled={isPending}
+        className="h-[50px] w-full rounded-[14px] text-[16px] font-bold shadow-[var(--db-btn-shadow)] hover:brightness-[0.97]"
+      >
+        {isPending ? <Loader2 className="animate-spin" /> : "Sign in"}
+      </Button>
+    </form>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Card className="w-full max-w-sm rounded-xl shadow-sm p-4 sm:p-6">
-      <h2 className="text-xl font-semibold leading-[1.2] mb-4">Welcome back</h2>
-      <Suspense
-        fallback={
-          <div className="text-sm text-muted-foreground">Loading...</div>
-        }
-      >
-        <LoginForm />
-      </Suspense>
-    </Card>
+    <>
+      <AuthCard scene={<DaybreakAuthScene variant="sunrise" />}>
+        <h2 className="font-display text-[22px] font-bold text-foreground">
+          Welcome back
+        </h2>
+        <Suspense
+          fallback={
+            <div className="text-sm text-muted-foreground">Loading…</div>
+          }
+        >
+          <LoginForm />
+        </Suspense>
+      </AuthCard>
+
+      <p className="text-center text-sm text-muted-foreground">
+        Don&rsquo;t have an account?{" "}
+        <Link
+          href="/signup"
+          className="font-bold text-[var(--db-link)] hover:underline"
+        >
+          Sign up
+        </Link>
+      </p>
+    </>
   );
 }

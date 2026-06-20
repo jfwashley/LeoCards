@@ -1,19 +1,25 @@
 import "@/env";
 import type { Metadata } from "next";
-import { Geist, Inter } from "next/font/google";
+import { Baloo_2, Figtree } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
-
-const inter = Inter({
+// Daybreak typography: Figtree (body) + Baloo 2 (display — headings, numbers, buttons).
+const figtree = Figtree({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "600", "700"],
+  variable: "--font-sans",
+});
+
+const baloo2 = Baloo_2({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
   title: "LeoCards",
-  description: "Learn languages with your tiger.",
+  description: "Learn languages and grow Leo's world.",
 };
 
 export default function RootLayout({
@@ -27,17 +33,12 @@ export default function RootLayout({
       className={cn(
         "h-full",
         "antialiased",
-        inter.variable,
+        figtree.variable,
+        baloo2.variable,
         "font-sans",
-        geist.variable,
       )}
     >
-      <body
-        className="min-h-full flex flex-col font-sans"
-        style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-      >
-        {children}
-      </body>
+      <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
 }
