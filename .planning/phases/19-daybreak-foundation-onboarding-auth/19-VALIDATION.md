@@ -43,18 +43,18 @@ updated: 2026-06-20
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 19-01-01 | 01 | 1 | DSY-02, DSY-03 | T-19-01-XSS | TField/TBtn render user input via escaped JSX (no dangerouslySetInnerHTML) | unit | `npx vitest run src/components/daybreak/__tests__/t-field.test.tsx src/components/daybreak/__tests__/t-btn.test.tsx --reporter=verbose` | ❌ W0 — created by this task (jsdom docblock) | ⬜ pending |
-| 19-01-02 | 01 | 1 | DSY-02 | T-19-01-XSS | Pill/Card presentational, no injection sink | unit (typecheck gate) | `npx tsc --noEmit && echo TSC-OK` | ✅ (whole-project tsc) | ⬜ pending |
-| 19-01-03 | 01 | 1 | DSY-01 | — | Reduced-motion hook reads only a media query | unit | `npx vitest run src/components/__tests__/habitat-scene-video.test.ts --reporter=verbose` | ✅ existing | ⬜ pending |
-| 19-02-01 | 02 | 2 | ONB-01, DSY-03 | T-19-02-AUTH | better-auth signIn preserved verbatim; login still → /dashboard | unit (typecheck + grep gate) | `npx tsc --noEmit && echo TSC-OK && grep -c "daybreak/t-field\|daybreak/t-btn" "src/app/(auth)/login/page.tsx"` | ✅ (whole-project tsc) | ⬜ pending |
-| 19-02-02 | 02 | 2 | ONB-02, DSY-03 | T-19-02-VAL | Signup payload narrowed to {name,email,password} — no nativeLanguage written | unit | `npx vitest run "src/app/(auth)/__tests__/signup-payload.test.tsx" --reporter=verbose` | ❌ W0 — created by this task | ⬜ pending |
-| 19-03-01 | 03 | 2 | ONB-03, DSY-03 | T-19-03-ENUM | Forgot confirmation is privacy-safe ("If an account exists") — no account enumeration | unit (typecheck + grep gate) + e2e (19-03-03) | `npx tsc --noEmit && echo TSC-OK && grep -c "If an account exists" "src/app/(auth)/forgot-password/page.tsx"` | ✅ (whole-project tsc) | ⬜ pending |
-| 19-03-02 | 03 | 2 | ONB-04, DSY-03 | T-19-03-TOKEN / T-19-03-MATCH / T-19-03-LEAK | Reset token validated server-side; expired/invalid → generic dead-end; password-match enforced | unit (typecheck + grep gate) + e2e (19-03-03) | `npx tsc --noEmit && echo TSC-OK && grep -c "resetPassword" "src/app/(auth)/reset-password/page.tsx"` | ✅ (whole-project tsc) | ⬜ pending |
-| 19-03-03 | 03 | 2 | ONB-03, ONB-04 | T-19-03-ENUM / T-19-03-TOKEN | E2E locks privacy-safe forgot confirmation + reset expired-link dead-end + mismatch error | e2e | `npx playwright test e2e/03-forgot-reset-password.spec.ts --reporter=line` | ❌ W0 — created by this task | ⬜ pending |
-| 19-04-01 | 04 | 3 | ONB-05 | T-19-04-EOP / T-19-04-AUTHZ | /welcome RSC guards: no session → /login; has-decks → /dashboard (no re-onboard) | unit (typecheck + grep gate) | `grep -rn "FirstVisitPicker" src; npx tsc --noEmit && echo TSC-OK` | ✅ (whole-project tsc) | ⬜ pending |
-| 19-04-02 | 04 | 3 | ONB-05 | T-19-04-INJ / T-19-04-MASS / T-19-04-IDEMP | native/target validated via z.enum before updateUser; updateUser before createDeck; only {nativeLanguage} written | unit (typecheck + grep gate) | `grep -c "updateUser" "src/components/welcome/welcome-step-choose.tsx"; grep -c "use-prefers-reduced-motion" "src/components/welcome/habitat-teaser.tsx"; npx tsc --noEmit && echo TSC-OK` | ✅ (whole-project tsc) | ⬜ pending |
-| 19-04-03 | 04 | 3 | ONB-05, ONB-06 | T-19-04-EOP | E2E: signup→/welcome→/dashboard; 0-deck→/welcome redirect; no "Native language" field; ONB-06 empty-deck + no-search-results states | e2e | `npx playwright test e2e/01-auth-signup-login.spec.ts e2e/02-first-visit-deck-creation.spec.ts --reporter=line` | ✅ existing (rewritten by this task) | ⬜ pending |
-| 19-05-01 | 05 | 3 | ONB-06 | T-19-05-XSS | No-search query rendered via escaped JSX; Clear search resets query | e2e (+ typecheck + grep gate) | `... grep gates ... && npx tsc --noEmit && echo TSC-OK && npx playwright test e2e/02-first-visit-deck-creation.spec.ts --reporter=line` | ✅ existing (asserts the restyle; spec owned by 19-04) | ⬜ pending |
+| 19-01-01 | 01 | 1 | DSY-02, DSY-03 | T-19-01-XSS | TField/TBtn render user input via escaped JSX (no dangerouslySetInnerHTML) | unit | `npx vitest run src/components/daybreak/__tests__/t-field.test.tsx src/components/daybreak/__tests__/t-btn.test.tsx --reporter=verbose` | ❌ W0 — created by this task (jsdom docblock) | ✅ green |
+| 19-01-02 | 01 | 1 | DSY-02 | T-19-01-XSS | Pill/Card presentational, no injection sink | unit (typecheck gate) | `npx tsc --noEmit && echo TSC-OK` | ✅ (whole-project tsc) | ✅ green |
+| 19-01-03 | 01 | 1 | DSY-01 | — | Reduced-motion hook reads only a media query | unit | `npx vitest run src/components/__tests__/habitat-scene-video.test.ts --reporter=verbose` | ✅ existing | ✅ green |
+| 19-02-01 | 02 | 2 | ONB-01, DSY-03 | T-19-02-AUTH | better-auth signIn preserved verbatim; login still → /dashboard | unit (typecheck + grep gate) | `npx tsc --noEmit && echo TSC-OK && grep -c "daybreak/t-field\|daybreak/t-btn" "src/app/(auth)/login/page.tsx"` | ✅ (whole-project tsc) | ✅ green |
+| 19-02-02 | 02 | 2 | ONB-02, DSY-03 | T-19-02-VAL | Signup payload narrowed to {name,email,password} — no nativeLanguage written | unit | `npx vitest run "src/app/(auth)/__tests__/signup-payload.test.tsx" --reporter=verbose` | ❌ W0 — created by this task | ✅ green |
+| 19-03-01 | 03 | 2 | ONB-03, DSY-03 | T-19-03-ENUM | Forgot confirmation is privacy-safe ("If an account exists") — no account enumeration | unit (typecheck + grep gate) + e2e (19-03-03) | `npx tsc --noEmit && echo TSC-OK && grep -c "If an account exists" "src/app/(auth)/forgot-password/page.tsx"` | ✅ (whole-project tsc) | ✅ green |
+| 19-03-02 | 03 | 2 | ONB-04, DSY-03 | T-19-03-TOKEN / T-19-03-MATCH / T-19-03-LEAK | Reset token validated server-side; expired/invalid → generic dead-end; password-match enforced | unit (typecheck + grep gate) + e2e (19-03-03) | `npx tsc --noEmit && echo TSC-OK && grep -c "resetPassword" "src/app/(auth)/reset-password/page.tsx"` | ✅ (whole-project tsc) | ✅ green |
+| 19-03-03 | 03 | 2 | ONB-03, ONB-04 | T-19-03-ENUM / T-19-03-TOKEN | E2E locks privacy-safe forgot confirmation + reset expired-link dead-end + mismatch error | e2e | `npx playwright test e2e/03-forgot-reset-password.spec.ts --reporter=line` | ❌ W0 — created by this task | ✅ green |
+| 19-04-01 | 04 | 3 | ONB-05 | T-19-04-EOP / T-19-04-AUTHZ | /welcome RSC guards: no session → /login; has-decks → /dashboard (no re-onboard) | unit (typecheck + grep gate) | `grep -rn "FirstVisitPicker" src; npx tsc --noEmit && echo TSC-OK` | ✅ (whole-project tsc) | ✅ green |
+| 19-04-02 | 04 | 3 | ONB-05 | T-19-04-INJ / T-19-04-MASS / T-19-04-IDEMP | native/target validated via z.enum before updateUser; updateUser before createDeck; only {nativeLanguage} written | unit (typecheck + grep gate) | `grep -c "updateUser" "src/components/welcome/welcome-step-choose.tsx"; grep -c "use-prefers-reduced-motion" "src/components/welcome/habitat-teaser.tsx"; npx tsc --noEmit && echo TSC-OK` | ✅ (whole-project tsc) | ✅ green |
+| 19-04-03 | 04 | 3 | ONB-05, ONB-06 | T-19-04-EOP | E2E: signup→/welcome→/dashboard; 0-deck→/welcome redirect; no "Native language" field; ONB-06 empty-deck + no-search-results states | e2e | `npx playwright test e2e/01-auth-signup-login.spec.ts e2e/02-first-visit-deck-creation.spec.ts --reporter=line` | ✅ existing (rewritten by this task) | ✅ green |
+| 19-05-01 | 05 | 3 | ONB-06 | T-19-05-XSS | No-search query rendered via escaped JSX; Clear search resets query | e2e (+ typecheck + grep gate) | `... grep gates ... && npx tsc --noEmit && echo TSC-OK && npx playwright test e2e/02-first-visit-deck-creation.spec.ts --reporter=line` | ✅ existing (asserts the restyle; spec owned by 19-04) | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -115,4 +115,18 @@ Wave 0 work is folded into Wave 1 (plan 19-01) and the wave-2/3 tasks that own e
 - [x] `wave_0_complete: true` — all Wave 0 test stubs are present as tasks in the plan set (19-01-01, 19-02-02, 19-03-03, 19-04-03)
 
 **Approval:** approved 2026-06-20
+
+---
+
+## Validation Audit 2026-06-20 (post-execution)
+
+All 5 plans executed + verified. Re-ran the full automated gate set; every per-task command is green — no MISSING or PARTIAL gaps. Per-Task Map statuses updated ⬜ → ✅.
+
+| Metric | Count |
+|--------|-------|
+| Gaps found | 0 |
+| Resolved | 0 |
+| Escalated | 0 |
+
+**Confirmed green:** `npx tsc --noEmit` (exit 0); `npx vitest run` (1956 pass / 6 skip, 104 files); `npx playwright test e2e/01,02,03` (30/30, web + mobile); all per-task grep gates (login primitives ×6, forgot "If an account exists", reset `resetPassword`, FirstVisitPicker removed = 0, welcome `updateUser`, teaser reduced-motion hook, no-results copy). Manual-Only items (DSY-01 visual tokens/fonts, scene recolouring, teaser ambient motion, pixel parity) remain for human UAT (`19-HUMAN-UAT.md`) — not automatable. All 9 requirements (DSY-01..03, ONB-01..06) are covered by ≥1 green automated gate.
 </content>
