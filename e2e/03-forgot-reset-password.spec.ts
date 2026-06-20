@@ -1,16 +1,5 @@
 import { expect, test } from "playwright/test";
-import { testEmail } from "./helpers";
-
-/**
- * Wait for the Next.js dev server to finish compiling before asserting UI.
- * Mirrors the same helper in helpers.ts (not exported from there).
- */
-async function waitForCompilation(
-  page: import("playwright/test").Page,
-): Promise<void> {
-  await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => {});
-  await page.waitForTimeout(1000);
-}
+import { testEmail, waitForCompilation } from "./helpers";
 
 test.describe("Password reset — forgot & reset", () => {
   /**

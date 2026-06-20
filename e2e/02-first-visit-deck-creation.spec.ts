@@ -106,8 +106,10 @@ test.describe("First visit — welcome flow + ONB-06 empty states", () => {
     // Assert the no-results state (ObNoSearch)
     await expect(page.getByText(/No words match/)).toBeVisible({ timeout: 5_000 });
 
-    // Click the "Clear search" button and assert the query is cleared + empty-state returns
-    await page.getByRole("button", { name: "Clear search" }).click();
+    // Two controls share the name "Clear search" in this state (the search-bar
+    // clear-X icon and the no-results CTA). Target the no-results CTA (rendered
+    // last) to avoid a strict-mode collision.
+    await page.getByRole("button", { name: "Clear search" }).last().click();
     await page.waitForTimeout(300);
 
     // After clearing: the no-results copy must be gone, the card list is visible again
