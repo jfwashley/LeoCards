@@ -1,11 +1,17 @@
 import { expect, test } from "playwright/test";
 import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
 
-test.describe("Language breakdown and dashboard polish", () => {
-  test("dashboard shows per-language learned count", async ({ page }) => {
+test.describe("Dashboard — habitat hero and deck integration", () => {
+  test("dashboard shows learned count in words accordion header", async ({
+    page,
+  }) => {
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
-    await expect(page.getByText("My Deck")).toBeVisible();
+    // Plan 05 adds the accordion header with data-testid="words-accordion-header"
+    // showing "{N} learned". Click it to open (it starts collapsed).
+    const accordionHeader = page.getByTestId("words-accordion-header");
+    await expect(accordionHeader).toBeVisible();
+    await expect(accordionHeader).toContainText(/\d+ learned/);
   });
 
   test("browse words and add card links work from empty deck", async ({
@@ -25,13 +31,12 @@ test.describe("Language breakdown and dashboard polish", () => {
     await expect(page.getByText("Add a Card")).toBeVisible();
   });
 
-  test("habitat widget shows on dashboard alongside deck", async ({
-    page,
-  }) => {
+  test("habitat hero shows on dashboard alongside deck", async ({ page }) => {
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 2);
 
-    await expect(page.getByText("Level")).toBeVisible();
-    await expect(page.getByText("My Deck")).toBeVisible();
+    await expect(page.getByText(/Level \d+/)).toBeVisible();
+    // HabitatHero wraps a habitat-medallion (Plan 03 testid)
+    await expect(page.getByTestId("habitat-medallion")).toBeVisible();
   });
 });

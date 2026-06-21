@@ -7,9 +7,11 @@ test.describe("Habitat — widget and full page", () => {
   });
 
   test("habitat widget is visible on dashboard", async ({ page }) => {
-    await expect(page.getByText("Level 1")).toBeVisible({ timeout: 5_000 });
-    await expect(page.locator(".bg-secondary.rounded-full")).toBeVisible();
-    await expect(page.getByText(/\/.*cards/)).toBeVisible();
+    await expect(page.getByText(/Level 1/)).toBeVisible({ timeout: 5_000 });
+    // HabitatMedallion (Plan 03) carries data-testid="habitat-medallion"
+    await expect(page.getByTestId("habitat-medallion")).toBeVisible();
+    // HabitatHero subtitle shows "N of M cards to Level N+1" (Daybreak DSH-02)
+    await expect(page.getByText(/\d+ of \d+ cards/)).toBeVisible();
   });
 
   test("habitat widget links to /habitat", async ({ page }) => {
@@ -21,18 +23,22 @@ test.describe("Habitat — widget and full page", () => {
 
     // Navigate directly — clicking is unreliable due to PixiJS canvas overlay
     await page.goto(href!);
-    await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => {});
+    await page
+      .waitForLoadState("networkidle", { timeout: 30_000 })
+      .catch(() => {});
     await expect(page.getByText("Level")).toBeVisible({ timeout: 15_000 });
   });
 
   test("habitat page shows mood indicator", async ({ page }) => {
     await page.goto("/habitat");
-    await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => {});
+    await page
+      .waitForLoadState("networkidle", { timeout: 30_000 })
+      .catch(() => {});
 
     // Wait longer — PixiJS and habitat state need to load
-    await expect(
-      page.getByText(/Excited|Happy|Neutral|Sad/),
-    ).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/Excited|Happy|Neutral|Sad/)).toBeVisible({
+      timeout: 30_000,
+    });
   });
 
   test("habitat page has loading state for PixiJS", async ({ page }) => {

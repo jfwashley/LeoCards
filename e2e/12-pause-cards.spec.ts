@@ -17,7 +17,7 @@ import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
  *   - getByLabel(/Pause this card/)   — active row's button
  *   - getByLabel(/Resume this card/)  — paused row's button
  *   - getByText("Paused")             — the per-row badge
- *   - getByText(/All cards are paused/) — DeckView's empty-state copy
+ *   - getByText("All paused") — DeckView's all-paused status-row copy (Daybreak DSH-03)
  *
  * No arbitrary sleeps — Playwright's web-first auto-waiting assertions only.
  */
@@ -146,18 +146,14 @@ test.describe("Pause cards — Phase 12", () => {
     }
 
     // Empty-state copy appears (verbatim from DeckView).
-    await expect(
-      page.getByText("All cards are paused — unpause one to study."),
-    ).toBeVisible();
+    await expect(page.getByText("All paused")).toBeVisible();
 
     // Unpause one card → message disappears.
     await desktopTable
       .getByLabel(/Resume this card/)
       .first()
       .click();
-    await expect(
-      page.getByText("All cards are paused — unpause one to study."),
-    ).toHaveCount(0);
+    await expect(page.getByText("All paused")).toHaveCount(0);
   });
 
   test("pause → unpause of a NULL-cooldown card keeps it studyable in the very next session", async ({
