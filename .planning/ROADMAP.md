@@ -120,7 +120,12 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 > - **DSH-02 (habitat hero):** the dashboard still shows the legacy 80px `.webp` thumbnail (`src/components/habitat-widget.tsx` → `habitat-3d-widget-image.tsx`). Replace with the `HabitatHero`/`HabitatMedallion` from `design/handoff-daybreak/daybreak-dashboard.jsx` — LionFace on a sunrise disc + conic progress ring + level badge.
 > - **DSH-03 (action line):** remove the "Browse words" link from the populated-deck action line (`src/components/deck-view.tsx` ~line 195). The Daybreak action line is Start studying + status + Add a card only; "Browse words" stays solely in the empty-deck state (`src/components/card-list.tsx`).
 
-**Plans**: TBD
+**Plans**: 5 plans (2 waves)
+- [ ] 21-01-PLAN.md — Foundation: @base-ui Popover wrapper + getLanguageBreakdown / "My Deck" heading removal (D-02)
+- [ ] 21-02-PLAN.md — Header TopBar + deck-picker popover with inline create + logout glyph (DSH-01, D-01)
+- [ ] 21-03-PLAN.md — HabitatMedallion + HabitatHero (conic ring, L9 gold + "Course 1 complete", cooldown nap) (DSH-02, D-05/D-06)
+- [ ] 21-04-PLAN.md — DeckView body: hero wiring + Option-D action line + 4-state status row, "Browse words" removed (DSH-03, L-05)
+- [ ] 21-05-PLAN.md — "Your words" accordion + Daybreak rows (native-on-top D-04) + edit-modal restyle (DSH-04/05/06)
 **UI hint**: yes
 
 ### Phase 22: Add a Card
@@ -147,7 +152,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **UI hint**: yes
 
 ### Phase 24: Habitat
-**Goal**: The Habitat screen is a living flat-geometric scene in Daybreak — level-by-level cumulative composition, mood-driven Leo, ambient motion that is light on mobile and fully paused under prefers-reduced-motion — covering all required states
+**Goal**: The Habitat screen is a living flat-geometric scene in Daybreak — level-by-level cumulative composition, mood-driven Leo, ambient motion that is light on mobile and pauses under prefers-reduced-motion — covering all required states
 **Depends on**: Phase 19 (Daybreak atoms and tokens), Phase 21 (Dashboard links to Habitat)
 **Requirements**: HAB-01, HAB-02, HAB-03, HAB-04, HAB-05
 **Success Criteria** (what must be TRUE):
@@ -175,7 +180,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 |-------|----------------|--------|-----------|
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
 | 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
-| 21. Dashboard — "My Deck" | 0/TBD | Not started | - |
+| 21. Dashboard — "My Deck" | 0/5 | Planned | - |
 | 22. Add a Card | 0/TBD | Not started | - |
 | 23. Browse Words | 0/TBD | Not started | - |
 | 24. Habitat | 0/TBD | Not started | - |
