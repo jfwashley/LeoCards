@@ -31,12 +31,11 @@ export default async function DashboardPage({
 
   if (!session) return null;
 
-  const [decks, nativeLang, habitatFacts] =
-    await Promise.all([
-      getUserDecks(session.user.id),
-      getUserNativeLanguage(session.user.id),
-      getHabitatFacts(session.user.id as UserId),
-    ]);
+  const [decks, nativeLang, habitatFacts] = await Promise.all([
+    getUserDecks(session.user.id),
+    getUserNativeLanguage(session.user.id),
+    getHabitatFacts(session.user.id as UserId),
+  ]);
 
   const habitatOverride = await readHabitatOverride();
   const qaMode = await readQaAuth();

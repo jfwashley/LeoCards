@@ -1,7 +1,6 @@
 "use client";
 
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const Popover = PopoverPrimitive.Root;
@@ -63,10 +62,7 @@ function PopoverContent({
   align = "end",
   ...props
 }: PopoverPrimitive.Popup.Props &
-  Pick<
-    PopoverPrimitive.Positioner.Props,
-    "side" | "sideOffset" | "align"
-  >) {
+  Pick<PopoverPrimitive.Positioner.Props, "side" | "sideOffset" | "align">) {
   return (
     <PopoverPortal>
       <PopoverPositioner side={side} sideOffset={sideOffset} align={align}>
@@ -80,10 +76,10 @@ function PopoverContent({
 
 export {
   Popover,
-  PopoverTrigger,
-  PopoverPortal,
-  PopoverPositioner,
-  PopoverPopup,
   PopoverClose,
   PopoverContent,
+  PopoverPopup,
+  PopoverPortal,
+  PopoverPositioner,
+  PopoverTrigger,
 };
