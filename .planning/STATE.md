@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 21 Plan 02 complete
-last_updated: "2026-06-21T16:05:00.000Z"
-last_activity: 2026-06-21 -- Phase 21 Plan 02 executed (Daybreak TopBar + Popover deck picker + logout glyph + e2e retarget; 2001 tests green)
+stopped_at: Phase 21 Plan 04 complete
+last_updated: "2026-06-21T16:15:00.000Z"
+last_activity: 2026-06-21 -- Phase 21 Plan 04 executed (HabitatHero wiring + Option-D action line + StatusText 4-state machine + e2e retargets 09/12/07; 2011 tests green)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 12
-  completed_plans: 9
-  percent: 33
+  completed_plans: 10
+  percent: 42
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 ## Current Position
 
 Phase: 21 (dashboard-my-deck) — EXECUTING
-Plan: 5 of 5
-Status: Executing Phase 21
-Last activity: 2026-06-21 -- Phase 21 Plan 02 complete (Daybreak TopBar + Popover deck picker + logout glyph + e2e retarget; 2001 unit tests green)
+Plan: 4 of 5 complete (plan 05 already done — this was out-of-order execution)
+Status: Executing Phase 21 — 4/5 plans complete
+Last activity: 2026-06-21 -- Phase 21 Plan 04 complete (HabitatHero wiring + Option-D action line + StatusText 4-state machine + e2e retargets; 2011 unit tests green)
 
 Progress: [████████░░] 75%
 
@@ -82,6 +82,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-21T16:05:00.000Z
-Stopped at: Phase 21 Plan 02 complete
-Resume file: .planning/phases/21-dashboard-my-deck/21-04-PLAN.md (Plan 04 still to execute — wave 2)
+Last session: 2026-06-21T16:15:00.000Z
+Stopped at: Phase 21 Plan 04 complete (all 5 plans done — 01, 02, 03, 04, 05)
+Resume file: None — Phase 21 complete; next: Phase 22
