@@ -37,7 +37,7 @@ test.describe("Mobile responsiveness", () => {
     await signUpWithDeck(page, "French");
 
     await expect(page.getByText("LeoCards")).toBeVisible();
-    await expect(page.getByText("Sign out")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
 
     const scrollWidth = await page.evaluate(
       () => document.documentElement.scrollWidth,

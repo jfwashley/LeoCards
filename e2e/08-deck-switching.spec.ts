@@ -8,12 +8,12 @@ test.describe("Deck switching — multiple decks", () => {
   });
 
   test("can create a second deck via header dropdown", async ({ page }) => {
-    // Open the select dropdown
-    const trigger = page.locator('[data-slot="select-trigger"]');
+    // Open the deck picker popover
+    const trigger = page.getByTestId("deck-picker-trigger");
     await trigger.click();
 
     // Wait for the dropdown content to render
-    const newDeckOption = page.locator('[role="option"]').filter({ hasText: "New deck" });
+    const newDeckOption = page.getByTestId("new-deck-row");
     await newDeckOption.waitFor({ state: "visible", timeout: 5_000 });
     await newDeckOption.click();
 
@@ -33,9 +33,9 @@ test.describe("Deck switching — multiple decks", () => {
 
   test("switching back to first deck preserves cards", async ({ page }) => {
     // Create second deck
-    const trigger = page.locator('[data-slot="select-trigger"]');
+    const trigger = page.getByTestId("deck-picker-trigger");
     await trigger.click();
-    const newDeckOption = page.locator('[role="option"]').filter({ hasText: "New deck" });
+    const newDeckOption = page.getByTestId("new-deck-row");
     await newDeckOption.waitFor({ state: "visible", timeout: 5_000 });
     await newDeckOption.click();
     await page.getByRole("button", { name: "Spanish" }).click();
@@ -44,7 +44,7 @@ test.describe("Deck switching — multiple decks", () => {
 
     // Switch back to French deck
     await trigger.click();
-    const frenchOption = page.locator('[role="option"]').filter({ hasText: "French" });
+    const frenchOption = page.getByTestId("deck-option-fr");
     await frenchOption.waitFor({ state: "visible", timeout: 5_000 });
     await frenchOption.click();
     await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
@@ -57,9 +57,9 @@ test.describe("Deck switching — multiple decks", () => {
   });
 
   test("cancel button hides language picker", async ({ page }) => {
-    const trigger = page.locator('[data-slot="select-trigger"]');
+    const trigger = page.getByTestId("deck-picker-trigger");
     await trigger.click();
-    const newDeckOption = page.locator('[role="option"]').filter({ hasText: "New deck" });
+    const newDeckOption = page.getByTestId("new-deck-row");
     await newDeckOption.waitFor({ state: "visible", timeout: 5_000 });
     await newDeckOption.click();
 

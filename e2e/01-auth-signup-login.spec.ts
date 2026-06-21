@@ -35,7 +35,7 @@ test.describe("Authentication — signup and login", () => {
     const { email } = await signUpWithDeck(page);
 
     // Sign out (header visible after deck creation)
-    await page.getByText("Sign out").click();
+    await page.getByRole("button", { name: "Sign out" }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
 
     // Try same email again
@@ -57,7 +57,7 @@ test.describe("Authentication — signup and login", () => {
     const { email } = await signUpWithDeck(page);
 
     // Sign out
-    await page.getByText("Sign out").click();
+    await page.getByRole("button", { name: "Sign out" }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
 
     // Sign back in
@@ -86,7 +86,7 @@ test.describe("Authentication — signup and login", () => {
     const { email } = await signUpWithDeck(page);
 
     // Sign out so we hit a fresh, unauthenticated login form
-    await page.getByText("Sign out").click();
+    await page.getByRole("button", { name: "Sign out" }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
 
     // Attempt an open redirect via the ?callbackUrl query param
