@@ -23,7 +23,9 @@ test.describe("Deck switching — multiple decks", () => {
     await spanishBtn.click();
 
     // Wait for page to settle with new empty deck
-    await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+    await page
+      .waitForLoadState("networkidle", { timeout: 15_000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     await expect(page.getByText("Your deck is empty")).toBeVisible({
@@ -39,7 +41,9 @@ test.describe("Deck switching — multiple decks", () => {
     await newDeckOption.waitFor({ state: "visible", timeout: 5_000 });
     await newDeckOption.click();
     await page.getByRole("button", { name: "Spanish" }).click();
-    await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+    await page
+      .waitForLoadState("networkidle", { timeout: 15_000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     // Switch back to French deck
@@ -47,7 +51,9 @@ test.describe("Deck switching — multiple decks", () => {
     const frenchOption = page.getByTestId("deck-option-fr");
     await frenchOption.waitFor({ state: "visible", timeout: 5_000 });
     await frenchOption.click();
-    await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+    await page
+      .waitForLoadState("networkidle", { timeout: 15_000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     // French deck should still have cards

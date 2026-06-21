@@ -9,7 +9,10 @@ import { authClient } from "@/lib/auth-client";
 function LogoutGlyph() {
   const c = "#4A331C";
   return (
-    <div style={{ position: "relative", width: 18, height: 15 }} aria-hidden="true">
+    <div
+      style={{ position: "relative", width: 18, height: 15 }}
+      aria-hidden="true"
+    >
       <div
         style={{
           position: "absolute",

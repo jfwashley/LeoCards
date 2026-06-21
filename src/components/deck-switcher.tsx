@@ -60,7 +60,13 @@ function Chevron({ dir = "down" }: { dir?: "down" | "up" | "right" }) {
 function PlusGlyph() {
   return (
     <span
-      style={{ position: "relative", width: 14, height: 14, flex: "none", display: "inline-flex" }}
+      style={{
+        position: "relative",
+        width: 14,
+        height: 14,
+        flex: "none",
+        display: "inline-flex",
+      }}
       aria-hidden="true"
     >
       <span
@@ -216,6 +222,8 @@ export function DeckSwitcher({
                 <span style={{ flex: 1 }}>{getLangLabel(deck.language)}</span>
                 {isActive && (
                   <span
+                    role="img"
+                    aria-label="active deck"
                     style={{
                       width: 8,
                       height: 8,
@@ -223,7 +231,6 @@ export function DeckSwitcher({
                       background: "#F28A1F",
                       flex: "none",
                     }}
-                    aria-label="active"
                   />
                 )}
               </button>
@@ -259,14 +266,20 @@ export function DeckSwitcher({
                 color: "#B4762A",
               }}
             >
-              <PlusGlyph />
-              + New deck
+              <PlusGlyph />+ New deck
             </button>
           )}
 
           {/* Inline create picker */}
           {showPicker && (
-            <div style={{ padding: "8px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+            <div
+              style={{
+                padding: "8px 14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+              }}
+            >
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {learningLanguages.map((lang) => (
                   <button
@@ -283,7 +296,10 @@ export function DeckSwitcher({
                       border: "1px solid #F0E3CF",
                       background: "#FFF1DC",
                       cursor: creatingLang !== null ? "not-allowed" : "pointer",
-                      opacity: creatingLang !== null && creatingLang !== lang.code ? 0.5 : 1,
+                      opacity:
+                        creatingLang !== null && creatingLang !== lang.code
+                          ? 0.5
+                          : 1,
                       fontSize: 13,
                       fontWeight: 600,
                       color: "#B4762A",
@@ -291,7 +307,11 @@ export function DeckSwitcher({
                   >
                     {creatingLang === lang.code ? (
                       <Loader2
-                        style={{ width: 14, height: 14, animation: "spin 1s linear infinite" }}
+                        style={{
+                          width: 14,
+                          height: 14,
+                          animation: "spin 1s linear infinite",
+                        }}
                       />
                     ) : (
                       <LangChip code={lang.code.toUpperCase()} size={18} />
