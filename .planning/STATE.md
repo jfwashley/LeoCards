@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 21 Plan 01 complete
-last_updated: "2026-06-21T15:25:00.000Z"
-last_activity: 2026-06-21 -- Phase 21 Plan 01 executed (Popover wrapper + D-02 removal)
+stopped_at: Phase 21 Plan 03 complete
+last_updated: "2026-06-21T15:29:00.000Z"
+last_activity: 2026-06-21 -- Phase 21 Plan 03 executed (HabitatMedallion + HabitatHero; 13 tests green)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 12
-  completed_plans: 8
+  completed_plans: 9
   percent: 33
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 ## Current Position
 
 Phase: 21 (dashboard-my-deck) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Executing Phase 21
-Last activity: 2026-06-21 -- Phase 21 Plan 01 complete (Popover wrapper + D-02 removal; gates green)
+Last activity: 2026-06-21 -- Phase 21 Plan 03 complete (HabitatMedallion + HabitatHero; gates green)
 
-Progress: [██████████] 100%
+Progress: [████████░░] 75%
 
 ## Shipped Milestones
 
@@ -56,10 +56,14 @@ Progress: [██████████] 100%
 - [Phase ?]: Added data-testid=card-back-hint to back-face swipe cue to scope Playwright locator away from below-card showSwipeHint pill in study-session.tsx (avoids strict-mode multi-match)
 - [21-01]: popover.tsx exports PopoverContent convenience wrapper (Portal>Positioner>Popup) in addition to the six required primitives — reduces boilerplate for Plan 02 deck-switcher consumer
 - [21-01]: HabitatWidget import removed from dashboard/page.tsx as dead code after D-02 removal; Plans 03/04 own the habitat hero swap
+- [21-03]: D-05 canonical max-level signal is nextLevelThreshold === null (level >= 9), NOT the mock's dead level >= 10 branch
+- [21-03]: D-06 sleeping ring keeps the real conic-gradient (accurate degrees); overrides mock's #F3E3C6 greyed solid
+- [21-03]: jsdom normalises hex→rgb() in element.style.background — tests use toMatch(/rgb\\(\\d+,\\s*\\d+,\\s*\\d+\\)/) not literal hex comparisons
+- [21-03]: vitest auto-hoists vi.mock() — imports can be sorted per biome organizeImports without breaking mock behaviour
 
 ### Pending Todos
 
-- **[→ Phase 21 / DSH-02] Dashboard habitat hero medallion** — replace the legacy 80px `.webp` thumbnail (`habitat-widget.tsx` → `habitat-3d-widget-image.tsx`) with the `HabitatHero`/`HabitatMedallion` (LionFace on sunrise disc + conic progress ring + level badge). Phase 19 empty-deck UAT carry-forward; recorded in ROADMAP Phase 21.
+- ~~**[→ Phase 21 / DSH-02] Dashboard habitat hero medallion**~~ — DONE in Plan 03: `HabitatMedallion` + `HabitatHero` created; Plan 04 wires them into deck-view.tsx.
 - **[→ Phase 21 / DSH-03] Remove "Browse words" from the populated-deck action line** (`deck-view.tsx` ~L195) — keep it only in the empty-deck state (`card-list.tsx`). Phase 19 UAT carry-forward.
 
 ### Blockers/Concerns
@@ -77,6 +81,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-21T15:25:00.000Z
-Stopped at: Phase 21 Plan 01 complete
-Resume file: .planning/phases/21-dashboard-my-deck/21-02-PLAN.md
+Last session: 2026-06-21T15:29:00.000Z
+Stopped at: Phase 21 Plan 03 complete
+Resume file: .planning/phases/21-dashboard-my-deck/21-04-PLAN.md
