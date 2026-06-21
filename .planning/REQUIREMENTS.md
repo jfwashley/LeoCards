@@ -26,7 +26,7 @@
 
 ### Study (STU)
 
-- [ ] **STU-01**: The study card is redesigned to Daybreak — big flashcard over a ghost-peek stack, prompt ("WHAT'S THE TRANSLATION?"), tap-to-reveal, swipe →/← with green/red color feedback and the "Swipe → if you got it · ← still learning" hint — preserving the QA state badge (Phase 14) when QA-authed.
+- [x] **STU-01**: The study card is redesigned to Daybreak — big flashcard over a ghost-peek stack, prompt ("WHAT'S THE TRANSLATION?"), tap-to-reveal, swipe →/← with green/red color feedback and the "Swipe → if you got it · ← still learning" hint — preserving the QA state badge (Phase 14) when QA-authed.
 - [ ] **STU-02**: The study-session result/end screen (cards studied · % correct · learned + "Back to deck", plus the level-up celebration hand-off) is redesigned to the Daybreak visual language.
 
 ### Dashboard — "My Deck" (DSH)
@@ -86,7 +86,7 @@
 | ONB-04 | Phase 19 | Complete |
 | ONB-05 | Phase 19 | Complete |
 | ONB-06 | Phase 19 | Complete |
-| STU-01 | Phase 20 | Pending |
+| STU-01 | Phase 20 | Complete |
 | STU-02 | Phase 20 | Pending |
 | DSH-01 | Phase 21 | Pending |
 | DSH-02 | Phase 21 | Pending |

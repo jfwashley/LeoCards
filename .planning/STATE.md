@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 20 context gathered
-last_updated: "2026-06-20T22:24:18.823Z"
-last_activity: 2026-06-20 -- Phase 20 planning complete
+stopped_at: Completed 20-01-PLAN.md
+last_updated: "2026-06-21T00:01:29.476Z"
+last_activity: 2026-06-21
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
   percent: 17
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 19 COMPLETE (verify + code-review + secure + validate + UAT all passed) — next: Phase 20 (Study Screen)
+**Current focus:** Phase 20 — study-screen
 
 ## Current Position
 
-Phase: 19 (daybreak-foundation-onboarding-auth) — COMPLETE (all gates + UAT passed)
-Plan: 5 of 5 complete
+Phase: 20 (study-screen) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-06-20 -- Phase 20 planning complete
+Last activity: 2026-06-21
 
-Progress: [██████████] 100%
+Progress: [█████████░] 86%
 
 ## Shipped Milestones
 
@@ -52,6 +52,8 @@ Progress: [██████████] 100%
 - [Phase ?]: 19-04: Playwright test timeout 60s→180s; networkidle removed from waitForCompilation (HMR WebSocket blocks networkidle)
 - [Phase ?]: 19-04: D-04 ordering — updateUser before createDeck ensures nativeLanguage persisted even if deck creation fails
 - [Phase ?]: 19-04: T-19-04-INJ — z.enum(['en','fr','es']) validates at call site before authClient.updateUser
+- [Phase ?]: Adapted card-stack.tsx in place with Daybreak surface tokens rather than reusing GhostPeek atom (auth GhostPeek renders top-edge strips h:22px, not full-height ghost cards; in-place reskin is lower-risk)
+- [Phase ?]: Added data-testid=card-back-hint to back-face swipe cue to scope Playwright locator away from below-card showSwipeHint pill in study-session.tsx (avoids strict-mode multi-match)
 
 ### Pending Todos
 
@@ -73,6 +75,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-20T20:15:18.685Z
-Stopped at: Phase 20 context gathered
-Resume file: .planning/phases/20-study-screen/20-CONTEXT.md
+Last session: 2026-06-21T00:00:57.924Z
+Stopped at: Completed 20-01-PLAN.md
+Resume file: None
