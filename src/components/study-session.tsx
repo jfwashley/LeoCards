@@ -6,7 +6,8 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CardStack } from "@/components/card-stack";
 import { LevelUpOverlay } from "@/components/level-up-overlay";
 import { StudyCard } from "@/components/study-card";
-import { Button } from "@/components/ui/button";
+import { LionFace } from "@/components/daybreak/lion-face";
+import { TBtn } from "@/components/daybreak/t-btn";
 import type { GradeEntry, SessionCard, SessionStats } from "@/lib/study-engine";
 
 // ============================================================
@@ -293,14 +294,17 @@ export function StudySession({
     commit();
   }, [state.phase, initialCards, deckId]);
 
+  // ⬇ Safe edit zone — render only. Lines above are PRESERVE (reducer/commit/idempotency).
+
   // ============================================================
   // Render: committing
   // ============================================================
 
   if (state.phase === "committing") {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-sm text-muted-foreground">Saving your progress...</p>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+        <LionFace size={48} />
+        <p className="text-sm text-muted-foreground">Saving your progress…</p>
       </div>
     );
   }
@@ -311,14 +315,15 @@ export function StudySession({
 
   if (state.phase === "error") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-4 sm:px-8">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6 px-4 sm:px-8">
+        <LionFace size={56} />
         <p className="text-base text-center text-foreground">{state.message}</p>
-        <Button
-          variant="default"
+        <TBtn
+          style={{ maxWidth: 280 }}
           onClick={() => dispatch({ type: "RETRY_COMMIT" })}
         >
           Retry saving session
-        </Button>
+        </TBtn>
       </div>
     );
   }
@@ -349,38 +354,39 @@ export function StudySession({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <span className="text-6xl" role="img" aria-label="Tiger">
-              🐯
-            </span>
-            <h1 className="text-lg sm:text-[20px] font-semibold text-foreground">
+            {/* LionFace replaces 🐯 emoji (D-04) */}
+            <LionFace size={80} />
+            <h1 className="font-display text-[20px] font-bold text-foreground">
               Great work, keep it up!
             </h1>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
               <div className="flex flex-col items-center gap-1">
-                <span className="text-2xl sm:text-[28px] font-semibold text-foreground">
+                <span className="font-display text-[32px] font-bold text-foreground">
                   {cardsStudied}
                 </span>
                 <span className="text-sm text-muted-foreground">studied</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-2xl sm:text-[28px] font-semibold text-foreground">
+                <span className="font-display text-[32px] font-bold text-foreground">
                   {correctPct}%
                 </span>
                 <span className="text-sm text-muted-foreground">correct</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-2xl sm:text-[28px] font-semibold text-primary">
+                {/* "learned" numeral stays amber (text-primary) — D-04 */}
+                <span className="font-display text-[32px] font-bold text-primary">
                   {newlyLearned}
                 </span>
                 <span className="text-sm text-muted-foreground">learned</span>
               </div>
             </div>
-            <Button
-              variant="default"
+            {/* TBtn replaces shadcn Button (Pitfall 7) */}
+            <TBtn
+              style={{ maxWidth: 280 }}
               onClick={() => router.push(`/dashboard?deck=${deckId}`)}
             >
               Back to deck
-            </Button>
+            </TBtn>
           </motion.div>
         </div>
       </>
@@ -410,44 +416,74 @@ export function StudySession({
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Top bar — responsive padding */}
-      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4">
-        <span className="text-sm text-muted-foreground">Study session</span>
-        <div className="flex flex-col items-end gap-2">
-          <Button
-            variant="ghost"
-            className="h-10 px-3 text-sm"
-            aria-label="Quit study session"
-            onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
-          >
-            Quit session
-          </Button>
-
-          {showQuitConfirm && (
-            <div className="flex flex-col items-end gap-2 p-3 rounded-lg border border-border bg-card shadow-sm">
-              <p className="text-sm text-foreground">
-                Quit session? Your progress so far will be saved.
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  className="h-10 px-3 text-sm"
-                  onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
-                >
-                  Keep studying
-                </Button>
-                <Button
-                  variant="default"
-                  className="h-10 px-3 text-sm"
-                  onClick={() => dispatch({ type: "QUIT_SESSION" })}
-                >
-                  Save and quit
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+      {/* Top bar — Daybreak chrome */}
+      <div
+        className="flex items-center justify-between flex-none"
+        style={{ padding: "4px 22px 0" }}
+      >
+        <button
+          aria-label="Quit study session"
+          onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 999,
+            border: "1.5px solid #EDDFC9",
+            background: "#FFFFFF",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#4A331C",
+            fontSize: 15,
+            cursor: "pointer",
+          }}
+        >
+          ✕
+        </button>
+        <span
+          className="text-[14px] font-semibold text-muted-foreground"
+          style={{ letterSpacing: 0.3 }}
+        >
+          Study session
+        </span>
+        <span style={{ width: 40 }} aria-hidden="true" />
       </div>
+
+      {/* Quit-confirm popover — Daybreak card surface */}
+      {showQuitConfirm && (
+        <div
+          className="mx-4 sm:mx-6"
+          style={{
+            borderRadius: 18,
+            background: "#FFFFFF",
+            border: "1px solid #F0E3CF",
+            boxShadow: "0 12px 30px rgba(160, 110, 40, 0.16)",
+            padding: "14px 16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <p className="text-sm text-foreground">
+            Quit session? Your progress so far will be saved.
+          </p>
+          <div className="flex gap-2 justify-end">
+            <button
+              className="h-9 px-4 text-sm font-semibold rounded-[10px] border text-foreground"
+              style={{ borderColor: "#EDDFC9", background: "#FFFFFF" }}
+              onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
+            >
+              Keep studying
+            </button>
+            <TBtn
+              style={{ width: "auto", height: 36, padding: "0 16px", fontSize: 14, borderRadius: 10 }}
+              onClick={() => dispatch({ type: "QUIT_SESSION" })}
+            >
+              Save and quit
+            </TBtn>
+          </div>
+        </div>
+      )}
 
       {/* Card area */}
       <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4 sm:px-8">
@@ -472,10 +508,24 @@ export function StudySession({
           </AnimatePresence>
         </div>
 
+        {/* Hint pill — Daybreak style (D-02 HiFiStudy spec) */}
         {showSwipeHint && (
-          <p className="text-sm text-muted-foreground text-center">
-            Swipe right if correct, left if still learning
-          </p>
+          <div
+            className="text-[13.5px] font-semibold"
+            style={{
+              color: "#9C8467",
+              background: "#FFFFFF",
+              border: "1.5px solid #F0E3CF",
+              padding: "9px 18px",
+              borderRadius: 999,
+            }}
+          >
+            Swipe{" "}
+            <span style={{ color: "#3E9B5F" }}>→</span>
+            {" "}if you got it ·{" "}
+            <span style={{ color: "#DE5F4A" }}>←</span>
+            {" "}still learning
+          </div>
         )}
       </div>
     </div>
