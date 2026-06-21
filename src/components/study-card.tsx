@@ -179,9 +179,8 @@ export function StudyCard({
               style={{ color: "#9C8467" }}
               data-testid="card-back-hint"
             >
-              <span style={{ color: "#DE5F4A" }}>←</span>
-              {" "}still learning · got it{" "}
-              <span style={{ color: "#3E9B5F" }}>→</span>
+              <span style={{ color: "#DE5F4A" }}>←</span> still learning · got
+              it <span style={{ color: "#3E9B5F" }}>→</span>
             </p>
           )}
         </motion.div>
