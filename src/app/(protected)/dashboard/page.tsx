@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DeckView } from "@/components/deck-view";
-import { HabitatWidget } from "@/components/habitat-widget";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { readHabitatOverride, readQaAuth } from "@/lib/debug-cheat";
@@ -12,7 +11,6 @@ import {
 } from "@/lib/deck-queries";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
-import { getLanguageBreakdown } from "@/lib/milestone-queries";
 import type { CardForSession } from "@/lib/study-engine";
 import {
   assembleSession,
@@ -33,12 +31,11 @@ export default async function DashboardPage({
 
   if (!session) return null;
 
-  const [decks, nativeLang, habitatFacts, languageBreakdown] =
+  const [decks, nativeLang, habitatFacts] =
     await Promise.all([
       getUserDecks(session.user.id),
       getUserNativeLanguage(session.user.id),
       getHabitatFacts(session.user.id as UserId),
-      getLanguageBreakdown(session.user.id as UserId),
     ]);
 
   const habitatOverride = await readHabitatOverride();
@@ -126,7 +123,6 @@ export default async function DashboardPage({
       earliestCooldownEnd={earliestCooldownEndStr}
       habitatState={habitatState}
       celebratingLevel={celebratingLevel}
-      languageBreakdown={languageBreakdown}
       qaMode={qaMode}
     />
   );

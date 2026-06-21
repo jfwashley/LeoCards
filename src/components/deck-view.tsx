@@ -100,7 +100,6 @@ interface DeckViewProps {
   earliestCooldownEnd: string | null;
   habitatState: HabitatState;
   celebratingLevel?: number | null;
-  languageBreakdown: Array<{ language: string; count: number }>;
   qaMode?: boolean;
 }
 
@@ -113,7 +112,6 @@ export function DeckView({
   earliestCooldownEnd,
   habitatState,
   celebratingLevel = null,
-  languageBreakdown,
   qaMode = false,
 }: DeckViewProps) {
   const router = useRouter();
@@ -173,19 +171,6 @@ export function DeckView({
           />
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">My Deck</h1>
-            {languageBreakdown.length > 0 && (
-              <p className="text-sm text-muted-foreground mt-1">
-                {languageBreakdown
-                  .map(
-                    (item) =>
-                      `${LANGUAGE_LABELS[item.language] ?? item.language}: ${item.count} learned`,
-                  )
-                  .join(" \u00B7 ")}
-              </p>
-            )}
-          </div>
           <div className="flex items-center gap-3 flex-wrap">
             {renderStudyButton()}
             <Link
