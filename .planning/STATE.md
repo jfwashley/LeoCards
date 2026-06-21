@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
-status: verifying
-stopped_at: Completed 20-02-PLAN.md
-last_updated: "2026-06-21T00:46:22.064Z"
+status: ready_to_plan
+stopped_at: Phase 20 complete (2/2) — ready to discuss Phase 21
+last_updated: 2026-06-21T01:07:20.079Z
 last_activity: 2026-06-21
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 7
+  completed_phases: 3
+  total_plans: 49
   completed_plans: 7
-  percent: 33
+  percent: 50
 ---
 
 # Project State
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 20 — study-screen
+**Current focus:** Phase 21 — dashboard — "my deck"
 
 ## Current Position
 
-Phase: 20 (study-screen) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
+Phase: 21
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-06-21
 
 Progress: [██████████] 100%

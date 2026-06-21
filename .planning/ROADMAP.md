@@ -174,7 +174,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
-| 20. Study Screen | 2/2 | Complete   | 2026-06-21 |
+| 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
 | 21. Dashboard — "My Deck" | 0/TBD | Not started | - |
 | 22. Add a Card | 0/TBD | Not started | - |
 | 23. Browse Words | 0/TBD | Not started | - |
