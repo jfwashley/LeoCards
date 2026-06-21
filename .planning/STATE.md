@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 21 Plan 03 complete
-last_updated: "2026-06-21T15:29:00.000Z"
-last_activity: 2026-06-21 -- Phase 21 Plan 03 executed (HabitatMedallion + HabitatHero; 13 tests green)
+stopped_at: Phase 21 Plan 05 complete
+last_updated: "2026-06-21T15:45:00.000Z"
+last_activity: 2026-06-21 -- Phase 21 Plan 05 executed (Your words accordion + Daybreak rows + edit modal; 17 tests green)
 progress:
   total_phases: 6
   completed_phases: 2
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 ## Current Position
 
 Phase: 21 (dashboard-my-deck) — EXECUTING
-Plan: 3 of 5
+Plan: 5 of 5
 Status: Executing Phase 21
-Last activity: 2026-06-21 -- Phase 21 Plan 03 complete (HabitatMedallion + HabitatHero; gates green)
+Last activity: 2026-06-21 -- Phase 21 Plan 05 complete (Your words accordion + Daybreak CardRows + edit modal; 17 tests green)
 
 Progress: [████████░░] 75%
 
@@ -64,6 +64,7 @@ Progress: [████████░░] 75%
 ### Pending Todos
 
 - ~~**[→ Phase 21 / DSH-02] Dashboard habitat hero medallion**~~ — DONE in Plan 03: `HabitatMedallion` + `HabitatHero` created; Plan 04 wires them into deck-view.tsx.
+- ~~**[→ Phase 21 / DSH-04/05] "Your words" accordion + Daybreak rows**~~ — DONE in Plan 05: collapsed accordion, height/opacity motion, D-04 native-on-top, SourceTag, MasteryMeter, testids.
 - **[→ Phase 21 / DSH-03] Remove "Browse words" from the populated-deck action line** (`deck-view.tsx` ~L195) — keep it only in the empty-deck state (`card-list.tsx`). Phase 19 UAT carry-forward.
 
 ### Blockers/Concerns
@@ -81,6 +82,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-21T15:29:00.000Z
-Stopped at: Phase 21 Plan 03 complete
-Resume file: .planning/phases/21-dashboard-my-deck/21-04-PLAN.md
+Last session: 2026-06-21T15:45:00.000Z
+Stopped at: Phase 21 Plan 05 complete
+Resume file: .planning/phases/21-dashboard-my-deck/21-04-PLAN.md (Plan 04 still to execute — wave 2)
