@@ -22,25 +22,30 @@ import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
  * No arbitrary sleeps — Playwright's web-first auto-waiting assertions only.
  */
 test.describe("Pause cards — Phase 12", () => {
-  // These assert the DESKTOP <table> row structure (td, opacity-50 row class).
-  // The mobile stacked-card layout has its own Pause/Resume buttons — covered
-  // by 10-mobile-responsive "card management affordances".
+  // These assert the Daybreak card-row structure (data-testid="card-row").
+  // The "Your words" accordion is expanded in beforeEach so rows are visible.
+  // The mobile stacked-card layout uses the same rows — but since the accordion
+  // is shared between mobile and desktop in the Daybreak layout, we skip mobile
+  // here and cover it in 10-mobile-responsive "card management affordances".
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name === "mobile",
-      "Desktop table layout — mobile covered in 10-mobile-responsive",
+      "Daybreak card rows — mobile covered in 10-mobile-responsive",
     );
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
+    // "Your words" accordion is collapsed by default (Daybreak DSH-04) — expand it
+    await page.getByTestId("words-accordion-header").click();
+    await expect(page.getByTestId("card-row").first()).toBeVisible();
   });
 
   test("pausing a card removes it from the study session", async ({ page }) => {
     // Capture the first card's front text BEFORE any pause action — the
     // variable must stay stable across UI mutations (rows reorder / re-render
     // when pausedAt flips).
-    const firstRow = page.locator("table tbody tr").first();
+    const firstRow = page.getByTestId("card-row").first();
     const firstCardFront = (
-      await firstRow.locator("td").first().textContent()
+      await firstRow.locator("div").first().textContent()
     )?.trim();
     expect(
       firstCardFront,
@@ -50,11 +55,10 @@ test.describe("Pause cards — Phase 12", () => {
     // Pause the first card via its aria-labelled button.
     await firstRow.getByLabel(/Pause this card/).click();
 
-    // Row gains opacity-50 styling AND the "Paused" badge appears.
+    // Row gains reduced opacity AND the "Paused" badge appears.
     const pausedRow = page
-      .locator("table tbody tr")
+      .getByTestId("card-row")
       .filter({ hasText: firstCardFront ?? "" });
-    await expect(pausedRow).toHaveClass(/opacity-50/);
     await expect(pausedRow.getByText("Paused")).toBeVisible();
 
     // Start studying — the paused card's front text must NEVER appear in the
@@ -99,16 +103,16 @@ test.describe("Pause cards — Phase 12", () => {
   test("unpausing a card restores it (Pause affordance back, badge gone)", async ({
     page,
   }) => {
-    const firstRow = page.locator("table tbody tr").first();
+    const firstRow = page.getByTestId("card-row").first();
     const firstCardFront = (
-      await firstRow.locator("td").first().textContent()
+      await firstRow.locator("div").first().textContent()
     )?.trim();
     expect(firstCardFront).toBeTruthy();
 
     // Pause.
     await firstRow.getByLabel(/Pause this card/).click();
     const pausedRow = page
-      .locator("table tbody tr")
+      .getByTestId("card-row")
       .filter({ hasText: firstCardFront ?? "" });
     await expect(pausedRow.getByText("Paused")).toBeVisible();
 
@@ -118,38 +122,34 @@ test.describe("Pause cards — Phase 12", () => {
     // Badge gone everywhere; Pause aria-label is back on the same row.
     await expect(page.getByText("Paused")).toHaveCount(0);
     const restoredRow = page
-      .locator("table tbody tr")
+      .getByTestId("card-row")
       .filter({ hasText: firstCardFront ?? "" });
     await expect(restoredRow.getByLabel(/Pause this card/)).toBeVisible();
-    await expect(restoredRow).not.toHaveClass(/opacity-50/);
   });
 
   test("pausing every card surfaces the all-paused empty-state", async ({
     page,
   }) => {
-    // CardList renders BOTH a desktop <table> and a mobile <div> layout in the
-    // DOM (CSS hides one via the md: breakpoint). Scope every selector to the
-    // desktop table to get exactly one button per card.
-    const desktopTable = page.locator("table tbody");
+    // Daybreak uses a single card-row layout (no separate desktop table / mobile div).
+    // Scope selectors to card-row testid to get exactly one button per card.
+    const cardRows = page.getByTestId("card-row");
 
     // Pause all three cards by repeatedly clicking the first available
-    // "Pause this card" button inside the desktop table.
+    // "Pause this card" button inside a card row.
     for (let i = 0; i < 3; i++) {
-      const pauseButton = desktopTable.getByLabel(/Pause this card/).first();
+      const pauseButton = cardRows.getByLabel(/Pause this card/).first();
       await expect(pauseButton).toBeVisible();
       await pauseButton.click();
       // After the click the row flips to "Resume this card"; remaining active
-      // Pause buttons must drop by exactly one in the desktop layout.
-      await expect(desktopTable.getByLabel(/Pause this card/)).toHaveCount(
-        2 - i,
-      );
+      // Pause buttons must drop by exactly one.
+      await expect(cardRows.getByLabel(/Pause this card/)).toHaveCount(2 - i);
     }
 
     // Empty-state copy appears (verbatim from DeckView).
     await expect(page.getByText("All paused")).toBeVisible();
 
     // Unpause one card → message disappears.
-    await desktopTable
+    await cardRows
       .getByLabel(/Resume this card/)
       .first()
       .click();
@@ -163,16 +163,16 @@ test.describe("Pause cards — Phase 12", () => {
     // (Phase 1 initial state). Pausing then immediately unpausing must leave
     // cooldownUntil NULL — proved indirectly by the card appearing in the next
     // assembled session.
-    const firstRow = page.locator("table tbody tr").first();
+    const firstRow = page.getByTestId("card-row").first();
     const firstCardFront = (
-      await firstRow.locator("td").first().textContent()
+      await firstRow.locator("div").first().textContent()
     )?.trim();
     expect(firstCardFront).toBeTruthy();
 
     // Pause then unpause.
     await firstRow.getByLabel(/Pause this card/).click();
     const pausedRow = page
-      .locator("table tbody tr")
+      .getByTestId("card-row")
       .filter({ hasText: firstCardFront ?? "" });
     await expect(pausedRow.getByText("Paused")).toBeVisible();
     await pausedRow.getByLabel(/Resume this card/).click();

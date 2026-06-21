@@ -1,5 +1,5 @@
 import { expect, test } from "playwright/test";
-import { signIn, signUpWithDeck, testEmail, waitForCompilation } from "./helpers";
+import { signIn, signUpWithDeck, waitForCompilation } from "./helpers";
 
 test.describe("Authentication — signup and login", () => {
   test("login page renders with form fields", async ({ page }) => {
@@ -26,8 +26,18 @@ test.describe("Authentication — signup and login", () => {
 
   test("can create a new account and reach dashboard", async ({ page }) => {
     await signUpWithDeck(page);
-    // After completing the welcome flow, the deck view is visible
-    await expect(page.getByText("French")).toBeVisible({ timeout: 10_000 });
+    // After completing the welcome flow, the French deck is active.
+    // The Daybreak header shows a "FR" LangChip on the deck-picker trigger
+    // (the full word "French" is inside the closed popover, not directly visible).
+    // Assert the deck-picker trigger is visible — it only renders when a deck exists.
+    const deckTrigger = page.getByTestId("deck-picker-trigger");
+    await expect(deckTrigger).toBeVisible({ timeout: 10_000 });
+    // Open the popover and confirm "French" is listed as the active deck option
+    await deckTrigger.click();
+    await expect(page.getByTestId("deck-option-fr")).toBeVisible({
+      timeout: 5_000,
+    });
+    await expect(page.getByTestId("deck-option-fr")).toContainText("French");
   });
 
   test("shows error for duplicate email signup", async ({ page }) => {

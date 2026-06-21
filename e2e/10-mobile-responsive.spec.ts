@@ -51,11 +51,17 @@ test.describe("Mobile responsiveness", () => {
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
 
+    // Daybreak layout: no <table> element at any viewport
     const table = page.locator("table");
     await expect(table).not.toBeVisible();
 
-    const mobileCards = page.locator(".border.border-border.rounded-lg");
-    const count = await mobileCards.count();
+    // "Your words" accordion is collapsed by default — expand it to see the rows
+    await page.getByTestId("words-accordion-header").click();
+
+    // Daybreak card rows render as divs with data-testid="card-row"
+    const cardRows = page.getByTestId("card-row");
+    await expect(cardRows.first()).toBeVisible();
+    const count = await cardRows.count();
     expect(count).toBeGreaterThanOrEqual(3);
   });
 
@@ -69,7 +75,9 @@ test.describe("Mobile responsiveness", () => {
     await expect(page.getByText("Tap to reveal")).toBeVisible({
       timeout: 5_000,
     });
-    await expect(page.getByRole("button", { name: /quit study session/i })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /quit study session/i }),
+    ).toBeVisible();
 
     const scrollWidth = await page.evaluate(
       () => document.documentElement.scrollWidth,
@@ -115,17 +123,22 @@ test.describe("Mobile responsiveness", () => {
     expect(frBox!.y).toBeGreaterThan(engBox!.y);
   });
 
-  // Mobile card-management affordances live in the stacked-card layout
-  // (card-list.tsx `md:hidden`), NOT the desktop table. This verifies the
-  // mobile Pause + Edit buttons are actually visible + usable on a phone
-  // viewport (the table-based 05/12 specs are desktop-only and skip on mobile).
+  // Mobile card-management affordances live in the Daybreak card-row layout
+  // (data-testid="card-row"), visible after expanding the "Your words" accordion.
+  // The desktop table no longer exists — the Daybreak layout is shared across
+  // viewports (DSH-05). This verifies Pause + Edit buttons are usable on mobile.
   test("card management affordances (pause, edit) are usable on mobile", async ({
     page,
   }) => {
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 2);
 
-    // Pause: the VISIBLE button (mobile layout), not the hidden desktop table.
+    // "Your words" accordion is collapsed by default — expand it so card rows
+    // and their action buttons become visible.
+    await page.getByTestId("words-accordion-header").click();
+    await expect(page.getByTestId("card-row").first()).toBeVisible();
+
+    // Pause: button is inside the expanded accordion (aria-label preserved from pre-Daybreak)
     const pause = page
       .locator('[aria-label="Pause this card"]:visible')
       .first();

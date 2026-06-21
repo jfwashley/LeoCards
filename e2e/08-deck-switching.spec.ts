@@ -46,8 +46,13 @@ test.describe("Deck switching — multiple decks", () => {
       .catch(() => {});
     await page.waitForTimeout(2000);
 
-    // Switch back to French deck
+    // Switch back to French deck — click trigger and wait for the popover content
+    // to be attached before looking for the deck option.
     await trigger.click();
+    // Wait for any deck option to appear (confirms popover is open)
+    await page
+      .getByTestId("new-deck-row")
+      .waitFor({ state: "visible", timeout: 5_000 });
     const frenchOption = page.getByTestId("deck-option-fr");
     await frenchOption.waitFor({ state: "visible", timeout: 5_000 });
     await frenchOption.click();

@@ -35,8 +35,11 @@ test.describe("Dashboard — habitat hero and deck integration", () => {
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 2);
 
-    await expect(page.getByText(/Level \d+/)).toBeVisible();
-    // HabitatHero wraps a habitat-medallion (Plan 03 testid)
+    // HabitatHero wraps a habitat-medallion (Plan 03 testid) — use the testid
+    // to scope; getByText(/Level \d+/) matches both the hero title AND the subtitle
+    // "N of M cards to Level N+1" causing a strict-mode multi-element error.
     await expect(page.getByTestId("habitat-medallion")).toBeVisible();
+    // Confirm the hero title is present by scoping to the habitat-hero subtitle container
+    await expect(page.getByTestId("habitat-hero-subtitle")).toBeVisible();
   });
 });

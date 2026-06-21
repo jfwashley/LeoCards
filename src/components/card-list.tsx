@@ -394,6 +394,8 @@ export const CardList = React.memo(function CardList({
                     return (
                       <div
                         key={card.id}
+                        data-testid="card-row"
+                        data-card-id={card.id}
                         style={{
                           display: "flex",
                           alignItems: "center",

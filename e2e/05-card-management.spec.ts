@@ -2,16 +2,19 @@ import { expect, test } from "playwright/test";
 import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
 
 test.describe("Card management — search, edit, delete", () => {
-  // These assert the DESKTOP <table> layout (card-list.tsx `hidden md:table`).
-  // On mobile the list renders as stacked cards (`md:hidden`) with its own
-  // buttons — covered by 10-mobile-responsive "card management affordances".
+  // These assert the Daybreak card-row layout (accordion-based, card-list.tsx).
+  // On mobile the same rows are visible after expanding the accordion —
+  // but pause/edit affordances on mobile are covered in 10-mobile-responsive.
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name === "mobile",
-      "Desktop table layout — mobile covered in 10-mobile-responsive",
+      "Desktop layout — mobile card management covered in 10-mobile-responsive",
     );
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
+    // "Your words" accordion is collapsed by default (Daybreak DSH-04) — expand it
+    await page.getByTestId("words-accordion-header").click();
+    await expect(page.getByTestId("card-row").first()).toBeVisible();
   });
 
   test("cards appear in deck list after adding from browser", async ({
