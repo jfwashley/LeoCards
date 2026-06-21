@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 
 import { AppHeader } from "@/components/app-header";
 import { CardList } from "@/components/card-list";
+import { LionFace } from "@/components/daybreak/lion-face";
 import type { DeckOption } from "@/components/deck-switcher";
-import { HabitatWidget } from "@/components/habitat-widget";
+import { HabitatHero } from "@/components/habitat-hero";
 import type { HabitatState } from "@/lib/habitat-engine";
 
 const LANGUAGE_LABELS: Record<string, string> = {
@@ -41,7 +42,8 @@ function formatCountdown(ms: number): string {
   return "<1m";
 }
 
-// Isolated countdown component — re-renders every 60s without affecting parent
+// Isolated countdown component — re-renders every 60s without affecting parent.
+// Returns the countdown string for the status row.
 function CountdownTimer({
   earliestCooldownEnd,
   hasDueCards,
@@ -72,22 +74,197 @@ function CountdownTimer({
     return () => clearInterval(interval);
   }, [earliestCooldownEnd, hasDueCards, router]);
 
-  const cooldownDate = new Date(earliestCooldownEnd);
-  const formattedTime = cooldownDate.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
+  // Render the "Resting · {countdown}" status text in-line
   return (
-    <button
-      type="button"
-      disabled
-      aria-disabled="true"
-      title={`Next cards available at ${formattedTime}`}
-      className="inline-flex items-center justify-center rounded-lg bg-muted text-muted-foreground px-4 h-10 text-sm cursor-not-allowed"
+    <span
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        fontSize: 14.5,
+        fontWeight: 600,
+        color: "#8A6235",
+      }}
     >
-      Next cards in {countdown}
-    </button>
+      <span style={{ position: "relative", display: "inline-flex" }}>
+        <LionFace
+          size={22}
+          mane="#E8973B"
+          face="#FFD9A6"
+          muzzle="#FFF1DC"
+          ink="#4A331C"
+        />
+        <span
+          style={{
+            position: "absolute",
+            right: -5,
+            top: -4,
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: 12,
+            color: "#B4762A",
+          }}
+        >
+          z
+        </span>
+      </span>
+      Resting &middot; {countdown}
+    </span>
+  );
+}
+
+// StatusText — four-state machine (due / none / cooldown / paused)
+function StatusText({
+  hasDueCards,
+  dueCount,
+  earliestCooldownEnd,
+  allPaused,
+}: {
+  hasDueCards: boolean;
+  dueCount: number;
+  earliestCooldownEnd: string | null;
+  allPaused: boolean;
+}) {
+  // Cooldown state: earliestCooldownEnd set and nothing due
+  if (earliestCooldownEnd && !hasDueCards) {
+    return (
+      <CountdownTimer
+        earliestCooldownEnd={earliestCooldownEnd}
+        hasDueCards={hasDueCards}
+      />
+    );
+  }
+
+  // All-paused state
+  if (allPaused) {
+    return (
+      <span
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 14.5,
+          fontWeight: 600,
+          color: "#8A6235",
+        }}
+      >
+        <span style={{ display: "flex", gap: 3 }}>
+          <span
+            style={{
+              width: 3.5,
+              height: 13,
+              borderRadius: 2,
+              background: "#B49B78",
+              display: "inline-block",
+            }}
+          />
+          <span
+            style={{
+              width: 3.5,
+              height: 13,
+              borderRadius: 2,
+              background: "#B49B78",
+              display: "inline-block",
+            }}
+          />
+        </span>
+        All paused
+      </span>
+    );
+  }
+
+  // Due state: hasDueCards (amber dot + count)
+  if (hasDueCards) {
+    return (
+      <span
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 14.5,
+          fontWeight: 700,
+          color: "#4A331C",
+        }}
+      >
+        <span
+          style={{
+            width: 9,
+            height: 9,
+            borderRadius: "50%",
+            background: "#F28A1F",
+            flex: "none",
+            display: "inline-block",
+          }}
+        />
+        {dueCount} due
+      </span>
+    );
+  }
+
+  // None-due state: outline dot + "0 due"
+  return (
+    <span
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        fontSize: 14.5,
+        fontWeight: 700,
+        color: "#8C7A63",
+      }}
+    >
+      <span
+        style={{
+          width: 9,
+          height: 9,
+          borderRadius: "50%",
+          background: "transparent",
+          border: "1.6px solid #8C7A63",
+          flex: "none",
+          display: "inline-block",
+          boxSizing: "border-box",
+        }}
+      />
+      0 due
+    </span>
+  );
+}
+
+// Plus glyph for "Add a card" pill
+function PlusGlyph() {
+  return (
+    <span
+      style={{
+        position: "relative",
+        width: 14,
+        height: 14,
+        flex: "none",
+        display: "inline-block",
+      }}
+    >
+      <span
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 6,
+          width: 14,
+          height: 2.3,
+          borderRadius: 2,
+          background: "#F28A1F",
+        }}
+      />
+      <span
+        style={{
+          position: "absolute",
+          left: 6,
+          top: 0,
+          width: 2.3,
+          height: 14,
+          borderRadius: 2,
+          background: "#F28A1F",
+        }}
+      />
+    </span>
   );
 }
 
@@ -128,31 +305,27 @@ export function DeckView({
 
   const hasCards = initialCards.length > 0;
 
-  function renderStudyButton() {
-    if (!hasCards) return null;
+  // All-paused: cards exist, nothing due, no cooldown active, AND every card is paused.
+  // The original branch condition was hasCards && !hasDueCards && !earliestCooldownEnd
+  // (which is only reachable when every card is actually paused).
+  // We check initialCards.every(pausedAt) as a safety guard.
+  const allPaused =
+    hasCards &&
+    !hasDueCards &&
+    !earliestCooldownEnd &&
+    initialCards.every((c) => c.pausedAt !== null);
 
-    if (hasDueCards) {
-      return (
-        <Link
-          href={`/study?deck=${activeDeckId}`}
-          className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-4 h-10 text-sm font-medium hover:bg-primary/90 transition-colors"
-        >
-          Start studying
-        </Link>
-      );
-    }
+  // Compute due count: for display; we use the length of initialCards that are
+  // not paused and not in cooldown — but hasDueCards is the authoritative flag
+  // (computed server-side). Show a static due count only when hasDueCards is true.
+  // The plan does not provide a separate dueCount prop, so we derive a display
+  // count: if hasDueCards, count the non-paused, non-cooldown cards as a proxy.
+  const dueCount = hasDueCards
+    ? initialCards.filter((c) => !c.pausedAt && !c.cooldownUntil).length || 1
+    : 0;
 
-    if (earliestCooldownEnd) {
-      return (
-        <CountdownTimer
-          earliestCooldownEnd={earliestCooldownEnd}
-          hasDueCards={hasDueCards}
-        />
-      );
-    }
-
-    return null;
-  }
+  // Sleeping: resting/cooldown state for the hero
+  const sleeping = Boolean(earliestCooldownEnd && !hasDueCards);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -163,35 +336,115 @@ export function DeckView({
         nativeLang={nativeLang}
       />
       <main className="flex-1 px-4 sm:px-6 md:px-8 py-6 sm:py-8 max-w-4xl mx-auto w-full">
-        {/* Mini habitat widget — links to /habitat */}
+        {/* HabitatHero — DSH-02 wiring (L-04) */}
         <div className="mb-6">
-          <HabitatWidget
+          <HabitatHero
             habitatState={habitatState}
             celebratingLevel={celebratingLevel}
+            sleeping={sleeping}
           />
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
-          <div className="flex items-center gap-3 flex-wrap">
-            {renderStudyButton()}
-            <Link
-              href={`/deck/browse?deck=${activeDeckId}`}
-              className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-10 text-sm hover:bg-muted transition-colors"
+
+        {/* Option-D action line (DSH-03) — only renders when deck has cards */}
+        {hasCards && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 14,
+              marginBottom: 24,
+            }}
+          >
+            {/* StudyButton — full-width, height 58 */}
+            {hasDueCards ? (
+              <Link
+                href={`/study?deck=${activeDeckId}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 58,
+                  borderRadius: 14,
+                  background: "#F28A1F",
+                  color: "#FFFFFF",
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 21,
+                  boxShadow: "0 10px 22px rgba(242,138,31,0.32)",
+                  textDecoration: "none",
+                }}
+              >
+                Start studying
+              </Link>
+            ) : (
+              <div
+                aria-disabled="true"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 58,
+                  borderRadius: 14,
+                  background: "#F4E7D2",
+                  color: "#B49B78",
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: 21,
+                }}
+              >
+                Start studying
+              </div>
+            )}
+
+            {/* Status row: StatusText (left) | "Add a card" pill (right) */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+              }}
             >
-              Browse words
-            </Link>
-            <Link
-              href={`/deck/new-card?deck=${activeDeckId}`}
-              className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-3 h-10 text-sm hover:bg-muted transition-colors"
-            >
-              Add a card
-            </Link>
+              <StatusText
+                hasDueCards={hasDueCards}
+                dueCount={dueCount}
+                earliestCooldownEnd={earliestCooldownEnd}
+                allPaused={allPaused}
+              />
+
+              {/* "Add a card" pill — always a link, accessible name "Add a card" */}
+              <Link
+                href={`/deck/new-card?deck=${activeDeckId}`}
+                data-testid="add-a-card"
+                style={{
+                  height: 40,
+                  padding: "0 15px",
+                  borderRadius: 12,
+                  border: "1.5px solid #EDDFC9",
+                  background: "#FFFFFF",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  textDecoration: "none",
+                  boxSizing: "border-box",
+                  flex: "none",
+                }}
+              >
+                <PlusGlyph />
+                <span
+                  style={{
+                    fontSize: 14.5,
+                    fontWeight: 700,
+                    color: "#4A331C",
+                  }}
+                >
+                  Add a card
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
-        {hasCards && !hasDueCards && !earliestCooldownEnd && (
-          <p className="text-sm text-muted-foreground mt-2 mb-4">
-            All cards are paused — unpause one to study.
-          </p>
         )}
+
         <CardList
           cards={initialCards}
           nativeLangLabel={nativeLangLabel}
