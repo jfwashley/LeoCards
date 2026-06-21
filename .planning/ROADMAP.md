@@ -121,7 +121,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 > - **DSH-03 (action line):** remove the "Browse words" link from the populated-deck action line (`src/components/deck-view.tsx` ~line 195). The Daybreak action line is Start studying + status + Add a card only; "Browse words" stays solely in the empty-deck state (`src/components/card-list.tsx`).
 
 **Plans**: 5 plans (2 waves)
-- [ ] 21-01-PLAN.md — Foundation: @base-ui Popover wrapper + getLanguageBreakdown / "My Deck" heading removal (D-02)
+- [x] 21-01-PLAN.md — Foundation: @base-ui Popover wrapper + getLanguageBreakdown / "My Deck" heading removal (D-02)
 - [ ] 21-02-PLAN.md — Header TopBar + deck-picker popover with inline create + logout glyph (DSH-01, D-01)
 - [ ] 21-03-PLAN.md — HabitatMedallion + HabitatHero (conic ring, L9 gold + "Course 1 complete", cooldown nap) (DSH-02, D-05/D-06)
 - [ ] 21-04-PLAN.md — DeckView body: hero wiring + Option-D action line + 4-state status row, "Browse words" removed (DSH-03, L-05)
@@ -180,7 +180,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 |-------|----------------|--------|-----------|
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
 | 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
-| 21. Dashboard — "My Deck" | 0/5 | Planned | - |
+| 21. Dashboard — "My Deck" | 1/5 | Executing | - |
 | 22. Add a Card | 0/TBD | Not started | - |
 | 23. Browse Words | 0/TBD | Not started | - |
 | 24. Habitat | 0/TBD | Not started | - |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 21 context gathered
-last_updated: "2026-06-21T13:55:26.591Z"
-last_activity: 2026-06-21 -- Phase 21 planning complete
+stopped_at: Phase 21 Plan 01 complete
+last_updated: "2026-06-21T15:25:00.000Z"
+last_activity: 2026-06-21 -- Phase 21 Plan 01 executed (Popover wrapper + D-02 removal)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 12
-  completed_plans: 7
+  completed_plans: 8
   percent: 33
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 21 — dashboard — "my deck"
+**Current focus:** Phase 21 — dashboard-my-deck
 
 ## Current Position
 
-Phase: 21
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-21 -- Phase 21 planning complete
+Phase: 21 (dashboard-my-deck) — EXECUTING
+Plan: 2 of 5
+Status: Executing Phase 21
+Last activity: 2026-06-21 -- Phase 21 Plan 01 complete (Popover wrapper + D-02 removal; gates green)
 
 Progress: [██████████] 100%
 
@@ -54,6 +54,8 @@ Progress: [██████████] 100%
 - [Phase ?]: 19-04: T-19-04-INJ — z.enum(['en','fr','es']) validates at call site before authClient.updateUser
 - [Phase ?]: Adapted card-stack.tsx in place with Daybreak surface tokens rather than reusing GhostPeek atom (auth GhostPeek renders top-edge strips h:22px, not full-height ghost cards; in-place reskin is lower-risk)
 - [Phase ?]: Added data-testid=card-back-hint to back-face swipe cue to scope Playwright locator away from below-card showSwipeHint pill in study-session.tsx (avoids strict-mode multi-match)
+- [21-01]: popover.tsx exports PopoverContent convenience wrapper (Portal>Positioner>Popup) in addition to the six required primitives — reduces boilerplate for Plan 02 deck-switcher consumer
+- [21-01]: HabitatWidget import removed from dashboard/page.tsx as dead code after D-02 removal; Plans 03/04 own the habitat hero swap
 
 ### Pending Todos
 
@@ -75,6 +77,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-21T13:01:22.114Z
-Stopped at: Phase 21 context gathered
-Resume file: .planning/phases/21-dashboard-my-deck/21-CONTEXT.md
+Last session: 2026-06-21T15:25:00.000Z
+Stopped at: Phase 21 Plan 01 complete
+Resume file: .planning/phases/21-dashboard-my-deck/21-02-PLAN.md
