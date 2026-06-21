@@ -67,7 +67,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **Milestone goal:** Replace LeoCards' utilitarian UI with the warm, cohesive "Daybreak" design system across every primary screen — friendly, mobile-first, anchored by Leo the lion.
 
 - [x] **Phase 19: Daybreak Foundation + Onboarding & Auth** — Design system tokens + shared components + all auth/onboarding screens in Daybreak (completed 2026-06-20)
-- [ ] **Phase 20: Study Screen** — Study card and session result screen in Daybreak
+- [x] **Phase 20: Study Screen** — Study card and session result screen in Daybreak (completed 2026-06-21)
 - [ ] **Phase 21: Dashboard — "My Deck"** — Full dashboard experience in Daybreak (header, habitat hero, action line, word accordion)
 - [ ] **Phase 22: Add a Card** — Type-a-word and from-an-image flows in Daybreak
 - [ ] **Phase 23: Browse Words** — Topic tiles and word-list screens in Daybreak
@@ -102,7 +102,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
   2. The session-result/end screen (cards studied, % correct, learned count, "Back to deck", and level-up celebration hand-off) matches the Daybreak visual language
 **Plans**: 2 plans (2 waves)
 - [x] 20-01-PLAN.md — Study card + count-aware ghost-peek stack reskinned to Daybreak (surface, ALL-CAPS prompt, amber Tap-to-reveal pill, green/red swipe feedback), interaction model + QA badge preserved (STU-01)
-- [ ] 20-02-PLAN.md — Session chrome + end screen (LionFace, Baloo 2 numerals, amber learned + TBtn) + level-up overlay (Soft-Clay Leo + recolored confetti, reduced-motion gate) (STU-02)
+- [x] 20-02-PLAN.md — Session chrome + end screen (LionFace, Baloo 2 numerals, amber learned + TBtn) + level-up overlay (Soft-Clay Leo + recolored confetti, reduced-motion gate) (STU-02)
 **UI hint**: yes
 
 ### Phase 21: Dashboard — "My Deck"
@@ -174,7 +174,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
-| 20. Study Screen | 1/2 | In Progress|  |
+| 20. Study Screen | 2/2 | Complete   | 2026-06-21 |
 | 21. Dashboard — "My Deck" | 0/TBD | Not started | - |
 | 22. Add a Card | 0/TBD | Not started | - |
 | 23. Browse Words | 0/TBD | Not started | - |
