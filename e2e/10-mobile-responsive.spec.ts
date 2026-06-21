@@ -69,7 +69,7 @@ test.describe("Mobile responsiveness", () => {
     await expect(page.getByText("Tap to reveal")).toBeVisible({
       timeout: 5_000,
     });
-    await expect(page.getByText("Quit session")).toBeVisible();
+    await expect(page.getByRole("button", { name: /quit study session/i })).toBeVisible();
 
     const scrollWidth = await page.evaluate(
       () => document.documentElement.scrollWidth,

@@ -79,6 +79,7 @@ export function LevelUpOverlay({ level, onDismiss }: LevelUpOverlayProps) {
       {/* Content — always shows (static Leo + stats even in reduced-motion) */}
       <div className="relative flex flex-col items-center gap-4 text-center px-6">
         {/* Soft-Clay Leo (D-05) — static widget-l{N}.webp, L9-clamped */}
+        {/* biome-ignore lint/performance/noImgElement: dynamic src with Math.min clamp is unsupported by next/image; plain <img> required for the L9-clamped habitat asset path (20-RESEARCH.md OQ-1, Pitfall 4) */}
         <img
           src={`/habitat/widget-l${assetLevel}.webp`}
           alt="Leo"
@@ -87,7 +88,9 @@ export function LevelUpOverlay({ level, onDismiss }: LevelUpOverlayProps) {
           style={{ borderRadius: 16, objectFit: "cover" }}
         />
         <p className="text-sm text-muted-foreground">Habitat Level</p>
-        <p className="font-display text-[62px] font-bold text-primary leading-none">{level}</p>
+        <p className="font-display text-[62px] font-bold text-primary leading-none">
+          {level}
+        </p>
         <p className="text-base text-foreground">
           {/* NOTE: level === 10 condition intentionally preserved per CONTEXT Deferred —
               dead branch (habitat caps at L9); do NOT change to level >= 9 (scope fence) */}
@@ -95,7 +98,9 @@ export function LevelUpOverlay({ level, onDismiss }: LevelUpOverlayProps) {
             ? "A bird arrived in your habitat!"
             : "Your habitat grew!"}
         </p>
-        <p className="text-sm text-muted-foreground mt-6">Tap anywhere to continue</p>
+        <p className="text-sm text-muted-foreground mt-6">
+          Tap anywhere to continue
+        </p>
       </div>
     </motion.div>
   );

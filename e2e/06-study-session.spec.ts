@@ -20,7 +20,7 @@ test.describe("Study session — flashcard loop", () => {
     await page.waitForURL(/\/study/);
 
     await expect(page.getByText("Study session")).toBeVisible();
-    await expect(page.getByText("Quit session")).toBeVisible();
+    await expect(page.getByRole("button", { name: /quit study session/i })).toBeVisible();
     await expect(
       page.getByText(/What's the translation|What does this mean/),
     ).toBeVisible({ timeout: 5_000 });
@@ -68,7 +68,7 @@ test.describe("Study session — flashcard loop", () => {
     await page.waitForURL(/\/study/);
 
     await page.waitForSelector('text="Tap to reveal"', { timeout: 5_000 });
-    await page.getByText("Quit session").click();
+    await page.getByRole("button", { name: /quit study session/i }).click();
     await expect(page.getByText("Quit session?")).toBeVisible();
     await page.getByRole("button", { name: "Save and quit" }).click();
 

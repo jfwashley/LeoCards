@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { LevelUpOverlay } from "@/components/level-up-overlay";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 // Mock the reduced-motion hook so we can control its return value per test case
 vi.mock("@/hooks/use-prefers-reduced-motion", () => ({

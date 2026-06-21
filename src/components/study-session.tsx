@@ -4,10 +4,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CardStack } from "@/components/card-stack";
-import { LevelUpOverlay } from "@/components/level-up-overlay";
-import { StudyCard } from "@/components/study-card";
 import { LionFace } from "@/components/daybreak/lion-face";
 import { TBtn } from "@/components/daybreak/t-btn";
+import { LevelUpOverlay } from "@/components/level-up-overlay";
+import { StudyCard } from "@/components/study-card";
 import type { GradeEntry, SessionCard, SessionStats } from "@/lib/study-engine";
 
 // ============================================================
@@ -422,6 +422,7 @@ export function StudySession({
         style={{ padding: "4px 22px 0" }}
       >
         <button
+          type="button"
           aria-label="Quit study session"
           onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
           style={{
@@ -469,6 +470,7 @@ export function StudySession({
           </p>
           <div className="flex gap-2 justify-end">
             <button
+              type="button"
               className="h-9 px-4 text-sm font-semibold rounded-[10px] border text-foreground"
               style={{ borderColor: "#EDDFC9", background: "#FFFFFF" }}
               onClick={() => dispatch({ type: "TOGGLE_QUIT_CONFIRM" })}
@@ -476,7 +478,13 @@ export function StudySession({
               Keep studying
             </button>
             <TBtn
-              style={{ width: "auto", height: 36, padding: "0 16px", fontSize: 14, borderRadius: 10 }}
+              style={{
+                width: "auto",
+                height: 36,
+                padding: "0 16px",
+                fontSize: 14,
+                borderRadius: 10,
+              }}
               onClick={() => dispatch({ type: "QUIT_SESSION" })}
             >
               Save and quit
@@ -520,11 +528,8 @@ export function StudySession({
               borderRadius: 999,
             }}
           >
-            Swipe{" "}
-            <span style={{ color: "#3E9B5F" }}>→</span>
-            {" "}if you got it ·{" "}
-            <span style={{ color: "#DE5F4A" }}>←</span>
-            {" "}still learning
+            Swipe <span style={{ color: "#3E9B5F" }}>→</span> if you got it ·{" "}
+            <span style={{ color: "#DE5F4A" }}>←</span> still learning
           </div>
         )}
       </div>
