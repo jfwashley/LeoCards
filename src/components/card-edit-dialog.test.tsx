@@ -1,5 +1,11 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
 
@@ -12,7 +18,7 @@ vi.mock("@/lib/deck-actions", () => ({
 afterEach(() => cleanup());
 
 // Import after mock so we can inspect calls
-import { editCard, deleteCard } from "@/lib/deck-actions";
+import { deleteCard, editCard } from "@/lib/deck-actions";
 
 // Fixture card
 const FIXTURE_CARD: CardRow = {
@@ -46,8 +52,12 @@ describe("CardEditDialog — TField inputs", () => {
     expect(screen.getByText("Target word")).toBeTruthy();
 
     // Check input values via label association (TField derives id from label text)
-    const nativeInput = document.getElementById("native-word") as HTMLInputElement;
-    const targetInput = document.getElementById("target-word") as HTMLInputElement;
+    const nativeInput = document.getElementById(
+      "native-word",
+    ) as HTMLInputElement;
+    const targetInput = document.getElementById(
+      "target-word",
+    ) as HTMLInputElement;
 
     expect(nativeInput).not.toBeNull();
     expect(targetInput).not.toBeNull();
@@ -64,7 +74,9 @@ describe("CardEditDialog — Save flow", () => {
     renderDialog();
 
     // Modify the front field
-    const nativeInput = document.getElementById("native-word") as HTMLInputElement;
+    const nativeInput = document.getElementById(
+      "native-word",
+    ) as HTMLInputElement;
     fireEvent.change(nativeInput, { target: { value: "Hi" } });
 
     const saveBtn = screen.getByRole("button", { name: /save changes/i });

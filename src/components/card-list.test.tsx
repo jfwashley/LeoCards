@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CardList } from "@/components/card-list";
 
@@ -19,23 +19,23 @@ vi.mock("next/navigation", () => ({
 }));
 
 // Mock fetch for togglePause
-global.fetch = vi.fn(() =>
-  Promise.resolve({ ok: true } as Response),
-);
+global.fetch = vi.fn(() => Promise.resolve({ ok: true } as Response));
 
 afterEach(() => cleanup());
 
 // -----------------------------------------------------------------------
 // Shared fixture — a small fixed card list for all tests
 // -----------------------------------------------------------------------
-function makeCard(overrides: Partial<{
-  id: string;
-  front: string;
-  back: string;
-  source: string;
-  masteryRound: number;
-  pausedAt: Date | null;
-}>) {
+function makeCard(
+  overrides: Partial<{
+    id: string;
+    front: string;
+    back: string;
+    source: string;
+    masteryRound: number;
+    pausedAt: Date | null;
+  }>,
+) {
   return {
     id: overrides.id ?? "card-1",
     front: overrides.front ?? "Hello",
@@ -49,10 +49,35 @@ function makeCard(overrides: Partial<{
 }
 
 const FIXTURE_CARDS = [
-  makeCard({ id: "c1", front: "Cat", back: "Chat", source: "wordlist", masteryRound: 0 }),
-  makeCard({ id: "c2", front: "Dog", back: "Chien", source: "manual", masteryRound: 2 }),
-  makeCard({ id: "c3", front: "Bird", back: "Oiseau", source: "wordlist", masteryRound: 3 }),
-  makeCard({ id: "c4", front: "Fish", back: "Poisson", source: "wordlist", masteryRound: 1, pausedAt: new Date() }),
+  makeCard({
+    id: "c1",
+    front: "Cat",
+    back: "Chat",
+    source: "wordlist",
+    masteryRound: 0,
+  }),
+  makeCard({
+    id: "c2",
+    front: "Dog",
+    back: "Chien",
+    source: "manual",
+    masteryRound: 2,
+  }),
+  makeCard({
+    id: "c3",
+    front: "Bird",
+    back: "Oiseau",
+    source: "wordlist",
+    masteryRound: 3,
+  }),
+  makeCard({
+    id: "c4",
+    front: "Fish",
+    back: "Poisson",
+    source: "wordlist",
+    masteryRound: 1,
+    pausedAt: new Date(),
+  }),
 ];
 
 function renderCardList(cards = FIXTURE_CARDS) {

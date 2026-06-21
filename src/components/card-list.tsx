@@ -1,8 +1,8 @@
 "use client";
 
 import { Pause, Pencil, Play, Search, X } from "lucide-react";
-import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState, useTransition } from "react";
 import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
@@ -314,9 +314,7 @@ export const CardList = React.memo(function CardList({
                   alignItems: "center",
                 }}
               >
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none"
-                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
                 <input
                   data-testid="words-search-input"
                   value={query}
@@ -488,7 +486,10 @@ export const CardList = React.memo(function CardList({
                           aria-label="Edit card"
                           onClick={() => setEditCard(card)}
                         >
-                          <Pencil className="size-4" style={{ color: "#8C7A63" }} />
+                          <Pencil
+                            className="size-4"
+                            style={{ color: "#8C7A63" }}
+                          />
                         </IconBtn>
                       </div>
                     );

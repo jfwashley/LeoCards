@@ -1,5 +1,10 @@
 import { expect, test } from "playwright/test";
-import { completeWelcomeFlow, signUpFreshUser, signUpWithDeck, waitForCompilation } from "./helpers";
+import {
+  completeWelcomeFlow,
+  signUpFreshUser,
+  signUpWithDeck,
+  waitForCompilation,
+} from "./helpers";
 
 // ---------------------------------------------------------------------------
 // Helper: save a card directly via the API (used to seed a non-empty deck
@@ -7,20 +12,31 @@ import { completeWelcomeFlow, signUpFreshUser, signUpWithDeck, waitForCompilatio
 // We call the server action indirectly by navigating to the + Add a card
 // route and filling the form, which is the most reliable browser path.
 // ---------------------------------------------------------------------------
-async function seedOneCard(page: import("playwright/test").Page): Promise<void> {
+async function seedOneCard(
+  page: import("playwright/test").Page,
+): Promise<void> {
   // Navigate to the new-card route
   await page.goto("/deck/new-card");
   await waitForCompilation(page);
 
   // Fill "Hello" → "Bonjour" (front = native word, back = target word)
   // The form may use different label text — try common patterns
-  const frontInput = page.getByLabel("Front").or(page.getByPlaceholder("Front")).first();
-  const backInput = page.getByLabel("Back").or(page.getByPlaceholder("Back")).first();
+  const frontInput = page
+    .getByLabel("Front")
+    .or(page.getByPlaceholder("Front"))
+    .first();
+  const backInput = page
+    .getByLabel("Back")
+    .or(page.getByPlaceholder("Back"))
+    .first();
 
   if (await frontInput.isVisible({ timeout: 5_000 }).catch(() => false)) {
     await frontInput.fill("Hello");
     await backInput.fill("Bonjour");
-    await page.getByRole("button", { name: /save|add|create/i }).first().click();
+    await page
+      .getByRole("button", { name: /save|add|create/i })
+      .first()
+      .click();
     await page.waitForURL(/\/dashboard/, { timeout: 15_000 });
     await waitForCompilation(page);
   } else {
@@ -77,9 +93,10 @@ test.describe("First visit — welcome flow + ONB-06 empty states", () => {
     ).toBeVisible({ timeout: 5_000 });
     // "Add a card" — rendered as a link (ghost button)
     await expect(
-      page.getByRole("link", { name: /\+\s*Add a card/i }).first().or(
-        page.getByText("+ Add a card").first(),
-      ),
+      page
+        .getByRole("link", { name: /\+\s*Add a card/i })
+        .first()
+        .or(page.getByText("+ Add a card").first()),
     ).toBeVisible({ timeout: 5_000 });
   });
 
@@ -105,7 +122,9 @@ test.describe("First visit — welcome flow + ONB-06 empty states", () => {
     await page.waitForTimeout(300);
 
     // Assert the no-results state (ObNoSearch)
-    await expect(page.getByText(/No words match/)).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByText(/No words match/)).toBeVisible({
+      timeout: 5_000,
+    });
 
     // Two controls share the name "Clear search" in this state (the search-bar
     // clear-X icon and the no-results CTA). Target the no-results CTA (rendered
