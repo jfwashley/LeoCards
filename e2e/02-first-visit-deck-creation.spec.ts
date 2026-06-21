@@ -95,8 +95,9 @@ test.describe("First visit — welcome flow + ONB-06 empty states", () => {
     // Seed a card so the card list + search bar render
     await seedOneCard(page);
 
-    // Now the deck has ≥1 card — the search input should be present
-    const searchInput = page.getByPlaceholder("Search your cards...");
+    // Now the deck has ≥1 card — expand the accordion first (DSH-04) then locate the search input
+    await page.getByTestId("words-accordion-header").click();
+    const searchInput = page.getByTestId("words-search-input");
     await expect(searchInput).toBeVisible({ timeout: 10_000 });
 
     // Type a query that will match nothing

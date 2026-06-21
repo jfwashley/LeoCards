@@ -21,15 +21,18 @@ test.describe("Card management — search, edit, delete", () => {
   });
 
   test("search filters cards as you type", async ({ page }) => {
-    const searchInput = page.getByPlaceholder("Search your cards...");
+    // The search lives inside the "Your words" accordion — expand it first (DSH-04)
+    await page.getByTestId("words-accordion-header").click();
+    const searchInput = page.getByTestId("words-search-input");
     await expect(searchInput).toBeVisible();
 
     await searchInput.fill("zzzzz");
     await page.waitForTimeout(200);
-    await expect(page.getByText("No cards match")).toBeVisible();
+    // Pre-existing stale selector fixed: component text is "No words match" (updated DSH-05)
+    await expect(page.getByText(/No words match/)).toBeVisible();
 
     await page.getByLabel("Clear search").click();
-    await expect(page.getByText("No cards match")).not.toBeVisible();
+    await expect(page.getByText(/No words match/)).not.toBeVisible();
   });
 
   test("can open edit dialog and modify a card", async ({ page }) => {

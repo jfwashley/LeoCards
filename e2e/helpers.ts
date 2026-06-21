@@ -161,7 +161,7 @@ export async function addWordsFromBrowser(
   page: Page,
   count: number,
 ): Promise<void> {
-  await page.getByRole("link", { name: "Browse words" }).first().click();
+  await page.getByTestId("browse-words-empty").click();
   await page.waitForURL(/\/deck\/browse/, { timeout: 15_000 });
   await waitForCompilation(page);
 
