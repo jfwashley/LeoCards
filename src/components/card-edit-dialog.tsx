@@ -1,7 +1,9 @@
 "use client";
 
-import { Loader2, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { TBtn } from "@/components/daybreak/t-btn";
+import { TField } from "@/components/daybreak/t-field";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { deleteCard, editCard } from "@/lib/deck-actions";
 
 export interface CardRow {
@@ -84,14 +85,9 @@ function EditForm({ card, onClose }: { card: CardRow; onClose: () => void }) {
         {deleteError && (
           <p className="text-sm text-destructive">{deleteError}</p>
         )}
-        <Button
-          variant="destructive"
-          className="w-full h-11"
-          disabled={deleting}
-          onClick={handleDelete}
-        >
-          {deleting ? <Loader2 className="size-4 animate-spin" /> : "Delete"}
-        </Button>
+        <TBtn isPending={deleting} onClick={handleDelete}>
+          Delete
+        </TBtn>
         <Button
           variant="outline"
           className="w-full h-11"
@@ -106,39 +102,22 @@ function EditForm({ card, onClose }: { card: CardRow; onClose: () => void }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="card-front" className="text-sm font-medium">
-          Native word
-        </label>
-        <Input
-          id="card-front"
-          value={front}
-          onChange={(e) => setFront(e.target.value)}
-          disabled={saving}
-          className="h-11"
-        />
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="card-back" className="text-sm font-medium">
-          Target word
-        </label>
-        <Input
-          id="card-back"
-          value={back}
-          onChange={(e) => setBack(e.target.value)}
-          disabled={saving}
-          className="h-11"
-        />
-      </div>
-      {saveError && <p className="text-sm text-destructive">{saveError}</p>}
-      <Button
-        variant="default"
-        className="w-full h-11"
+      <TField
+        label="Native word"
+        value={front}
+        onChange={(e) => setFront(e.target.value)}
         disabled={saving}
-        onClick={handleSave}
-      >
-        {saving ? <Loader2 className="size-4 animate-spin" /> : "Save changes"}
-      </Button>
+      />
+      <TField
+        label="Target word"
+        value={back}
+        onChange={(e) => setBack(e.target.value)}
+        disabled={saving}
+      />
+      {saveError && <p className="text-sm text-destructive">{saveError}</p>}
+      <TBtn isPending={saving} onClick={handleSave}>
+        Save changes
+      </TBtn>
       <Button
         variant="outline"
         className="w-full h-11"
@@ -169,7 +148,10 @@ export function CardEditDialog({
 }: CardEditDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md" showCloseButton={false}>
+      <DialogContent
+        className="max-w-md bg-[var(--background)] rounded-[22px] border border-[#F0E3CF]"
+        showCloseButton={false}
+      >
         <DialogHeader>
           <DialogTitle>Edit card</DialogTitle>
         </DialogHeader>
