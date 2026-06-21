@@ -119,6 +119,7 @@ export default async function DashboardPage({
       nativeLang={nativeLang}
       activeDeckId={activeDeck.id}
       hasDueCards={hasDueCards}
+      dueCount={sessionCards.length}
       earliestCooldownEnd={earliestCooldownEndStr}
       habitatState={habitatState}
       celebratingLevel={celebratingLevel}

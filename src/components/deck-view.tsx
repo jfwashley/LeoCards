@@ -274,6 +274,7 @@ interface DeckViewProps {
   nativeLang: string;
   activeDeckId: string;
   hasDueCards: boolean;
+  dueCount: number;
   earliestCooldownEnd: string | null;
   habitatState: HabitatState;
   celebratingLevel?: number | null;
@@ -286,6 +287,7 @@ export function DeckView({
   nativeLang,
   activeDeckId,
   hasDueCards,
+  dueCount,
   earliestCooldownEnd,
   habitatState,
   celebratingLevel = null,
@@ -314,15 +316,6 @@ export function DeckView({
     !hasDueCards &&
     !earliestCooldownEnd &&
     initialCards.every((c) => c.pausedAt !== null);
-
-  // Compute due count: for display; we use the length of initialCards that are
-  // not paused and not in cooldown — but hasDueCards is the authoritative flag
-  // (computed server-side). Show a static due count only when hasDueCards is true.
-  // The plan does not provide a separate dueCount prop, so we derive a display
-  // count: if hasDueCards, count the non-paused, non-cooldown cards as a proxy.
-  const dueCount = hasDueCards
-    ? initialCards.filter((c) => !c.pausedAt && !c.cooldownUntil).length || 1
-    : 0;
 
   // Sleeping: resting/cooldown state for the hero
   const sleeping = Boolean(earliestCooldownEnd && !hasDueCards);

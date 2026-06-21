@@ -110,6 +110,7 @@ describe("DeckView action line — hasDueCards state", () => {
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={true}
+        dueCount={5}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
@@ -121,7 +122,7 @@ describe("DeckView action line — hasDueCards state", () => {
     expect(studyLink.getAttribute("href")).toContain("deck-1");
   });
 
-  it("shows '{N} due' in the status row with N > 0 when hasDueCards", () => {
+  it("shows '5 due' in the status row when dueCount=5 and hasDueCards", () => {
     render(
       <DeckView
         decks={baseDecks}
@@ -129,19 +130,16 @@ describe("DeckView action line — hasDueCards state", () => {
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={true}
+        dueCount={5}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
     );
 
-    // Status row shows a "due" count
+    // Status row shows the server-authoritative due count
     const statusText = screen.getByText(/\d+ due/);
     expect(statusText).toBeTruthy();
-    // Due count must be > 0
-    const match = statusText.textContent?.match(/(\d+) due/);
-    expect(match).toBeTruthy();
-    const count = Number(match?.[1]);
-    expect(count).toBeGreaterThan(0);
+    expect(statusText.textContent).toContain("5 due");
   });
 });
 
@@ -159,6 +157,7 @@ describe("DeckView action line — none-due state (no cooldown, not all-paused)"
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={false}
+        dueCount={0}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
@@ -186,6 +185,7 @@ describe("DeckView action line — none-due state (no cooldown, not all-paused)"
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={false}
+        dueCount={0}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
@@ -210,6 +210,7 @@ describe("DeckView action line — cooldown/resting state", () => {
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={false}
+        dueCount={0}
         earliestCooldownEnd={future}
         habitatState={baseHabitatState}
       />,
@@ -228,6 +229,7 @@ describe("DeckView action line — cooldown/resting state", () => {
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={false}
+        dueCount={0}
         earliestCooldownEnd={future}
         habitatState={baseHabitatState}
       />,
@@ -258,6 +260,7 @@ describe("DeckView action line — all-paused state", () => {
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={false}
+        dueCount={0}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
@@ -274,6 +277,7 @@ describe("DeckView action line — all-paused state", () => {
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={false}
+        dueCount={0}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
@@ -299,6 +303,7 @@ describe("DeckView populated action line — Browse words absent, Add a card pre
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={true}
+        dueCount={3}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
@@ -320,6 +325,7 @@ describe("DeckView populated action line — Browse words absent, Add a card pre
         nativeLang="en"
         activeDeckId="deck-1"
         hasDueCards={true}
+        dueCount={3}
         earliestCooldownEnd={null}
         habitatState={baseHabitatState}
       />,
