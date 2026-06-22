@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 22 Plan 01 complete
-last_updated: "2026-06-22T21:31:24Z"
-last_activity: 2026-06-22 -- 22-01 Add-a-Card atoms + LangChip extraction complete
+stopped_at: Phase 22 Plan 02 complete
+last_updated: "2026-06-22T22:00:00Z"
+last_activity: 2026-06-22 -- 22-02 Daybreak Add-a-Card shell + type-a-word restyle complete
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 16
-  completed_plans: 13
+  completed_plans: 14
   percent: 81
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 ## Current Position
 
 Phase: 22 (add-a-card) — EXECUTING
-Plan: 2 of 4
-Status: Executing Phase 22 — Plan 01 complete; Plan 02 next
-Last activity: 2026-06-22 -- 22-01 complete (6 atoms + LangChip + 15 unit tests)
+Plan: 3 of 4
+Status: Executing Phase 22 — Plan 02 complete; Plan 03 next
+Last activity: 2026-06-22 -- 22-02 complete (ACTop + ACContext + toggle restyle + type-a-word restyle + e2e retarget)
 
-Progress: [████████░░] 81%
+Progress: [████████░░] 84%
 
 ## Shipped Milestones
 
@@ -64,6 +64,10 @@ Progress: [████████░░] 81%
 - [22-01]: Test assertions use ?. optional chaining not ! (biome noNonNullAssertion enforced in this project)
 - [22-01]: ACPairRow D-01 orientation locked by DOM-order test — target (ES) at inputs[0], native (EN) at inputs[1]
 - [22-01]: LangChip extracted verbatim from deck-switcher.tsx to daybreak/lang-chip.tsx; deck-switcher re-imports unchanged
+- [22-02]: ACField kept inline in translation-form.tsx (not shared daybreak/* atom) — premature to generalize before image-flow field design is known
+- [22-02]: ACLinkBadge swap wired to existing SET_NATIVE/SET_TARGET actions — no new reducer actions; re-triggers debounced translate
+- [22-02]: Shimmer uses CSS animation:pulse (Tailwind keyframe) not motion/react — simpler for this case
+- [22-02]: e2e/09 getByText("Add a Card") straggler fixed alongside e2e/04 retargets in same Task 3 commit
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-22T21:31:24Z
-Stopped at: Phase 22 Plan 01 complete (22-01-SUMMARY.md)
-Resume file: .planning/phases/22-add-a-card/22-02-PLAN.md
+Last session: 2026-06-22T22:00:00Z
+Stopped at: Phase 22 Plan 02 complete (22-02-SUMMARY.md)
+Resume file: .planning/phases/22-add-a-card/22-03-PLAN.md
