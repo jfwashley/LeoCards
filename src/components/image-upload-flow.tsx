@@ -1,16 +1,23 @@
 "use client";
 
-import { AlertCircle, ArrowLeft, ImageOff, Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
-import { type DeckOption, DeckSwitcher } from "@/components/deck-switcher";
+import { ACBanner } from "@/components/daybreak/ac-banner";
+import { ACBtn } from "@/components/daybreak/ac-btn";
+import { ACDeckSelect } from "@/components/daybreak/ac-deck-select";
+import { ACProgress } from "@/components/daybreak/ac-progress";
+import { ACStepper } from "@/components/daybreak/ac-stepper";
+import { LionFace } from "@/components/daybreak/lion-face";
+import type { DeckOption } from "@/components/deck-switcher";
 import {
   ImageDropZone,
   type ImageDropZoneHandle,
 } from "@/components/image-drop-zone";
 import { ReviewList } from "@/components/review-list";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { validateImageFile } from "@/lib/image-validation";
+
+// Stepper stage indices (D-05)
+const STAGE_IMAGE = 0; // Confirm lives under "Image" dot
+const STAGE_EXTRACT = 1; // Extracting lives under "Extract" dot
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
@@ -24,7 +31,7 @@ interface ImageUploadFlowProps {
   nativeLang: string;
 }
 
-interface ImageFlowState {
+export interface ImageFlowState {
   step: "pick" | "deck";
   file: File | null;
   previewUrl: string | null;
@@ -135,6 +142,24 @@ function friendlyErrorCopy(status: number): string {
   }
 }
 
+// Left chevron glyph (no emoji, L-01)
+function LeftChev({ c = "#C96F12", size = 8 }: { c?: string; size?: number }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        width: size,
+        height: size,
+        borderLeft: `2.2px solid ${c}`,
+        borderBottom: `2.2px solid ${c}`,
+        transform: "rotate(45deg)",
+        display: "inline-block",
+        flex: "none",
+      }}
+    />
+  );
+}
+
 export function ImageUploadFlow({
   decks,
   defaultDeckId,
@@ -159,6 +184,9 @@ export function ImageUploadFlow({
   // Always keep dropZoneRef mounted so openPicker() / resetInput() stay available
   const dropZoneRef = useRef<ImageDropZoneHandle>(null);
 
+  // D-03: cancelled guard — modeled on review-list.tsx line 451
+  const cancelled = useRef(false);
+
   // Safety net: runs only on unmount — revokes latest URL via ref
   useEffect(() => {
     return () => {
@@ -170,6 +198,8 @@ export function ImageUploadFlow({
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     const url = URL.createObjectURL(file);
     dispatch({ type: "FILE_PICKED", file, previewUrl: url });
+    // Pitfall 6: auto-advance to Confirm immediately on valid file pick (D-06)
+    dispatch({ type: "ADVANCE_STEP" });
   }, []);
 
   const validateAndSetFile = useCallback(
@@ -190,9 +220,17 @@ export function ImageUploadFlow({
     dispatch({ type: "CLEAR_FILE" });
   }
 
+  // D-03: Cancel on Extracting → returns to Confirm with image+deck preserved (D-16)
+  function handleCancelExtraction() {
+    cancelled.current = true;
+    dispatch({ type: "BACK_TO_PICK" }); // reducer step "pick" = Confirm in Daybreak surface
+  }
+
   // Phase 10: POST to /api/extract and dispatch extraction state actions
   async function handleExtract() {
     if (!state.file || !state.selectedDeckId || state.extracting) return;
+    // D-03: reset guard before each attempt (Pitfall 3)
+    cancelled.current = false;
     dispatch({ type: "EXTRACT_START" });
 
     // Read file as data-URL (file is guaranteed non-null by the guard above)
@@ -244,14 +282,17 @@ export function ImageUploadFlow({
           detectedLanguage?: string;
         };
         if (data.words.length === 0) {
+          if (cancelled.current) return; // D-03 late-result guard
           dispatch({ type: "EXTRACT_NO_WORDS" });
         } else {
+          if (cancelled.current) return; // D-03 late-result guard
           dispatch({ type: "EXTRACT_SUCCESS", words: data.words });
         }
       } else {
         const data = (await res
           .json()
           .catch(() => ({ error: "Unknown error" }))) as { error: string };
+        if (cancelled.current) return; // D-03 late-result guard
         dispatch({
           type: "EXTRACT_ERROR",
           status: res.status,
@@ -260,6 +301,7 @@ export function ImageUploadFlow({
       }
     } catch (err) {
       const isAbort = err instanceof Error && err.name === "AbortError";
+      if (cancelled.current) return; // D-03 late-result guard
       dispatch({
         type: "EXTRACT_ERROR",
         status: isAbort ? 504 : 0,
@@ -285,141 +327,312 @@ export function ImageUploadFlow({
     return () => document.removeEventListener("paste", handlePaste);
   }, [validateAndSetFile]);
 
-  // Step 2: recap thumbnail + deck selector — 5 states per 10-UI-SPEC
+  // Step "deck" — Confirm + Extracting + error + no-words + success states
   if (state.step === "deck") {
-    // Render precedence: extracting → error → no-words([]) → success(non-empty) → idle
+    // Render precedence: extracting → error → no-words([]) → success(non-empty) → idle (Confirm)
 
-    // State 1 — In-flight / Loading (EXT-02)
+    // Extracting (EXT-02)
     if (state.extracting) {
       return (
-        <div className="flex flex-col gap-4">
-          {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
-          <img
-            src={state.previewUrl ?? undefined}
-            alt="Selected file"
-            className="max-h-32 w-auto object-contain rounded-md"
-          />
-          <Label>Add words to:</Label>
-          {/* Wrap DeckSwitcher in pointer-events-none during in-flight — DeckSwitcher has no disabled prop */}
-          <div className="pointer-events-none opacity-60">
-            <DeckSwitcher
-              decks={decks}
-              activeDeckId={state.selectedDeckId}
-              onDeckChange={(id) => dispatch({ type: "SET_DECK", deckId: id })}
-              nativeLang={nativeLang}
-            />
-          </div>
-          {/* Back button hidden during in-flight — prevents navigating away while request is in flight */}
-          <Button
-            className="w-full h-11"
-            variant="default"
-            disabled
-            aria-busy="true"
-            aria-label="Extracting words, please wait"
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {/* ACFlowTop: Re-pick (left) + title + Cancel (right) */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: 4,
+            }}
           >
-            <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-            Extracting words…
-          </Button>
-          <p className="text-sm text-muted-foreground text-center">
-            This can take up to 30 seconds…
-          </p>
-        </div>
-      );
-    }
-
-    // State 4 — Error (EXT-04)
-    if (state.extractError) {
-      return (
-        <div className="flex flex-col gap-4">
-          {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
-          <img
-            src={state.previewUrl ?? undefined}
-            alt="Selected file"
-            className="max-h-32 w-auto object-contain rounded-md"
-          />
-          <Label>Add words to:</Label>
-          <DeckSwitcher
-            decks={decks}
-            activeDeckId={state.selectedDeckId}
-            onDeckChange={(id) => dispatch({ type: "SET_DECK", deckId: id })}
-            nativeLang={nativeLang}
-          />
-          <Button
-            variant="ghost"
-            onClick={() => dispatch({ type: "BACK_TO_PICK" })}
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground"
-          >
-            <ArrowLeft className="size-4" />
-            Back
-          </Button>
-          <p role="alert" className="text-sm text-destructive mt-1">
-            <AlertCircle className="inline size-4 mr-1" aria-hidden="true" />
-            {friendlyErrorCopy(state.extractError.status)}
-          </p>
-          <div className="flex gap-2 mt-2">
-            <Button
-              variant="outline"
+            <button
+              type="button"
               onClick={() => {
-                // IN-03: handleExtract() already dispatches EXTRACT_START, which
-                // produces the same state transition as EXTRACT_RETRY. Dispatching
-                // both here caused a redundant re-render. The EXTRACT_RETRY action
-                // is retained in the reducer for potential future use (e.g. retry
-                // animation triggers) but is no longer fired on this path.
-                void handleExtract();
+                handleClearFile();
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                color: "#C96F12",
+                fontWeight: 700,
+                fontSize: 14.5,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
               }}
             >
-              Try again
-            </Button>
+              <LeftChev />
+              Re-pick
+            </button>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 17,
+                fontWeight: 700,
+                color: "#4A331C",
+              }}
+            >
+              From an image
+            </span>
+            <button
+              type="button"
+              onClick={handleCancelExtraction}
+              style={{
+                color: "#9C8467",
+                fontWeight: 600,
+                fontSize: 14.5,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                width: 52,
+                textAlign: "right",
+              }}
+            >
+              Cancel
+            </button>
           </div>
+
+          {/* Stepper: "Extract" dot active */}
+          <ACStepper current={STAGE_EXTRACT} />
+
+          {/* ACProgress */}
+          <ACProgress
+            title="Reading your image…"
+            sub="This can take up to 30 seconds. Hang tight — your lion is sniffing out the words."
+            searching={true}
+          />
         </div>
       );
     }
 
-    // State 3 — No Words Found (EXT-03): extractWords is [] (empty array, NOT null)
-    if (Array.isArray(state.extractWords) && state.extractWords.length === 0) {
+    // Extract error (EXT-04)
+    if (state.extractError) {
       return (
-        <div className="flex flex-col gap-4">
-          {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {/* ACFlowTop */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: 4,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({ type: "BACK_TO_PICK" });
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                color: "#C96F12",
+                fontWeight: 700,
+                fontSize: 14.5,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <LeftChev />
+              Back
+            </button>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 17,
+                fontWeight: 700,
+                color: "#4A331C",
+              }}
+            >
+              From an image
+            </span>
+            <button
+              type="button"
+              onClick={() => window.location.assign("/dashboard")}
+              style={{
+                color: "#9C8467",
+                fontWeight: 600,
+                fontSize: 14.5,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                width: 52,
+                textAlign: "right",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+
+          <ACStepper current={STAGE_IMAGE} />
+
+          {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview */}
           <img
             src={state.previewUrl ?? undefined}
             alt="Selected file"
-            className="max-h-32 w-auto object-contain rounded-md"
+            data-testid="image-preview"
+            style={{
+              borderRadius: 16,
+              height: 168,
+              width: "100%",
+              objectFit: "cover",
+            }}
           />
-          <div className="flex flex-col items-center gap-3 py-4 text-center">
-            <ImageOff className="size-8 text-muted-foreground" />
-            <p className="text-sm font-medium text-foreground">
-              No words found in this image.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Try a photo with clearer text, or choose a different image.
-            </p>
-            <Button
-              variant="outline"
+
+          <ACBanner kind="error">
+            {friendlyErrorCopy(state.extractError.status)}
+          </ACBanner>
+
+          <ACBtn
+            kind="ghost"
+            onClick={() => {
+              void handleExtract();
+            }}
+          >
+            Try again
+          </ACBtn>
+        </div>
+      );
+    }
+
+    // No words found (EXT-03)
+    if (Array.isArray(state.extractWords) && state.extractWords.length === 0) {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {/* ACFlowTop */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: 4,
+            }}
+          >
+            <button
+              type="button"
               onClick={() => {
                 dispatch({ type: "BACK_TO_PICK" });
                 dispatch({ type: "CLEAR_FILE" });
               }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                color: "#C96F12",
+                fontWeight: 700,
+                fontSize: 14.5,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
             >
-              Choose another image
-            </Button>
+              <LeftChev />
+              Re-pick
+            </button>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 17,
+                fontWeight: 700,
+                color: "#4A331C",
+              }}
+            >
+              From an image
+            </span>
+            <button
+              type="button"
+              onClick={() => window.location.assign("/dashboard")}
+              style={{
+                color: "#9C8467",
+                fontWeight: 600,
+                fontSize: 14.5,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                width: 52,
+                textAlign: "right",
+              }}
+            >
+              Cancel
+            </button>
           </div>
+
+          <ACStepper current={STAGE_IMAGE} />
+
+          {/* LionFace no-words empty state */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 16,
+              padding: "28px 0",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                width: 96,
+                height: 96,
+                borderRadius: "50%",
+                background: "linear-gradient(180deg, #FFE7BC, #FFFDF8)",
+                border: "1px solid #F0E3CF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <LionFace
+                size={52}
+                mane="#E8973B"
+                face="#FFD9A6"
+                muzzle="#FFF1DC"
+                ink="#4A331C"
+              />
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 20,
+                fontWeight: 700,
+                color: "#4A331C",
+              }}
+            >
+              No words found.
+            </span>
+            <span style={{ fontSize: 14.5, color: "#9C8467", maxWidth: 260 }}>
+              Try a photo with clearer text, or choose a different image.
+            </span>
+          </div>
+
+          <ACBtn
+            kind="ghost"
+            onClick={() => {
+              dispatch({ type: "BACK_TO_PICK" });
+              dispatch({ type: "CLEAR_FILE" });
+            }}
+          >
+            Choose another image
+          </ACBtn>
         </div>
       );
     }
 
-    // State 2 — Success (RVW-01): extractWords is non-empty array — hand off to ReviewList
+    // Success (RVW-01): extractWords is non-empty — hand off to ReviewList
     if (Array.isArray(state.extractWords) && state.extractWords.length > 0) {
       const deck = decks.find((d) => d.id === state.selectedDeckId);
       // IN-03: selectedDeckId is always sourced from `decks`, so a missing match
-      // means props are stale or there is a race during re-render. Render an
-      // explicit error instead of silently defaulting the target language to "fr".
+      // means props are stale or there is a race during re-render.
       if (!deck) {
-        return (
-          <div role="alert" className="text-sm text-destructive">
-            <AlertCircle className="inline size-4 mr-1" aria-hidden="true" />
-            Deck not found.
-          </div>
-        );
+        return <ACBanner kind="error">Deck not found.</ACBanner>;
       }
       const targetLang = deck.language;
       return (
@@ -435,91 +648,138 @@ export function ImageUploadFlow({
       );
     }
 
-    // State 0 — Idle (Phase 9 carry-forward)
+    // Confirm (idle — step "deck", no extraction in progress)
+    const activeDeck = decks.find((d) => d.id === state.selectedDeckId);
+
     return (
-      <div className="flex flex-col gap-4">
-        {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        {/* ACFlowTop: Re-pick (left) + title + Cancel (right) */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingBottom: 4,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({ type: "BACK_TO_PICK" });
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              color: "#C96F12",
+              fontWeight: 700,
+              fontSize: 14.5,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            <LeftChev />
+            Re-pick
+          </button>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 17,
+              fontWeight: 700,
+              color: "#4A331C",
+            }}
+          >
+            From an image
+          </span>
+          <button
+            type="button"
+            onClick={() => window.location.assign("/dashboard")}
+            style={{
+              color: "#9C8467",
+              fontWeight: 600,
+              fontSize: 14.5,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              width: 52,
+              textAlign: "right",
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+
+        {/* Stepper: "Image" dot active (Confirm lives under Image dot) */}
+        <ACStepper current={STAGE_IMAGE} />
+
+        {/* ACThumb — the selected image thumbnail */}
+        {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview */}
         <img
           src={state.previewUrl ?? undefined}
           alt="Selected file"
-          className="max-h-32 w-auto object-contain rounded-md"
+          data-testid="image-preview"
+          style={{
+            borderRadius: 16,
+            height: 168,
+            width: "100%",
+            objectFit: "cover",
+            flex: "none",
+          }}
         />
-        <Label>Add words to:</Label>
-        <DeckSwitcher
+
+        {/* Change image / Remove controls */}
+        <div style={{ display: "flex", gap: 10 }}>
+          <ACBtn
+            kind="ghost"
+            onClick={() => dropZoneRef.current?.openPicker()}
+            style={{ fontSize: 14, height: 40 }}
+          >
+            Change image
+          </ACBtn>
+          <ACBtn
+            kind="ghost-danger"
+            onClick={handleClearFile}
+            style={{ fontSize: 14, height: 40 }}
+          >
+            Remove
+          </ACBtn>
+        </div>
+
+        {/* ACDeckSelect — full-width "Add words to" field (D-02) */}
+        <ACDeckSelect
           decks={decks}
-          activeDeckId={state.selectedDeckId}
+          activeDeckId={state.selectedDeckId ?? activeDeck?.id ?? null}
           onDeckChange={(id) => dispatch({ type: "SET_DECK", deckId: id })}
           nativeLang={nativeLang}
         />
-        <Button
-          variant="ghost"
-          onClick={() => dispatch({ type: "BACK_TO_PICK" })}
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground"
-        >
-          <ArrowLeft className="size-4" />
-          Back
-        </Button>
-        <Button
-          className="w-full h-11"
-          variant="default"
-          disabled={!state.file || !state.selectedDeckId}
-          onClick={handleExtract}
-        >
-          Extract words
-        </Button>
-      </div>
-    );
-  }
 
-  // Step 1, previewing state: file is held
-  if (state.file) {
-    return (
-      <div className="flex flex-col gap-4">
-        <div className="relative inline-block">
-          {/* biome-ignore lint/performance/noImgElement: blob URLs are unsupported by next/image; plain <img> required for object URL preview (RESEARCH.md Pitfall 5) */}
-          <img
-            src={state.previewUrl ?? undefined}
-            alt="Selected file"
-            className="max-h-64 w-auto object-contain rounded-lg"
-          />
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Remove selected image"
-            onClick={handleClearFile}
-            className="absolute top-2 right-2"
-          >
-            <X className="size-4" />
-          </Button>
-        </div>
-        {/* Keep drop zone mounted (hidden) so dropZoneRef stays valid for openPicker/resetInput */}
-        <div className="hidden">
+        {/* Hidden drop zone keeps ref alive for openPicker */}
+        <div style={{ display: "none" }}>
           <ImageDropZone
             ref={dropZoneRef}
             onFileSelect={validateAndSetFile}
             error={null}
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={() => dropZoneRef.current?.openPicker()}
+
+        {/* Extract words CTA */}
+        <ACBtn
+          kind={state.file && state.selectedDeckId ? "primary" : "disabled"}
+          disabled={!state.file || !state.selectedDeckId}
+          onClick={() => void handleExtract()}
         >
-          Choose different image
-        </Button>
-        <Button
-          variant="default"
-          className="w-full"
-          onClick={() => dispatch({ type: "ADVANCE_STEP" })}
-        >
-          Next: choose deck
-        </Button>
+          Extract words
+        </ACBtn>
       </div>
     );
   }
 
-  // Step 1, empty state: show drop zone
+  // Step "pick" — show the Daybreak ACDrop (no stepper — pre-stepper)
   return (
-    <div className="flex flex-col gap-4">
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <ImageDropZone
         ref={dropZoneRef}
         onFileSelect={validateAndSetFile}
