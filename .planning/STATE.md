@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 22 Plan 02 complete
-last_updated: "2026-06-22T22:00:00Z"
-last_activity: 2026-06-22 -- 22-02 Daybreak Add-a-Card shell + type-a-word restyle complete
+stopped_at: Phase 22 Plan 03 complete (22-03-SUMMARY.md)
+last_updated: "2026-06-22T22:14:33Z"
+last_activity: 2026-06-22 -- 22-03 Image-upload Daybreak re-skin + D-03 cancelled guard complete
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 16
-  completed_plans: 14
-  percent: 81
+  completed_plans: 15
+  percent: 94
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 ## Current Position
 
 Phase: 22 (add-a-card) — EXECUTING
-Plan: 3 of 4
-Status: Executing Phase 22 — Plan 02 complete; Plan 03 next
-Last activity: 2026-06-22 -- 22-02 complete (ACTop + ACContext + toggle restyle + type-a-word restyle + e2e retarget)
+Plan: 4 of 4
+Status: Executing Phase 22 — Plan 03 complete; Plan 04 next
+Last activity: 2026-06-22 -- 22-03 complete (image-upload Daybreak re-skin + D-03 guard + e2e/11 retarget)
 
-Progress: [████████░░] 84%
+Progress: [█████████░] 94%
 
 ## Shipped Milestones
 
@@ -68,6 +68,9 @@ Progress: [████████░░] 84%
 - [22-02]: ACLinkBadge swap wired to existing SET_NATIVE/SET_TARGET actions — no new reducer actions; re-triggers debounced translate
 - [22-02]: Shimmer uses CSS animation:pulse (Tailwind keyframe) not motion/react — simpler for this case
 - [22-02]: e2e/09 getByText("Add a Card") straggler fixed alongside e2e/04 retargets in same Task 3 commit
+- [22-03]: ACDeckSelect drives DeckSwitcher via additive customTrigger?: React.ReactNode prop; base-ui PopoverTrigger uses render= not asChild (not Radix asChild pattern)
+- [22-03]: D-03 cancelled.current guard — reset at top of handleExtract (Pitfall 3), if (cancelled.current) return before each dispatch, handleCancelExtraction sets true + dispatches BACK_TO_PICK (no AbortController wiring, no EXTRACT_CANCEL action)
+- [22-03]: Pitfall 6 auto-advance — handleValidFile dispatches FILE_PICKED + ADVANCE_STEP; flow goes directly to Confirm; "Next: choose deck" button removed from flow and e2e
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-22T22:00:00Z
-Stopped at: Phase 22 Plan 02 complete (22-02-SUMMARY.md)
-Resume file: .planning/phases/22-add-a-card/22-03-PLAN.md
+Last session: 2026-06-22T22:14:33Z
+Stopped at: Phase 22 Plan 03 complete (22-03-SUMMARY.md)
+Resume file: .planning/phases/22-add-a-card/22-04-PLAN.md

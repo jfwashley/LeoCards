@@ -139,7 +139,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **Plans**: 4 plans (3 waves)
 - [x] 22-01-PLAN.md — Daybreak Add-a-Card atoms (ACSeg/ACBtn/ACProgress/ACBanner/ACReviewRow/ACPairRow) + shared LangChip extraction (ADC-01/02/03 foundation)
 - [x] 22-02-PLAN.md — Type-a-word: ACSeg toggle + ACContext/ACTop + translation-form restyle + page shell + e2e/04 retarget + D-07 label test (ADC-01/02)
-- [ ] 22-03-PLAN.md — From-an-image Pick/Confirm/Extracting: ACDrop + ACStepper + ACDeckSelect (D-02) + D-03 cancel guard + e2e/11 retarget (ADC-01/03)
+- [x] 22-03-PLAN.md — From-an-image Pick/Confirm/Extracting: ACDrop + ACStepper + ACDeckSelect (D-02) + D-03 cancel guard + e2e/11 retarget (ADC-01/03)
 - [ ] 22-04-PLAN.md — From-an-image Review/Translate/Check/Result: ACReviewRow + ACPairRow (D-01) + Result states + e2e/11 review-tail retarget (ADC-03)
 **UI hint**: yes
 
@@ -185,7 +185,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
 | 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
 | 21. Dashboard — "My Deck" | 5/5 | Complete    | 2026-06-22 |
-| 22. Add a Card | 1/4 | In Progress|  |
+| 22. Add a Card | 3/4 | In Progress|  |
 | 23. Browse Words | 0/TBD | Not started | - |
 | 24. Habitat | 0/TBD | Not started | - |
 
