@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import type * as React from "react";
 import { useCallback, useMemo, useState } from "react";
 import { LangChip } from "@/components/daybreak/lang-chip";
 import {
@@ -86,6 +87,8 @@ interface DeckSwitcherProps {
   activeDeckId: string | null;
   onDeckChange: (id: string) => void;
   nativeLang: string;
+  /** Optional custom trigger — when provided, renders instead of the default compact pill. */
+  customTrigger?: React.ReactNode;
 }
 
 export function DeckSwitcher({
@@ -93,6 +96,7 @@ export function DeckSwitcher({
   activeDeckId,
   onDeckChange,
   nativeLang,
+  customTrigger,
 }: DeckSwitcherProps) {
   const [creatingLang, setCreatingLang] = useState<string | null>(null);
   const [showPicker, setShowPicker] = useState(false);
@@ -147,23 +151,38 @@ export function DeckSwitcher({
       }}
     >
       <PopoverTrigger
-        data-testid="deck-picker-trigger"
-        aria-label={`Switch deck, current ${activeDeck?.name ?? "deck"}`}
-        style={{
-          height: 36,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          padding: "0 9px",
-          borderRadius: 10,
-          border: "1.5px solid #EDDFC9",
-          background: "#FFFFFF",
-          boxSizing: "border-box",
-          cursor: "pointer",
-        }}
+        data-testid={customTrigger ? undefined : "deck-picker-trigger"}
+        aria-label={
+          customTrigger
+            ? undefined
+            : `Switch deck, current ${activeDeck?.name ?? "deck"}`
+        }
+        render={
+          customTrigger ? (customTrigger as React.ReactElement) : undefined
+        }
+        style={
+          customTrigger
+            ? undefined
+            : {
+                height: 36,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "0 9px",
+                borderRadius: 10,
+                border: "1.5px solid #EDDFC9",
+                background: "#FFFFFF",
+                boxSizing: "border-box",
+                cursor: "pointer",
+              }
+        }
       >
-        <LangChip code={activeLangCode} size={20} />
-        <Chevron dir="down" />
+        {customTrigger ? null : (
+          <>
+            <LangChip code={activeLangCode} size={20} />
+            <Chevron dir="down" />
+          </>
+        )}
       </PopoverTrigger>
 
       <PopoverContent align="end" sideOffset={8}>
