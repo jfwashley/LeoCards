@@ -10,12 +10,10 @@ test.describe("Manual card entry with auto-translation", () => {
     await page.getByRole("link", { name: "Add a card" }).click();
     await page.waitForURL(/\/deck\/new-card/);
 
-    await expect(page.getByText("Add a Card")).toBeVisible();
+    await expect(page.getByTestId("add-card-title")).toBeVisible();
     await expect(page.getByLabel("English")).toBeVisible();
     await expect(page.getByLabel("French")).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "Save card" }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Save card" })).toBeVisible();
   });
 
   test("typing in native field triggers auto-translation or shows error", async ({
@@ -48,7 +46,7 @@ test.describe("Manual card entry with auto-translation", () => {
     await page.getByLabel("French").fill("chat");
     await page.getByRole("button", { name: "Save card" }).click();
 
-    await expect(page.getByText("Card saved")).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByText(/Card saved/)).toBeVisible({ timeout: 5_000 });
     const nativeValue = await page.getByLabel("English").inputValue();
     expect(nativeValue).toBe("");
   });
@@ -65,5 +63,29 @@ test.describe("Manual card entry with auto-translation", () => {
 
     await page.getByLabel("French").fill("test");
     await expect(saveButton).toBeEnabled();
+  });
+
+  // D-07 regression guard: ACSeg toggle labels must be "Type a word" and "From an image"
+  test('toggle shows "Type a word" and "From an image" segments (D-07)', async ({
+    page,
+  }) => {
+    await page.getByRole("link", { name: "Add a card" }).click();
+    await page.waitForURL(/\/deck\/new-card/);
+
+    // "Type a word" segment is visible and initially active
+    await expect(
+      page.getByRole("button", { name: "Type a word" }),
+    ).toBeVisible();
+
+    // "From an image" segment is visible (label must read "From an image", not "From image")
+    await expect(
+      page.getByRole("button", { name: "From an image" }),
+    ).toBeVisible();
+
+    // Click "From an image" — the toggle switches
+    await page.getByRole("button", { name: "From an image" }).click();
+    await expect(
+      page.getByRole("button", { name: "From an image" }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
 });

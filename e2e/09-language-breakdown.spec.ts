@@ -28,7 +28,7 @@ test.describe("Dashboard — habitat hero and deck integration", () => {
 
     await page.getByRole("link", { name: "Add a card" }).click();
     await page.waitForURL(/\/deck\/new-card/);
-    await expect(page.getByText("Add a Card")).toBeVisible();
+    await expect(page.getByTestId("add-card-title")).toBeVisible();
   });
 
   test("habitat hero shows on dashboard alongside deck", async ({ page }) => {
