@@ -53,7 +53,8 @@ type ImageFlowAction =
   | { type: "EXTRACT_SUCCESS"; words: string[] }
   | { type: "EXTRACT_NO_WORDS" }
   | { type: "EXTRACT_ERROR"; status: number; message: string }
-  | { type: "EXTRACT_RETRY" };
+  | { type: "EXTRACT_RETRY" }
+  | { type: "EXTRACT_CANCEL" };
 
 export function imageFlowReducer(
   state: ImageFlowState,
@@ -110,6 +111,16 @@ export function imageFlowReducer(
       return {
         ...state,
         extracting: true,
+        extractError: null,
+        extractWords: null,
+      };
+    case "EXTRACT_CANCEL":
+      // D-03: cancel the in-flight extraction and return to the Confirm surface.
+      // step stays "deck" (Confirm), NOT "pick" (the dropzone); file / previewUrl /
+      // selectedDeckId are NOT touched — D-16 preservation.
+      return {
+        ...state,
+        extracting: false,
         extractError: null,
         extractWords: null,
       };
@@ -223,7 +234,9 @@ export function ImageUploadFlow({
   // D-03: Cancel on Extracting → returns to Confirm with image+deck preserved (D-16)
   function handleCancelExtraction() {
     cancelled.current = true;
-    dispatch({ type: "BACK_TO_PICK" }); // reducer step "pick" = Confirm in Daybreak surface
+    // EXTRACT_CANCEL keeps step "deck" (the Confirm surface) and clears `extracting`,
+    // preserving file + deck. BACK_TO_PICK would wrongly drop back to the dropzone.
+    dispatch({ type: "EXTRACT_CANCEL" });
   }
 
   // Phase 10: POST to /api/extract and dispatch extraction state actions

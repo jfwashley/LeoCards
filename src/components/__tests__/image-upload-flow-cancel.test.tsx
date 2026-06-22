@@ -3,9 +3,11 @@
  * D-03 cancelled.current guard tests for image-upload-flow.tsx.
  *
  * Tests verify:
- * 1. The reducer's BACK_TO_PICK action (the cancel path) returns to "pick" step
- *    while preserving the file, previewUrl, and selectedDeckId — the D-16 preservation
- *    that ensures the image + deck are still present after Cancel.
+ * 1. The reducer's EXTRACT_CANCEL action (the D-03 cancel path) returns to the
+ *    Confirm surface (step stays "deck", extracting cleared) while preserving the
+ *    file, previewUrl, and selectedDeckId — the D-16 preservation that keeps the
+ *    image + deck present after Cancel. (BACK_TO_PICK is the separate Re-pick path
+ *    that intentionally returns to the dropzone.)
  * 2. The D-03 pure guard: when cancelled.current is true, a resolved result should
  *    be ignored; when false, it should proceed normally.
  * 3. Pitfall 3 regression: after cancelling and retrying, the guard resets correctly
@@ -21,9 +23,9 @@ afterEach(() => cleanup());
 
 // ─── D-16 Preservation via Reducer ───────────────────────────────────────────
 
-describe("imageFlowReducer — BACK_TO_PICK preserves image + deck (D-16)", () => {
+describe("imageFlowReducer — EXTRACT_CANCEL returns to Confirm + preserves image + deck (D-03/D-16)", () => {
   const file = new File(["x"], "photo.png", { type: "image/png" });
-  const initialState: ImageFlowState = {
+  const extractingState: ImageFlowState = {
     step: "deck",
     file,
     previewUrl: "blob:fake-url",
@@ -34,24 +36,34 @@ describe("imageFlowReducer — BACK_TO_PICK preserves image + deck (D-16)", () =
     extractWords: null,
   };
 
-  it("BACK_TO_PICK returns to step=pick", () => {
-    const next = imageFlowReducer(initialState, { type: "BACK_TO_PICK" });
-    expect(next.step).toBe("pick");
+  it("EXTRACT_CANCEL stays on step=deck (the Confirm surface, NOT the dropzone)", () => {
+    const next = imageFlowReducer(extractingState, { type: "EXTRACT_CANCEL" });
+    expect(next.step).toBe("deck");
   });
 
-  it("BACK_TO_PICK preserves file reference (image still present after cancel)", () => {
-    const next = imageFlowReducer(initialState, { type: "BACK_TO_PICK" });
+  it("EXTRACT_CANCEL clears extracting (reveals the Confirm surface again)", () => {
+    const next = imageFlowReducer(extractingState, { type: "EXTRACT_CANCEL" });
+    expect(next.extracting).toBe(false);
+  });
+
+  it("EXTRACT_CANCEL preserves file reference (image still present after cancel)", () => {
+    const next = imageFlowReducer(extractingState, { type: "EXTRACT_CANCEL" });
     expect(next.file).toBe(file);
   });
 
-  it("BACK_TO_PICK preserves previewUrl (thumbnail still shown after cancel)", () => {
-    const next = imageFlowReducer(initialState, { type: "BACK_TO_PICK" });
+  it("EXTRACT_CANCEL preserves previewUrl (thumbnail still shown after cancel)", () => {
+    const next = imageFlowReducer(extractingState, { type: "EXTRACT_CANCEL" });
     expect(next.previewUrl).toBe("blob:fake-url");
   });
 
-  it("BACK_TO_PICK preserves selectedDeckId (deck choice still intact after cancel)", () => {
-    const next = imageFlowReducer(initialState, { type: "BACK_TO_PICK" });
+  it("EXTRACT_CANCEL preserves selectedDeckId (deck choice still intact after cancel)", () => {
+    const next = imageFlowReducer(extractingState, { type: "EXTRACT_CANCEL" });
     expect(next.selectedDeckId).toBe("deck-123");
+  });
+
+  it("BACK_TO_PICK is the Re-pick path → step=pick (dropzone), distinct from cancel", () => {
+    const next = imageFlowReducer(extractingState, { type: "BACK_TO_PICK" });
+    expect(next.step).toBe("pick");
   });
 });
 
@@ -87,7 +99,7 @@ describe("D-03 cancelled.current guard — pure logic", () => {
   it("guard ignores a EXTRACT_SUCCESS dispatch when cancelled=true", () => {
     const cancelled = { current: false };
 
-    // Simulate: user clicks Cancel → sets cancelled=true, dispatches BACK_TO_PICK
+    // Simulate: user clicks Cancel → sets cancelled=true, dispatches EXTRACT_CANCEL
     cancelled.current = true;
 
     // Simulate: extraction resolves late — guard should prevent dispatch
