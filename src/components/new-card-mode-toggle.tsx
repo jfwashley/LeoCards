@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { ACContext } from "@/components/daybreak/ac-context";
+import { ACSeg } from "@/components/daybreak/ac-seg";
+import { ACTop } from "@/components/daybreak/ac-top";
 import type { DeckOption } from "@/components/deck-switcher";
 import { ImageUploadFlow } from "@/components/image-upload-flow";
 import { TranslationForm } from "@/components/translation-form";
-import { Button } from "@/components/ui/button";
 
 interface NewCardModeToggleProps {
   decks: DeckOption[];
@@ -26,21 +28,18 @@ export function NewCardModeToggle({
   const [mode, setMode] = useState<"type" | "image">("type");
 
   return (
-    <div>
-      <div className="flex gap-2 mb-6">
-        <Button
-          variant={mode === "type" ? "default" : "outline"}
-          onClick={() => setMode("type")}
-        >
-          Type a word
-        </Button>
-        <Button
-          variant={mode === "image" ? "default" : "outline"}
-          onClick={() => setMode("image")}
-        >
-          From image
-        </Button>
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      {/* ACTop: "‹ My deck" escape link + "Add a Card" Baloo 2 title */}
+      <ACTop />
+      {/* ACContext: EN → ES · saves to your Spanish deck */}
+      <ACContext
+        nativeLang={nativeLangLabel}
+        targetLang={targetLangLabel}
+        targetDeckName={`${targetLangLabel} deck`}
+      />
+      {/* ACSeg: segmented toggle — "Type a word" | "From an image" (D-07) */}
+      <ACSeg mode={mode} onChange={setMode} />
+      {/* Child flows — both mounts preserved, all props unchanged */}
       {mode === "type" ? (
         <TranslationForm
           deckId={activeDeckId}

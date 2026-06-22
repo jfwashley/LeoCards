@@ -44,8 +44,8 @@ export default async function NewCardPage({ searchParams }: NewCardPageProps) {
     LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="px-8 py-8 max-w-4xl mx-auto w-full">
+    <div className="min-h-screen bg-background flex flex-col items-center">
+      <main className="w-full max-w-lg px-5 py-6 flex flex-col gap-0">
         <NewCardModeToggle
           decks={decks}
           activeDeckId={activeDeck.id}
