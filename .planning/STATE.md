@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 22 context gathered
-last_updated: "2026-06-22T20:36:41.439Z"
-last_activity: 2026-06-22 -- Phase 22 planning complete
+stopped_at: Phase 22 Plan 01 complete
+last_updated: "2026-06-22T21:31:24Z"
+last_activity: 2026-06-22 -- 22-01 Add-a-Card atoms + LangChip extraction complete
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 16
-  completed_plans: 12
-  percent: 50
+  completed_plans: 13
+  percent: 81
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 22 — add a card
+**Current focus:** Phase 22 — add-a-card
 
 ## Current Position
 
-Phase: 22
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-22 -- Phase 22 planning complete
+Phase: 22 (add-a-card) — EXECUTING
+Plan: 2 of 4
+Status: Executing Phase 22 — Plan 01 complete; Plan 02 next
+Last activity: 2026-06-22 -- 22-01 complete (6 atoms + LangChip + 15 unit tests)
 
-Progress: [████████░░] 75%
+Progress: [████████░░] 81%
 
 ## Shipped Milestones
 
@@ -60,6 +60,10 @@ Progress: [████████░░] 75%
 - [21-03]: D-06 sleeping ring keeps the real conic-gradient (accurate degrees); overrides mock's #F3E3C6 greyed solid
 - [21-03]: jsdom normalises hex→rgb() in element.style.background — tests use toMatch(/rgb\\(\\d+,\\s*\\d+,\\s*\\d+\\)/) not literal hex comparisons
 - [21-03]: vitest auto-hoists vi.mock() — imports can be sorted per biome organizeImports without breaking mock behaviour
+- [22-01]: Unused `import * as React` removed via biome --unsafe from new atoms; JSX transform handles React in scope
+- [22-01]: Test assertions use ?. optional chaining not ! (biome noNonNullAssertion enforced in this project)
+- [22-01]: ACPairRow D-01 orientation locked by DOM-order test — target (ES) at inputs[0], native (EN) at inputs[1]
+- [22-01]: LangChip extracted verbatim from deck-switcher.tsx to daybreak/lang-chip.tsx; deck-switcher re-imports unchanged
 
 ### Pending Todos
 
@@ -82,6 +86,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-22T17:36:42.593Z
-Stopped at: Phase 22 context gathered
-Resume file: .planning/phases/22-add-a-card/22-CONTEXT.md
+Last session: 2026-06-22T21:31:24Z
+Stopped at: Phase 22 Plan 01 complete (22-01-SUMMARY.md)
+Resume file: .planning/phases/22-add-a-card/22-02-PLAN.md

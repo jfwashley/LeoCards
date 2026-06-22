@@ -41,9 +41,9 @@
 
 ### Add a Card (ADC)
 
-- [ ] **ADC-01**: A single Add-a-Card destination with a segmented toggle ("Type a word | From an image"), a persistent context line ("EN → ES · saves to your Spanish deck"), and a "‹ My deck" escape.
-- [ ] **ADC-02**: Type-a-word — two linked native/target fields with an auto-translate badge between them (typing either side auto-fills the other with a shimmer/"Translating…" pending state; both sides editable; Save unlocks only when both are filled; success shows a "Card saved" banner and clears for the next), covering empty, translating, translate-fail, save-fail, and saved states.
-- [ ] **ADC-03**: From-an-image — a full-screen stepper (Pick → Confirm+deck → Extracting → Review words → Check translations → Result) with a drop zone (browse/paste, file-type validation), calm long-wait progress (up to ~30s, cancelable), an editable keep/exclude review list ("already in your deck · skipped", "keep at least one"), editable translation pairs, and result outcomes (success / partial counts / all-failed). Nothing is saved until the explicit "Add N cards" commit.
+- [x] **ADC-01**: A single Add-a-Card destination with a segmented toggle ("Type a word | From an image"), a persistent context line ("EN → ES · saves to your Spanish deck"), and a "‹ My deck" escape.
+- [x] **ADC-02**: Type-a-word — two linked native/target fields with an auto-translate badge between them (typing either side auto-fills the other with a shimmer/"Translating…" pending state; both sides editable; Save unlocks only when both are filled; success shows a "Card saved" banner and clears for the next), covering empty, translating, translate-fail, save-fail, and saved states.
+- [x] **ADC-03**: From-an-image — a full-screen stepper (Pick → Confirm+deck → Extracting → Review words → Check translations → Result) with a drop zone (browse/paste, file-type validation), calm long-wait progress (up to ~30s, cancelable), an editable keep/exclude review list ("already in your deck · skipped", "keep at least one"), editable translation pairs, and result outcomes (success / partial counts / all-failed). Nothing is saved until the explicit "Add N cards" commit.
 
 ### Browse Words (BRW)
 
@@ -95,9 +95,9 @@
 | DSH-05 | Phase 21 | Complete |
 | DSH-06 | Phase 21 | Complete |
 | DSH-07 | Phase 21 | Complete |
-| ADC-01 | Phase 22 | Pending |
-| ADC-02 | Phase 22 | Pending |
-| ADC-03 | Phase 22 | Pending |
+| ADC-01 | Phase 22 | Complete |
+| ADC-02 | Phase 22 | Complete |
+| ADC-03 | Phase 22 | Complete |
 | BRW-01 | Phase 23 | Pending |
 | BRW-02 | Phase 23 | Pending |
 | BRW-03 | Phase 23 | Pending |
