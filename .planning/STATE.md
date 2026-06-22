@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
-status: ready_to_plan
-stopped_at: Phase 21 complete (5/5) — ready to discuss Phase 22
-last_updated: 2026-06-22T12:09:01.269Z
-last_activity: 2026-06-21 -- Phase 21 Plan 04 executed (HabitatHero wiring + Option-D action line + StatusText 4-state machine + e2e retargets 09/12/07; 2011 tests green)
+status: planning
+stopped_at: Phase 22 context gathered
+last_updated: "2026-06-22T17:36:42.606Z"
+last_activity: 2026-06-22
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 49
+  total_plans: 12
   completed_plans: 12
   percent: 50
 ---
@@ -82,6 +82,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-21T16:15:00.000Z
-Stopped at: Phase 21 Plan 04 complete (all 5 plans done — 01, 02, 03, 04, 05)
-Resume file: None — Phase 21 complete; next: Phase 22
+Last session: 2026-06-22T17:36:42.593Z
+Stopped at: Phase 22 context gathered
+Resume file: .planning/phases/22-add-a-card/22-CONTEXT.md
