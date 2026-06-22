@@ -10,10 +10,10 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Current State
 
-**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). Now starting **v4.0 Daybreak** UI redesign (2026-06-19).
+**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). **v4.0 Daybreak** UI redesign in progress (started 2026-06-19) — through Phase 22 Add a Card (ADC-01/02/03) as of 2026-06-23; Phases 23 Browse Words + 24 Habitat remain.
 **Live at:** https://leocards.vercel.app
 **Tech stack:** Next.js 16, React 19, Better Auth, Drizzle ORM, Neon Postgres, Three.js 0.160 (build-time only — renders habitat clips; never ships to client), Motion 12, Tailwind v4, DeepL, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3 (Claude vision), Vitest, Playwright, Biome
-**Tests:** 1892 unit tests green; 15+ Playwright e2e specs
+**Tests:** 2044 unit tests green; 15+ Playwright e2e specs
 **Requirements satisfied:** 23 (v1.0) + 15 (v2.0) + 21 (v2.1: P12×8, P13×10, P13.1×8 re-satisfied via pivot, 13.2 ad-hoc) across 14 phases
 
 **v2.1 highlights:** Per-card pause/unpause with exact cadence preservation. Habitat is now 3D: 72 pre-rendered Soft-Clay ambient clips (9 levels × 4 moods, seamless 360° orbit loops) with live CSS decay/mood filters — Three.js renders clips at build time and ships zero WebGL to the client. `/habitat` mobile passes all CWV "Good" gates on warm prod (LCP 2417 / TBT 97 / CLS 0 / Perf 96). Secret-gated `/debug` QA console with HMAC-signed virtual state override. Critical study-loop fix: cards can actually reach "learned" (round thresholds were unreachable since Phase 3).
@@ -160,4 +160,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-19 — started v4.0 Daybreak UI redesign (v3.0 Performance & QA closed partial: Phase 14 shipped; QAJ/PERF deferred)*
+*Last updated: 2026-06-23 — Phase 22 (Add a Card / ADC-01/02/03) complete: type-a-word + from-an-image flows redesigned to Daybreak, pipelines preserved. Daybreak now through Phase 22; Phases 23 Browse + 24 Habitat remain.*
