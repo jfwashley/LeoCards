@@ -226,6 +226,7 @@ export function ImageUploadFlow({
   );
 
   function handleClearFile() {
+    cancelled.current = true; // WR-01: guard late extraction result after Re-pick
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     dropZoneRef.current?.resetInput();
     dispatch({ type: "CLEAR_FILE" });
