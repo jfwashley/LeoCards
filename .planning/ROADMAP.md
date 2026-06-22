@@ -136,7 +136,11 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
   1. A single Add-a-Card destination with a segmented toggle ("Type a word | From an image"), a persistent context line (e.g. "EN → ES · saves to your Spanish deck"), and a working "My deck" escape link matches the Daybreak hi-fi
   2. Type-a-word shows linked native/target fields with auto-translate shimmer, handles all states (empty, translating, translate-fail, save-fail, saved "Card saved" banner + form clear), and Save remains locked until both fields are filled
   3. From-an-image completes the full six-step stepper (Pick, Confirm+deck, Extracting with calm long-wait progress and Cancel, Review words with keep/exclude list, Check translations with editable pairs, Result) across all outcome states (success, partial counts, all-failed); nothing saves until the explicit "Add N cards" commit
-**Plans**: TBD
+**Plans**: 4 plans (3 waves)
+- [ ] 22-01-PLAN.md — Daybreak Add-a-Card atoms (ACSeg/ACBtn/ACProgress/ACBanner/ACReviewRow/ACPairRow) + shared LangChip extraction (ADC-01/02/03 foundation)
+- [ ] 22-02-PLAN.md — Type-a-word: ACSeg toggle + ACContext/ACTop + translation-form restyle + page shell + e2e/04 retarget + D-07 label test (ADC-01/02)
+- [ ] 22-03-PLAN.md — From-an-image Pick/Confirm/Extracting: ACDrop + ACStepper + ACDeckSelect (D-02) + D-03 cancel guard + e2e/11 retarget (ADC-01/03)
+- [ ] 22-04-PLAN.md — From-an-image Review/Translate/Check/Result: ACReviewRow + ACPairRow (D-01) + Result states + e2e/11 review-tail retarget (ADC-03)
 **UI hint**: yes
 
 ### Phase 23: Browse Words
