@@ -1,12 +1,15 @@
 "use client";
 
-import { CheckCircle2, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useRef } from "react";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { ACBanner } from "@/components/daybreak/ac-banner";
+import { ACBtn } from "@/components/daybreak/ac-btn";
+import { ACPairRow } from "@/components/daybreak/ac-pair-row";
+import { ACProgress } from "@/components/daybreak/ac-progress";
+import { ACReviewRow } from "@/components/daybreak/ac-review-row";
+import { ACStepper } from "@/components/daybreak/ac-stepper";
+import { LionFace } from "@/components/daybreak/lion-face";
 import {
   getSameLanguageDeckBackWords,
   saveImageCards,
@@ -317,125 +320,6 @@ export async function commitReviewRows(
   };
 }
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
-
-interface ReviewWordRowProps {
-  row: ReviewRow;
-  onToggle: (id: string) => void;
-  onEdit: (id: string, word: string) => void;
-  onRemove: (id: string) => void;
-}
-
-function ReviewWordRow({
-  row,
-  onToggle,
-  onEdit,
-  onRemove,
-}: ReviewWordRowProps) {
-  return (
-    <div className="flex items-center gap-2 py-2 border-b border-border last:border-0">
-      <input
-        type="checkbox"
-        checked={row.kept}
-        onChange={() => onToggle(row.id)}
-        className="size-4 shrink-0"
-        aria-label={`Keep "${row.word}"`}
-      />
-      <Input
-        value={row.word}
-        onChange={(e) => onEdit(row.id, e.target.value)}
-        className="flex-1 h-8"
-        aria-label={`Edit word "${row.word}"`}
-      />
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onRemove(row.id)}
-        aria-label={`Remove "${row.word}"`}
-      >
-        <X className="size-4" />
-      </Button>
-    </div>
-  );
-}
-
-interface AlreadyLearnedRowProps {
-  word: string;
-}
-
-function AlreadyLearnedRow({ word }: AlreadyLearnedRowProps) {
-  return (
-    <div className="flex items-center gap-2 py-2">
-      <span className="text-sm text-muted-foreground line-through">{word}</span>
-      <span className="text-sm text-muted-foreground ml-auto">
-        already learned
-      </span>
-    </div>
-  );
-}
-
-interface ReviewTranslationRowProps {
-  row: TranslationRow;
-  index: number;
-  isLoading: boolean;
-  isDisabled: boolean;
-  nativeLangLabel: string;
-  targetLangLabel: string;
-  onEditNative: (id: string, text: string) => void;
-  onEditTarget: (id: string, word: string) => void;
-}
-
-function ReviewTranslationRow({
-  row,
-  index,
-  isLoading,
-  isDisabled,
-  nativeLangLabel,
-  targetLangLabel,
-  onEditNative,
-  onEditTarget,
-}: ReviewTranslationRowProps) {
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <div className="flex flex-col gap-1">
-          <Label htmlFor={`native-${index}`}>{nativeLangLabel}</Label>
-          {isLoading ? (
-            <div className="bg-muted animate-pulse rounded-md h-8 w-full" />
-          ) : (
-            <Input
-              id={`native-${index}`}
-              value={row.nativeText}
-              onChange={(e) => onEditNative(row.id, e.target.value)}
-              placeholder={`Type in ${nativeLangLabel}…`}
-              className="h-8"
-              disabled={isDisabled}
-              aria-label={`Native translation for "${row.word}"`}
-            />
-          )}
-        </div>
-        <div className="flex flex-col gap-1">
-          <Label htmlFor={`target-${index}`}>{targetLangLabel}</Label>
-          <Input
-            id={`target-${index}`}
-            value={row.word}
-            onChange={(e) => onEditTarget(row.id, e.target.value)}
-            placeholder={`Type in ${targetLangLabel}…`}
-            className="h-8"
-            disabled={isDisabled}
-            aria-label={`Target word for card ${index + 1}`}
-          />
-        </div>
-      </div>
-      {row.translationError && (
-        <p className="text-sm text-destructive mt-1" role="alert">
-          {row.translationError}
-        </p>
-      )}
-    </div>
-  );
-}
-
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function ReviewList({
@@ -574,12 +458,11 @@ export function ReviewList({
 
   if (state.step === "loading-dedupe") {
     return (
-      <div className="flex flex-col items-center gap-4 py-6">
-        <Loader2
-          className="size-4 animate-spin text-primary"
-          aria-hidden="true"
-        />
-      </div>
+      <ACProgress
+        title="Loading…"
+        sub="Checking your deck for duplicates."
+        searching={false}
+      />
     );
   }
 
@@ -588,95 +471,100 @@ export function ReviewList({
   if (state.step === "translating") {
     const n = keptCount;
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2
-            className="size-4 animate-spin text-primary"
-            aria-hidden="true"
-          />
-          {`Translating ${n} word${plural(n)}…`}
-        </div>
-        <Button variant="ghost" className="w-full" onClick={handleCancel}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+          alignItems: "stretch",
+        }}
+      >
+        <ACStepper current={3} />
+        <ACProgress
+          title={`Translating ${n} word${plural(n)}…`}
+          sub="Almost there. You'll be able to check and fix each one."
+          searching={false}
+        />
+        <ACBtn kind="ghost" style={{ height: 46 }} onClick={handleCancel}>
           Cancel
-        </Button>
+        </ACBtn>
       </div>
     );
   }
 
-  // ─── Render: step-b ───────────────────────────────────────────────────────
+  // ─── Render: step-b (Check translations + committing) ────────────────────
 
   if (state.step === "step-b" || state.step === "committing") {
     const isCommitting = state.step === "committing";
     const n = state.translationRows.length;
 
     return (
-      <div className="flex flex-col gap-4">
-        <p className="text-sm font-medium text-foreground">
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <ACStepper current={3} />
+
+        {/* Check translations heading — Baloo 2 display style */}
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 22,
+            fontWeight: 700,
+            color: "#4A331C",
+          }}
+        >
           Check translations
-        </p>
-        <p className="text-sm text-muted-foreground">
+        </span>
+
+        <p style={{ fontSize: 14, color: "#9C8467", margin: 0 }}>
           Edit any translation before adding to your deck.
         </p>
 
-        <div className="flex flex-col gap-4">
+        {/* ACPairRow per translation row — D-01: target (ES) on top, native (EN) below */}
+        <div style={{ display: "flex", flexDirection: "column" }}>
           {state.translationRows.map((row, i) => (
-            <ReviewTranslationRow
+            <ACPairRow
               key={row.id}
-              row={row}
-              index={i}
-              isLoading={false}
-              isDisabled={isCommitting}
-              nativeLangLabel={nativeLangLabel}
-              targetLangLabel={targetLangLabel}
-              onEditNative={(id, text) =>
-                dispatch({ type: "EDIT_NATIVE", id, nativeText: text })
+              targetLabel={targetLangLabel}
+              nativeLabel={nativeLangLabel}
+              target={row.word}
+              native={row.nativeText}
+              failed={row.translationError !== null}
+              last={i === state.translationRows.length - 1}
+              onEditTarget={(v) =>
+                dispatch({ type: "EDIT_TARGET", id: row.id, word: v })
               }
-              onEditTarget={(id, word) =>
-                dispatch({ type: "EDIT_TARGET", id, word })
+              onEditNative={(v) =>
+                dispatch({ type: "EDIT_NATIVE", id: row.id, nativeText: v })
               }
             />
           ))}
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* Commit button / committing state */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {isCommitting ? (
-            <>
-              <Button
-                variant="default"
-                className="w-full h-11"
-                disabled
-                aria-busy="true"
-                aria-label="Adding cards, please wait"
-              >
-                <Loader2
-                  className="size-4 animate-spin mr-2"
-                  aria-hidden="true"
-                />
-                Adding cards…
-              </Button>
-              <p className="text-sm text-muted-foreground text-center">
-                {`Adding ${n} card${plural(n)} to your deck…`}
-              </p>
-            </>
+            <ACBtn kind="disabled" aria-busy="true">
+              Adding {n} card{plural(n)}…
+            </ACBtn>
           ) : (
             <>
-              <Button
-                variant="default"
-                className="w-full h-11"
-                onClick={handleCommit}
-              >
-                {`Add ${n} card${plural(n)}`}
-              </Button>
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
+              <ACBtn kind="primary" onClick={handleCommit}>
+                Add {n} card{plural(n)}
+              </ACBtn>
+              <div style={{ display: "flex", gap: 8 }}>
+                <ACBtn
+                  kind="ghost"
+                  style={{ height: 46, flex: 1 }}
                   onClick={() => dispatch({ type: "BACK_TO_STEP_A" })}
                 >
-                  ← Back
-                </Button>
-                <Button variant="ghost" onClick={handleCancel}>
+                  Back
+                </ACBtn>
+                <ACBtn
+                  kind="ghost"
+                  style={{ height: 46, flex: 1 }}
+                  onClick={handleCancel}
+                >
                   Cancel
-                </Button>
+                </ACBtn>
               </div>
             </>
           )}
@@ -685,131 +573,335 @@ export function ReviewList({
     );
   }
 
-  // ─── Render: success ──────────────────────────────────────────────────────
+  // ─── Render: success (Result states — D-05: under the "Add" dot) ──────────
 
   if (state.step === "success") {
     const { addedCount, failedCount, skippedCount } = state;
     const allFailed = addedCount === 0 && failedCount > 0;
-
-    const secondaryParts = [
-      skippedCount > 0 ? `${skippedCount} already learned (skipped)` : null,
-      failedCount > 0 ? `${failedCount} failed` : null,
-    ].filter((p): p is string => p !== null);
+    const isPartial = failedCount > 0 && addedCount > 0;
 
     return (
-      <div className="flex flex-col items-center gap-4 py-6 text-center">
-        <CheckCircle2 className="size-8 text-green-600" aria-hidden="true" />
-        <div>
-          {allFailed ? (
-            <p className="text-sm font-medium text-foreground">
-              Couldn&apos;t add cards — please try again.
-            </p>
-          ) : (
-            <p className="text-sm font-medium text-foreground">
-              {`${addedCount} card${plural(addedCount)} added to your deck.`}
-            </p>
-          )}
-          {secondaryParts.length > 0 && (
-            <p className="text-sm text-muted-foreground mt-1">
-              {secondaryParts.join(" · ")}
-            </p>
-          )}
-        </div>
-        {allFailed ? (
-          <Button
-            variant="outline"
-            className="w-full h-11"
-            onClick={handleGoToDeck}
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        {/* D-05: Result lives under the "Add" stepper dot */}
+        <ACStepper current={4} />
+
+        {allFailed && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <ACBanner kind="error">
+              {"Couldn't add cards — please try again."}
+            </ACBanner>
+            <ACBtn
+              kind="primary"
+              onClick={() => dispatch({ type: "BACK_TO_STEP_A" })}
+            >
+              Try again
+            </ACBtn>
+            <ACBtn kind="ghost" style={{ height: 46 }} onClick={handleGoToDeck}>
+              Back to deck
+            </ACBtn>
+          </div>
+        )}
+
+        {isPartial && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {/* Partial result counts card */}
+            <div
+              style={{
+                borderRadius: 22,
+                background: "#FFFFFF",
+                border: "1px solid #F0E3CF",
+                boxShadow: "0 12px 30px rgba(160, 110, 40, 0.16)",
+                padding: "18px 20px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+              }}
+            >
+              {/* Added row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  fontSize: 15,
+                  color: "#4A331C",
+                }}
+              >
+                <span
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    background: "#3E9B5F",
+                    color: "#FFF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    flex: "none",
+                  }}
+                >
+                  ✓
+                </span>
+                <span style={{ flex: 1 }}>Added</span>
+                <span style={{ fontWeight: 700 }}>{addedCount}</span>
+              </div>
+              {/* Already learned row */}
+              {skippedCount > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontSize: 15,
+                    color: "#9C8467",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: "50%",
+                      border: "1.5px solid #D8C7AC",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 13,
+                      fontWeight: 700,
+                      flex: "none",
+                      color: "#9C8467",
+                    }}
+                  >
+                    -
+                  </span>
+                  <span style={{ flex: 1 }}>Already learned</span>
+                  <span style={{ fontWeight: 700 }}>{skippedCount}</span>
+                </div>
+              )}
+              {/* Couldn't add row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  fontSize: 15,
+                  color: "#4A331C",
+                }}
+              >
+                <span
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    background: "#DE5F4A",
+                    color: "#FFF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    flex: "none",
+                  }}
+                >
+                  !
+                </span>
+                <span style={{ flex: 1 }}>{"Couldn't add"}</span>
+                <span style={{ fontWeight: 700 }}>{failedCount}</span>
+              </div>
+            </div>
+            <ACBtn kind="primary" onClick={handleGoToDeck}>
+              Go to my deck
+            </ACBtn>
+          </div>
+        )}
+
+        {!allFailed && !isPartial && (
+          /* Full success: LionFace disc + "N cards added!" + "Go to my deck" — L-01, D-05 */
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 20,
+              textAlign: "center",
+            }}
           >
-            Back to deck
-          </Button>
-        ) : (
-          <Button
-            variant="default"
-            className="w-full h-11"
-            onClick={handleGoToDeck}
-          >
-            Go to my deck
-          </Button>
+            {/* Sunrise disc with LionFace (no emoji, L-01) */}
+            <div
+              style={{
+                width: 116,
+                height: 116,
+                borderRadius: "50%",
+                background: "linear-gradient(180deg, #FFE7BC, #FFFDF8)",
+                border: "1px solid #F0E3CF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+              }}
+            >
+              <LionFace
+                size={72}
+                mane="#E8973B"
+                face="#FFD9A6"
+                muzzle="#FFF1DC"
+                ink="#4A331C"
+              />
+            </div>
+            {/* N cards added! — Baloo 2 display heading */}
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 24,
+                fontWeight: 700,
+                color: "#4A331C",
+              }}
+            >
+              {addedCount} card{plural(addedCount)} added!
+            </span>
+            <ACBtn kind="primary" onClick={handleGoToDeck}>
+              Go to my deck
+            </ACBtn>
+          </div>
         )}
       </div>
     );
   }
 
-  // ─── Render: step-a (default) ─────────────────────────────────────────────
+  // ─── Render: step-a (Review words — default) ──────────────────────────────
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-sm font-medium text-foreground">
-        Review extracted words
-      </p>
-      <p className="text-sm text-muted-foreground">
-        Uncheck or remove words you don&apos;t want to add.
-      </p>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <ACStepper current={2} />
 
-      <div className="flex gap-2">
-        <Button
-          variant="ghost"
-          className="text-sm"
+      {/* Select all / Select none — link-style controls */}
+      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+        <button
+          type="button"
           onClick={() => dispatch({ type: "SELECT_ALL" })}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            fontSize: 13.5,
+            fontWeight: 600,
+            color: "#C96F12",
+            cursor: "pointer",
+          }}
         >
           Select all
-        </Button>
-        <Button
-          variant="ghost"
-          className="text-sm"
+        </button>
+        <span style={{ color: "#D8C7AC", fontSize: 13 }}>·</span>
+        <button
+          type="button"
           onClick={() => dispatch({ type: "SELECT_NONE" })}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            fontSize: 13.5,
+            fontWeight: 600,
+            color: "#C96F12",
+            cursor: "pointer",
+          }}
         >
           Select none
-        </Button>
+        </button>
       </div>
 
-      <div className="flex flex-col divide-y divide-border">
-        {state.rows.map((row) => (
-          <ReviewWordRow
+      {/* Word rows — ACReviewRow per kept word */}
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {state.rows.map((row, i) => (
+          <ACReviewRow
             key={row.id}
-            row={row}
-            onToggle={(id) => dispatch({ type: "TOGGLE_WORD", id })}
-            onEdit={(id, word) => dispatch({ type: "EDIT_WORD", id, word })}
-            onRemove={(id) => dispatch({ type: "REMOVE_WORD", id })}
+            word={row.word}
+            excluded={!row.kept}
+            last={i === state.rows.length - 1 && state.duplicates.length === 0}
+            onToggle={() => dispatch({ type: "TOGGLE_WORD", id: row.id })}
+            onEdit={() =>
+              dispatch({
+                type: "EDIT_WORD",
+                id: row.id,
+                word: row.word,
+              })
+            }
+            onRemove={() => dispatch({ type: "REMOVE_WORD", id: row.id })}
           />
         ))}
       </div>
 
+      {/* Duplicates — "Already in your deck · skipped" struck-through muted chips */}
       {state.duplicates.length > 0 && (
-        <div className="mt-2 pt-4 border-t border-border flex flex-col gap-2">
-          <p className="text-sm font-medium text-muted-foreground">
-            Already learned
-          </p>
-          {state.duplicates.map((word) => (
-            <AlreadyLearnedRow key={word} word={word} />
-          ))}
+        <div
+          style={{
+            marginTop: 8,
+            paddingTop: 12,
+            borderTop: "1px solid #F4ECDD",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#9C8467" }}>
+            Already in your deck
+          </span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {state.duplicates.map((word) => (
+              <span
+                key={word}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "4px 10px",
+                  borderRadius: 999,
+                  background: "#FFF1DC",
+                  border: "1px solid #EDDFC9",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#9C8467",
+                  textDecoration: "line-through",
+                }}
+              >
+                {word}
+                <span style={{ textDecoration: "none", fontSize: 11 }}>
+                  skipped
+                </span>
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
       {state.dedupeError && (
-        <p className="text-sm text-destructive mt-1" role="alert">
-          {state.dedupeError}
-        </p>
+        <ACBanner kind="error">{state.dedupeError}</ACBanner>
       )}
 
-      <div className="flex flex-col gap-2">
-        <Button
-          variant="default"
-          className="w-full h-11"
+      {/* Translate N words primary button + keep-at-least-one guard */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <ACBtn
+          kind={noWordsKept ? "disabled" : "primary"}
           disabled={noWordsKept}
-          onClick={handleNext}
+          onClick={noWordsKept ? undefined : handleNext}
         >
-          Next: translate
-        </Button>
+          Translate {keptCount} word{plural(keptCount)}
+        </ACBtn>
         {noWordsKept && (
-          <p className="text-sm text-muted-foreground text-center">
+          <p
+            style={{
+              fontSize: 13.5,
+              color: "#9C8467",
+              textAlign: "center",
+              margin: 0,
+            }}
+          >
             Keep at least one word to continue.
           </p>
         )}
-        <Button variant="ghost" className="w-full" onClick={handleCancel}>
+        <ACBtn kind="ghost" style={{ height: 46 }} onClick={handleCancel}>
           Cancel
-        </Button>
+        </ACBtn>
       </div>
     </div>
   );
