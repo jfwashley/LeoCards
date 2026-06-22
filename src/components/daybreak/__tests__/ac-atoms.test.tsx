@@ -130,6 +130,102 @@ describe("ACReviewRow — keep/exclude word row", () => {
   });
 });
 
+describe("ACReviewRow — inline word editing (CR-01 regression)", () => {
+  it("clicking the pencil button reveals an input pre-filled with the current word", () => {
+    render(
+      <ACReviewRow
+        word="gato"
+        excluded={false}
+        onToggle={() => {}}
+        onEdit={() => {}}
+        onRemove={() => {}}
+      />,
+    );
+    // Static word is visible before edit
+    expect(screen.getByText("gato")).toBeTruthy();
+    // Click the pencil (Edit word) button
+    fireEvent.click(screen.getByRole("button", { name: /Edit word/i }));
+    // Input appears, pre-filled with "gato"
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    expect(input.value).toBe("gato");
+  });
+
+  it("typing a new value and pressing Enter calls onEdit with the new word", () => {
+    const onEdit = vi.fn();
+    render(
+      <ACReviewRow
+        word="gato"
+        excluded={false}
+        onToggle={() => {}}
+        onEdit={onEdit}
+        onRemove={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Edit word/i }));
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    // Replace draft value
+    fireEvent.change(input, { target: { value: "gatos" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onEdit).toHaveBeenCalledWith("gatos");
+  });
+
+  it("pressing Escape cancels without calling onEdit", () => {
+    const onEdit = vi.fn();
+    render(
+      <ACReviewRow
+        word="gato"
+        excluded={false}
+        onToggle={() => {}}
+        onEdit={onEdit}
+        onRemove={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Edit word/i }));
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "perro" } });
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(onEdit).not.toHaveBeenCalled();
+    // Static word is shown again (input is gone)
+    expect(screen.getByText("gato")).toBeTruthy();
+  });
+
+  it("blurring the input commits the edit", () => {
+    const onEdit = vi.fn();
+    render(
+      <ACReviewRow
+        word="gato"
+        excluded={false}
+        onToggle={() => {}}
+        onEdit={onEdit}
+        onRemove={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Edit word/i }));
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "perro" } });
+    fireEvent.blur(input);
+    expect(onEdit).toHaveBeenCalledWith("perro");
+  });
+
+  it("submitting an unchanged value does not call onEdit", () => {
+    const onEdit = vi.fn();
+    render(
+      <ACReviewRow
+        word="gato"
+        excluded={false}
+        onToggle={() => {}}
+        onEdit={onEdit}
+        onRemove={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Edit word/i }));
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    // No change — Enter pressed with the same value
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onEdit).not.toHaveBeenCalled();
+  });
+});
+
 describe("ACPairRow — D-01 target-on-top orientation guard", () => {
   it("renders target value in the TOP input and native value in the BOTTOM input", () => {
     render(

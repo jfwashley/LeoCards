@@ -1,14 +1,21 @@
+"use client";
+
 // ACReviewRow — Daybreak keep/exclude word row atom.
 // Checkbox, word (line-through when excluded), edit + remove buttons.
+// Clicking the pencil button enters inline edit mode: the word becomes
+// a controlled input pre-filled with the current value; Enter/blur commits
+// the new value via onEdit(newWord); Escape cancels with no change.
 // All interactive controls are real <button type="button"> elements (L-06).
 // CSS/SVG glyphs only — no emoji (L-01).
+
+import { useRef, useState } from "react";
 
 interface ACReviewRowProps {
   word: string;
   excluded: boolean;
   last?: boolean;
   onToggle: () => void;
-  onEdit: () => void;
+  onEdit: (newWord: string) => void;
   onRemove: () => void;
 }
 
@@ -102,6 +109,42 @@ export function ACReviewRow({
   onRemove,
 }: ACReviewRowProps) {
   const checked = !excluded;
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  // Track whether we already committed (blur fires after Enter keyDown)
+  const committedRef = useRef(false);
+
+  function startEdit() {
+    setDraft(word);
+    committedRef.current = false;
+    setEditing(true);
+  }
+
+  function commitEdit() {
+    if (committedRef.current) return;
+    committedRef.current = true;
+    const trimmed = draft.trim();
+    if (trimmed && trimmed !== word) {
+      onEdit(trimmed);
+    }
+    setEditing(false);
+  }
+
+  function cancelEdit() {
+    committedRef.current = true; // suppress any following blur
+    setEditing(false);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      commitEdit();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      cancelEdit();
+    }
+  }
+
   return (
     <div
       style={{
@@ -139,23 +182,49 @@ export function ACReviewRow({
         {checked ? "✓" : ""}
       </button>
 
-      {/* Word */}
-      <span
-        style={{
-          flex: 1,
-          fontSize: 17.5,
-          fontWeight: 600,
-          color: excluded ? "#9C8467" : "#4A331C",
-          textDecoration: excluded ? "line-through" : "none",
-        }}
-      >
-        {word}
-      </span>
+      {/* Word — either static span or inline edit input */}
+      {editing ? (
+        <input
+          // biome-ignore lint/a11y/noAutofocus: inline edit input must focus immediately on pencil click
+          autoFocus
+          type="text"
+          value={draft}
+          aria-label={`Edit word "${word}"`}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onBlur={commitEdit}
+          style={{
+            flex: 1,
+            height: 34,
+            borderRadius: 10,
+            border: "1.5px solid #F28A1F",
+            background: "#FFFBF4",
+            padding: "0 10px",
+            fontSize: 16,
+            color: "#4A331C",
+            boxSizing: "border-box",
+            outline: "none",
+            fontFamily: "inherit",
+          }}
+        />
+      ) : (
+        <span
+          style={{
+            flex: 1,
+            fontSize: 17.5,
+            fontWeight: 600,
+            color: excluded ? "#9C8467" : "#4A331C",
+            textDecoration: excluded ? "line-through" : "none",
+          }}
+        >
+          {word}
+        </span>
+      )}
 
       {/* Edit button */}
       <button
         type="button"
-        onClick={onEdit}
+        onClick={startEdit}
         aria-label="Edit word"
         style={{
           width: 34,

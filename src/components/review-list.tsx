@@ -819,11 +819,11 @@ export function ReviewList({
             excluded={!row.kept}
             last={i === state.rows.length - 1 && state.duplicates.length === 0}
             onToggle={() => dispatch({ type: "TOGGLE_WORD", id: row.id })}
-            onEdit={() =>
+            onEdit={(newWord) =>
               dispatch({
                 type: "EDIT_WORD",
                 id: row.id,
-                word: row.word,
+                word: newWord,
               })
             }
             onRemove={() => dispatch({ type: "REMOVE_WORD", id: row.id })}
