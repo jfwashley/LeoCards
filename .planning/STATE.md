@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
-status: executing
-stopped_at: Phase 21 Plan 04 complete
-last_updated: "2026-06-21T16:15:00.000Z"
+status: ready_to_plan
+stopped_at: Phase 21 complete (5/5) — ready to discuss Phase 22
+last_updated: 2026-06-22T12:09:01.269Z
 last_activity: 2026-06-21 -- Phase 21 Plan 04 executed (HabitatHero wiring + Option-D action line + StatusText 4-state machine + e2e retargets 09/12/07; 2011 tests green)
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 12
-  completed_plans: 10
-  percent: 42
+  completed_phases: 3
+  total_plans: 49
+  completed_plans: 12
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 21 — dashboard-my-deck
+**Current focus:** Phase 22 — add a card
 
 ## Current Position
 
-Phase: 21 (dashboard-my-deck) — EXECUTING
-Plan: 4 of 5 complete (plan 05 already done — this was out-of-order execution)
-Status: Executing Phase 21 — 4/5 plans complete
-Last activity: 2026-06-21 -- Phase 21 Plan 04 complete (HabitatHero wiring + Option-D action line + StatusText 4-state machine + e2e retargets; 2011 unit tests green)
+Phase: 22
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-06-22
 
 Progress: [████████░░] 75%
 

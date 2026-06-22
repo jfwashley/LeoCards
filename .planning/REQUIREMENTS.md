@@ -31,13 +31,13 @@
 
 ### Dashboard — "My Deck" (DSH)
 
-- [ ] **DSH-01**: Persistent app header — Leo + "LeoCards" wordmark, a deck picker (active-language chip, switch decks, and create-a-new-deck inline language picker with a per-language "creating…" state), and logout.
+- [x] **DSH-01**: Persistent app header — Leo + "LeoCards" wordmark, a deck picker (active-language chip, switch decks, and create-a-new-deck inline language picker with a per-language "creating…" state), and logout.
 - [x] **DSH-02**: Habitat hero medallion — Leo on a sunrise disc with a conic progress ring + level badge, "Habitat · Level N", "X of Y cards to Level N+1" (no next-threshold at max), linking to the Habitat screen.
-- [ ] **DSH-03**: Action line — full-width "Start studying" primary (dims when nothing due) + a status row that adapts (e.g. "12 due" / "0 due" / "Resting · 2h 15m" live countdown / "All paused") with "Add a card" alongside.
-- [ ] **DSH-04**: "Your words" is a tap-to-expand inline accordion (height/opacity transition, **not** a swipe gesture) showing a count when collapsed and a search field + word rows when open, including a no-search-results state.
-- [ ] **DSH-05**: Word row — native term (bold) + translation + source tag (Curated / Added by you / Paused) + a 3-segment mastery meter (green + check at 3/3) + pause/resume and edit actions; paused rows read de-emphasised but present.
-- [ ] **DSH-06**: Edit-card modal — editable native/target fields, Save / Discard, and Delete with a confirmation step ("Delete this card? This can't be undone."), plus inline save/delete error states.
-- [ ] **DSH-07**: Dashboard covers all states in Daybreak — cards-due, none-due, resting (cooldown), all-paused, empty deck, brand-new-user first-visit, and search-active-no-results.
+- [x] **DSH-03**: Action line — full-width "Start studying" primary (dims when nothing due) + a status row that adapts (e.g. "12 due" / "0 due" / "Resting · 2h 15m" live countdown / "All paused") with "Add a card" alongside.
+- [x] **DSH-04**: "Your words" is a tap-to-expand inline accordion (height/opacity transition, **not** a swipe gesture) showing a count when collapsed and a search field + word rows when open, including a no-search-results state.
+- [x] **DSH-05**: Word row — native term (bold) + translation + source tag (Curated / Added by you / Paused) + a 3-segment mastery meter (green + check at 3/3) + pause/resume and edit actions; paused rows read de-emphasised but present.
+- [x] **DSH-06**: Edit-card modal — editable native/target fields, Save / Discard, and Delete with a confirmation step ("Delete this card? This can't be undone."), plus inline save/delete error states.
+- [x] **DSH-07**: Dashboard covers all states in Daybreak — cards-due, none-due, resting (cooldown), all-paused, empty deck, brand-new-user first-visit, and search-active-no-results.
 
 ### Add a Card (ADC)
 
@@ -88,13 +88,13 @@
 | ONB-06 | Phase 19 | Complete |
 | STU-01 | Phase 20 | Complete |
 | STU-02 | Phase 20 | Complete |
-| DSH-01 | Phase 21 | Pending |
+| DSH-01 | Phase 21 | Complete |
 | DSH-02 | Phase 21 | Complete |
-| DSH-03 | Phase 21 | Pending |
-| DSH-04 | Phase 21 | Pending |
-| DSH-05 | Phase 21 | Pending |
-| DSH-06 | Phase 21 | Pending |
-| DSH-07 | Phase 21 | Pending |
+| DSH-03 | Phase 21 | Complete |
+| DSH-04 | Phase 21 | Complete |
+| DSH-05 | Phase 21 | Complete |
+| DSH-06 | Phase 21 | Complete |
+| DSH-07 | Phase 21 | Complete |
 | ADC-01 | Phase 22 | Pending |
 | ADC-02 | Phase 22 | Pending |
 | ADC-03 | Phase 22 | Pending |
