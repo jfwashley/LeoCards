@@ -69,7 +69,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 - [x] **Phase 19: Daybreak Foundation + Onboarding & Auth** — Design system tokens + shared components + all auth/onboarding screens in Daybreak (completed 2026-06-20)
 - [x] **Phase 20: Study Screen** — Study card and session result screen in Daybreak (completed 2026-06-21)
 - [x] **Phase 21: Dashboard — "My Deck"** — Full dashboard experience in Daybreak (header, habitat hero, action line, word accordion) (completed 2026-06-21)
-- [ ] **Phase 22: Add a Card** — Type-a-word and from-an-image flows in Daybreak
+- [x] **Phase 22: Add a Card** — Type-a-word and from-an-image flows in Daybreak (completed 2026-06-22)
 - [ ] **Phase 23: Browse Words** — Topic tiles and word-list screens in Daybreak
 - [ ] **Phase 24: Habitat** — Living flat-geometric Habitat scene with ambient motion, all states, reduced-motion safety
 
@@ -140,7 +140,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 - [x] 22-01-PLAN.md — Daybreak Add-a-Card atoms (ACSeg/ACBtn/ACProgress/ACBanner/ACReviewRow/ACPairRow) + shared LangChip extraction (ADC-01/02/03 foundation)
 - [x] 22-02-PLAN.md — Type-a-word: ACSeg toggle + ACContext/ACTop + translation-form restyle + page shell + e2e/04 retarget + D-07 label test (ADC-01/02)
 - [x] 22-03-PLAN.md — From-an-image Pick/Confirm/Extracting: ACDrop + ACStepper + ACDeckSelect (D-02) + D-03 cancel guard + e2e/11 retarget (ADC-01/03)
-- [ ] 22-04-PLAN.md — From-an-image Review/Translate/Check/Result: ACReviewRow + ACPairRow (D-01) + Result states + e2e/11 review-tail retarget (ADC-03)
+- [x] 22-04-PLAN.md — From-an-image Review/Translate/Check/Result: ACReviewRow + ACPairRow (D-01) + Result states + e2e/11 review-tail retarget (ADC-03)
 **UI hint**: yes
 
 ### Phase 23: Browse Words
@@ -185,7 +185,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | 19. Daybreak Foundation + Onboarding & Auth | 5/5 | Complete   | 2026-06-20 |
 | 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
 | 21. Dashboard — "My Deck" | 5/5 | Complete    | 2026-06-22 |
-| 22. Add a Card | 3/4 | In Progress|  |
+| 22. Add a Card | 4/4 | Complete   | 2026-06-22 |
 | 23. Browse Words | 0/TBD | Not started | - |
 | 24. Habitat | 0/TBD | Not started | - |
 

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
-status: executing
-stopped_at: Phase 22 Plan 03 complete (22-03-SUMMARY.md)
-last_updated: "2026-06-22T22:14:33Z"
-last_activity: 2026-06-22 -- 22-03 Image-upload Daybreak re-skin + D-03 cancelled guard complete
+status: verifying
+stopped_at: Phase 22 Plan 04 complete (22-04-SUMMARY.md)
+last_updated: "2026-06-22T23:55:00Z"
+last_activity: 2026-06-22
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 16
-  completed_plans: 15
-  percent: 94
+  completed_plans: 16
+  percent: 67
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 
 Phase: 22 (add-a-card) — EXECUTING
 Plan: 4 of 4
-Status: Executing Phase 22 — Plan 03 complete; Plan 04 next
-Last activity: 2026-06-22 -- 22-03 complete (image-upload Daybreak re-skin + D-03 guard + e2e/11 retarget)
+Status: Phase complete — ready for verification
+Last activity: 2026-06-22
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Shipped Milestones
 
@@ -71,6 +71,9 @@ Progress: [█████████░] 94%
 - [22-03]: ACDeckSelect drives DeckSwitcher via additive customTrigger?: React.ReactNode prop; base-ui PopoverTrigger uses render= not asChild (not Radix asChild pattern)
 - [22-03]: D-03 cancelled.current guard — reset at top of handleExtract (Pitfall 3), if (cancelled.current) return before each dispatch, handleCancelExtraction sets true + dispatches BACK_TO_PICK (no AbortController wiring, no EXTRACT_CANCEL action)
 - [22-03]: Pitfall 6 auto-advance — handleValidFile dispatches FILE_PICKED + ADVANCE_STEP; flow goes directly to Confirm; "Next: choose deck" button removed from flow and e2e
+- [22-04]: Tasks 1+2 committed together (same file, TDD cycle shared); Task 3 no-op — e2e/11 had no review/translate/result assertions to retarget; Plan 03 already cleaned all stale selectors
+- [22-04]: All-failed banner uses JSX string literal to allow grep matching; loading-dedupe upgraded from bare spinner to ACProgress for consistency
+- [22-04]: D-01 ACPairRow: target={row.word} (ES top), native={row.nativeText} (EN bottom); D-05: ACStepper current=4 (Add) above all Result states
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-22T22:14:33Z
-Stopped at: Phase 22 Plan 03 complete (22-03-SUMMARY.md)
-Resume file: .planning/phases/22-add-a-card/22-04-PLAN.md
+Last session: 2026-06-22T23:55:00Z
+Stopped at: Phase 22 Plan 04 complete (22-04-SUMMARY.md) — Phase 22 all 4 plans done; ready for /gsd:verify-work
+Resume file: None
