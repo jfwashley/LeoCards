@@ -2,39 +2,13 @@
 
 import { Loader2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-
+import { LangChip } from "@/components/daybreak/lang-chip";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { createDeck } from "@/lib/deck-actions";
-
-// LangChip: compact text chip per the Daybreak mock (lines 56-60)
-function LangChip({ code, size = 24 }: { code: string; size?: number }) {
-  return (
-    <span
-      style={{
-        width: size + 7,
-        height: size,
-        borderRadius: 6,
-        background: "#FFF1DC",
-        border: "1px solid #F0E3CF",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: size * 0.46,
-        fontWeight: 700,
-        color: "#B4762A",
-        letterSpacing: 0.3,
-        flex: "none",
-        boxSizing: "border-box",
-      }}
-    >
-      {code}
-    </span>
-  );
-}
 
 // Chevron glyph per the Daybreak mock (lines 27-30)
 function Chevron({ dir = "down" }: { dir?: "down" | "up" | "right" }) {
