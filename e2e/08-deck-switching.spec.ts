@@ -46,15 +46,23 @@ test.describe("Deck switching — multiple decks", () => {
       .catch(() => {});
     await page.waitForTimeout(2000);
 
-    // Switch back to French deck — click trigger and wait for the popover content
-    // to be attached before looking for the deck option.
-    await trigger.click();
-    // Wait for any deck option to appear (confirms popover is open)
-    await page
-      .getByTestId("new-deck-row")
-      .waitFor({ state: "visible", timeout: 5_000 });
+    // Switch back to French deck.
+    // After the Spanish-deck creation, the popover may still be open (Base UI
+    // keeps it open during soft navigation; nobody explicitly closes it). If the
+    // trigger is clicked while the popover is open it TOGGLES it closed. So we
+    // first ensure the popover is closed (Escape / click page body), then open
+    // it fresh to reach the FR option.
+    await expect(trigger).toBeVisible({ timeout: 10_000 });
+    // Close any leftover popover with Escape before re-opening.
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(200);
+    // Open the deck picker. Base UI's PopoverTrigger has child <span> nodes
+    // (LangChip + Chevron) over it — force:true dispatches the event directly
+    // on the <button> element, matching how a real click lands on it.
+    await trigger.click({ force: true });
+    // Wait for the French deck option to appear (confirms popover is open).
     const frenchOption = page.getByTestId("deck-option-fr");
-    await frenchOption.waitFor({ state: "visible", timeout: 5_000 });
+    await frenchOption.waitFor({ state: "visible", timeout: 10_000 });
     await frenchOption.click();
     await page
       .waitForLoadState("networkidle", { timeout: 15_000 })

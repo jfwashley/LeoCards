@@ -161,6 +161,8 @@ test.describe("Mobile responsiveness", () => {
     const edit = page.locator('[aria-label="Edit card"]:visible').first();
     await expect(edit).toBeVisible();
     await edit.click();
-    await expect(page.locator("#card-front")).toBeVisible({ timeout: 3_000 });
+    // Daybreak TField generates id from label: "Native word" → id="native-word"
+    // (replaces pre-Daybreak id="card-front")
+    await expect(page.locator("#native-word")).toBeVisible({ timeout: 3_000 });
   });
 });

@@ -5,6 +5,9 @@ test.describe("Card management — search, edit, delete", () => {
   // These assert the Daybreak card-row layout (accordion-based, card-list.tsx).
   // On mobile the same rows are visible after expanding the accordion —
   // but pause/edit affordances on mobile are covered in 10-mobile-responsive.
+  // Note: "Your words" accordion is collapsed by default (Daybreak DSH-04);
+  // each test that needs card rows expands it individually to avoid double-click
+  // issues (a second click would collapse it again).
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name === "mobile",
@@ -12,9 +15,6 @@ test.describe("Card management — search, edit, delete", () => {
     );
     await signUpWithDeck(page, "French");
     await addWordsFromBrowser(page, 3);
-    // "Your words" accordion is collapsed by default (Daybreak DSH-04) — expand it
-    await page.getByTestId("words-accordion-header").click();
-    await expect(page.getByTestId("card-row").first()).toBeVisible();
   });
 
   test("cards appear in deck list after adding from browser", async ({
@@ -39,10 +39,15 @@ test.describe("Card management — search, edit, delete", () => {
   });
 
   test("can open edit dialog and modify a card", async ({ page }) => {
+    // "Your words" accordion is collapsed by default — expand it to reveal card rows
+    await page.getByTestId("words-accordion-header").click();
+    await expect(page.getByTestId("card-row").first()).toBeVisible();
     await page.getByLabel("Edit card").first().click();
     await expect(page.getByText("Edit card")).toBeVisible({ timeout: 3_000 });
 
-    const frontInput = page.locator("#card-front");
+    // Daybreak TField generates id from label: "Native word" → id="native-word"
+    // (replaces pre-Daybreak id="card-front")
+    const frontInput = page.locator("#native-word");
     await expect(frontInput).toBeVisible();
 
     await frontInput.fill("modified-word");
@@ -54,6 +59,9 @@ test.describe("Card management — search, edit, delete", () => {
   });
 
   test("can delete a card with confirmation", async ({ page }) => {
+    // "Your words" accordion is collapsed by default — expand it to reveal card rows
+    await page.getByTestId("words-accordion-header").click();
+    await expect(page.getByTestId("card-row").first()).toBeVisible();
     await page.getByLabel("Edit card").first().click();
     await expect(page.getByText("Edit card")).toBeVisible({ timeout: 3_000 });
 
