@@ -216,7 +216,7 @@ export const BWWordRow = React.memo(function BWWordRow({
       {/* CEFR chip */}
       <BWLvlTag cefr={word.cefr} />
 
-      {/* 38px circular toggle */}
+      {/* >=44px touch target (BRW-03 a11y) wrapping the 38px visual circle (D-06) */}
       <button
         type="button"
         aria-label={
@@ -227,53 +227,68 @@ export const BWWordRow = React.memo(function BWWordRow({
         onClick={() => (inDeck ? onRemove(word) : onAdd(word))}
         disabled={loading}
         style={{
-          width: 38,
-          height: 38,
-          borderRadius: "50%",
+          minWidth: 44,
+          minHeight: 44,
           flex: "none",
           boxSizing: "border-box",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: inDeck ? "#F28A1F" : "#FFFFFF",
-          border: inDeck ? "none" : "2px solid #F28A1F",
-          boxShadow: inDeck ? "0 5px 12px rgba(242,138,31,0.26)" : "none",
+          background: "transparent",
+          border: "none",
+          padding: 0,
           cursor: loading ? "default" : "pointer",
         }}
       >
-        {loading ? (
-          <AmberSpinner />
-        ) : inDeck ? (
-          <span style={{ color: "#FFF", fontSize: 17, fontWeight: 700 }}>
-            &#10003;
-          </span>
-        ) : (
-          /* CSS-drawn + cross */
-          <span style={{ position: "relative", width: 15, height: 15 }}>
-            <span
-              style={{
-                position: "absolute",
-                top: 6.5,
-                left: 0,
-                width: 15,
-                height: 2.4,
-                borderRadius: 2,
-                background: "#F28A1F",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                left: 6.5,
-                top: 0,
-                width: 2.4,
-                height: 15,
-                borderRadius: 2,
-                background: "#F28A1F",
-              }}
-            />
-          </span>
-        )}
+        {/* 38px circular visual — kept as an inner element so the button stays a >=44px tap target */}
+        <span
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: "50%",
+            boxSizing: "border-box",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: inDeck ? "#F28A1F" : "#FFFFFF",
+            border: inDeck ? "none" : "2px solid #F28A1F",
+            boxShadow: inDeck ? "0 5px 12px rgba(242,138,31,0.26)" : "none",
+          }}
+        >
+          {loading ? (
+            <AmberSpinner />
+          ) : inDeck ? (
+            <span style={{ color: "#FFF", fontSize: 17, fontWeight: 700 }}>
+              &#10003;
+            </span>
+          ) : (
+            /* CSS-drawn + cross */
+            <span style={{ position: "relative", width: 15, height: 15 }}>
+              <span
+                style={{
+                  position: "absolute",
+                  top: 6.5,
+                  left: 0,
+                  width: 15,
+                  height: 2.4,
+                  borderRadius: 2,
+                  background: "#F28A1F",
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  left: 6.5,
+                  top: 0,
+                  width: 2.4,
+                  height: 15,
+                  borderRadius: 2,
+                  background: "#F28A1F",
+                }}
+              />
+            </span>
+          )}
+        </span>
       </button>
     </div>
   );
