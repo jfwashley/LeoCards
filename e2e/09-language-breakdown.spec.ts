@@ -21,9 +21,15 @@ test.describe("Dashboard — habitat hero and deck integration", () => {
 
     await page.getByRole("link", { name: "Browse words" }).first().click();
     await page.waitForURL(/\/deck\/browse/);
-    await expect(page.getByText("Browse Words")).toBeVisible();
+    // Browse landing (two-screen IA, Plan 23-03): title is a span testid, not an h1
+    await expect(page.getByTestId("browse-words-title")).toBeVisible();
 
-    await page.getByRole("link", { name: "Back to my deck" }).click();
+    // Back-link on Browse landing is "‹ Add a card" (D-04) — not "Back to my deck"
+    await page.getByRole("link", { name: /Add a card/i }).click();
+    await page.waitForURL(/\/deck\/new-card/);
+
+    // From new-card, escape back to dashboard via "‹ My deck" link (ACTop)
+    await page.getByRole("link", { name: /My deck/i }).click();
     await page.waitForURL(/\/dashboard/);
 
     await page.getByRole("link", { name: "Add a card" }).click();

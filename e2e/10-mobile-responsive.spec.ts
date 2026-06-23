@@ -1,5 +1,9 @@
 import { expect, test } from "playwright/test";
-import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
+import {
+  addWordsFromBrowser,
+  signUpWithDeck,
+  waitForCompilation,
+} from "./helpers";
 
 const MOBILE = { width: 375, height: 812 };
 
@@ -91,13 +95,20 @@ test.describe("Mobile responsiveness", () => {
     await page.getByRole("link", { name: "Browse words" }).first().click();
     await page.waitForURL(/\/deck\/browse/);
 
-    await expect(page.getByRole("button", { name: "Animals" })).toBeVisible();
+    // Landing shows topic tiles (two-screen IA, Plan 23-03) — assert Animals tile visible
+    await expect(page.getByTestId("topic-tile-animals")).toBeVisible();
 
+    // Drill into Animals so the word-row list + toggle buttons render
+    await page.getByTestId("topic-tile-animals").click();
+    await page.waitForURL(/topic=/);
+    await waitForCompilation(page);
+
+    // BRW-03 touch-target: the add toggle must be >= 44px (preserved assertion)
     const addButton = page.locator('[aria-label*="Add"]').first();
     await addButton.waitFor({ timeout: 10_000 });
     const box = await addButton.boundingBox();
     expect(box).not.toBeNull();
-    expect(box!.height).toBeGreaterThanOrEqual(44);
+    expect(box?.height).toBeGreaterThanOrEqual(44);
 
     const scrollWidth = await page.evaluate(
       () => document.documentElement.scrollWidth,
@@ -120,7 +131,7 @@ test.describe("Mobile responsiveness", () => {
     const frBox = await frenchField.boundingBox();
     expect(engBox).not.toBeNull();
     expect(frBox).not.toBeNull();
-    expect(frBox!.y).toBeGreaterThan(engBox!.y);
+    expect(frBox?.y).toBeGreaterThan(engBox?.y);
   });
 
   // Mobile card-management affordances live in the Daybreak card-row layout
