@@ -10,7 +10,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Current State
 
-**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). **v4.0 Daybreak** UI redesign in progress (started 2026-06-19) — through Phase 22 Add a Card (ADC-01/02/03) as of 2026-06-23; Phases 23 Browse Words + 24 Habitat remain.
+**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). **v4.0 Daybreak** UI redesign in progress (started 2026-06-19) — through Phase 23 Browse Words (BRW-01..04) as of 2026-06-23; Phase 24 Habitat remains (the last Daybreak phase).
 **Live at:** https://leocards.vercel.app
 **Tech stack:** Next.js 16, React 19, Better Auth, Drizzle ORM, Neon Postgres, Three.js 0.160 (build-time only — renders habitat clips; never ships to client), Motion 12, Tailwind v4, DeepL, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3 (Claude vision), Vitest, Playwright, Biome
 **Tests:** 2044 unit tests green; 15+ Playwright e2e specs
@@ -160,4 +160,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-23 — Phase 22 (Add a Card / ADC-01/02/03) complete: type-a-word + from-an-image flows redesigned to Daybreak, pipelines preserved. Daybreak now through Phase 22; Phases 23 Browse + 24 Habitat remain.*
+*Last updated: 2026-06-23 — Phase 23 (Browse Words / BRW-01..04) complete: two-screen Daybreak Browse IA (topic tiles ↔ per-topic word list), optimistic add/remove preserved verbatim. Daybreak now through Phase 23; Phase 24 Habitat remains (the last Daybreak phase).*
