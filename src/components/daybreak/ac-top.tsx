@@ -1,10 +1,16 @@
 // ACTop — Daybreak Add-a-Card top bar.
-// "‹ My deck" escape link (left) + "Add a Card" display title (right).
+// "‹ My deck" escape link (left) + "Add a Card" display title (centre) +
+// optional "Browse words ›" link (right, D-03 — landing/Pick only; omitted during the image stepper).
 // data-testid="add-card-title" on the title span so e2e/04 + e2e/09 can locate it.
 
 import Link from "next/link";
 
-export function ACTop() {
+interface ACTopProps {
+  /** When provided, renders "Browse words ›" at top-right — landing/Pick only; omitted during the image stepper. */
+  browsePath?: string;
+}
+
+export function ACTop({ browsePath }: ACTopProps) {
   return (
     <div
       style={{
@@ -40,8 +46,26 @@ export function ACTop() {
       >
         Add a Card
       </span>
-      {/* Right spacer — mirrors the left link width so the title stays visually centred */}
-      <span style={{ flex: "none", width: 60 }} />
+      {/* Right side — "Browse words ›" link when browsePath provided (D-03), else spacer to keep title centred */}
+      {browsePath ? (
+        <Link
+          href={browsePath}
+          data-testid="browse-words-link"
+          style={{
+            fontSize: 14,
+            fontWeight: 600,
+            color: "#C96F12",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            flex: "none",
+          }}
+        >
+          Browse words ›
+        </Link>
+      ) : (
+        <span style={{ flex: "none", width: 60 }} />
+      )}
     </div>
   );
 }
