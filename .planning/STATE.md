@@ -4,13 +4,13 @@ milestone: v4.0
 milestone_name: Daybreak
 status: executing
 stopped_at: Phase 23 context gathered
-last_updated: "2026-06-23T09:21:13.846Z"
+last_updated: "2026-06-23T09:38:39.720Z"
 last_activity: 2026-06-23
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 20
-  completed_plans: 18
+  completed_plans: 19
   percent: 67
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 ## Current Position
 
 Phase: 23 (browse-words) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-06-23
 
-Progress: [█████████░] 90%
+Progress: [██████████] 95%
 
 ## Shipped Milestones
 
@@ -74,6 +74,11 @@ Progress: [█████████░] 90%
 - [22-04]: Tasks 1+2 committed together (same file, TDD cycle shared); Task 3 no-op — e2e/11 had no review/translate/result assertions to retarget; Plan 03 already cleaned all stale selectors
 - [22-04]: All-failed banner uses JSX string literal to allow grep matching; loading-dedupe upgraded from bare spinner to ACProgress for consistency
 - [22-04]: D-01 ACPairRow: target={row.word} (ES top), native={row.nativeText} (EN bottom); D-05: ACStepper current=4 (Add) above all Result states
+- [23-03]: D-04 Browse landing back-link hardwired to "‹ Add a card" (not mock's "‹ My deck") — guard comment in source; D-02 list back-link = "‹ Topics"
+- [23-03]: BrowseTiles + BrowseList replace single WordListBrowser export; BWWordRow + BrowseEmpty exported named for direct rendered-component test import
+- [23-03]: AmberSpinner uses className="animate-spin" (Tailwind utility) not inline animation string — ensures @keyframes spin is emitted by compiler
+- [23-03]: CATEGORIES import in word-list-browser.tsx is import type (runtime value not needed; only used in typeof CATEGORIES type cast for filterWords)
+- [23-03]: Tasks 1+2 committed together — page.tsx imports BrowseTiles/BrowseList; TypeScript would fail if committed independently
 
 ### Pending Todos
 
@@ -96,6 +101,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-23T09:21:13.840Z
+Last session: 2026-06-23T09:38:39.708Z
 Stopped at: Phase 23 context gathered
 Resume file: None
