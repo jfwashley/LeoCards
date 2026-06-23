@@ -8,6 +8,7 @@ import { ACPairRow } from "@/components/daybreak/ac-pair-row";
 import { ACProgress } from "@/components/daybreak/ac-progress";
 import { ACReviewRow } from "@/components/daybreak/ac-review-row";
 import { ACSeg } from "@/components/daybreak/ac-seg";
+import { ACTop } from "@/components/daybreak/ac-top";
 
 afterEach(() => cleanup());
 
@@ -279,5 +280,26 @@ describe("ACProgress — calm long-wait", () => {
       />,
     );
     expect(screen.getByText("Reading your image…")).toBeTruthy();
+  });
+});
+
+// ─── D-03 ACTop browsePath assertions ────────────────────────────────────────
+
+describe("ACTop — D-03 Browse words entry link", () => {
+  it("renders Browse words link when browsePath is provided", () => {
+    render(<ACTop browsePath="/deck/browse?deck=abc" />);
+    const link = screen.getByTestId("browse-words-link");
+    expect(link).toBeTruthy();
+    expect(link.getAttribute("href")).toBe("/deck/browse?deck=abc");
+  });
+
+  it("Browse words link is absent when browsePath is omitted", () => {
+    render(<ACTop />);
+    expect(screen.queryByTestId("browse-words-link")).toBeNull();
+  });
+
+  it("add-card-title is still present when browsePath is provided (regression guard)", () => {
+    render(<ACTop browsePath="/deck/browse?deck=abc" />);
+    expect(screen.getByTestId("add-card-title")).toBeTruthy();
   });
 });
