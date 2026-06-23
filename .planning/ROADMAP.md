@@ -190,7 +190,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
 | 21. Dashboard — "My Deck" | 5/5 | Complete    | 2026-06-22 |
 | 22. Add a Card | 4/4 | Complete    | 2026-06-22 |
-| 23. Browse Words | 4/4 | Complete   | 2026-06-23 |
+| 23. Browse Words | 4/4 | Complete    | 2026-06-23 |
 | 24. Habitat | 0/TBD | Not started | - |
 
 ## Backlog
