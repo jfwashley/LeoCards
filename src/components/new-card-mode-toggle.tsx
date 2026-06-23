@@ -29,8 +29,12 @@ export function NewCardModeToggle({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      {/* ACTop: "‹ My deck" escape link + "Add a Card" Baloo 2 title */}
-      <ACTop />
+      {/* ACTop: "‹ My deck" escape link + "Add a Card" Baloo 2 title + D-03 Browse entry in type mode */}
+      <ACTop
+        browsePath={
+          mode === "type" ? `/deck/browse?deck=${activeDeckId}` : undefined
+        }
+      />
       {/* ACContext: EN → ES · saves to your Spanish deck */}
       <ACContext
         nativeLang={nativeLangLabel}
