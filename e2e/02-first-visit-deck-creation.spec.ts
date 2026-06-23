@@ -46,6 +46,11 @@ async function seedOneCard(
     await page.getByRole("link", { name: "Browse words" }).first().click();
     await page.waitForURL(/\/deck\/browse/, { timeout: 15_000 });
     await waitForCompilation(page);
+    // Two-screen IA (Plan 23-03): the landing shows topic tiles, not word rows —
+    // drill into a topic before the add toggles render.
+    await page.getByTestId("topic-tile-animals").click();
+    await page.waitForURL(/topic=/, { timeout: 15_000 });
+    await waitForCompilation(page);
     const addBtn = page.locator('[aria-label*="Add"]').first();
     await addBtn.waitFor({ timeout: 10_000 });
     await addBtn.click();

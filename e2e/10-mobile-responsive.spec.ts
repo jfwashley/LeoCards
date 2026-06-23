@@ -131,7 +131,10 @@ test.describe("Mobile responsiveness", () => {
     const frBox = await frenchField.boundingBox();
     expect(engBox).not.toBeNull();
     expect(frBox).not.toBeNull();
-    expect(frBox?.y).toBeGreaterThan(engBox?.y);
+    if (engBox === null || frBox === null) {
+      throw new Error("English/French field bounding box missing");
+    }
+    expect(frBox.y).toBeGreaterThan(engBox.y);
   });
 
   // Mobile card-management affordances live in the Daybreak card-row layout
