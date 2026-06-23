@@ -683,14 +683,18 @@ const handleAdd = useCallback((word: WordEntry) => {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> Both questions were resolved during pattern mapping (see 23-PATTERNS.md §Assumption Resolutions) and are reflected in the plans (23-02, 23-03). Retained here with inline resolutions for traceability.
 
 1. **`ACTop` browsePath — should it also appear when `mode === "image"` on the Pick step?**
+   - **RESOLVED:** Pass `browsePath` only when `mode === "type"`. PATTERNS.md A2 verified via `image-upload-flow.tsx` (the Pick step does render the outer `ACTop`, but the D-03-aligned conservative choice is type-mode only — the "Browse words ›" link does not appear in the image Pick). Implemented in plan 23-02.
    - What we know: D-03 says "landing/Pick view only, not during the image stepper"; ImageUploadFlow renders its own header (ACStepper) for steps ≥ Confirm.
    - What's unclear: Whether the Pick step of ImageUploadFlow uses `ACTop` or overrides it. From the code, `ACTop` is rendered by `NewCardModeToggle` unconditionally, and `ImageUploadFlow` likely renders `ACStepper` only when step > pick — meaning the Pick step still shows `ACTop`.
    - Recommendation: Planner reads `src/components/image-upload-flow.tsx` step structure and verifies. If Pick step shows `ACTop`, pass `browsePath` when `mode === "type"` only (simplest). If Pick step also shows `ACTop`, pass `browsePath` when `mode === "type" || (mode === "image" && step === "pick")`.
 
 2. **`bt.fieldBorder` exact value for `BWLevels` inactive tile borders**
+   - **RESOLVED:** `"1px solid #EDDFC9"` (PATTERNS.md A1, confirmed from the existing codebase `TField` / ghost-button border pattern). Used for inactive LEVEL tiles in plan 23-03.
    - What we know: The mock uses `bt.fieldBorder` for the inactive LEVEL tiles' border. The design README doesn't list `fieldBorder` explicitly.
    - What's unclear: Exact hex. The existing `TField` uses `#EDDFC9` border on inputs (visible in card-list.tsx `ghost button` border). This is likely `fieldBorder`.
    - Recommendation: Planner reads `design/handoff-daybreak/hifi-daybreak.jsx` and extracts the `d1` theme object's `fieldBorder` value. High confidence it is `"1px solid #EDDFC9"` matching the existing codebase pattern.
