@@ -1,16 +1,17 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { WordListBrowser } from "@/components/word-list-browser";
+import { BrowseList, BrowseTiles } from "@/components/word-list-browser";
+import { CATEGORIES } from "@/data/wordlists/schema";
 import { auth } from "@/lib/auth";
 import {
   getDeckCardWords,
   getUserDecks,
   getUserNativeLanguage,
 } from "@/lib/deck-queries";
-import { getWordList } from "@/lib/wordlist";
+import { filterWords, getWordList } from "@/lib/wordlist";
 
 interface BrowsePageProps {
-  searchParams: Promise<{ deck?: string }>;
+  searchParams: Promise<{ deck?: string; topic?: string }>;
 }
 
 const LANGUAGE_LABELS: Record<string, string> = {
@@ -28,6 +29,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
 
   const params = await searchParams;
   const requestedDeckId = params.deck;
+  const requestedTopic = params.topic;
 
   const [decks, nativeLang] = await Promise.all([
     getUserDecks(session.user.id),
@@ -53,16 +55,37 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
   const targetLangLabel =
     LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
 
+  // Per-category counts — synchronous, no extra I/O (D-07)
+  const categoryCounts: Record<string, number> = Object.fromEntries(
+    CATEGORIES.map((cat) => [
+      cat,
+      filterWords(wordList.words, { category: cat }).length,
+    ]),
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <main className="px-8 py-8 max-w-4xl mx-auto w-full">
-        <WordListBrowser
-          words={wordList.words}
-          existingWords={existingWords}
-          deckId={activeDeck.id}
-          nativeLangLabel={nativeLangLabel}
-          targetLangLabel={targetLangLabel}
-        />
+        {requestedTopic ? (
+          <BrowseList
+            words={wordList.words}
+            topic={requestedTopic}
+            existingWords={existingWords}
+            deckId={activeDeck.id}
+            nativeLang={nativeLang}
+            targetLang={activeDeck.language}
+            nativeLangLabel={nativeLangLabel}
+            targetLangLabel={targetLangLabel}
+          />
+        ) : (
+          <BrowseTiles
+            categories={CATEGORIES}
+            categoryCounts={categoryCounts}
+            deckId={activeDeck.id}
+            nativeLangLabel={nativeLangLabel}
+            targetLangLabel={targetLangLabel}
+          />
+        )}
       </main>
     </div>
   );
