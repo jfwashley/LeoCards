@@ -47,7 +47,7 @@
 
 ### Browse Words (BRW)
 
-- [ ] **BRW-01**: Topic-tiles landing — 14 category cards (Greetings … Work) each with a geometric amber icon on a medallion + word count.
+- [x] **BRW-01**: Topic-tiles landing — 14 category cards (Greetings … Work) each with a geometric amber icon on a medallion + word count.
 - [ ] **BRW-02**: Word list per topic — back-to-topics + topic header, a CEFR LEVEL tile row (All / A1 / A2 / B1) as its own section, and the EN→ES context line.
 - [ ] **BRW-03**: Word row — English primary / Spanish beneath (with an "ES" marker) + a CEFR level chip + a trailing circular toggle (outlined **+** to add, filled amber **✓** when in deck); in-deck rows get a warm tint; add/remove is optimistic & instant with row-local per-row error recovery that never loses scroll position.
 - [ ] **BRW-04**: Browse covers its states — full list, level-filtered, and empty result ("No words at this level" + "Show all levels").
@@ -98,7 +98,7 @@
 | ADC-01 | Phase 22 | Complete |
 | ADC-02 | Phase 22 | Complete |
 | ADC-03 | Phase 22 | Complete |
-| BRW-01 | Phase 23 | Pending |
+| BRW-01 | Phase 23 | Complete |
 | BRW-02 | Phase 23 | Pending |
 | BRW-03 | Phase 23 | Pending |
 | BRW-04 | Phase 23 | Pending |

@@ -153,7 +153,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
   3. Word rows match the Daybreak "Row A" spec: English primary / target beneath with language marker, CEFR level chip, trailing circular toggle (outlined + to add, filled amber check when in deck); in-deck rows get a warm tint; add/remove is optimistic and instant with row-local error recovery that never loses scroll position
   4. Browse covers all states in Daybreak: full list (All), level-filtered, and empty result ("No words at this level" + "Show all levels")
 **Plans**: 4 plans (3 waves)
-- [ ] 23-01-PLAN.md — BWMedallion: 14 CSS-art amber topic icons + medallion (D-08) + Wave 0 component-test scaffold (BRW-01)
+- [x] 23-01-PLAN.md — BWMedallion: 14 CSS-art amber topic icons + medallion (D-08) + Wave 0 component-test scaffold (BRW-01)
 - [ ] 23-02-PLAN.md — D-03 Browse-words entry link on the Add-a-Card header (ACTop browsePath, type-mode only) + tests (BRW-01)
 - [ ] 23-03-PLAN.md — Browse two-screen IA + re-skin: ?topic= page branch + BrowseTiles/BrowseList, optimistic machine preserved, D-04 back-link, D-09 empty state (BRW-01/02/03/04)
 - [ ] 23-04-PLAN.md — L-06 e2e retarget: addWordsFromBrowser two-screen fix + e2e/03/09/10 structural selectors + green batch (BRW-01/02/03/04)
@@ -190,7 +190,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | 20. Study Screen | 2/2 | Complete    | 2026-06-21 |
 | 21. Dashboard — "My Deck" | 5/5 | Complete    | 2026-06-22 |
 | 22. Add a Card | 4/4 | Complete    | 2026-06-22 |
-| 23. Browse Words | 0/4 | Planned | - |
+| 23. Browse Words | 1/4 | In Progress|  |
 | 24. Habitat | 0/TBD | Not started | - |
 
 ## Backlog
