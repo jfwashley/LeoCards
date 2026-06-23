@@ -29,7 +29,12 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
 
   const params = await searchParams;
   const requestedDeckId = params.deck;
-  const requestedTopic = params.topic;
+  // Validate ?topic= against known categories — an unrecognized/stale topic falls
+  // back to the tiles landing instead of rendering a nonsense empty state (WR-01).
+  const requestedTopic =
+    params.topic && (CATEGORIES as readonly string[]).includes(params.topic)
+      ? params.topic
+      : undefined;
 
   const [decks, nativeLang] = await Promise.all([
     getUserDecks(session.user.id),
@@ -72,8 +77,6 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
             topic={requestedTopic}
             existingWords={existingWords}
             deckId={activeDeck.id}
-            nativeLang={nativeLang}
-            targetLang={activeDeck.language}
             nativeLangLabel={nativeLangLabel}
             targetLangLabel={targetLangLabel}
           />

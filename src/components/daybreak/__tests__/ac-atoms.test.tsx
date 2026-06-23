@@ -242,6 +242,8 @@ describe("ACPairRow — D-01 target-on-top orientation guard", () => {
     const inputs = screen.getAllByRole("textbox") as HTMLInputElement[];
     expect(inputs.length).toBeGreaterThanOrEqual(2);
     // D-01: target (ES) MUST be first (top), native (EN) second (bottom)
+    // Casts narrow away `undefined` from the tuple index under
+    // noUncheckedIndexedAccess (length>=2 is asserted above; biome forbids `!`).
     const [targetInput, nativeInput] = inputs;
     expect((targetInput as HTMLInputElement).value).toBe("gato");
     expect((nativeInput as HTMLInputElement).value).toBe("cat");

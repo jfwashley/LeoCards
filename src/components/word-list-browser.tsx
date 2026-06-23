@@ -521,8 +521,6 @@ interface BrowseListProps {
   existingWords: Set<string>;
   deckId: string;
   topic: string;
-  nativeLang: string;
-  targetLang: string;
   nativeLangLabel: string;
   targetLangLabel: string;
 }

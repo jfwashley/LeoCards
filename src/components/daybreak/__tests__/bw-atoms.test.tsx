@@ -99,7 +99,7 @@ describe("BWWordRow — Row A states", () => {
     );
     expect(
       screen.getByRole("button", {
-        name: /Remove water from deck|Remove water to deck/,
+        name: /Remove water from deck/,
       }),
     ).toBeTruthy();
   });
