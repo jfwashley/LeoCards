@@ -22,10 +22,14 @@ export async function waitForCompilation(page: Page): Promise<void> {
     await page.waitForFunction(
       () => {
         // Look for any element containing "Compiling" text in the DOM
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        let node: Text | null;
-        while ((node = walker.nextNode() as Text | null)) {
+        const walker = document.createTreeWalker(
+          document.body,
+          NodeFilter.SHOW_TEXT,
+        );
+        let node = walker.nextNode() as Text | null;
+        while (node !== null) {
           if (node.nodeValue?.includes("Compiling")) return false;
+          node = walker.nextNode() as Text | null;
         }
         return true;
       },
@@ -156,6 +160,11 @@ export async function signUpWithDeck(
 
 /**
  * Add words from the word list browser.
+ *
+ * Two-screen IA (Plan 23-03): the Browse landing now shows topic tiles, not
+ * word rows. We must click into a topic before [aria-label*="Add"] buttons
+ * appear. Using "Animals" (topic-tile-animals): 20 A2 words in the French pair
+ * — densely populated, clean slug, no ambiguity.
  */
 export async function addWordsFromBrowser(
   page: Page,
@@ -163,6 +172,11 @@ export async function addWordsFromBrowser(
 ): Promise<void> {
   await page.getByTestId("browse-words-empty").click();
   await page.waitForURL(/\/deck\/browse/, { timeout: 15_000 });
+  await waitForCompilation(page);
+
+  // Drill into a topic — landing shows tiles, not word rows (two-screen IA)
+  await page.getByTestId("topic-tile-animals").click();
+  await page.waitForURL(/topic=/, { timeout: 15_000 });
   await waitForCompilation(page);
 
   await page.waitForSelector('[aria-label*="Add"]', { timeout: 15_000 });
