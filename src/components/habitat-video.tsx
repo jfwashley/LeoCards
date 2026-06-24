@@ -26,8 +26,9 @@
 //     16/9 size; the video/still are `position:absolute; inset:0` inside it.
 
 import Image from "next/image";
-import type { HabitatState } from "@/lib/habitat-engine";
+import { useEffect, useRef } from "react";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+import type { HabitatState } from "@/lib/habitat-engine";
 
 // ---------------------------------------------------------------------------
 // Pure helpers (exported for node-env Vitest — no jsdom in this repo)
@@ -102,6 +103,47 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
   const { level, mood, quality } = habitatState;
   const reducedMotion = usePrefersReducedMotion();
 
+  // D-03/D-04: mobile freeze tier — attach ref to <video> and freeze after ~10s on narrow viewports.
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || reducedMotion) return;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    if (!isMobile) return; // desktop: keep looping (D-03)
+
+    let freezeTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const freeze = () => {
+      video.pause();
+    };
+    const scheduleFreeze = () => {
+      if (freezeTimer !== null) clearTimeout(freezeTimer);
+      freezeTimer = setTimeout(freeze, 10_000); // ~2 loops (D-04: tuning knob)
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          video.play().catch(() => {}); // catch autoplay-policy rejection (Pitfall 3, T-24-03-PLAY)
+          scheduleFreeze();
+        } else {
+          if (freezeTimer !== null) clearTimeout(freezeTimer);
+          video.pause(); // offscreen: pause immediately
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(video);
+    scheduleFreeze(); // start the initial freeze timer
+
+    return () => {
+      observer.disconnect();
+      if (freezeTimer !== null) clearTimeout(freezeTimer);
+    };
+  }, [reducedMotion]); // re-run if reduced-motion changes after mount
+
   const filter = decayFilter(quality);
   const poster = posterSrc(level);
   const altLevel = clampLevel(level);
@@ -139,6 +181,7 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
     <>
       {Poster}
       <video
+        ref={videoRef}
         key={clipBasename(level, mood)}
         data-testid="habitat-video"
         autoPlay
