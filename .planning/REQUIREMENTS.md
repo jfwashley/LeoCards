@@ -55,8 +55,8 @@
 ### Habitat (HAB)
 
 - [x] **HAB-01**: The habitat is a living, flat-geometric scene whose elements stack cumulatively by level (L1 bare mound → L2 lake/lilies → L3 trees/rocks → L4 flowers/grass/butterflies → L5 elephant → L6 mushrooms → L7 cave → L8 toys → L9 songbirds + golden-hour), driven by the learned-card count — keeping the level-by-level composition from the handoff.
-- [ ] **HAB-02**: Mood is expressed three independent ways and is independent of level — Leo's seated expression, the ambient light, and a mood chip label (Excited / Happy / Neutral / Sad).
-- [ ] **HAB-03**: A bottom progress card shows "Level N · <name>", a progress bar, and the named next unlock ("Next at L6: mushrooms"); at L9 it reads "Course 1 complete". Overlays: back button + level badge.
+- [x] **HAB-02**: Mood is expressed three independent ways and is independent of level — Leo's seated expression, the ambient light, and a mood chip label (Excited / Happy / Neutral / Sad).
+- [x] **HAB-03**: A bottom progress card shows "Level N · <name>", a progress bar, and the named next unlock ("Next at L6: mushrooms"); at L9 it reads "Course 1 complete". Overlays: back button + level badge.
 - [x] **HAB-04**: Ambient motion (Leo breathing, water shimmer, cloud drift, butterfly float, sun glow) is **light on mobile** and **fully paused under `prefers-reduced-motion`** (static scene + "Motion paused").
 - [x] **HAB-05**: Habitat covers its states in Daybreak — new-user L1 (sparse/inviting), mid L5 (default), lush L9, level-up celebration (~2.5s confetti then settles), decaying/sad (desaturated, encouraging "Leo misses you"), offline (cached banner, scene still shown), error (friendly + Try again), and reduced-motion.
 
@@ -103,7 +103,7 @@
 | BRW-03 | Phase 23 | Complete |
 | BRW-04 | Phase 23 | Complete |
 | HAB-01 | Phase 24 | Complete |
-| HAB-02 | Phase 24 | Pending |
-| HAB-03 | Phase 24 | Pending |
+| HAB-02 | Phase 24 | Complete |
+| HAB-03 | Phase 24 | Complete |
 | HAB-04 | Phase 24 | Complete |
 | HAB-05 | Phase 24 | Complete |
