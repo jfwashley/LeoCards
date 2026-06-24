@@ -71,7 +71,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 - [x] **Phase 21: Dashboard — "My Deck"** — Full dashboard experience in Daybreak (header, habitat hero, action line, word accordion) (completed 2026-06-21)
 - [x] **Phase 22: Add a Card** — Type-a-word and from-an-image flows in Daybreak (completed 2026-06-22)
 - [x] **Phase 23: Browse Words** — Topic tiles and word-list screens in Daybreak (completed 2026-06-23)
-- [ ] **Phase 24: Habitat** — Living flat-geometric Habitat scene with ambient motion, all states, reduced-motion safety
+- [x] **Phase 24: Habitat** — Living flat-geometric Habitat scene with ambient motion, all states, reduced-motion safety (completed 2026-06-24)
 
 ## Phase Details (v4.0 Daybreak)
 
@@ -191,7 +191,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | 21. Dashboard — "My Deck" | 5/5 | Complete    | 2026-06-22 |
 | 22. Add a Card | 4/4 | Complete    | 2026-06-22 |
 | 23. Browse Words | 4/4 | Complete    | 2026-06-23 |
-| 24. Habitat | 2/3 | In progress | - |
+| 24. Habitat | 3/3 | Complete   | 2026-06-24 |
 
 ## Backlog
 
