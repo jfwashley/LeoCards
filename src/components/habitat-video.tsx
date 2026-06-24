@@ -106,6 +106,7 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
   // D-03/D-04: mobile freeze tier — attach ref to <video> and freeze after ~10s on narrow viewports.
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: level+mood intentionally added even though not read in body — <video key={clipBasename(level,mood)}> remounts on changes; deps force re-bind to new node (WR-01)
   useEffect(() => {
     const video = videoRef.current;
     if (!video || reducedMotion) return;
@@ -115,6 +116,7 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
     let freezeTimer: ReturnType<typeof setTimeout> | null = null;
 
     const freeze = () => {
+      freezeTimer = null; // null out after firing so the guard reflects reality (WR-02)
       video.pause();
     };
     const scheduleFreeze = () => {
@@ -125,10 +127,17 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
-          video.play().catch(() => {}); // catch autoplay-policy rejection (Pitfall 3, T-24-03-PLAY)
-          scheduleFreeze();
+          // Gate scheduleFreeze on successful play so a rejected autoplay-policy
+          // promise doesn't arm a freeze timer against a never-started video (WR-02).
+          video
+            .play()
+            .then(scheduleFreeze)
+            .catch(() => {}); // catch autoplay-policy rejection (Pitfall 3, T-24-03-PLAY)
         } else {
-          if (freezeTimer !== null) clearTimeout(freezeTimer);
+          if (freezeTimer !== null) {
+            clearTimeout(freezeTimer);
+            freezeTimer = null;
+          } // null out so guard stays accurate (WR-02)
           video.pause(); // offscreen: pause immediately
         }
       },
@@ -136,13 +145,12 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
     );
 
     observer.observe(video);
-    scheduleFreeze(); // start the initial freeze timer
 
     return () => {
       observer.disconnect();
       if (freezeTimer !== null) clearTimeout(freezeTimer);
     };
-  }, [reducedMotion]); // re-run if reduced-motion changes after mount
+  }, [reducedMotion, level, mood]);
 
   const filter = decayFilter(quality);
   const poster = posterSrc(level);

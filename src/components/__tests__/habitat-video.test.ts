@@ -173,9 +173,10 @@ describe("HabitatVideo JSX invariants (source grep)", () => {
     expect(s).toMatch(/setTimeout/);
   });
 
-  it("V16: mobile freeze — video.play() has .catch to handle autoplay-policy rejection (Pitfall 3)", () => {
+  it("V16: mobile freeze — video.play() is chained with .catch to handle autoplay-policy rejection (Pitfall 3)", () => {
     const s = src();
-    // play() must be chained with .catch to avoid unhandled Promise rejection
-    expect(s).toMatch(/\.play\(\)\s*\.catch/);
+    // play() must ultimately chain .catch to avoid unhandled Promise rejection.
+    // WR-02 fix: .then(scheduleFreeze) is interleaved, so match the full chain.
+    expect(s).toMatch(/\.play\(\)[\s\S]*?\.catch/);
   });
 });
