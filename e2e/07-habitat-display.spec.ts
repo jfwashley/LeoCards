@@ -22,11 +22,14 @@ test.describe("Habitat — widget and full page", () => {
     expect(href).toContain("/habitat");
 
     // Navigate directly — clicking is unreliable due to PixiJS canvas overlay
-    await page.goto(href!);
+    await page.goto(href ?? "/habitat");
     await page
       .waitForLoadState("networkidle", { timeout: 30_000 })
       .catch(() => {});
-    await expect(page.getByText("Level")).toBeVisible({ timeout: 15_000 });
+    // Retargeted: HLevelBadge renders "LVL\n{N}", not "Level N" (Phase 24 re-skin)
+    await expect(page.getByTestId("habitat-level-badge")).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test("habitat page shows mood indicator", async ({ page }) => {
@@ -35,8 +38,8 @@ test.describe("Habitat — widget and full page", () => {
       .waitForLoadState("networkidle", { timeout: 30_000 })
       .catch(() => {});
 
-    // Wait longer — PixiJS and habitat state need to load
-    await expect(page.getByText(/Excited|Happy|Neutral|Sad/)).toBeVisible({
+    // Retargeted: HMoodChip carries data-testid="habitat-mood-chip" (Phase 24 re-skin)
+    await expect(page.getByTestId("habitat-mood-chip")).toBeVisible({
       timeout: 30_000,
     });
   });
@@ -55,8 +58,9 @@ test.describe("Habitat — widget and full page", () => {
       .locator("canvas")
       .isVisible()
       .catch(() => false);
+    // Retargeted: HMoodChip carries data-testid="habitat-mood-chip" (Phase 24 re-skin)
     const hasMood = await page
-      .getByText(/Excited|Happy|Neutral|Sad/)
+      .getByTestId("habitat-mood-chip")
       .isVisible()
       .catch(() => false);
 

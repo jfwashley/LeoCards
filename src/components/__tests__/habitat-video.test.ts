@@ -151,4 +151,31 @@ describe("HabitatVideo JSX invariants (source grep)", () => {
     expect(imports).not.toMatch(/habitat-3d-canvas/);
     expect(imports).not.toMatch(/habitat-3d\//);
   });
+
+  // Phase 24 extensions — mobile freeze logic (HAB-04 D-03/D-04)
+  it("V12: mobile freeze — IntersectionObserver is used for scroll-aware pause/resume", () => {
+    const s = src();
+    expect(s).toMatch(/IntersectionObserver/);
+  });
+
+  it("V13: mobile freeze — window.innerWidth < 768 check for isMobile branch", () => {
+    const s = src();
+    expect(s).toMatch(/window\.innerWidth\s*<\s*768/);
+  });
+
+  it("V14: mobile freeze — video.pause() is called in the freeze path", () => {
+    const s = src();
+    expect(s).toMatch(/video\.pause\(\)/);
+  });
+
+  it("V15: mobile freeze — setTimeout is used for the freeze timer (D-04 tuning knob)", () => {
+    const s = src();
+    expect(s).toMatch(/setTimeout/);
+  });
+
+  it("V16: mobile freeze — video.play() has .catch to handle autoplay-policy rejection (Pitfall 3)", () => {
+    const s = src();
+    // play() must be chained with .catch to avoid unhandled Promise rejection
+    expect(s).toMatch(/\.play\(\)\s*\.catch/);
+  });
 });

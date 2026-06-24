@@ -83,3 +83,14 @@ describe("Phase 13.1-VIDEO-02 — scene swapped to video", () => {
     expect(webmIdx).toBeLessThan(mp4Idx);
   });
 });
+
+// Phase 24 extensions — celebration trigger wiring (HAB-04 D-09)
+describe("Phase 24 — celebratingLevel wiring in habitat-scene.tsx", () => {
+  it("VS7: habitat-scene.tsx consumes 'celebratingLevel' (NOT the dead '_celebratingLevel' prefix)", () => {
+    // D-09 repair: the dead `_celebratingLevel` prefix must be replaced by `celebratingLevel`.
+    // A test for the active prop name keeps the repair from regressing.
+    expect(SCENE_SRC).toMatch(/\bcelebratingLevel\b/);
+    // The underscore-prefixed dead variant must NOT appear (it signalled "intentionally unused")
+    expect(SCENE_SRC).not.toMatch(/_celebratingLevel/);
+  });
+});
