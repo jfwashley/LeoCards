@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v4.0
 milestone_name: Daybreak
 status: executing
-stopped_at: Phase 24 context gathered
-last_updated: "2026-06-24T10:49:00.209Z"
-last_activity: 2026-06-24 -- Phase 24 planning complete
+stopped_at: Phase 24 Plan 01 complete
+last_updated: "2026-06-24T12:55:00.000Z"
+last_activity: 2026-06-24 -- 24-01 Wave-0 foundation executed
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 23
-  completed_plans: 20
-  percent: 83
+  completed_plans: 21
+  percent: 91
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign star
 
 ## Current Position
 
-Phase: 24
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-24 -- Phase 24 planning complete
+Phase: 24 (habitat) — EXECUTING
+Plan: 2 of 3
+Status: Executing Phase 24
+Last activity: 2026-06-24 -- 24-01 complete (Wave-0 foundation: constants + moodTint + scaffold)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 91%
 
 ## Shipped Milestones
 
@@ -81,6 +81,9 @@ Progress: [██████████] 100%
 - [23-03]: Tasks 1+2 committed together — page.tsx imports BrowseTiles/BrowseList; TypeScript would fail if committed independently
 - [Phase ?]: 23-04: Animals+A1 combo used for BRW-04 empty state test (verified 0 A1 words in en-fr.json Animals category)
 - [Phase ?]: 23-04: Browse e2e retargets use structural testids (topic-tile-{slug}, browse-words-title, word-row) and role/aria-label selectors; L-06 closed for phase 23
+- [24-01]: moodTint extracted to src/lib/habitat-tint.ts (not inlined in habitat-scene.tsx) for direct unit testability; map[mood] ?? fallback (no non-null assertion per biome)
+- [24-01]: e2e/07 retargeted in Wave 0 (not Wave 3) — getByTestId("habitat-level-badge") + getByTestId("habitat-mood-chip") — to avoid selector breakage when HTop atoms land in Wave 2
+- [24-01]: H_NEXT keys 1-8 only (no L9 entry) confirmed in test HN2; all callers guard with nextLevelThreshold === null (D-12)
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 
 ## Session Continuity
 
-Last session: 2026-06-24T08:57:18.251Z
-Stopped at: Phase 24 context gathered
-Resume file: .planning/phases/24-habitat/24-CONTEXT.md
+Last session: 2026-06-24T12:55:00.000Z
+Stopped at: Phase 24 Plan 01 complete
+Resume file: .planning/phases/24-habitat/24-02-PLAN.md

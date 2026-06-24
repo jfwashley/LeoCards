@@ -191,7 +191,7 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 | 21. Dashboard — "My Deck" | 5/5 | Complete    | 2026-06-22 |
 | 22. Add a Card | 4/4 | Complete    | 2026-06-22 |
 | 23. Browse Words | 4/4 | Complete    | 2026-06-23 |
-| 24. Habitat | 0/TBD | Not started | - |
+| 24. Habitat | 1/3 | In progress | - |
 
 ## Backlog
 
