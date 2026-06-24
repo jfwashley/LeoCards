@@ -19,7 +19,16 @@ export default async function HabitatPage({
   if (!session) return null;
 
   const params = await searchParams;
-  const celebratingLevel = params.celebrate ? Number(params.celebrate) : null;
+  // T-24-03-CELEBRATE: validate ?celebrate is an integer in [1,9] (STRIDE Tampering).
+  // Number("") === 0, Number("abc") === NaN — both fail isInteger. ?celebrate=999 → null.
+  const rawCelebrate = params.celebrate ? Number(params.celebrate) : null;
+  const celebratingLevel =
+    rawCelebrate !== null &&
+    Number.isInteger(rawCelebrate) &&
+    rawCelebrate >= 1 &&
+    rawCelebrate <= 9
+      ? rawCelebrate
+      : null;
 
   const facts = await getHabitatFacts(session.user.id as UserId);
   const override = await readHabitatOverride();

@@ -214,10 +214,10 @@ export function StudySession({
   const handleLevelUpDismiss = useCallback(() => {
     const leveledUp = showLevelUp;
     setShowLevelUp(null);
-    if (leveledUp === 10) {
-      router.push(`/dashboard?deck=${deckId}&celebrate=10`);
+    if (leveledUp !== null) {
+      router.push(`/habitat?celebrate=${leveledUp}`);
     }
-  }, [showLevelUp, router, deckId]);
+  }, [showLevelUp, router]);
 
   // 300ms swipe enable after flip
   const isFlipped = state.phase === "studying" ? state.flipped : false;
