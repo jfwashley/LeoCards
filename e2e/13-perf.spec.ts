@@ -243,7 +243,14 @@ test.describe("Phase 13 Plan 06 — CWV + widget perf", () => {
       "13-3d-habitat",
       "perf-results.json",
     );
-    await fs.writeFile(out, JSON.stringify(results, null, 2), "utf8");
+    try {
+      await fs.writeFile(out, JSON.stringify(results, null, 2), "utf8");
+    } catch (err) {
+      // Diagnostic artifact only: the 13-3d-habitat dir was archived with v2.1,
+      // so this write may ENOENT. Never fail the perf suite on the side-effect —
+      // the CWV thresholds are asserted in the separate test() below.
+      console.warn(`[13-perf] perf-results.json write skipped: ${err}`);
+    }
   });
 
   // Assert all CWV pass — Plan 06 hard gate.
