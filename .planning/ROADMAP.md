@@ -160,14 +160,14 @@ Full details: [milestones/v3.0-ROADMAP.md](milestones/v3.0-ROADMAP.md)
 **UI hint**: yes
 
 ### Phase 24: Habitat
-**Goal**: The Habitat screen is a living flat-geometric scene in Daybreak — level-by-level cumulative composition, mood-driven Leo, ambient motion that is light on mobile and pauses under prefers-reduced-motion — covering all required states
+**Goal**: The Habitat screen is a living Daybreak experience — the existing pre-rendered ambient video (kept as-is) re-skinned with Daybreak overlays (mood/decay colour wash, chrome, bottom progress card), mood-driven, with motion that is lighter on mobile and pauses under prefers-reduced-motion — covering all required states. (Scope per 24-CONTEXT.md: keep the video, re-skin overlays only — NOT a flat-geometric scene rebuild.)
 **Depends on**: Phase 19 (Daybreak atoms and tokens), Phase 21 (Dashboard links to Habitat)
 **Requirements**: HAB-01, HAB-02, HAB-03, HAB-04, HAB-05
 **Success Criteria** (what must be TRUE):
-  1. The habitat scene renders the correct cumulative set of flat-geometric elements for the current level (L1 bare mound through L9 songbirds + golden-hour) using the Daybreak PAL palette; Leo's seated expression reflects the current mood
+  1. The habitat renders the kept pre-rendered video for the current level × mood (clip `l{1-9}-{mood}`), with a Daybreak CSS colour overlay (mood ambient-light tint + golden-hour at L9) and the existing decay desaturate/dim filter composited on top; Leo's mood reads from the per-mood clip, and the Daybreak palette is used for the overlay + chrome
   2. Mood is expressed three independent ways: Leo's expression, ambient light tint, and a mood chip label (Excited / Happy / Neutral / Sad) — visibly different across moods at the same level
   3. The bottom progress card shows "Level N · <name>", a progress bar, and the named next unlock ("Next at L6: mushrooms"); at L9 it reads "Course 1 complete"
-  4. Ambient motion (Leo breathing, water shimmer, cloud drift, butterfly float, sun glow) plays on desktop; on mobile it is visibly lighter (reduced or absent); under prefers-reduced-motion the scene is fully static and a "Motion paused" label appears
+  4. Ambient motion is the video clip: it autoplays on desktop; on mobile it autoplays then freezes to the still (visibly lighter); under prefers-reduced-motion the scene is the static poster only and a "Motion paused" label appears
   5. All required states render correctly in Daybreak: new-user L1, mid L5, lush L9, level-up confetti celebration (~2.5s then settles), decaying/sad (desaturated + "Leo misses you"), offline (cached banner, scene still shown), error (friendly + Try again), and reduced-motion static
 **Plans**: TBD
 **UI hint**: yes
