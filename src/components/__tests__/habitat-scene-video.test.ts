@@ -64,10 +64,11 @@ describe("Phase 13.1-VIDEO-02 — scene swapped to video", () => {
     expect(SCENE_SRC).toMatch(/data-testid=["']habitat-scene-wrapper["']/);
   });
 
-  it("VS5: surrounding chrome + state logic preserved (badge, mood, level-up, offline, retry, cache)", () => {
-    expect(SCENE_SRC).toMatch(/Level \{state\.level\}/); // level badge
-    expect(SCENE_SRC).toMatch(/<MoodIndicator mood=\{state\.mood\}/); // mood
-    expect(SCENE_SRC).toMatch(/showLevelUp/); // level-up celebration
+  it("VS5: surrounding chrome + state logic preserved (Daybreak chrome, celebration, offline, retry, cache)", () => {
+    // Phase 24 re-skin: HTop replaces the old badge + MoodIndicator
+    expect(SCENE_SRC).toMatch(/<HTop mood=\{state\.mood\}/); // Daybreak chrome
+    // showCelebration replaces showLevelUp (D-09 repair)
+    expect(SCENE_SRC).toMatch(/showCelebration/); // level-up celebration
     expect(SCENE_SRC).toMatch(/offline/); // offline indicator
     expect(SCENE_SRC).toMatch(/async function retry\(/); // error/retry
     expect(SCENE_SRC).toMatch(/localStorage\.setItem\(CACHE_KEY/); // cache

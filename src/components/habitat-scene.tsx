@@ -2,9 +2,16 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { HBack } from "@/components/daybreak/h-back";
+import { HDecayCard } from "@/components/daybreak/h-decay-card";
+import { HProgCard } from "@/components/daybreak/h-prog-card";
+import { HTop } from "@/components/daybreak/h-top";
+import { HabitatCelebration } from "@/components/habitat-celebration";
 import { HabitatVideo } from "@/components/habitat-video";
 import { Button } from "@/components/ui/button";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
+import { moodTint } from "@/lib/habitat-tint";
 
 // localStorage cache key for offline support (Pattern 8 from RESEARCH.md)
 const CACHE_KEY = "leocards:habitat-state";
@@ -70,55 +77,35 @@ const HabitatCanvasCapture =
     : null;
 
 // ============================================================
-// Mood indicator helpers
-// ============================================================
-
-const MOOD_LABELS: Record<TigerMood, string> = {
-  excited: "Excited",
-  happy: "Happy",
-  neutral: "Neutral",
-  sad: "Sad",
-};
-
-const MOOD_DOT_CLASSES: Record<TigerMood, string> = {
-  excited: "bg-primary",
-  happy: "bg-emerald-500",
-  neutral: "bg-amber-400",
-  sad: "bg-slate-400",
-};
-
-interface MoodIndicatorProps {
-  mood: TigerMood;
-}
-
-function MoodIndicator({ mood }: MoodIndicatorProps) {
-  return (
-    <div className="absolute top-3 right-3 text-sm font-normal text-muted-foreground flex items-center gap-2 z-10">
-      <span className={`w-2.5 h-2.5 rounded-full ${MOOD_DOT_CLASSES[mood]}`} />
-      {MOOD_LABELS[mood]}
-    </div>
-  );
-}
-
-// ============================================================
 // HabitatScene
 // ============================================================
 
 export function HabitatScene({
   habitatState,
-  // Plan 13.1-VIDEO-02: kept for API parity with the caller in
-  // `habitat/page.tsx` (which threads `?celebrate=` through). The level-up
-  // celebration overlay is driven by prop-change detection on `state.level`,
-  // not by this prop, so it is intentionally unused in the body.
-  celebratingLevel: _celebratingLevel = null,
+  // D-09 repair: consume celebratingLevel on mount via lazy useState initializer.
+  // The prop was previously prefixed with underscore to mark it unused — now wired.
+  celebratingLevel = null,
 }: {
   habitatState: HabitatState;
   celebratingLevel?: number | null;
 }) {
+  const reducedMotion = usePrefersReducedMotion();
+
+  // D-09: lazy init fires on mount only — avoids the "prop-change never fires" pitfall.
+  const [showCelebration, setShowCelebration] = useState(
+    () => celebratingLevel != null && celebratingLevel > 0,
+  );
+  // D-07: auto-settle after 2500ms; mount-only effect (intentionally empty deps).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally mount-only — showCelebration is read from lazy init on mount; re-running on change would restart the timer incorrectly
+  useEffect(() => {
+    if (!showCelebration) return;
+    const t = setTimeout(() => setShowCelebration(false), 2500);
+    return () => clearTimeout(t);
+  }, []); // intentionally empty — fires once on mount only
+
   const [state, setState] = useState<HabitatState>(habitatState);
   const [error, setError] = useState(false);
   const [offline, setOffline] = useState(false);
-  const [showLevelUp, setShowLevelUp] = useState(false);
   const prevLevelRef = useRef(habitatState.level);
 
   // Plan 13.1-VIDEO-03: dev-only — detect `?capture=video` to mount the live
@@ -149,14 +136,8 @@ export function HabitatScene({
     }
   }, [habitatState]);
 
-  // Level-up detection: when state.level increases, show celebration for 2.5s (D-20)
+  // Level tracking: keep prevLevelRef in sync (D-02 data layer untouched)
   useEffect(() => {
-    if (state.level > prevLevelRef.current) {
-      setShowLevelUp(true);
-      prevLevelRef.current = state.level;
-      const timer = setTimeout(() => setShowLevelUp(false), 2500);
-      return () => clearTimeout(timer);
-    }
     prevLevelRef.current = state.level;
   }, [state.level]);
 
@@ -175,7 +156,7 @@ export function HabitatScene({
       }
       setOffline(false);
     } catch {
-      // Try cached data with Zod validation
+      // Try cached data with type guard validation
       try {
         const cached = localStorage.getItem(CACHE_KEY);
         const parsed: unknown = cached ? JSON.parse(cached) : null;
@@ -191,19 +172,69 @@ export function HabitatScene({
     }
   }
 
-  // Error state (D-23): shows when API fails and no cached data available
+  // Error state (D-13/D-23): Daybreak-styled error + HBack header
   if (error) {
     return (
       <div
-        className="w-full flex flex-col items-center justify-center bg-card rounded-lg border"
-        style={WRAPPER_STYLE}
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
-        <p className="text-lg font-semibold mb-2">Something went wrong</p>
-        <p className="text-sm text-muted-foreground mb-4">
-          We couldn&apos;t load your habitat. Check your connection and try
-          again.
-        </p>
-        <Button onClick={retry}>Try again</Button>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(180deg, #FFEAC0, #FFF6E8, #FBF0DB)",
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 3,
+            padding: "8px 18px 0",
+            flex: "none",
+          }}
+        >
+          <HBack />
+        </div>
+        <div
+          style={{
+            ...WRAPPER_STYLE,
+            position: "relative",
+            zIndex: 3,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 16,
+            padding: 28,
+            textAlign: "center",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 21,
+              fontWeight: 700,
+              color: "#4A331C",
+            }}
+          >
+            We couldn&rsquo;t load your habitat.
+          </span>
+          <span
+            style={{
+              fontSize: 14.5,
+              color: "#9C8467",
+              lineHeight: 1.5,
+              maxWidth: 250,
+            }}
+          >
+            Check your connection and try again.
+          </span>
+          <Button onClick={retry}>Try again</Button>
+        </div>
       </div>
     );
   }
@@ -224,14 +255,6 @@ export function HabitatScene({
         style={WRAPPER_STYLE}
         data-testid="habitat-scene-wrapper"
       >
-        {/* Level badge overlay (D-15, UI-SPEC) — z-10 so it sits above the video */}
-        <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm font-semibold px-3 py-1 rounded-full z-10">
-          Level {state.level}
-        </div>
-
-        {/* Mood indicator overlay (D-15, UI-SPEC) */}
-        <MoodIndicator mood={state.mood} />
-
         {/* Pre-rendered ambient loop clip (poster = LCP candidate). In dev
             capture mode we mount the live Three.js canvas instead so the clip
             render pipeline can record it (tree-shaken from production). */}
@@ -240,30 +263,122 @@ export function HabitatScene({
         ) : (
           <HabitatVideo habitatState={state} />
         )}
+
+        {/* D-05 / D-11: mood tint — CSS sibling layer over the untouched decayFilter.
+            position:absolute; inset:0; pointer-events:none so chrome stays clickable (Pitfall 6).
+            zIndex 1 = above video, below chrome (HTop is z-3, cards are z-3). */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 1,
+            background:
+              state.level >= 9 && !state.isDecaying
+                ? "radial-gradient(circle at 72% 26%, rgba(255,200,110,0.28), transparent 55%)"
+                : moodTint(state.mood, state.isDecaying, state.level),
+          }}
+        />
+
+        {/* D-13: Daybreak chrome — HTop (HBack | HMoodChip | HLevelBadge) */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            zIndex: 2,
+          }}
+        >
+          <HTop mood={state.mood} level={state.level} />
+
+          {/* Bottom section: offline banner + cards */}
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {/* D-13: Daybreak offline banner */}
+            {offline && (
+              <div
+                data-testid="habitat-offline-banner"
+                style={{
+                  margin: "4px 16px 0",
+                  padding: "10px 14px",
+                  borderRadius: 13,
+                  background: "rgba(74,51,28,0.82)",
+                  backdropFilter: "blur(4px)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  flex: "none",
+                }}
+              >
+                <span
+                  style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    border: "2px solid #FFE0A8",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#FFE0A8",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    flex: "none",
+                  }}
+                >
+                  !
+                </span>
+                <span
+                  style={{ fontSize: 13, fontWeight: 600, color: "#FFF6E9" }}
+                >
+                  You&rsquo;re offline &mdash; showing last known state.
+                </span>
+              </div>
+            )}
+
+            {/* D-03: "Motion paused" label for reduced-motion users (HabScreen line 94) */}
+            {reducedMotion && (
+              <div
+                data-testid="habitat-motion-paused"
+                style={{
+                  position: "relative",
+                  zIndex: 3,
+                  alignSelf: "center",
+                  marginBottom: 10,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#9C8467",
+                  background: "rgba(255,255,255,0.8)",
+                  padding: "5px 12px",
+                  borderRadius: 999,
+                }}
+              >
+                &#9208; Motion paused
+              </div>
+            )}
+
+            {/* D-10: bottom card switch — decay card when isDecaying, progress card otherwise */}
+            {state.isDecaying ? (
+              <HDecayCard />
+            ) : (
+              <HProgCard
+                level={state.level}
+                effectiveCardCount={state.effectiveCardCount}
+                nextLevelThreshold={state.nextLevelThreshold}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* D-07/D-09: celebration overlay — absolute, above everything (zIndex 20) */}
+        {showCelebration && celebratingLevel !== null && (
+          <HabitatCelebration
+            celebratingLevel={celebratingLevel}
+            onSettle={() => setShowCelebration(false)}
+          />
+        )}
       </div>
-
-      {/*
-        Offline indicator (D-24): shows when displaying cached data.
-        Phase 13.1-VIDEO-03: CSS-only fade-in (tw-animate-css) replaces the old
-        `motion.div`. The `motion/react` library was the single largest cost on
-        /habitat mobile (~71 KB chunk, ~1.5 s script-eval under 4× CPU throttle,
-        the entire TBT budget). Removing the import drops it from /habitat's
-        bundle. Two simple fades do not justify the framer-motion runtime.
-      */}
-      {offline && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-card/90 backdrop-blur-sm text-sm text-muted-foreground px-4 py-2 rounded-full border animate-in fade-in duration-300">
-          You&apos;re offline — showing last known state
-        </div>
-      )}
-
-      {/* Level-up celebration overlay (D-20): shown for 2.5s after leveling up */}
-      {showLevelUp && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none animate-in fade-in zoom-in-95 duration-500">
-          <span className="text-xl sm:text-[28px] font-semibold text-primary drop-shadow-lg">
-            Level {state.level}!
-          </span>
-        </div>
-      )}
     </div>
   );
 }
