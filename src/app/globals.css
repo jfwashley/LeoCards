@@ -106,3 +106,22 @@
     @apply font-sans;
   }
 }
+
+/* Phase 24 — Habitat Daybreak confetti animation (D-08, CSS-only — no motion/react) */
+@keyframes hab-fall {
+  from {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Respect prefers-reduced-motion: disable confetti animation for .hab-confetti elements */
+@media (prefers-reduced-motion: reduce) {
+  .hab-confetti {
+    animation: none;
+  }
+}
