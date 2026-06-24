@@ -695,7 +695,9 @@ This was flagged as WR-01 in Phase 23 code review context (validate untrusted `?
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> All three are design-discretion items resolved in the plans: confetti settle = 200ms fade after a 2.3s timer (2.5s total); "Study now" routes to /dashboard (no deckId in HabitatState); the what-appeared reveal uses a generic medallion icon, not per-level CSS shapes.
 
 1. **Confetti fall duration vs. celebration auto-settle (2.5s)**
    - What we know: D-07 says the celebration auto-settles after ~2.5s. The handoff's confetti CSS in HabCelebrate uses `animationDelay` up to `(8) * 0.22s ≈ 1.76s` and the fall should complete before settle. A 2s fall + 0.5s fade-out gives exactly 2.5s.
