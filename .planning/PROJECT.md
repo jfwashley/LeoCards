@@ -10,7 +10,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Current State
 
-**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). **v4.0 Daybreak** UI redesign in progress (started 2026-06-19) — through Phase 23 Browse Words (BRW-01..04) as of 2026-06-23; Phase 24 Habitat remains (the last Daybreak phase).
+**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). **v4.0 Daybreak** UI redesign — ALL phases complete (started 2026-06-19, completed 2026-06-24 with Phase 24 Habitat / HAB-01..05). Every primary screen is now on the Daybreak design system; milestone is feature-complete pending human visual UAT.
 **Live at:** https://leocards.vercel.app
 **Tech stack:** Next.js 16, React 19, Better Auth, Drizzle ORM, Neon Postgres, Three.js 0.160 (build-time only — renders habitat clips; never ships to client), Motion 12, Tailwind v4, DeepL, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3 (Claude vision), Vitest, Playwright, Biome
 **Tests:** 2044 unit tests green; 15+ Playwright e2e specs
@@ -160,4 +160,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-23 — Phase 23 (Browse Words / BRW-01..04) complete: two-screen Daybreak Browse IA (topic tiles ↔ per-topic word list), optimistic add/remove preserved verbatim. Daybreak now through Phase 23; Phase 24 Habitat remains (the last Daybreak phase).*
+*Last updated: 2026-06-24 — Phase 24 (Habitat / HAB-01..05) complete: the kept pre-rendered video habitat re-skinned with Daybreak overlays — mood/decay CSS tint over the untouched clip, HTop chrome, bottom progress/decay cards, repaired level-up celebration (CSS-only confetti, auto-settles ~2.5s), and a 3-tier motion model (desktop loop / mobile freeze / reduced-motion poster). This was the LAST Daybreak phase — v4.0 Daybreak is feature-complete (pending human visual UAT in 24-HUMAN-UAT.md).*
