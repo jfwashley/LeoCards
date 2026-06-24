@@ -16,12 +16,19 @@ export function HProgCard({
   nextLevelThreshold: number | null;
 }) {
   const isMax = nextLevelThreshold === null;
-  const pct = isMax
-    ? 100
-    : Math.min(
-        100,
-        Math.round((effectiveCardCount / nextLevelThreshold) * 100),
-      );
+  // Guard: treat null OR 0 denominator as max (WR-03 — isValidHabitatState only
+  // checks isFiniteNum, not > 0; a future 0 threshold would produce Infinity%).
+  // Math.max(0, …) also defends against a negative effectiveCardCount.
+  const pct =
+    isMax || !nextLevelThreshold
+      ? 100
+      : Math.min(
+          100,
+          Math.max(
+            0,
+            Math.round((effectiveCardCount / nextLevelThreshold) * 100),
+          ),
+        );
   // Guard: H_NEXT has keys 1-8 only — never access H_NEXT[9] (Pitfall 5, D-12)
   const nx = level < 9 ? H_NEXT[level] : null;
 
