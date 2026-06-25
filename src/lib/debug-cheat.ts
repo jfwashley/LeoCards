@@ -271,7 +271,15 @@ export function verifyTimeOffset(
         "base64",
       ).toString("utf8"),
     );
-    const parsed = z.object({ offsetMs: z.number() }).safeParse(json);
+    const parsed = z
+      .object({
+        offsetMs: z
+          .number()
+          .int()
+          .min(0)
+          .max(30 * 24 * 60 * 60 * 1000),
+      })
+      .safeParse(json);
     return parsed.success ? parsed.data.offsetMs : null;
   } catch {
     return null;
