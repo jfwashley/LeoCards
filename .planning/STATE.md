@@ -1,101 +1,61 @@
 ---
 gsd_state_version: 1.0
-milestone: v4.0
-milestone_name: Daybreak
-status: milestone_complete
-stopped_at: Milestone complete (Phase 24 was final phase)
-last_updated: 2026-06-24T13:21:17.137Z
-last_activity: 2026-06-24
+milestone: v3.0
+milestone_name: Performance & QA
+status: in_progress
+stopped_at: Resuming v3.0 — Phase 15 (Core-journey QA harness) about to be discussed
+last_updated: 2026-06-25T00:00:00.000Z
+last_activity: 2026-06-25
 progress:
-  total_phases: 6
-  completed_phases: 3
-  total_plans: 49
-  completed_plans: 23
-  percent: 50
+  total_phases: 5
+  completed_phases: 1
+  total_plans: 3
+  completed_plans: 3
+  percent: 20
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-19 — v4.0 Daybreak UI redesign started)
+See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Milestone complete
+**Current focus:** v3.0 Performance & QA (resumed) — Phase 15: Core-journey QA harness
 
 ## Current Position
 
-Phase: 24
-Plan: Not started
-Status: Milestone complete
-Last activity: 2026-06-24
+Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
+Phase: 15 — Core-journey QA harness
+Plan: Not started (discuss-phase next)
+Status: In progress
+Last activity: 2026-06-25
 
-Progress: [██████████] 100%
+Progress (v3.0): [██░░░░░░░░] 20% (Phase 14 of 14-18 complete)
 
 ## Shipped Milestones
 
 - ✅ v1.0 MVP (2026-04-15) — Phases 1-8, 25 plans, 23 requirements satisfied
 - ✅ v2.0 Image-to-Flashcards (2026-05-20) — Phases 9-11, 10 plans, 15 requirements satisfied
 - ✅ v2.1 Living Habitat (2026-05-29, closed 2026-06-12) — Phases 12-13.2, 14 plans
-- ⏸ v3.0 Performance & QA (partial) — Phase 14 shipped (QAOB-01..04); Phases 15-18 deferred
+- ✅ v4.0 Daybreak (2026-06-24) — Phases 19-24, 23 plans, 28 requirements (DSY/ONB/STU/DSH/ADC/BRW/HAB) satisfied; tagged v4.0, archived to milestones/v4.0-*
+
+## Milestone Note
+
+v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. **Phases 16, 17, and 18 remain unbuilt after Phase 15** (see [[project_leocards_v3_perf_qa_pending]] reminder).
 
 ## Accumulated Context
 
-### Decisions
+### Decisions (v3.0-relevant)
 
-- Daybreak spike (pre-Phase 19): Tailwind tokens in globals.css, Baloo 2 + Figtree in layout.tsx, src/components/daybreak/ (LionFace + auth scene/card), auth shell, redesigned Login — all verified against the mock. Phase 19 formalizes and extends this foundation.
-- Phase 19 Plan 01: jsdom + @testing-library/react installed as Wave 0 dev deps (were not present). Per-file @vitest-environment jsdom docblock chosen over global env change. afterEach(cleanup) required for test isolation in @testing-library/react without jest globals. DSY-01 baseline confirmed — no edits to globals.css or layout.tsx needed.
-- Phases 15-18 are reserved for the deferred v3.0 Performance & QA work; do not reuse those numbers for Daybreak.
-- Habitat (Phase 24) is last: richest visual, most perf-sensitive, must stay light on mobile + pause under prefers-reduced-motion.
-- [Phase ?]: Phase 19 Plan 03: Privacy-safe confirmation and expired-link dead-end patterns established for Forgot/Reset auth screens
-- [Phase ?]: 19-04: Language pick mandatory — Skip on steps 1+2 jumps to step 3, not dashboard
-- [Phase ?]: 19-04: Playwright test timeout 60s→180s; networkidle removed from waitForCompilation (HMR WebSocket blocks networkidle)
-- [Phase ?]: 19-04: D-04 ordering — updateUser before createDeck ensures nativeLanguage persisted even if deck creation fails
-- [Phase ?]: 19-04: T-19-04-INJ — z.enum(['en','fr','es']) validates at call site before authClient.updateUser
-- [Phase ?]: Adapted card-stack.tsx in place with Daybreak surface tokens rather than reusing GhostPeek atom (auth GhostPeek renders top-edge strips h:22px, not full-height ghost cards; in-place reskin is lower-risk)
-- [Phase ?]: Added data-testid=card-back-hint to back-face swipe cue to scope Playwright locator away from below-card showSwipeHint pill in study-session.tsx (avoids strict-mode multi-match)
-- [21-01]: popover.tsx exports PopoverContent convenience wrapper (Portal>Positioner>Popup) in addition to the six required primitives — reduces boilerplate for Plan 02 deck-switcher consumer
-- [21-01]: HabitatWidget import removed from dashboard/page.tsx as dead code after D-02 removal; Plans 03/04 own the habitat hero swap
-- [21-03]: D-05 canonical max-level signal is nextLevelThreshold === null (level >= 9), NOT the mock's dead level >= 10 branch
-- [21-03]: D-06 sleeping ring keeps the real conic-gradient (accurate degrees); overrides mock's #F3E3C6 greyed solid
-- [21-03]: jsdom normalises hex→rgb() in element.style.background — tests use toMatch(/rgb\\(\\d+,\\s*\\d+,\\s*\\d+\\)/) not literal hex comparisons
-- [21-03]: vitest auto-hoists vi.mock() — imports can be sorted per biome organizeImports without breaking mock behaviour
-- [22-01]: Unused `import * as React` removed via biome --unsafe from new atoms; JSX transform handles React in scope
-- [22-01]: Test assertions use ?. optional chaining not ! (biome noNonNullAssertion enforced in this project)
-- [22-01]: ACPairRow D-01 orientation locked by DOM-order test — target (ES) at inputs[0], native (EN) at inputs[1]
-- [22-01]: LangChip extracted verbatim from deck-switcher.tsx to daybreak/lang-chip.tsx; deck-switcher re-imports unchanged
-- [22-02]: ACField kept inline in translation-form.tsx (not shared daybreak/* atom) — premature to generalize before image-flow field design is known
-- [22-02]: ACLinkBadge swap wired to existing SET_NATIVE/SET_TARGET actions — no new reducer actions; re-triggers debounced translate
-- [22-02]: Shimmer uses CSS animation:pulse (Tailwind keyframe) not motion/react — simpler for this case
-- [22-02]: e2e/09 getByText("Add a Card") straggler fixed alongside e2e/04 retargets in same Task 3 commit
-- [22-03]: ACDeckSelect drives DeckSwitcher via additive customTrigger?: React.ReactNode prop; base-ui PopoverTrigger uses render= not asChild (not Radix asChild pattern)
-- [22-03]: D-03 cancelled.current guard — reset at top of handleExtract (Pitfall 3), if (cancelled.current) return before each dispatch, handleCancelExtraction sets true + dispatches BACK_TO_PICK (no AbortController wiring, no EXTRACT_CANCEL action)
-- [22-03]: Pitfall 6 auto-advance — handleValidFile dispatches FILE_PICKED + ADVANCE_STEP; flow goes directly to Confirm; "Next: choose deck" button removed from flow and e2e
-- [22-04]: Tasks 1+2 committed together (same file, TDD cycle shared); Task 3 no-op — e2e/11 had no review/translate/result assertions to retarget; Plan 03 already cleaned all stale selectors
-- [22-04]: All-failed banner uses JSX string literal to allow grep matching; loading-dedupe upgraded from bare spinner to ACProgress for consistency
-- [22-04]: D-01 ACPairRow: target={row.word} (ES top), native={row.nativeText} (EN bottom); D-05: ACStepper current=4 (Add) above all Result states
-- [23-03]: D-04 Browse landing back-link hardwired to "‹ Add a card" (not mock's "‹ My deck") — guard comment in source; D-02 list back-link = "‹ Topics"
-- [23-03]: BrowseTiles + BrowseList replace single WordListBrowser export; BWWordRow + BrowseEmpty exported named for direct rendered-component test import
-- [23-03]: AmberSpinner uses className="animate-spin" (Tailwind utility) not inline animation string — ensures @keyframes spin is emitted by compiler
-- [23-03]: CATEGORIES import in word-list-browser.tsx is import type (runtime value not needed; only used in typeof CATEGORIES type cast for filterWords)
-- [23-03]: Tasks 1+2 committed together — page.tsx imports BrowseTiles/BrowseList; TypeScript would fail if committed independently
-- [Phase ?]: 23-04: Animals+A1 combo used for BRW-04 empty state test (verified 0 A1 words in en-fr.json Animals category)
-- [Phase ?]: 23-04: Browse e2e retargets use structural testids (topic-tile-{slug}, browse-words-title, word-row) and role/aria-label selectors; L-06 closed for phase 23
-- [24-01]: moodTint extracted to src/lib/habitat-tint.ts (not inlined in habitat-scene.tsx) for direct unit testability; map[mood] ?? fallback (no non-null assertion per biome)
-- [24-01]: e2e/07 retargeted in Wave 0 (not Wave 3) — getByTestId("habitat-level-badge") + getByTestId("habitat-mood-chip") — to avoid selector breakage when HTop atoms land in Wave 2
-- [24-01]: H_NEXT keys 1-8 only (no L9 entry) confirmed in test HN2; all callers guard with nextLevelThreshold === null (D-12)
-- [24-02]: HC4 (setTimeout 2500 test) GREEN immediately — existing habitat-scene.tsx already had setTimeout(2500) from pre-Daybreak level-up code, so no Wave 3 scene change needed for this assertion
-- [24-02]: void onSettle used in HabitatCelebration to acknowledge the prop without triggering biome unused-var; parent (habitat-scene.tsx) owns the timer
-
-### Pending Todos
-
-- ~~**[→ Phase 21 / DSH-02] Dashboard habitat hero medallion**~~ — DONE in Plan 03: `HabitatMedallion` + `HabitatHero` created; Plan 04 wires them into deck-view.tsx.
-- ~~**[→ Phase 21 / DSH-04/05] "Your words" accordion + Daybreak rows**~~ — DONE in Plan 05: collapsed accordion, height/opacity motion, D-04 native-on-top, SourceTag, MasteryMeter, testids.
-- **[→ Phase 21 / DSH-03] Remove "Browse words" from the populated-deck action line** (`deck-view.tsx` ~L195) — keep it only in the empty-deck state (`card-list.tsx`). Phase 19 UAT carry-forward.
+- Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
+- Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
+- DB workflow: this project uses Drizzle `db:push` (NOT `db:migrate` — the migrations journal is empty); hosted-DB writes gated by the auto-mode classifier.
+- All QA/test users use the `*test.local` domain so `scripts/cleanup-test-users.mjs` removes them (QAJ-06).
 
 ### Blockers/Concerns
 
-None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint — ambient motion must be light on mobile and fully paused under prefers-reduced-motion; verify against CWV gates at phase completion.
+None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + a QA-gated time-shift for decay (QAJ-05) without real multi-day waits.
 
 ## Carried Tech Debt
 
@@ -103,11 +63,11 @@ None at roadmap creation. Note: Phase 24 (Habitat) has a performance constraint 
 |----------|------|--------|-------------|
 | v2.0 UAT | 10-HUMAN-UAT.md (offline vision eval reference-set) | Partial | v2.0 close |
 | v2.0 UAT | 11-HUMAN-UAT.md (live browser walkthrough) | Partial | v2.0 close |
-| v3.0 QA | QAJ-01..06 Core-journey QA harness (Phases 15-16) | Deferred | v3.0 partial close |
-| v3.0 Perf | PERF-01..06 Performance baseline + opt + field (Phases 16-18) | Deferred | v3.0 partial close |
+| v4.0 UAT | 20-24 HUMAN-UAT.md interaction/animation/live items | Partial | v4.0 close (visual UAT done 2026-06-24) |
+| v4.0 Perf | 13-perf INP-on-dev-server follow-up (task_d326ebac) | Open | v4.0 close |
 
 ## Session Continuity
 
-Last session: 2026-06-24T12:24:58.131Z
-Stopped at: Phase 24 Plan 02 complete
+Last session: 2026-06-25
+Stopped at: v4.0 closed + archived + tagged; v3.0 resumed; about to discuss Phase 15
 Resume file: None
