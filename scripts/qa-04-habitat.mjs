@@ -39,8 +39,8 @@
 //   - Provisioned user is @test.local — cleanup-test-users.mjs reaps it (QAJ-06).
 
 import {
-  DEFAULT_BASE_URL,
   assertEq,
+  DEFAULT_BASE_URL,
   directionForRound,
   gradeSession,
   provision,
@@ -176,7 +176,12 @@ async function run() {
   // ── 4. Learn card 5 — crossing L1→2 (effectiveCardCount>=5) ───────────────
   console.log("[QAJ-04] Learning card 5 (crossing L1→L2 threshold)...");
   const card5Id = cardIds[4];
-  const crossingResult = await learnCard(BASE_URL, sessionToken, deckId, card5Id);
+  const crossingResult = await learnCard(
+    BASE_URL,
+    sessionToken,
+    deckId,
+    card5Id,
+  );
   console.log(`[QAJ-04] card 5 leveledUp=${crossingResult.leveledUp}`);
 
   // Assert leveledUp === 2 on the crossing session
@@ -217,7 +222,6 @@ async function run() {
 
   // ── 5. Learn cards 6-15 (to cross L2→3 threshold at effectiveCardCount>=15) ─
   console.log("[QAJ-04] Learning cards 6-15 (toward L2→L3 threshold at 15)...");
-  let levelUpToL3Result = null;
   for (let i = 5; i < 15; i++) {
     const cardId = cardIds[i];
     const result = await learnCard(BASE_URL, sessionToken, deckId, cardId);
@@ -225,10 +229,11 @@ async function run() {
     console.log(
       `[QAJ-04]   card ${learnedCount}/15 learned (leveledUp=${result.leveledUp})`,
     );
-    // Track the session that crosses L2→L3 (leveledUp === 3 when effectiveCardCount hits 15)
+    // Log the session that crosses L2→L3 (leveledUp === 3 when effectiveCardCount hits 15)
     if (result.leveledUp === 3) {
-      levelUpToL3Result = result;
-      console.log(`[QAJ-04]   ^ L2→L3 crossing detected at card ${learnedCount}`);
+      console.log(
+        `[QAJ-04]   ^ L2→L3 crossing detected at card ${learnedCount}`,
+      );
     }
   }
 

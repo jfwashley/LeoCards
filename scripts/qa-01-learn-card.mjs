@@ -28,8 +28,8 @@
 //   - Provisioned user is @test.local — cleanup-test-users.mjs reaps it (QAJ-06).
 
 import {
-  DEFAULT_BASE_URL,
   assertEq,
+  DEFAULT_BASE_URL,
   directionForRound,
   gradeSession,
   provision,
@@ -58,7 +58,9 @@ async function run() {
   assertEq(card0.masteryRound, 0, "baseline masteryRound");
   assertEq(card0.direction, "n2t", "baseline direction");
   assertEq(card0.learned, false, "baseline learned");
-  console.log("[QAJ-01] baseline: masteryRound=0 direction=n2t learned=false OK");
+  console.log(
+    "[QAJ-01] baseline: masteryRound=0 direction=n2t learned=false OK",
+  );
 
   // ── 3. Grade card correctly in round-0 direction (n2t) ────────────────────
   const gradeDir = directionForRound(0); // "n2t"
@@ -67,12 +69,15 @@ async function run() {
     grades: [{ cardId, direction: gradeDir, correct: true }],
   });
   assertEq(result.success, true, "gradeSession success");
-  console.log(`[QAJ-01] gradeSession success=true leveledUp=${result.leveledUp}`);
+  console.log(
+    `[QAJ-01] gradeSession success=true leveledUp=${result.leveledUp}`,
+  );
 
   // ── 4. Assert post-grade state ─────────────────────────────────────────────
   const after = await readState(BASE_URL, sessionToken, SECRET, deckId);
   const card1 = after.cards.find((c) => c.id === cardId);
-  if (!card1) throw new Error(`card ${cardId} not found in post-grade readState`);
+  if (!card1)
+    throw new Error(`card ${cardId} not found in post-grade readState`);
 
   // 4a. masteryRound advanced 0 → 1
   assertEq(card1.masteryRound, 1, "post-grade masteryRound");

@@ -24,8 +24,8 @@
 //   - Provisioned user is @test.local — cleanup-test-users.mjs reaps it (QAJ-06).
 
 import {
-  DEFAULT_BASE_URL,
   assertEq,
+  DEFAULT_BASE_URL,
   directionForRound,
   gradeSession,
   provision,
@@ -79,7 +79,11 @@ async function run() {
   const sWrong = await readState(BASE_URL, sessionToken, SECRET, deckId);
   const cWrong = sWrong.cards.find((c) => c.id === cardId);
   if (!cWrong) throw new Error("card not found after round 1 wrong grade");
-  assertEq(cWrong.masteryRound, 1, "after wrong answer: masteryRound still 1 (hold)");
+  assertEq(
+    cWrong.masteryRound,
+    1,
+    "after wrong answer: masteryRound still 1 (hold)",
+  );
   assertEq(cWrong.direction, "t2n", "after wrong answer: direction still t2n");
   console.log("[QAJ-02] Wrong-answer hold OK: masteryRound=1 (unchanged)");
 
@@ -105,7 +109,9 @@ async function run() {
   // ─────────────────────────────────────────────────────────────────────────
   // Round 2 → 3: grade "either"-direction correct, assert masteryRound=3 learned=true
   // ─────────────────────────────────────────────────────────────────────────
-  console.log("[QAJ-02] --- Round 2: grading either-direction correct (learned) ---");
+  console.log(
+    "[QAJ-02] --- Round 2: grading either-direction correct (learned) ---",
+  );
   const r2dir = directionForRound(2); // "either"
   // For "either" direction we must submit an actual direction string — pick "n2t"
   // (the study engine accepts either when ROUND_REQUIREMENT is "either")
@@ -125,9 +131,13 @@ async function run() {
   assertEq(c3.cooldownUntil, null, "after learned: cooldownUntil=null");
   // Direction at round 3 is "either" (directionForRound(3) returns "either")
   assertEq(c3.direction, "either", "after learned: direction=either");
-  console.log("[QAJ-02] Round 2→3 OK: masteryRound=3 learned=true cooldownUntil=null");
+  console.log(
+    "[QAJ-02] Round 2→3 OK: masteryRound=3 learned=true cooldownUntil=null",
+  );
   // Confirm we also used the "either" direction rule (ROUND_REQUIREMENT[2])
-  console.log(`[QAJ-02] round-2 direction rule verified: directionForRound(2)="${r2dir}"`);
+  console.log(
+    `[QAJ-02] round-2 direction rule verified: directionForRound(2)="${r2dir}"`,
+  );
 }
 
 // ── Entry point ──────────────────────────────────────────────────────────────
