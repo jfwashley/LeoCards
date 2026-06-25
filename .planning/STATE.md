@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: phase_complete
-stopped_at: Phase 15 Plan 05 complete — qa-run.mjs orchestrator + npm scripts committed; Phase 15 all 5 plans done
-last_updated: "2026-06-25T11:30:00.000Z"
+status: ready_to_plan
+stopped_at: Phase 15 complete (5/5) — ready to discuss Phase 16
+last_updated: 2026-06-25T10:28:01.622Z
 last_activity: 2026-06-25
 progress:
   total_phases: 5
-  completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  completed_phases: 4
+  total_plans: 72
+  completed_plans: 28
+  percent: 80
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 15 — core-journey-qa-harness
+**Current focus:** Phase 16 — performance baseline (measure)
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 15 (core-journey-qa-harness) — COMPLETE (all 5 plans done)
-Plan: 5 of 5
-Status: Phase complete — ready for UAT / operator live-run
+Phase: 16
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-06-25
 
 Progress (v3.0): [██████████] 100% (Phase 15 all 5 plans complete)

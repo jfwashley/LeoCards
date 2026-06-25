@@ -154,7 +154,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
-| 15. Core-journey QA harness | 5/5 | Complete   | 2026-06-25 |
+| 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 0/TBD | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
