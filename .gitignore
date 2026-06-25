@@ -68,3 +68,7 @@ next-env.d.ts
 .preview-url.tmp
 .planning/dev-server.log
 .e2e-dev.log
+
+# Phase 15 QA harness — generated resumable-session manifests (QAJ-03)
+scripts/qa-manifest-*.json
+scripts/qa-manifest.json
