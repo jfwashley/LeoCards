@@ -34,6 +34,12 @@ export const CHEAT_COOKIE = "leo-habitat-cheat";
  */
 export const QA_MODE_COOKIE = "leo-qa-mode";
 
+/**
+ * Cookie name for the signed QA time-shift offset (Phase 15).
+ * Set by POST /api/debug/time-shift; read by pipeline callsites to shift `now`.
+ */
+export const TIME_SHIFT_COOKIE = "leo-qa-time-offset";
+
 const MOODS = ["excited", "happy", "neutral", "sad"] as const;
 
 /**
@@ -212,4 +218,75 @@ export async function readQaAuth(): Promise<boolean> {
   if (!cheatEnabled()) return false;
   const store = await cookies();
   return verifyQaMode(store.get(QA_MODE_COOKIE)?.value);
+}
+
+// ============================================================
+// QA time-shift helpers (Phase 15)
+// ============================================================
+
+/**
+ * Sign a time-shift offset into a cookie value: `<payloadB64>.<sigB64>`.
+ * Payload is `{ offsetMs: number }`. Mirrors `signQaMode` exactly but carries
+ * a numeric payload instead of a fixed sentinel.
+ * Throws if DEBUG_CHEAT_SECRET is unset — callers must gate first.
+ * Server-only (imports `@/env`).
+ */
+export function signTimeOffset(offsetMs: number): string {
+  const secret = env.DEBUG_CHEAT_SECRET;
+  if (!secret) throw new Error("DEBUG_CHEAT_SECRET not set");
+  const payloadB64 = base64url(
+    Buffer.from(JSON.stringify({ offsetMs }), "utf8"),
+  );
+  return `${payloadB64}.${hmac(payloadB64, secret)}`;
+}
+
+/**
+ * Verify a time-shift cookie value via constant-time HMAC comparison.
+ * Returns the stored `offsetMs` number on success, or null on any failure
+ * (feature disabled, malformed, invalid signature, or bad schema).
+ * Safe to call on untrusted cookie input.
+ * Threat T-15-01: constant-time comparison via `timingSafeEqual`.
+ */
+export function verifyTimeOffset(
+  raw: string | null | undefined,
+): number | null {
+  const secret = env.DEBUG_CHEAT_SECRET;
+  if (!secret || typeof raw !== "string" || !raw.includes(".")) return null;
+
+  const dot = raw.lastIndexOf(".");
+  const payloadB64 = raw.slice(0, dot);
+  const sig = raw.slice(dot + 1);
+  if (!payloadB64 || !sig) return null;
+
+  // Constant-time signature check (Threat T-15-01 mitigation).
+  const expected = hmac(payloadB64, secret);
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+
+  try {
+    const json = JSON.parse(
+      Buffer.from(
+        payloadB64.replace(/-/g, "+").replace(/_/g, "/"),
+        "base64",
+      ).toString("utf8"),
+    );
+    const parsed = z.object({ offsetMs: z.number() }).safeParse(json);
+    return parsed.success ? parsed.data.offsetMs : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Read + verify the QA time-shift cookie. Server-only (uses next/headers `cookies()`).
+ * Returns the stored offset in milliseconds, or 0 when the feature is disabled,
+ * no cookie is present, or the signature/payload is invalid — so callers can safely
+ * use `new Date(Date.now() + offset)` with zero meaning unshifted real time.
+ * Threat T-15-02: returns 0 (real `new Date()` unchanged) in production.
+ */
+export async function readQaTimeOffset(): Promise<number> {
+  if (!cheatEnabled()) return 0;
+  const store = await cookies();
+  return verifyTimeOffset(store.get(TIME_SHIFT_COOKIE)?.value) ?? 0;
 }
