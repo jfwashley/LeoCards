@@ -65,6 +65,16 @@ export const DEFAULT_BASE_URL =
 // callers needing to thread it through every call.
 let _timeShiftCookie = ""; // "leo-qa-time-offset=<signed>" or ""
 
+/**
+ * Reset the module-level time-shift cookie state to empty.
+ * Call at the top of each journey's run() function as a defensive reset so
+ * that in-process multi-journey usage (future, or in tests that import qa-lib
+ * directly) does not inherit a stale shift from a prior invocation (WR-02).
+ */
+export function resetTimeShiftState() {
+  _timeShiftCookie = "";
+}
+
 // ── Cookie helpers ────────────────────────────────────────────────────────────
 
 /**
