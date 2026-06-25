@@ -4,13 +4,13 @@ milestone: v3.0
 milestone_name: Performance & QA
 status: executing
 stopped_at: Phase 15 context gathered
-last_updated: "2026-06-25T08:46:17.014Z"
-last_activity: 2026-06-25 -- Phase 15 planning complete
+last_updated: "2026-06-25T09:09:51.163Z"
+last_activity: 2026-06-25
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 5
-  completed_plans: 0
+  completed_plans: 1
   percent: 0
 ---
 
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** v3.0 Performance & QA (resumed) — Phase 15: Core-journey QA harness
+**Current focus:** Phase 15 — core-journey-qa-harness
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 15 — Core-journey QA harness
-Plan: Not started (discuss-phase next)
+Phase: 15 (core-journey-qa-harness) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-06-25 -- Phase 15 planning complete
+Last activity: 2026-06-25
 
 Progress (v3.0): [██░░░░░░░░] 20% (Phase 14 of 14-18 complete)
 
@@ -68,6 +68,6 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-06-25T08:06:30.353Z
+Last session: 2026-06-25T09:09:51.151Z
 Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-core-journey-qa-harness/15-CONTEXT.md
+Resume file: None

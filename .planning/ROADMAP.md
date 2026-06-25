@@ -101,7 +101,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
   4. A habitat progression script crosses the level 1→2 threshold (plus one representative higher transition) through real learning and asserts `computeHabitatState`, the dashboard widget, and `/habitat` all agree on the new level
   5. Decay/grace behavior (2-day grace + 5%/day, including pause interactions) is verified via a QA-gated time-shift, and every QA run self-cleans — all test users use `*test.local` so `scripts/cleanup-test-users.mjs` leaves zero residue in prod data
 **Plans**: 5 plans (4 waves)
-- [ ] 15-01-PLAN.md — QA-gated time-shift affordance (route + debug-cheat helpers + 3 callsites + vitest + prod-parity e2e)
+- [x] 15-01-PLAN.md — QA-gated time-shift affordance (route + debug-cheat helpers + 3 callsites + vitest + prod-parity e2e)
 - [ ] 15-02-PLAN.md — shared harness library scripts/qa-lib.mjs (auth, DB provisioning, real-HTTP grade, /api/debug/state assertions, time-shift, manifest) + manifest gitignore
 - [ ] 15-03-PLAN.md — journeys qa-01 (learn 0→1), qa-02 (full mastery + wrong-answer + direction rules), qa-04 (habitat level L1→2 + higher)
 - [ ] 15-04-PLAN.md — journeys qa-03 (time-resumable manifest), qa-05 (decay/grace + pause) via the time-shift
@@ -154,7 +154,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
-| 15. Core-journey QA harness | 0/TBD | Not started | - |
+| 15. Core-journey QA harness | 1/5 | In Progress|  |
 | 16. Performance baseline (Measure) | 0/TBD | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
