@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: in_progress
-stopped_at: Resuming v3.0 — Phase 15 (Core-journey QA harness) about to be discussed
-last_updated: 2026-06-25T00:00:00.000Z
+status: executing
+stopped_at: Phase 15 context gathered
+last_updated: "2026-06-25T08:06:30.379Z"
 last_activity: 2026-06-25
 progress:
   total_phases: 5
@@ -68,6 +68,6 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-06-25
-Stopped at: v4.0 closed + archived + tagged; v3.0 resumed; about to discuss Phase 15
-Resume file: None
+Last session: 2026-06-25T08:06:30.353Z
+Stopped at: Phase 15 context gathered
+Resume file: .planning/phases/15-core-journey-qa-harness/15-CONTEXT.md
