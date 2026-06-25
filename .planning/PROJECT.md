@@ -10,10 +10,10 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 ## Current State
 
-**Version:** v3.0 Performance & QA — partial (Phase 14 / QAOB-01..04 shipped; QA-harness + perf deferred). **v4.0 Daybreak** UI redesign — ALL phases complete (started 2026-06-19, completed 2026-06-24 with Phase 24 Habitat / HAB-01..05). Every primary screen is now on the Daybreak design system; milestone is feature-complete pending human visual UAT.
+**Version:** v3.0 Performance & QA — resuming (Phase 14 / QAOB-01..04 + Phase 15 / QAJ-01..06 core-journey QA harness shipped; perf Phases 16–18 remaining). **v4.0 Daybreak** UI redesign — ALL phases complete (started 2026-06-19, completed 2026-06-24 with Phase 24 Habitat / HAB-01..05). Every primary screen is now on the Daybreak design system; milestone is feature-complete pending human visual UAT.
 **Live at:** https://leocards.vercel.app
 **Tech stack:** Next.js 16, React 19, Better Auth, Drizzle ORM, Neon Postgres, Three.js 0.160 (build-time only — renders habitat clips; never ships to client), Motion 12, Tailwind v4, DeepL, Vercel AI SDK v6 + `@ai-sdk/anthropic` v3 (Claude vision), Vitest, Playwright, Biome
-**Tests:** 2044 unit tests green; 15+ Playwright e2e specs
+**Tests:** ~2089 unit tests green; 15+ Playwright e2e specs
 **Requirements satisfied:** 23 (v1.0) + 15 (v2.0) + 21 (v2.1: P12×8, P13×10, P13.1×8 re-satisfied via pivot, 13.2 ad-hoc) across 14 phases
 
 **v2.1 highlights:** Per-card pause/unpause with exact cadence preservation. Habitat is now 3D: 72 pre-rendered Soft-Clay ambient clips (9 levels × 4 moods, seamless 360° orbit loops) with live CSS decay/mood filters — Three.js renders clips at build time and ships zero WebGL to the client. `/habitat` mobile passes all CWV "Good" gates on warm prod (LCP 2417 / TBT 97 / CLS 0 / Perf 96). Secret-gated `/debug` QA console with HMAC-signed virtual state override. Critical study-loop fix: cards can actually reach "learned" (round thresholds were unreachable since Phase 3).
@@ -36,7 +36,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 - Habitat ambient motion must stay **light on mobile** and **pause under `prefers-reduced-motion`**.
 - **Validated design-system spike already in the tree** (do not re-derive): Daybreak tokens remapped into the Tailwind/shadcn theme, Baloo 2 + Figtree fonts, `src/components/daybreak/` (LionFace + auth scene/card), the auth shell, and the redesigned Login — all verified against the mock.
 
-**Predecessor:** v3.0 Performance & QA shipped Phase 14 (QAOB-01..04) only; QAJ-01..06 + PERF-01..06 are **deferred** (see `MILESTONES.md` and `milestones/v3.0-*`).
+**Predecessor:** v3.0 Performance & QA shipped Phase 14 (QAOB-01..04) + Phase 15 (QAJ-01..06, core-journey QA harness); PERF-01..06 (Phases 16–18) remain (see `MILESTONES.md` and `milestones/v3.0-*`).
 
 ## Requirements
 
@@ -74,7 +74,8 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 - [ ] v4.0 Daybreak UI-redesign requirements (UI-xx) — being defined during this `/gsd-new-milestone` run (requirements → roadmap); roughly one phase per primary screen, all to the Daybreak design system
 - ✓ Validated in v3.0 (partial, Phase 14): QAOB-01..04 — QA observability (QA-mode cookie + `readQaAuth()` gate, per-card state badges, `/debug` SRS table, prod-parity gating)
-- ⏸ Deferred to a future milestone: QAJ-01..06 (core-journey QA harness) + PERF-01..06 (performance) — preserved in `milestones/v3.0-REQUIREMENTS.md`
+- ✓ Validated in v3.0 (Phase 15): QAJ-01..06 — core-journey QA harness (5 journey scripts + `qa-run.mjs` orchestrator driving the REAL learn→master→cooldown→decay→level-up pipeline via a QA-gated signed time-shift cookie; self-cleaning `*test.local`). Code-complete + verified (5/5 must-haves); live green-run proof pending in `15-HUMAN-UAT.md`.
+- ⏳ Remaining in v3.0: PERF-01..06 (performance baseline / optimization / field guardrails — Phases 16–18) — preserved in `milestones/v3.0-REQUIREMENTS.md`
 
 ## Out of Scope
 
@@ -160,4 +161,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-24 — Phase 24 (Habitat / HAB-01..05) complete: the kept pre-rendered video habitat re-skinned with Daybreak overlays — mood/decay CSS tint over the untouched clip, HTop chrome, bottom progress/decay cards, repaired level-up celebration (CSS-only confetti, auto-settles ~2.5s), and a 3-tier motion model (desktop loop / mobile freeze / reduced-motion poster). This was the LAST Daybreak phase — v4.0 Daybreak is feature-complete (pending human visual UAT in 24-HUMAN-UAT.md).*
+*Last updated: 2026-06-25 — Phase 15 (core-journey QA harness / QAJ-01..06) complete: a single-command harness (`npm run qa:run`) that drives the REAL learn→master→cooldown→decay→level-up pipeline via a QA-gated, HMAC-signed `leo-qa-time-offset` cookie (no DB schema change), asserts against the real-data `/api/debug/state` + `/api/habitat` surface, and self-cleans every `*test.local` user. Code-verified (5/5 must-haves; tsc + ~2089 vitest green; 1 Critical + 3 Warning code-review findings fixed in-phase); live green-run + prod-parity e2e pending human UAT (15-HUMAN-UAT.md). First non-Daybreak v3.0 phase resumed out of order — next: v3.0 perf Phases 16–18.*
