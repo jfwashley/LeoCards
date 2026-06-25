@@ -251,11 +251,12 @@ async function runPhaseB() {
   //    simulated future (RESEARCH pitfall 5).
   //    Real-wait mode: skip the shift and rely on actual elapsed time (--no-fast).
   let shifted = false;
+  let minShiftMs = 0; // hoisted so nowForComparison can use it after the if/else (WR-01)
   if (fastPath) {
     const now = Date.now();
     const resumeAfterMs = new Date(resumeAfter).getTime();
     // Compute how much time shift is needed to exceed resumeAfter from now
-    const minShiftMs = Math.max(resumeAfterMs - now + 1000, 90_000);
+    minShiftMs = Math.max(resumeAfterMs - now + 1000, 90_000);
     await setTimeShift(BASE, freshToken, SECRET, minShiftMs);
     shifted = true;
     console.log(
@@ -282,13 +283,10 @@ async function runPhaseB() {
     );
 
     // 5. Assert each card
+    // With time-shift: compare against the virtual "now" the server sees (real + applied shift).
+    // Without time-shift: compare against real wall-clock now.
     const nowForComparison = shifted
-      ? // With time-shift: the virtual "now" is what the server sees — use the shifted time
-        // We track it ourselves as (Date.now() + shiftOffset). Since shifted=true we used
-        // minShiftMs, but we don't have that in scope here. Use a generous future time:
-        // any card with cooldownUntil set < 10 minutes from now (real) is "due" post-shift.
-        // Simpler: trust readState — if cooldownUntil is null OR in the past (real), it's due.
-        new Date()
+      ? new Date(Date.now() + minShiftMs)
       : new Date();
 
     let expectedDueCount = 0;
