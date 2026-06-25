@@ -113,10 +113,13 @@ vi.mock("@/db", () => ({
 
 // Mock debug-cheat so cheatEnabled() and checkSecret() are independently
 // controllable without depending on env.DEBUG_CHEAT_SECRET at import time.
+// readQaTimeOffset is mocked to return 0 (unshifted real time) — the state
+// route now calls it for the Phase 15 time-shift feature (D-06).
 vi.mock("@/lib/debug-cheat", () => ({
   cheatEnabled: mockCheatEnabled,
   checkSecret: mockCheckSecret,
   verifyOverride: mockVerifyOverride,
+  readQaTimeOffset: vi.fn().mockResolvedValue(0),
   CHEAT_COOKIE: "leo-habitat-cheat",
 }));
 
