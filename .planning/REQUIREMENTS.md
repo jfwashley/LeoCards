@@ -17,7 +17,7 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 ### Core-Journey QA Scripts (scripted, repeatable, against real pipeline — no virtual overrides)
 
 - [x] **QAJ-01**: QA can run a scripted "learn a card" journey — create user/deck/card, run a real study session via the app's own API path, grade correctly, and assert round 0→1 advancement with the correct next direction and cooldown
-- [ ] **QAJ-02**: QA can script the full mastery progression (rounds 0→1→2→3 → learned) including wrong-answer paths (round resets/holds per engine rules) and direction rules (round0=n2t, round1=t2n, round2=either)
+- [x] **QAJ-02**: QA can script the full mastery progression (rounds 0→1→2→3 → learned) including wrong-answer paths (round resets/holds per engine rules) and direction rules (round0=n2t, round1=t2n, round2=either)
 - [x] **QAJ-03**: QA can run a time-resumable session — the script persists a manifest (user, card ids, expected next state, timestamps), exits, and on resume 10–60 minutes later asserts each card landed in the expected state (cooldown expired vs still cooling, due-count correct)
 - [x] **QAJ-04**: QA can script habitat level progression — learn enough cards through the real pipeline to cross the level 1→2 threshold (and one representative higher transition) and assert `computeHabitatState`, the dashboard widget, and `/habitat` all reflect the new level
 - [x] **QAJ-05**: QA can verify remembering/decay states — scripted verification of the 2-day grace + 5%/day decay behavior via a QA-gated time-shift mechanism (no real multi-day waits), including pause interactions (paused cards don't decay study cadence per Phase 12 rules)
@@ -62,7 +62,7 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 | QAOB-03 | Phase 14 | Complete |
 | QAOB-04 | Phase 14 | Complete |
 | QAJ-01 | Phase 15 | Complete |
-| QAJ-02 | Phase 15 | Pending |
+| QAJ-02 | Phase 15 | Complete |
 | QAJ-03 | Phase 15 | Complete |
 | QAJ-04 | Phase 15 | Complete |
 | QAJ-05 | Phase 15 | Complete |
