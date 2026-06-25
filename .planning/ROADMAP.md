@@ -100,7 +100,12 @@ QA comes first deliberately: the harness must protect the core journey before pe
   3. A time-resumable session persists a manifest, exits, and on resume 10–60 minutes later asserts every card landed in its expected state (cooldown expired vs still cooling, due-counts correct)
   4. A habitat progression script crosses the level 1→2 threshold (plus one representative higher transition) through real learning and asserts `computeHabitatState`, the dashboard widget, and `/habitat` all agree on the new level
   5. Decay/grace behavior (2-day grace + 5%/day, including pause interactions) is verified via a QA-gated time-shift, and every QA run self-cleans — all test users use `*test.local` so `scripts/cleanup-test-users.mjs` leaves zero residue in prod data
-**Plans**: TBD
+**Plans**: 5 plans (4 waves)
+- [ ] 15-01-PLAN.md — QA-gated time-shift affordance (route + debug-cheat helpers + 3 callsites + vitest + prod-parity e2e)
+- [ ] 15-02-PLAN.md — shared harness library scripts/qa-lib.mjs (auth, DB provisioning, real-HTTP grade, /api/debug/state assertions, time-shift, manifest) + manifest gitignore
+- [ ] 15-03-PLAN.md — journeys qa-01 (learn 0→1), qa-02 (full mastery + wrong-answer + direction rules), qa-04 (habitat level L1→2 + higher)
+- [ ] 15-04-PLAN.md — journeys qa-03 (time-resumable manifest), qa-05 (decay/grace + pause) via the time-shift
+- [ ] 15-05-PLAN.md — orchestrator scripts/qa-run.mjs + cleanup wiring (QAJ-06) + npm scripts (qa:run, qa:cleanup)
 
 ### Phase 16: Performance baseline (Measure)
 **Goal**: A codified, repeatable warm-prod measurement harness establishes per-route truth on where time goes for `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse` — strictly NO optimization in this phase
