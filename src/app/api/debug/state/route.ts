@@ -8,6 +8,7 @@ import {
   CHEAT_COOKIE,
   cheatEnabled,
   checkSecret,
+  readQaTimeOffset,
   verifyOverride,
 } from "@/lib/debug-cheat";
 import { computeHabitatState } from "@/lib/habitat-engine";
@@ -59,8 +60,10 @@ export async function GET(req: Request) {
   }
 
   // Real state — deliberately computed WITHOUT the override so QA sees the truth.
+  // Phase 15 (D-06): honor QA time-shift so the assertion surface reflects the simulated future.
   const facts = await getHabitatFacts(session.user.id as UserId);
-  const real = computeHabitatState(facts, new Date());
+  const offset = await readQaTimeOffset();
+  const real = computeHabitatState(facts, new Date(Date.now() + offset));
 
   const cookieStore = await cookies();
   const forced = verifyOverride(cookieStore.get(CHEAT_COOKIE)?.value);

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { readHabitatOverride } from "@/lib/debug-cheat";
+import { readHabitatOverride, readQaTimeOffset } from "@/lib/debug-cheat";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 
@@ -34,8 +34,14 @@ export async function GET() {
   // 3. Compute habitat state (pure function, no side effects). A dev-only
   // signed-cookie override (QA cheat console) is applied when present + valid;
   // null in production unless DEBUG_CHEAT_SECRET is set.
+  // Phase 15 (D-03): honor QA time-shift so harness can simulate future instants.
   const override = await readHabitatOverride();
-  const state = computeHabitatState(facts, new Date(), override ?? undefined);
+  const offset = await readQaTimeOffset();
+  const state = computeHabitatState(
+    facts,
+    new Date(Date.now() + offset),
+    override ?? undefined,
+  );
 
   // 4. Return typed JSON
   return Response.json(state);

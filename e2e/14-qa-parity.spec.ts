@@ -87,6 +87,12 @@ test.describe("QA prod-parity gating (QAOB-04)", () => {
         data: { secret: "anything", level: 1 },
       });
       expect(cheatRes.status()).toBe(404);
+
+      // Phase 15 D-05: POST /api/debug/time-shift must also return 404 when secret is unset
+      const timeShiftRes = await page.request.post("/api/debug/time-shift", {
+        data: { secret: "anything", offsetMs: 86400000 },
+      });
+      expect(timeShiftRes.status()).toBe(404);
     }
   });
 });

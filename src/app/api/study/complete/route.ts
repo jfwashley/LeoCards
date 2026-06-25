@@ -14,6 +14,7 @@ const studyCompleteLimiter = createRateLimiter({
 });
 
 import { env } from "@/env";
+import { readQaTimeOffset } from "@/lib/debug-cheat";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
@@ -167,7 +168,10 @@ export async function POST(request: Request) {
   }
 
   // 5. Compute mastery updates per card
-  const now = new Date();
+  // Phase 15 (D-03): honor QA time-shift so the harness can simulate future instants
+  // without real wall-clock waiting. readQaTimeOffset() returns 0 in production.
+  const offset = await readQaTimeOffset();
+  const now = new Date(Date.now() + offset);
 
   // Step A: capture pre-session habitat level for level-up detection (per D-05)
   const factsBefore = await getHabitatFacts(session.user.id as UserId);
