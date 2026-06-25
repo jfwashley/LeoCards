@@ -187,7 +187,17 @@ async function run() {
 
     // 4. Apply +4 days time-shift (BEFORE assertion reads — RESEARCH pitfall 5)
     //    4 days past study completion → 2 days past 2-day grace → quality≈0.90
-    await setTimeShift(BASE_URL, sessionToken, SECRET, FOUR_DAYS_MS);
+    const decayShiftResult = await setTimeShift(
+      BASE_URL,
+      sessionToken,
+      SECRET,
+      FOUR_DAYS_MS,
+    );
+    if (!decayShiftResult.ok) {
+      throw new Error(
+        `[QAJ-05] setTimeShift (DECAY) returned ok=false: ${JSON.stringify(decayShiftResult)}`,
+      );
+    }
     decayShifted = true;
 
     // 5. Assert post-shift: isDecaying=true, quality≈0.90
@@ -283,7 +293,17 @@ async function run() {
     );
 
     // 9. Apply +4 days time-shift again (BEFORE readState — pitfall 5)
-    await setTimeShift(BASE_URL, sessionToken, SECRET, FOUR_DAYS_MS);
+    const pauseShiftResult = await setTimeShift(
+      BASE_URL,
+      sessionToken,
+      SECRET,
+      FOUR_DAYS_MS,
+    );
+    if (!pauseShiftResult.ok) {
+      throw new Error(
+        `[QAJ-05] setTimeShift (PAUSE) returned ok=false: ${JSON.stringify(pauseShiftResult)}`,
+      );
+    }
     pauseShifted = true;
 
     // 10. Assert pause invariants:

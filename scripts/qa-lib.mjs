@@ -358,6 +358,14 @@ export async function setTimeShift(baseUrl, token, secret, offsetMs) {
   if (timeShiftVal) {
     _timeShiftCookie = `leo-qa-time-offset=${timeShiftVal}`;
     console.log(`[qa-lib] time-shift set to +${offsetMs}ms`);
+  } else {
+    // Cookie not captured — likely server not sending Set-Cookie over plain HTTP
+    // (Next.js omits secure cookies on non-HTTPS in development).  Subsequent
+    // requests will NOT forward the shift; later assertions may silently pass
+    // against unshifted state (WR-03).
+    console.warn(
+      "[qa-lib] WARNING: leo-qa-time-offset cookie not received in Set-Cookie response. Requests may not forward the shift.",
+    );
   }
   return res.json();
 }
