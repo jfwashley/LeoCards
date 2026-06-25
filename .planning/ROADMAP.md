@@ -72,7 +72,7 @@ Full details: [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 QA comes first deliberately: the harness must protect the core journey before perf refactors begin. Motivation: v2.1's study-loop bug survived 2 months behind green unit tests — only real-pipeline integration scripts catch that class of gap.
 
 - [x] **Phase 14: QA observability foundations** - QA can see exact card state and compress time, with affordances provably absent for customers (completed 2026-06-17)
-- [ ] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline
+- [x] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline (completed 2026-06-25)
 - [ ] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization
 - [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
@@ -105,7 +105,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] 15-02-PLAN.md — shared harness library scripts/qa-lib.mjs (auth, DB provisioning, real-HTTP grade, /api/debug/state assertions, time-shift, manifest) + manifest gitignore
 - [x] 15-03-PLAN.md — journeys qa-01 (learn 0→1), qa-02 (full mastery + wrong-answer + direction rules), qa-04 (habitat level L1→2 + higher)
 - [x] 15-04-PLAN.md — journeys qa-03 (time-resumable manifest), qa-05 (decay/grace + pause) via the time-shift
-- [ ] 15-05-PLAN.md — orchestrator scripts/qa-run.mjs + cleanup wiring (QAJ-06) + npm scripts (qa:run, qa:cleanup)
+- [x] 15-05-PLAN.md — orchestrator scripts/qa-run.mjs + cleanup wiring (QAJ-06) + npm scripts (qa:run, qa:cleanup)
 
 ### Phase 16: Performance baseline (Measure)
 **Goal**: A codified, repeatable warm-prod measurement harness establishes per-route truth on where time goes for `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse` — strictly NO optimization in this phase
@@ -154,7 +154,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
-| 15. Core-journey QA harness | 4/5 | In Progress|  |
+| 15. Core-journey QA harness | 5/5 | Complete   | 2026-06-25 |
 | 16. Performance baseline (Measure) | 0/TBD | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
