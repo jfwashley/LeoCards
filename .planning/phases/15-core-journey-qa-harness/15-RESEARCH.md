@@ -873,7 +873,7 @@ they are not Vitest tests. Vitest tests cover the NEW QA affordances added to th
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **What does the better-auth `sign-up/email` response body look like exactly?**
    - What we know: better-auth 1.5.6 routes `POST /api/auth/sign-up/email` and sets a
