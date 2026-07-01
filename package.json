@@ -21,7 +21,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "qa:run": "node scripts/qa-run.mjs",
-    "qa:cleanup": "node scripts/cleanup-test-users.mjs %@test.local"
+    "qa:cleanup": "node scripts/cleanup-test-users.mjs %@test.local",
+    "measure:cwv": "node scripts/measure-cwv.mjs",
+    "measure:cleanup": "node scripts/cleanup-test-users.mjs %@test.local"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "3.0.78",

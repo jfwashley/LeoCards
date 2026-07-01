@@ -47,7 +47,6 @@ import {
   computeMedians,
   extractMetrics,
   getBundleKb,
-  median,
   renderRouteReport,
   renderSummary,
 } from "./measure-cwv-lib.mjs";
@@ -416,3 +415,223 @@ async function runMeasurements(browser, token) {
 
   return results;
 }
+
+// ── Bundle composition (D-05: LOCAL build only — no prod call) ──────────────
+
+/**
+ * Read and parse the Turbopack-emitted route bundle stats. This is the
+ * SOLE local .next/ read in the harness — bundle composition is never
+ * measured against prod, per D-05. Requires a fresh `npm run build` so
+ * the reported sizes match the exact deployed commit (Pitfall 6).
+ *
+ * @returns {Promise<Array<{route: string, firstLoadUncompressedJsBytes: number, firstLoadChunkPaths: string[]}>>}
+ */
+async function readBundleStats() {
+  const raw = await readFile(
+    path.join(ROOT, ".next", "diagnostics", "route-bundle-stats.json"),
+    "utf8",
+  );
+  return JSON.parse(raw);
+}
+
+// ── Report output ─────────────────────────────────────────────────────────
+
+const OUT_DIR = path.join(
+  ROOT,
+  ".planning",
+  "phases",
+  "16-performance-baseline-measure",
+  "baseline",
+);
+
+/**
+ * Map a route path to its filename-safe slug.
+ *
+ * @param {string} route — e.g. "/deck/new-card"
+ * @returns {string} e.g. "deck-new-card"
+ */
+function slugify(route) {
+  return route.replace(/^\//, "").replace(/\//g, "-") || "root";
+}
+
+/**
+ * Atomically write a JSON file: write to a .tmp sibling, then rename over
+ * the final path. Mirrors qa-lib.mjs writeManifest (lines 406-413).
+ *
+ * @param {string} filePath
+ * @param {unknown} obj
+ * @returns {Promise<void>}
+ */
+async function writeJsonAtomic(filePath, obj) {
+  const tmp = `${filePath}.tmp`;
+  await writeFile(tmp, JSON.stringify(obj, null, 2), "utf8");
+  await rename(tmp, filePath);
+}
+
+/**
+ * Atomically write a text (markdown) file: write to a .tmp sibling, then
+ * rename over the final path.
+ *
+ * @param {string} filePath
+ * @param {string} content
+ * @returns {Promise<void>}
+ */
+async function writeTextAtomic(filePath, content) {
+  const tmp = `${filePath}.tmp`;
+  await writeFile(tmp, content, "utf8");
+  await rename(tmp, filePath);
+}
+
+/**
+ * Write every per-route artifact (raw JSON x2 + markdown report) plus the
+ * cross-route summary. Uses the mobile medians as the bottleneck
+ * classification basis (mobile is the constrained profile — D-06/13.1).
+ *
+ * @param {Map<string, Awaited<ReturnType<typeof measureRoutexPreset>>>} results
+ * @param {Array<{route: string, firstLoadUncompressedJsBytes: number, firstLoadChunkPaths: string[]}>} bundleStats
+ * @returns {Promise<void>}
+ */
+async function writeReports(results, bundleStats) {
+  await mkdir(OUT_DIR, { recursive: true });
+
+  const dateIso = new Date().toISOString();
+  const summaryRows = [];
+
+  for (const route of ROUTES) {
+    const mobile = results.get(`${route}::mobile`);
+    const desktop = results.get(`${route}::desktop`);
+    const slug = slugify(route);
+
+    // Raw JSON per route x preset (D-04 machine-readable half).
+    await writeJsonAtomic(path.join(OUT_DIR, `${slug}-mobile-runs.json`), {
+      route: mobile.route,
+      preset: mobile.preset,
+      runs: mobile.runs,
+      warmRuns: mobile.warmRuns,
+      medians: mobile.medians,
+    });
+    await writeJsonAtomic(path.join(OUT_DIR, `${slug}-desktop-runs.json`), {
+      route: desktop.route,
+      preset: desktop.preset,
+      runs: desktop.runs,
+      warmRuns: desktop.warmRuns,
+      medians: desktop.medians,
+    });
+
+    // Bundle + bottleneck classification (mobile medians — the constrained
+    // profile per D-06/13.1).
+    const bundle = getBundleKb(bundleStats, route);
+    const bottleneck = classifyBottleneck(mobile.medians, bundle.kb);
+
+    // Human-readable markdown report per route (D-04).
+    const reportMd = renderRouteReport({
+      route,
+      dateIso,
+      mobile: mobile.medians,
+      desktop: desktop.medians,
+      bundle,
+      bottleneck,
+    });
+    await writeTextAtomic(path.join(OUT_DIR, `${slug}-baseline.md`), reportMd);
+
+    summaryRows.push({
+      route,
+      mobile: mobile.medians,
+      desktop: desktop.medians,
+      bundleKb: bundle.kb,
+      topClass: bottleneck.class,
+    });
+
+    console.log(`[measure-cwv] wrote ${slug}-baseline.md`);
+  }
+
+  // Cross-route summary (D-04).
+  const summaryMd = renderSummary(summaryRows);
+  await writeTextAtomic(
+    path.join(OUT_DIR, "16-BASELINE-SUMMARY.md"),
+    summaryMd,
+  );
+  console.log("[measure-cwv] wrote 16-BASELINE-SUMMARY.md");
+}
+
+// ── Main execution ────────────────────────────────────────────────────────
+
+console.log(
+  "[measure-cwv] ============================================================",
+);
+console.log(
+  "[measure-cwv] LeoCards CWV baseline measurement harness — Phase 16",
+);
+console.log(`[measure-cwv] PROD_URL: ${PROD_URL}`);
+console.log(
+  "[measure-cwv] ============================================================",
+);
+
+let browser;
+let exitCode = 0;
+
+try {
+  // 1. Read local bundle stats FIRST — fail fast if `npm run build` hasn't
+  //    been run, before spending time on auth/provision/browser launch.
+  const bundleStats = await readBundleStats();
+
+  // 2. Provision a *test.local user with a deck + cards (D-02) so /study,
+  //    /deck/browse, /deck/new-card render realistic non-empty state.
+  const { email, sessionToken, deckId } = await provision(PROD_URL, {
+    language: "fr",
+    cards: [
+      { front: "le chat", back: "the cat" },
+      { front: "le chien", back: "the dog" },
+      { front: "la maison", back: "the house" },
+      { front: "le livre", back: "the book" },
+      { front: "l'eau", back: "the water" },
+    ],
+  });
+  console.log(`[measure-cwv] provisioned deck ${deckId} for ${email}`);
+
+  // 3. Launch the browser and inject the session cookie (D-01).
+  browser = await launchBrowser();
+
+  // 4. Run the sequential measurement loop across ROUTES x PRESETS.
+  const results = await runMeasurements(browser, sessionToken);
+
+  // 5. Write per-route + summary reports (D-04) using the LOCAL bundle
+  //    stats read in step 1 (D-05: no prod call for bundle composition).
+  await writeReports(results, bundleStats);
+
+  console.log(
+    "\n[measure-cwv] ============================================================",
+  );
+  console.log(
+    "[measure-cwv] ALL ROUTES MEASURED — baseline artifacts written.",
+  );
+  console.log(
+    "[measure-cwv] ============================================================",
+  );
+} catch (err) {
+  console.error(`\n[measure-cwv] FAIL — ${err.message}`);
+  exitCode = 1;
+} finally {
+  if (browser) {
+    await browser.close();
+  }
+
+  // Self-clean (T-16-05): ALWAYS run cleanup regardless of measurement outcome.
+  const cleanupEnv = {
+    ...process.env,
+    CLEANUP_DB_URL: process.env.CLEANUP_DB_URL ?? process.env.DATABASE_URL,
+  };
+  console.log("\n[measure-cwv] --- Cleanup: remove *@test.local users ---");
+  const cleanupScript = path.join(ROOT, "scripts", "cleanup-test-users.mjs");
+  const cleanupResult = spawnSync(
+    process.execPath,
+    [cleanupScript, "%@test.local"],
+    { stdio: "inherit", env: cleanupEnv },
+  );
+  if ((cleanupResult.status ?? 1) !== 0) {
+    console.error("[measure-cwv] CLEANUP FAILED — test user may remain in DB");
+    exitCode = 1;
+  }
+}
+
+process.exit(exitCode);
