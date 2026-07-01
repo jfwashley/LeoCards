@@ -276,3 +276,143 @@ async function injectCookie(page, token) {
     sameSite: "Lax",
   });
 }
+
+// ── Route / preset / run-count constants (D-03, D-06) ────────────────────────
+//
+// Exactly these 4 routes — /habitat is EXCLUDED (D-03).
+const ROUTES = ["/dashboard", "/study", "/deck/new-card", "/deck/browse"];
+const PRESETS = ["mobile", "desktop"];
+// n=6 per route x preset: discard run 0 (cold Vercel hit), median of runs 1-5.
+const N_RUNS = 6;
+
+// ── Lighthouse preset configs ─────────────────────────────────────────────────
+// Source: RESEARCH.md Code Examples (mobile) + desktop-config.js (desktop),
+// verified against node_modules/lighthouse/core/config/desktop-config.js.
+
+const mobileConfig = {
+  extends: "lighthouse:default",
+  settings: {
+    formFactor: "mobile",
+    throttling: {
+      rttMs: 150,
+      throughputKbps: 1638,
+      requestLatencyMs: 562,
+      downloadThroughputKbps: 1474,
+      uploadThroughputKbps: 675,
+      cpuSlowdownMultiplier: 4,
+    },
+    screenEmulation: {
+      mobile: true,
+      width: 412,
+      height: 823,
+      deviceScaleFactor: 1.75,
+      disabled: false,
+    },
+    onlyCategories: ["performance"],
+    disableFullPageScreenshot: true,
+  },
+};
+
+const desktopConfig = {
+  extends: "lighthouse:default",
+  settings: {
+    formFactor: "desktop",
+    throttling: { cpuSlowdownMultiplier: 1 },
+    screenEmulation: {
+      mobile: false,
+      width: 1350,
+      height: 940,
+      deviceScaleFactor: 1,
+    },
+    onlyCategories: ["performance"],
+  },
+};
+
+// ── Measurement loop (sequential — RESEARCH.md: parallel self-contention
+// skews TBT) ───────────────────────────────────────────────────────────────
+
+/**
+ * Run N_RUNS sequential Lighthouse navigations against a single route x
+ * preset pair, re-injecting the session cookie before each run (Pitfall 4),
+ * and throwing loud if any run's final URL lands on /login (Pitfall 2 —
+ * the silent-garbage-baseline failure mode, D-01/T-16-07).
+ *
+ * @param {import('puppeteer-core').Browser} browser
+ * @param {string} route — e.g. "/dashboard"
+ * @param {"mobile"|"desktop"} preset
+ * @param {string} token — session token (never logged)
+ * @returns {Promise<{
+ *   route: string,
+ *   preset: "mobile"|"desktop",
+ *   runs: Array<Record<string, number>>,
+ *   warmRuns: Array<Record<string, number>>,
+ *   medians: Record<string, number>,
+ * }>}
+ */
+async function measureRoutexPreset(browser, route, preset, token) {
+  const page = await browser.newPage();
+  const runs = [];
+
+  try {
+    for (let i = 0; i < N_RUNS; i++) {
+      // Re-inject before EVERY run — Lighthouse does not clear httpOnly
+      // cookies between runs by default, but this is a defensive
+      // re-inject per RESEARCH.md Pitfall 4 (costs ~0 ms).
+      await injectCookie(page, token);
+
+      const result = await lighthouse.navigation(page, `${PROD_URL}${route}`, {
+        config: preset === "mobile" ? mobileConfig : desktopConfig,
+        flags: { logLevel: "silent" },
+      });
+
+      // Redirect guard (D-01, T-16-07): if auth silently failed, Lighthouse
+      // would measure the /login shell instead of the real authed route —
+      // a garbage-but-green baseline. Fail loud instead.
+      const finalUrl =
+        result.lhr.finalDisplayedUrl ?? result.lhr.finalUrl ?? "";
+      if (
+        finalUrl.includes("/login") ||
+        !finalUrl.includes(route === "/" ? "/" : route)
+      ) {
+        throw new Error(
+          `[measure-cwv] auth FAILED — ${route} run ${i} landed on /login; session cookie not honored (finalUrl: ${finalUrl})`,
+        );
+      }
+
+      runs.push(extractMetrics(result.lhr));
+    }
+  } finally {
+    await page.close();
+  }
+
+  const warmRuns = runs.slice(1);
+  return { route, preset, runs, warmRuns, medians: computeMedians(warmRuns) };
+}
+
+/**
+ * Drive measureRoutexPreset SEQUENTIALLY across every ROUTES x PRESETS pair
+ * (never parallel — RESEARCH.md: self-contention skews TBT). Mirrors the
+ * qa-run.mjs sequential for-loop cadence (lines 197-230) with the same
+ * "[measure-cwv] --- {label} ---" progress logging.
+ *
+ * @param {import('puppeteer-core').Browser} browser
+ * @param {string} token — session token from provision() (never logged)
+ * @returns {Promise<Map<string, Awaited<ReturnType<typeof measureRoutexPreset>>>>}
+ *   Keyed by `${route}::${preset}`.
+ */
+async function runMeasurements(browser, token) {
+  const results = new Map();
+
+  for (const route of ROUTES) {
+    for (const preset of PRESETS) {
+      console.log(`\n[measure-cwv] --- ${route} x ${preset} ---`);
+      const result = await measureRoutexPreset(browser, route, preset, token);
+      results.set(`${route}::${preset}`, result);
+      console.log(
+        `[measure-cwv] ${route} x ${preset} — median Perf score: ${result.medians.score}`,
+      );
+    }
+  }
+
+  return results;
+}
