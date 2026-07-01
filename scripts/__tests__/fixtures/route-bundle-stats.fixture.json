@@ -1,0 +1,28 @@
+[
+  {
+    "route": "/dashboard",
+    "firstLoadUncompressedJsBytes": 887000,
+    "firstLoadChunkPaths": [
+      "static/chunks/dashboard-a1.js",
+      "static/chunks/dashboard-a2.js"
+    ]
+  },
+  {
+    "route": "/study",
+    "firstLoadUncompressedJsBytes": 657000,
+    "firstLoadChunkPaths": [
+      "static/chunks/study-a1.js",
+      "static/chunks/study-a2.js"
+    ]
+  },
+  {
+    "route": "/deck/new-card",
+    "firstLoadUncompressedJsBytes": 1111000,
+    "firstLoadChunkPaths": []
+  },
+  {
+    "route": "/deck/browse",
+    "firstLoadUncompressedJsBytes": 556000,
+    "firstLoadChunkPaths": ["static/chunks/browse-a1.js"]
+  }
+]
