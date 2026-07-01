@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-07-01T22:25:47.577Z"
+stopped_at: Completed 16-02-PLAN.md
+last_updated: "2026-07-01T22:58:30.403Z"
 last_activity: 2026-07-01
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
   percent: 20
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 16 (performance-baseline-measure) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-07-01
 
@@ -53,6 +53,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 15-04: 3 vitest test failures in cooldown-config.test.ts are pre-existing (Phase 14 plan 14-01); not caused by this plan's .mjs scripts.
 - Phase 15-05: qa-run.mjs uses time-shift fast path (option a) — single STUDY_COOLDOWN_MINUTES=1 server boot covers all five journeys; qa-03-B uses --resume with built-in fast-path shift calculation. No new packages; only npm script entries added.
 - Phase 16-01: split pure logic into measure-cwv-lib.mjs (zero imports) so Plan 02's side-effectful harness (DATABASE_URL guard + puppeteer.launch) never breaks vitest collection — keeps decision logic (median/classifier/bundle-parse) unit-testable in isolation with zero live credentials or network access required.
+- Phase 16-02: measure-cwv.mjs inlines (not imports) qa-lib.mjs's auth/provisioning helpers, adding the required prod `Origin` header — qa-lib.mjs exits at module load without DEBUG_CHEAT_SECRET, and the perf harness never calls `/api/debug/*`, so importing it would crash the harness at startup for no benefit.
+- Phase 16-02: bottleneck classification uses MOBILE medians as the basis (not desktop) — mobile is the CWV-constrained profile per the D-06/13.1 precedent from Phase 13.1's `/habitat` CWV work.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -74,8 +76,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-01T22:25:47.569Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-07-01T22:58:30.385Z
+Stopped at: Completed 16-02-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -83,3 +85,4 @@ Resume file: None
 | Phase | Plan | Duration | Notes |
 |-------|------|----------|-------|
 | Phase 16 P01 | 12min | 2 tasks | 3 files |
+| Phase 16-performance-baseline-measure P02 | 10min | 3 tasks | 2 files |

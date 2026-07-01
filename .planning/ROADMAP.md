@@ -129,7 +129,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 **Plans**: 3 plans (3 waves)
 
 - [x] 16-01-PLAN.md — pure compute/render lib (median, bundle parse, D-07 bottleneck classifier, D-04 report renderers) + Wave-0 tests + fixture
-- [ ] 16-02-PLAN.md — measure-cwv.mjs harness: inlined auth+provision, puppeteer-core cookie auth, Lighthouse n=6 mobile+desktop loop, redirect guard, report writing, finally-cleanup, npm scripts
+- [x] 16-02-PLAN.md — measure-cwv.mjs harness: inlined auth+provision, puppeteer-core cookie auth, Lighthouse n=6 mobile+desktop loop, redirect guard, report writing, finally-cleanup, npm scripts
 - [ ] 16-03-PLAN.md — execute the warm-prod harness, produce + human-verify + commit the immutable per-route baselines (4 reports + raw JSON + summary)
 
 ### Phase 17: Performance optimization
@@ -175,7 +175,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 |-------|----------------|--------|-----------|
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
-| 16. Performance baseline (Measure) | 1/3 | In Progress|  |
+| 16. Performance baseline (Measure) | 2/3 | In Progress|  |
 | 17. Performance optimization | 0/TBD | Not started | - |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 
