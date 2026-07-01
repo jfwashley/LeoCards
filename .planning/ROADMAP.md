@@ -116,7 +116,10 @@ QA comes first deliberately: the harness must protect the core journey before pe
   2. Each key route has a written baseline report: median CWV numbers plus bundle composition (per-route first-load JS, chunk fingerprinting via `page_client-reference-manifest`)
   3. Each route has a ranked bottleneck classification (bundle vs RSC waterfall vs hydration) naming its top optimization target for Phase 17
   4. No optimization changes land in this phase — the baseline is the immutable before-reference for every Phase 17 change
-**Plans**: TBD
+**Plans**: 3 plans (3 waves)
+- [ ] 16-01-PLAN.md — pure compute/render lib (median, bundle parse, D-07 bottleneck classifier, D-04 report renderers) + Wave-0 tests + fixture
+- [ ] 16-02-PLAN.md — measure-cwv.mjs harness: inlined auth+provision, puppeteer-core cookie auth, Lighthouse n=6 mobile+desktop loop, redirect guard, report writing, finally-cleanup, npm scripts
+- [ ] 16-03-PLAN.md — execute the warm-prod harness, produce + human-verify + commit the immutable per-route baselines (4 reports + raw JSON + summary)
 
 ### Phase 17: Performance optimization
 **Goal**: Every key route meets CWV "Good" gates on warm prod and warm client-side navigation feels instant — each change measured before/after, never assumed
@@ -147,7 +150,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18 | 3/TBD | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18 | 8/TBD | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -155,7 +158,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 |-------|----------------|--------|-----------|
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
-| 16. Performance baseline (Measure) | 0/TBD | Not started | - |
+| 16. Performance baseline (Measure) | 0/3 | Not started | - |
 | 17. Performance optimization | 0/TBD | Not started | - |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 

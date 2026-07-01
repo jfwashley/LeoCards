@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: planning
-stopped_at: Phase 16 context gathered
+stopped_at: Phase 16 planned (3 plans, 3 waves)
 last_updated: "2026-07-01T14:09:40.897Z"
 last_activity: 2026-06-25
 progress:
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 16
 Plan: Not started
-Status: Ready to plan
+Status: Planned — ready to execute (3 plans / 3 waves)
 Last activity: 2026-06-25
 
 Progress (v3.0): [██████████] 100% (Phase 15 all 5 plans complete)
@@ -74,5 +74,5 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 ## Session Continuity
 
 Last session: 2026-07-01T14:09:40.883Z
-Stopped at: Phase 16 context gathered
+Stopped at: Phase 16 planned (3 plans, 3 waves)
 Resume file: .planning/phases/16-performance-baseline-measure/16-CONTEXT.md
