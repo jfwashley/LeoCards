@@ -4,13 +4,13 @@ milestone: v3.0
 milestone_name: Performance & QA
 status: executing
 stopped_at: Phase 17 context gathered
-last_updated: "2026-07-02T23:25:09.769Z"
-last_activity: 2026-07-02 -- Phase 17 planning complete
+last_updated: "2026-07-02T23:42:15.481Z"
+last_activity: 2026-07-02
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 13
-  completed_plans: 8
+  completed_plans: 9
   percent: 40
 ---
 
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 17 — performance optimization
+**Current focus:** Phase 17 — performance-optimization
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 17
-Plan: Not started
+Phase: 17 (performance-optimization) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-07-02 -- Phase 17 planning complete
+Last activity: 2026-07-02
 
 Progress (v3.0): [████████░░] 80% (Phases 15-16 all 8 plans complete; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied)
 
@@ -58,6 +58,9 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 16-03: split the harness-fix commit from the baseline-docs commit — three Rule-1 bug fixes to scripts/measure-cwv.mjs (getUserId prod-auth, lighthouse named import, /study deck param) are code changes kept separate from the immutable, never-re-edited baseline artifacts, for a clean audit trail.
 - Phase 16-03: getUserId()'s broken prod round-trip was removed, not patched — signUp() now reads userId directly from the sign-up response body instead of a second /api/auth/get-session call that was sending the wrong cookie name to prod.
 - Phase 16-03: all four key routes classify as "bundle" bottleneck (526-1111 KB first-load JS); PERF-01 and PERF-02 are complete — the immutable warm-prod baseline is committed and Phase 17 is unblocked.
+- Phase 17-01: resolveRoutes treats "/habitat" as a UNION-addable opt-in (not a subset filter) — ROUTE_FILTER=/habitat alone must return exactly ["/habitat"], which a plain intersection against the 4 key routes would incorrectly return [] for (D-11 spot-check requirement).
+- Phase 17-01: resolveOutDir defaults to a NEW .planning/phases/17-performance-optimization/measurements/ directory and is structurally incapable of defaulting to the Phase 16 baseline path — PHASE_OUT_DIR is the only override. Verified: git status --porcelain under 16-performance-baseline-measure/baseline/ stayed empty across all 3 tasks.
+- Phase 17-01: DaybreakShimmer ships with zero hooks/client directive (RSC-safe) since a placeholder never needs interactivity; e2e/perf-markers.ts only scaffolds PERF_READY_ATTR/waitForPerfReady/IS_PROD_BUILD this plan — no route is wired with data-perf-ready yet (explicitly Wave 3/4 work).
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -79,9 +82,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-02T22:37:58.590Z
-Stopped at: Phase 17 context gathered
-Resume file: .planning/phases/17-performance-optimization/17-CONTEXT.md
+Last session: 2026-07-02T23:37:08.000Z
+Stopped at: Completed 17-01-PLAN.md
+Resume file: None
 
 ## Performance Metrics
 
@@ -90,3 +93,4 @@ Resume file: .planning/phases/17-performance-optimization/17-CONTEXT.md
 | Phase 16 P01 | 12min | 2 tasks | 3 files |
 | Phase 16-performance-baseline-measure P02 | 10min | 3 tasks | 2 files |
 | Phase 16 P03 | 8min | 3 tasks | 15 files |
+| Phase 17 P01 | 40min | 3 tasks | 8 files |
