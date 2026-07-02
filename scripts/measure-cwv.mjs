@@ -433,7 +433,16 @@ async function measureRoutexPreset(browser, route, preset, token, deckId) {
       runs.push(extractMetrics(result.lhr));
     }
   } finally {
-    await page.close();
+    // CR-01 (secondary): a rejected page.close() must never REPLACE the
+    // loop's real diagnostic error with an opaque close error.
+    // Log-and-continue.
+    try {
+      await page.close();
+    } catch (closeErr) {
+      console.error(
+        `[measure-cwv] page.close() failed (continuing): ${closeErr.message}`,
+      );
+    }
   }
 
   const warmRuns = runs.slice(1);
@@ -673,7 +682,18 @@ try {
   exitCode = 1;
 } finally {
   if (browser) {
-    await browser.close();
+    // CR-01: browser.close() can reject when the connection is already dead
+    // (crashed/killed Chrome — a likely reason we entered the catch path).
+    // An unhandled rejection here would abort the finally BEFORE the
+    // cleanup spawnSync below, leaving *test.local residue in prod.
+    // Log-and-continue: cleanup must be reachable on EVERY path.
+    try {
+      await browser.close();
+    } catch (closeErr) {
+      console.error(
+        `[measure-cwv] browser.close() failed (continuing to cleanup): ${closeErr.message}`,
+      );
+    }
   }
 
   // Self-clean (T-16-05): ALWAYS run cleanup regardless of measurement outcome.
