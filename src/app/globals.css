@@ -125,3 +125,22 @@
     animation: none;
   }
 }
+
+/* Phase 17 (D-03) — DaybreakShimmer placeholder pulse (CSS-only, mirrors
+   the hab-fall convention above: named keyframe + paired
+   prefers-reduced-motion override). */
+@keyframes shimmer-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Respect prefers-reduced-motion: disable the shimmer pulse for .db-shimmer elements */
+@media (prefers-reduced-motion: reduce) {
+  .db-shimmer {
+    animation: none;
+  }
+}
