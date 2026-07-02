@@ -74,7 +74,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 14: QA observability foundations** - QA can see exact card state and compress time, with affordances provably absent for customers (completed 2026-06-17)
 - [x] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline (completed 2026-06-25)
 - [x] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization (completed 2026-07-02)
-- [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
+- [x] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline (completed 2026-07-02)
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
 
 ## Phase Details (v3.0)
@@ -175,7 +175,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 |-------|----------------|--------|-----------|
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
-| 16. Performance baseline (Measure) | 3/3 | Complete   | 2026-07-02 |
+| 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 0/TBD | Not started | - |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 
