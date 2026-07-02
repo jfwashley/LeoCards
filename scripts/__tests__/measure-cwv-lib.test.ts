@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   classifyBottleneck,
   computeMedians,
+  extractMetrics,
   getBundleKb,
   median,
 } from "../measure-cwv-lib.mjs";
@@ -85,6 +86,83 @@ describe("computeMedians", () => {
     expect(medians.lcp).toBe(2100);
     // Sorted tbt values: [90, 100, 120, 150, 200] -> middle = 120
     expect(medians.tbt).toBe(120);
+  });
+});
+
+describe("extractMetrics", () => {
+  /** Build a minimal, valid lhr; override individual audits or the score. */
+  function makeLhr(
+    overrides: {
+      audits?: Record<
+        string,
+        { numericValue?: number; scoreDisplayMode?: string }
+      >;
+      score?: number | null;
+    } = {},
+  ) {
+    return {
+      audits: {
+        "largest-contentful-paint": { numericValue: 2100 },
+        "total-blocking-time": { numericValue: 120 },
+        "cumulative-layout-shift": { numericValue: 0.01 },
+        "first-contentful-paint": { numericValue: 850 },
+        "server-response-time": { numericValue: 210 },
+        "bootup-time": { numericValue: 550 },
+        ...overrides.audits,
+      },
+      categories: {
+        performance: {
+          score: overrides.score === undefined ? 0.89 : overrides.score,
+        },
+      },
+    };
+  }
+
+  it("extracts all seven metrics from a valid lhr (score rounded to 0-100)", () => {
+    expect(extractMetrics(makeLhr())).toEqual({
+      lcp: 2100,
+      tbt: 120,
+      cls: 0.01,
+      fcp: 850,
+      ttfb: 210,
+      score: 89,
+      bootupTime: 550,
+    });
+  });
+
+  it("accepts a legitimate zero metric value (CLS 0)", () => {
+    const lhr = makeLhr({
+      audits: { "cumulative-layout-shift": { numericValue: 0 } },
+    });
+    expect(extractMetrics(lhr).cls).toBe(0);
+  });
+
+  it("throws naming the audit when numericValue is undefined (errored audit)", () => {
+    const lhr = makeLhr({
+      audits: {
+        "largest-contentful-paint": { scoreDisplayMode: "error" },
+      },
+    });
+    expect(() => extractMetrics(lhr)).toThrow(/largest-contentful-paint/);
+    expect(() => extractMetrics(lhr)).toThrow(/scoreDisplayMode: error/);
+  });
+
+  it("throws when numericValue is non-finite (NaN)", () => {
+    const lhr = makeLhr({
+      audits: { "server-response-time": { numericValue: Number.NaN } },
+    });
+    expect(() => extractMetrics(lhr)).toThrow(/server-response-time/);
+  });
+
+  it("throws when the performance score is null instead of coercing to 0", () => {
+    const lhr = makeLhr({ score: null });
+    expect(() => extractMetrics(lhr)).toThrow(/performance score is null/);
+  });
+
+  it("throws when a required audit key is missing entirely", () => {
+    const lhr = makeLhr();
+    delete (lhr.audits as Record<string, unknown>)["bootup-time"];
+    expect(() => extractMetrics(lhr)).toThrow(/bootup-time/);
   });
 });
 

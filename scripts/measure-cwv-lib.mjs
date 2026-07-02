@@ -62,18 +62,45 @@ export function computeMedians(runs) {
 /**
  * Extract the Metric shape from a Lighthouse Result (lhr) object.
  *
+ * Fails LOUD on errored audits (WR-04): under simulated throttling,
+ * Lighthouse occasionally marks an audit errored (e.g. NO_LCP/NO_FCP) —
+ * `numericValue` is then `undefined` and the category `score` is `null`.
+ * Coercing those (Math.round(null * 100) === 0, undefined medians) would
+ * produce a silently-garbage baseline, the exact failure class the
+ * redirect guard (D-01/T-16-07) exists to prevent.
+ *
  * @param {object} lhr
  * @returns {{ lcp: number, tbt: number, cls: number, fcp: number, ttfb: number, score: number, bootupTime: number }}
+ * @throws if any required audit has no finite numericValue, or the
+ *   performance category score is null/non-finite.
  */
 export function extractMetrics(lhr) {
+  const num = (id) => {
+    const v = lhr.audits[id]?.numericValue;
+    if (!Number.isFinite(v)) {
+      throw new Error(
+        `Lighthouse audit "${id}" has no finite numericValue ` +
+          `(got ${v}, scoreDisplayMode: ${lhr.audits[id]?.scoreDisplayMode ?? "unknown"}) — ` +
+          "the audit errored; refusing to record a garbage baseline",
+      );
+    }
+    return v;
+  };
+  const perfScore = lhr.categories.performance.score;
+  if (!Number.isFinite(perfScore)) {
+    throw new Error(
+      `Lighthouse performance score is ${perfScore} — a metric audit ` +
+        "errored; refusing to record a garbage baseline",
+    );
+  }
   return {
-    lcp: lhr.audits["largest-contentful-paint"].numericValue,
-    tbt: lhr.audits["total-blocking-time"].numericValue,
-    cls: lhr.audits["cumulative-layout-shift"].numericValue,
-    fcp: lhr.audits["first-contentful-paint"].numericValue,
-    ttfb: lhr.audits["server-response-time"].numericValue,
-    score: Math.round(lhr.categories.performance.score * 100),
-    bootupTime: lhr.audits["bootup-time"].numericValue,
+    lcp: num("largest-contentful-paint"),
+    tbt: num("total-blocking-time"),
+    cls: num("cumulative-layout-shift"),
+    fcp: num("first-contentful-paint"),
+    ttfb: num("server-response-time"),
+    score: Math.round(perfScore * 100),
+    bootupTime: num("bootup-time"),
   };
 }
 
