@@ -341,3 +341,42 @@ describe("DeckView populated action line — Browse words absent, Add a card pre
     expect(addACard.getAttribute("href")).toContain("/deck/new-card");
   });
 });
+
+// ---------------------------------------------------------------
+// Phase 17 (D-06 pre-split baseline) — locks DeckView's CURRENT
+// observable behavior BEFORE any RSC split lands in Wave 3. This test
+// must stay green with NO changes to its assertions after the split —
+// it is the behavior-preservation reference, not a moving target.
+// ---------------------------------------------------------------
+
+describe("DeckView pre-split baseline (Phase 17 D-06) — current rendered behavior", () => {
+  it("renders the header, HabitatHero, CardList, and the add-a-card affordance together", () => {
+    render(
+      <DeckView
+        decks={baseDecks}
+        initialCards={makeCards(3)}
+        nativeLang="en"
+        activeDeckId="deck-1"
+        hasDueCards={true}
+        dueCount={3}
+        earliestCooldownEnd={null}
+        habitatState={baseHabitatState}
+      />,
+    );
+
+    // Header renders.
+    expect(screen.getByTestId("app-header")).toBeTruthy();
+
+    // HabitatHero mock is present.
+    const habitatHero = screen.getByTestId("habitat-hero");
+    expect(habitatHero).toBeTruthy();
+
+    // CardList mock is present.
+    expect(screen.getByTestId("card-list")).toBeTruthy();
+
+    // The "add-a-card" affordance is present.
+    const addACard = screen.getByTestId("add-a-card");
+    expect(addACard).toBeTruthy();
+    expect(addACard.tagName.toLowerCase()).toBe("a");
+  });
+});
