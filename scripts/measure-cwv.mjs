@@ -627,6 +627,67 @@ async function writeReports(results, bundleStats) {
   console.log("[measure-cwv] wrote 16-BASELINE-SUMMARY.md");
 }
 
+// ── Cleanup + signal handling (T-16-05, WR-05) ───────────────────────────────
+
+const RECOVERY_HINT =
+  "[measure-cwv] residue recovery command: CLEANUP_DB_URL=$DATABASE_URL npm run measure:cleanup";
+
+/**
+ * Reap all *@test.local users via cleanup-test-users.mjs. Synchronous
+ * (spawnSync) so it is safe to call from signal handlers — the child runs
+ * to completion before the handler returns. Shared by the main finally
+ * block and emergencyCleanup below.
+ *
+ * @returns {boolean} true when the cleanup child exited 0
+ */
+function runCleanup() {
+  const cleanupEnv = {
+    ...process.env,
+    CLEANUP_DB_URL: process.env.CLEANUP_DB_URL ?? process.env.DATABASE_URL,
+  };
+  console.log("\n[measure-cwv] --- Cleanup: remove *@test.local users ---");
+  const cleanupScript = path.join(ROOT, "scripts", "cleanup-test-users.mjs");
+  const cleanupResult = spawnSync(
+    process.execPath,
+    [cleanupScript, "%@test.local"],
+    { stdio: "inherit", env: cleanupEnv },
+  );
+  if ((cleanupResult.status ?? 1) !== 0) {
+    console.error("[measure-cwv] CLEANUP FAILED — test user may remain in DB");
+    console.error(RECOVERY_HINT);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * WR-05: an operator interrupt (Ctrl-C) mid-run is one of the most likely
+ * termination modes for a ~1-hour, 48-run measurement — and it would
+ * otherwise kill the process without the finally-block cleanup, leaving
+ * *@test.local residue in prod. Best-effort reap, print the manual
+ * recovery command, exit non-zero (conventional 128+signum). SIGINT
+ * covers Ctrl-C on Windows; SIGTERM is a no-op there but registered for
+ * POSIX. `once` so a second interrupt falls through to the default
+ * immediate kill.
+ *
+ * @param {string} signal
+ * @param {number} code
+ */
+function emergencyCleanup(signal, code) {
+  console.error(
+    `\n[measure-cwv] ${signal} received — best-effort *@test.local cleanup before exit`,
+  );
+  try {
+    runCleanup();
+  } catch (err) {
+    console.error(`[measure-cwv] emergency cleanup threw: ${err.message}`);
+  }
+  console.error(RECOVERY_HINT);
+  process.exit(code);
+}
+process.once("SIGINT", () => emergencyCleanup("SIGINT", 130));
+process.once("SIGTERM", () => emergencyCleanup("SIGTERM", 143));
+
 // ── Main execution ────────────────────────────────────────────────────────
 
 console.log(
@@ -636,6 +697,7 @@ console.log(
   "[measure-cwv] LeoCards CWV baseline measurement harness — Phase 16",
 );
 console.log(`[measure-cwv] PROD_URL: ${PROD_URL}`);
+console.log(RECOVERY_HINT);
 console.log(
   "[measure-cwv] ============================================================",
 );
@@ -701,19 +763,7 @@ try {
   }
 
   // Self-clean (T-16-05): ALWAYS run cleanup regardless of measurement outcome.
-  const cleanupEnv = {
-    ...process.env,
-    CLEANUP_DB_URL: process.env.CLEANUP_DB_URL ?? process.env.DATABASE_URL,
-  };
-  console.log("\n[measure-cwv] --- Cleanup: remove *@test.local users ---");
-  const cleanupScript = path.join(ROOT, "scripts", "cleanup-test-users.mjs");
-  const cleanupResult = spawnSync(
-    process.execPath,
-    [cleanupScript, "%@test.local"],
-    { stdio: "inherit", env: cleanupEnv },
-  );
-  if ((cleanupResult.status ?? 1) !== 0) {
-    console.error("[measure-cwv] CLEANUP FAILED — test user may remain in DB");
+  if (!runCleanup()) {
     exitCode = 1;
   }
 }
