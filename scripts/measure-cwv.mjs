@@ -39,7 +39,17 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import lighthouse from "lighthouse/core/index.js";
+// DEVIATION (Rule 1 — bug fix, Task 1 live run): `navigation` is a NAMED
+// export of lighthouse/core/index.js, not a property of the default
+// export (the default export is itself an unrelated function — verified
+// via `Object.keys(await import('lighthouse/core/index.js'))`). The
+// original `import lighthouse from ...` + `lighthouse.navigation(...)`
+// call shape failed live with "lighthouse.navigation is not a function"
+// after provisioning succeeded (first Lighthouse call, /dashboard x
+// mobile, run 0). RESEARCH.md's own verified Code Examples already used
+// the correct named-import form (`import { navigation } from
+// 'lighthouse/core/index.js'`) — this restores that shape.
+import { navigation as lighthouseNavigation } from "lighthouse/core/index.js";
 import puppeteer from "puppeteer-core";
 import { cards, decks } from "../src/db/schema.ts";
 import {
@@ -114,10 +124,24 @@ function extractSessionCookie(res) {
  * better-auth's originCheckMiddleware validates Origin against
  * trustedOrigins (RESEARCH.md Pitfall 1) or the sign-up POST 403s.
  *
+ * DEVIATION (Rule 1 — bug fix, Task 1 live run): returns { sessionToken,
+ * userId } instead of qa-lib.mjs's sessionToken-only shape. better-auth's
+ * sign-up/email response body already includes `user.id` directly
+ * (verified: node_modules/better-auth/dist/api/routes/sign-up.mjs
+ * `ctx.json({ token, user: parseUserOutput(...) })`), so userId can be
+ * read from THIS response instead of a second round-trip to
+ * /api/auth/get-session. The separate getUserId() round-trip (verbatim
+ * from qa-lib.mjs, which only ever targets http://localhost) sent the
+ * Cookie header as the plain `better-auth.session_token` name against
+ * prod HTTPS and returned no user.id — the live Task-1 run failed with
+ * "get-session: no user.id in response" before any measurement began.
+ * Reading userId from the sign-up body removes the extra authenticated
+ * round-trip entirely rather than patching the cookie-name mismatch.
+ *
  * @param {string} baseUrl
  * @param {string} email
  * @param {string} password
- * @returns {Promise<string>} sessionToken
+ * @returns {Promise<{sessionToken: string, userId: string}>}
  */
 async function signUp(baseUrl, email, password) {
   const res = await fetch(`${baseUrl}/api/auth/sign-up/email`, {
@@ -133,7 +157,12 @@ async function signUp(baseUrl, email, password) {
   if (!res.ok) {
     throw new Error(`sign-up failed: HTTP ${res.status} for email ${email}`);
   }
-  return extractSessionCookie(res);
+  const sessionToken = extractSessionCookie(res);
+  const data = await res.json();
+  if (!data?.user?.id) {
+    throw new Error("sign-up: no user.id in response body");
+  }
+  return { sessionToken, userId: data.user.id };
 }
 
 /**
@@ -146,24 +175,6 @@ async function signUp(baseUrl, email, password) {
  */
 function mintTestEmail() {
   return `cwv+${Date.now()}+${Math.random().toString(36).slice(2, 4)}@test.local`;
-}
-
-/**
- * Resolve the userId for an authenticated session.
- * Verbatim from qa-lib.mjs lines 168-176.
- *
- * @param {string} baseUrl
- * @param {string} token — session token
- * @returns {Promise<string>} userId
- */
-async function getUserId(baseUrl, token) {
-  const res = await fetch(`${baseUrl}/api/auth/get-session`, {
-    headers: { Cookie: `better-auth.session_token=${token}` },
-  });
-  if (!res.ok) throw new Error(`get-session failed: HTTP ${res.status}`);
-  const data = await res.json();
-  if (!data?.user?.id) throw new Error("get-session: no user.id in response");
-  return data.user.id;
 }
 
 /**
@@ -192,13 +203,11 @@ async function provision(baseUrl, opts) {
   const email = mintTestEmail();
   const password = `CWV-${crypto.randomUUID().slice(0, 8)}!`; // random, never logged
 
-  // 1. Sign up → session token
-  const sessionToken = await signUp(baseUrl, email, password);
+  // 1. Sign up → session token + userId (both read from the sign-up
+  //    response directly — see Rule-1 deviation note on signUp()).
+  const { sessionToken, userId } = await signUp(baseUrl, email, password);
 
-  // 2. Resolve userId from the new session
-  const userId = await getUserId(baseUrl, sessionToken);
-
-  // 3. Direct-insert deck via Drizzle
+  // 2. Direct-insert deck via Drizzle
   const deckId = crypto.randomUUID();
   await db.insert(decks).values({
     id: deckId,
@@ -284,6 +293,36 @@ const PRESETS = ["mobile", "desktop"];
 // n=6 per route x preset: discard run 0 (cold Vercel hit), median of runs 1-5.
 const N_RUNS = 6;
 
+/**
+ * Build the actual URL to navigate Lighthouse to for a given route.
+ *
+ * DEVIATION (Rule 1 — bug fix, Task 1 live run): `/study` has an
+ * UNCONDITIONAL redirect to `/dashboard` when `?deck=` is absent
+ * (src/app/(protected)/study/page.tsx lines 20-22 — unlike /dashboard,
+ * /deck/new-card, and /deck/browse, which all gracefully default to the
+ * user's first deck when `?deck=` is omitted, /study has no such
+ * fallback). The live run measured a bare `/study` with no query string,
+ * so every navigation landed on `/dashboard` instead of the real study
+ * page — caught correctly by the redirect guard below (finalUrl was
+ * `.../dashboard`, not `/login`; auth was honored, but the WRONG page
+ * was being measured, which is exactly the "silent garbage baseline"
+ * class of failure the guard exists to catch). Appending `?deck={deckId}`
+ * for `/study` only reaches the real authenticated study page. `route`
+ * itself (the clean path, no query string) is unchanged everywhere else
+ * — report/summary keys, slugs, and the guard's containment check all
+ * still key off the plain route path.
+ *
+ * @param {string} route — e.g. "/study" (clean path, no query string)
+ * @param {string} deckId — the provisioned deck's id
+ * @returns {string} path (+ query string if required) to navigate to
+ */
+function buildNavigationUrl(route, deckId) {
+  if (route === "/study") {
+    return `${route}?deck=${deckId}`;
+  }
+  return route;
+}
+
 // ── Lighthouse preset configs ─────────────────────────────────────────────────
 // Source: RESEARCH.md Code Examples (mobile) + desktop-config.js (desktop),
 // verified against node_modules/lighthouse/core/config/desktop-config.js.
@@ -333,13 +372,17 @@ const desktopConfig = {
 /**
  * Run N_RUNS sequential Lighthouse navigations against a single route x
  * preset pair, re-injecting the session cookie before each run (Pitfall 4),
- * and throwing loud if any run's final URL lands on /login (Pitfall 2 —
- * the silent-garbage-baseline failure mode, D-01/T-16-07).
+ * and throwing loud if any run's final URL lands on /login OR any other
+ * unexpected page (Pitfall 2 — the silent-garbage-baseline failure mode,
+ * D-01/T-16-07).
  *
  * @param {import('puppeteer-core').Browser} browser
- * @param {string} route — e.g. "/dashboard"
+ * @param {string} route — e.g. "/dashboard" (clean path, no query string —
+ *   used for the guard's containment check, report keys, and slugs)
  * @param {"mobile"|"desktop"} preset
  * @param {string} token — session token (never logged)
+ * @param {string} deckId — provisioned deck id, threaded into
+ *   buildNavigationUrl() for routes that require it (currently /study only)
  * @returns {Promise<{
  *   route: string,
  *   preset: "mobile"|"desktop",
@@ -348,9 +391,10 @@ const desktopConfig = {
  *   medians: Record<string, number>,
  * }>}
  */
-async function measureRoutexPreset(browser, route, preset, token) {
+async function measureRoutexPreset(browser, route, preset, token, deckId) {
   const page = await browser.newPage();
   const runs = [];
+  const navigationUrl = buildNavigationUrl(route, deckId);
 
   try {
     for (let i = 0; i < N_RUNS; i++) {
@@ -359,22 +403,30 @@ async function measureRoutexPreset(browser, route, preset, token) {
       // re-inject per RESEARCH.md Pitfall 4 (costs ~0 ms).
       await injectCookie(page, token);
 
-      const result = await lighthouse.navigation(page, `${PROD_URL}${route}`, {
-        config: preset === "mobile" ? mobileConfig : desktopConfig,
-        flags: { logLevel: "silent" },
-      });
+      const result = await lighthouseNavigation(
+        page,
+        `${PROD_URL}${navigationUrl}`,
+        {
+          config: preset === "mobile" ? mobileConfig : desktopConfig,
+          flags: { logLevel: "silent" },
+        },
+      );
 
       // Redirect guard (D-01, T-16-07): if auth silently failed, Lighthouse
       // would measure the /login shell instead of the real authed route —
-      // a garbage-but-green baseline. Fail loud instead.
+      // a garbage-but-green baseline. Also catches landing on any OTHER
+      // unexpected page (e.g. a route-level redirect back to /dashboard)
+      // — same failure class, different symptom. Fail loud instead.
       const finalUrl =
         result.lhr.finalDisplayedUrl ?? result.lhr.finalUrl ?? "";
-      if (
-        finalUrl.includes("/login") ||
-        !finalUrl.includes(route === "/" ? "/" : route)
-      ) {
+      const isLoginShell = finalUrl.includes("/login");
+      const landedOnRoute = finalUrl.includes(route === "/" ? "/" : route);
+      if (isLoginShell || !landedOnRoute) {
+        const reason = isLoginShell
+          ? "landed on /login; session cookie not honored"
+          : `landed on an unexpected page (not ${route})`;
         throw new Error(
-          `[measure-cwv] auth FAILED — ${route} run ${i} landed on /login; session cookie not honored (finalUrl: ${finalUrl})`,
+          `[measure-cwv] auth FAILED — ${route} run ${i} ${reason} (finalUrl: ${finalUrl})`,
         );
       }
 
@@ -396,16 +448,24 @@ async function measureRoutexPreset(browser, route, preset, token) {
  *
  * @param {import('puppeteer-core').Browser} browser
  * @param {string} token — session token from provision() (never logged)
+ * @param {string} deckId — provisioned deck id, threaded to
+ *   measureRoutexPreset for routes requiring a deck query param
  * @returns {Promise<Map<string, Awaited<ReturnType<typeof measureRoutexPreset>>>>}
  *   Keyed by `${route}::${preset}`.
  */
-async function runMeasurements(browser, token) {
+async function runMeasurements(browser, token, deckId) {
   const results = new Map();
 
   for (const route of ROUTES) {
     for (const preset of PRESETS) {
       console.log(`\n[measure-cwv] --- ${route} x ${preset} ---`);
-      const result = await measureRoutexPreset(browser, route, preset, token);
+      const result = await measureRoutexPreset(
+        browser,
+        route,
+        preset,
+        token,
+        deckId,
+      );
       results.set(`${route}::${preset}`, result);
       console.log(
         `[measure-cwv] ${route} x ${preset} — median Perf score: ${result.medians.score}`,
@@ -593,7 +653,7 @@ try {
   browser = await launchBrowser();
 
   // 4. Run the sequential measurement loop across ROUTES x PRESETS.
-  const results = await runMeasurements(browser, sessionToken);
+  const results = await runMeasurements(browser, sessionToken, deckId);
 
   // 5. Write per-route + summary reports (D-04) using the LOCAL bundle
   //    stats read in step 1 (D-05: no prod call for bundle composition).
