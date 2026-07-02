@@ -25,8 +25,8 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 
 ### Performance — Measure
 
-- [ ] **PERF-01**: A codified measurement harness (`scripts/measure-cwv.mjs` + npm script) produces warm-prod Lighthouse medians (n≥5, mobile + desktop presets) for the four key routes — replacing the ad-hoc shell commands from 13-PERF-REAL.md
-- [ ] **PERF-02**: Each key route has a baseline report with bundle composition (per-route first-load JS, chunk fingerprinting via `page_client-reference-manifest`) and a ranked bottleneck classification (bundle vs RSC waterfall vs hydration)
+- [x] **PERF-01**: A codified measurement harness (`scripts/measure-cwv.mjs` + npm script) produces warm-prod Lighthouse medians (n≥5, mobile + desktop presets) for the four key routes — replacing the ad-hoc shell commands from 13-PERF-REAL.md
+- [x] **PERF-02**: Each key route has a baseline report with bundle composition (per-route first-load JS, chunk fingerprinting via `page_client-reference-manifest`) and a ranked bottleneck classification (bundle vs RSC waterfall vs hydration)
 
 ### Performance — Optimize
 
@@ -67,8 +67,8 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 | QAJ-04 | Phase 15 | Complete |
 | QAJ-05 | Phase 15 | Complete |
 | QAJ-06 | Phase 15 | Complete |
-| PERF-01 | Phase 16 | Pending |
-| PERF-02 | Phase 16 | Pending |
+| PERF-01 | Phase 16 | Complete |
+| PERF-02 | Phase 16 | Complete |
 | PERF-03 | Phase 17 | Pending |
 | PERF-04 | Phase 17 | Pending |
 | PERF-05 | Phase 18 | Pending |
