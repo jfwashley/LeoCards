@@ -30,9 +30,12 @@
  * Compute the median of a numeric array.
  *
  * Sorts a COPY ascending (never mutates the input) and returns the true
- * middle-of-sorted value. For even-length arrays this returns the
- * lower-of-the-two-middle value (Math.floor behavior) — consistent with
- * D-06's median statistic for n>=5 odd-length run sets.
+ * middle-of-sorted value. For even-length arrays this returns the UPPER
+ * of the two middle values (index `Math.floor(length / 2)`) — e.g.
+ * [10, 20, 30, 40] -> 30. The shipped harness only ever passes odd-length
+ * run sets (5 warm runs, D-06), where this is the true median. Do NOT
+ * "fix" this to the lower middle: that would silently shift every future
+ * baseline relative to Phase 16's committed numbers.
  *
  * @param {number[]} values
  * @returns {number}

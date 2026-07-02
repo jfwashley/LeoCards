@@ -24,7 +24,7 @@ describe("median", () => {
     expect(median([42])).toBe(42);
   });
 
-  it("returns the lower-of-two-middle value for an even-length array (floor behavior)", () => {
+  it("returns the upper-of-two-middle value for an even-length array (index Math.floor(length / 2))", () => {
     expect(median([10, 20, 30, 40])).toBe(30);
   });
 });
