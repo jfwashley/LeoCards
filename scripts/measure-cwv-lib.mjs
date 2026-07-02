@@ -118,6 +118,15 @@ export function getBundleKb(stats, route) {
   if (!item) {
     throw new Error(`Route not found in bundle stats: ${route}`);
   }
+  // WR-07 (secondary): a renamed/missing byte field would otherwise render
+  // as NaN KB in the committed report instead of failing loud.
+  if (!Number.isFinite(item.firstLoadUncompressedJsBytes)) {
+    throw new Error(
+      `Bundle stats entry for ${route} has no finite firstLoadUncompressedJsBytes ` +
+        `(got ${item.firstLoadUncompressedJsBytes}) — the stats file shape changed; ` +
+        "re-run `npm run build` and check .next/diagnostics/route-bundle-stats.json",
+    );
+  }
   return {
     kb: Math.round(item.firstLoadUncompressedJsBytes / 1024),
     chunks: item.firstLoadChunkPaths.length,

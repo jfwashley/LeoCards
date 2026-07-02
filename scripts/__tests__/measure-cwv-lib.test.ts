@@ -176,6 +176,28 @@ describe("getBundleKb", () => {
   it("throws for an unknown route", () => {
     expect(() => getBundleKb(stats, "/nonexistent-route")).toThrow();
   });
+
+  it("throws when firstLoadUncompressedJsBytes is non-finite instead of reporting NaN KB", () => {
+    const malformed = [
+      {
+        route: "/dashboard",
+        firstLoadUncompressedJsBytes: Number.NaN,
+        firstLoadChunkPaths: [],
+      },
+    ];
+    expect(() => getBundleKb(malformed, "/dashboard")).toThrow(
+      /firstLoadUncompressedJsBytes/,
+    );
+  });
+
+  it("throws when the byte field is missing entirely (renamed stats shape)", () => {
+    const malformed = [
+      { route: "/dashboard", firstLoadChunkPaths: [] },
+    ] as unknown as Parameters<typeof getBundleKb>[0];
+    expect(() => getBundleKb(malformed, "/dashboard")).toThrow(
+      /firstLoadUncompressedJsBytes/,
+    );
+  });
 });
 
 describe("classifyBottleneck", () => {

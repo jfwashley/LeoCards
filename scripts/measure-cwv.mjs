@@ -34,7 +34,7 @@
 //   - DEBUG_CHEAT_SECRET is NOT required; do not set it for prod runs.
 
 import { spawnSync } from "node:child_process";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
@@ -521,13 +521,49 @@ async function runMeasurements(browser, token, deckId) {
  * measured against prod, per D-05. Requires a fresh `npm run build` so
  * the reported sizes match the exact deployed commit (Pitfall 6).
  *
+ * WR-07: freshness is ENFORCED, not just documented — a stale .next/
+ * from an older commit parses fine but silently corrupts first-load KB,
+ * chunk fingerprints, and the bottleneck classification in the committed
+ * baseline. Fail unless the stats file is at least as new as the HEAD
+ * commit; rebuilding (`npm run build`) clears the gate.
+ *
  * @returns {Promise<Array<{route: string, firstLoadUncompressedJsBytes: number, firstLoadChunkPaths: string[]}>>}
  */
 async function readBundleStats() {
-  const raw = await readFile(
-    path.join(ROOT, ".next", "diagnostics", "route-bundle-stats.json"),
-    "utf8",
+  const statsPath = path.join(
+    ROOT,
+    ".next",
+    "diagnostics",
+    "route-bundle-stats.json",
   );
+
+  let mtimeMs;
+  try {
+    ({ mtimeMs } = await stat(statsPath));
+  } catch {
+    throw new Error(
+      `[measure-cwv] ${statsPath} is missing — run \`npm run build\` first (Pitfall 6)`,
+    );
+  }
+
+  const headResult = spawnSync("git", ["log", "-1", "--format=%ct"], {
+    cwd: ROOT,
+    encoding: "utf8",
+  });
+  const headTimeMs = Number(headResult.stdout?.trim()) * 1000;
+  if (!Number.isFinite(headTimeMs)) {
+    console.warn(
+      "[measure-cwv] WARN: could not read the HEAD commit timestamp — skipping bundle-stats freshness check",
+    );
+  } else if (mtimeMs < headTimeMs) {
+    throw new Error(
+      "[measure-cwv] .next/diagnostics/route-bundle-stats.json predates the " +
+        "HEAD commit — the local build is stale and its bundle table would " +
+        "not match the deployed commit. Run `npm run build` first (Pitfall 6).",
+    );
+  }
+
+  const raw = await readFile(statsPath, "utf8");
   return JSON.parse(raw);
 }
 
