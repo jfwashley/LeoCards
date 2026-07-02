@@ -38,6 +38,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 // DEVIATION (Rule 1 — bug fix, Task 1 live run): `navigation` is a NAMED
 // export of lighthouse/core/index.js, not a property of the default
@@ -51,7 +52,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 // 'lighthouse/core/index.js'`) — this restores that shape.
 import { navigation as lighthouseNavigation } from "lighthouse/core/index.js";
 import puppeteer from "puppeteer-core";
-import { cards, decks } from "../src/db/schema.ts";
+import { cards, decks, user } from "../src/db/schema.ts";
 import {
   classifyBottleneck,
   computeMedians,
@@ -210,6 +211,29 @@ async function provision(baseUrl, opts) {
   // 1. Sign up → session token + userId (both read from the sign-up
   //    response directly — see Rule-1 deviation note on signUp()).
   const { sessionToken, userId } = await signUp(baseUrl, email, password);
+
+  // 1b. Same-DB guard (WR-06): signUp created the user through the PROD
+  //     deployment (baseUrl); deck/card inserts and cleanup use
+  //     DATABASE_URL directly. Those are two trust domains ASSUMED to be
+  //     the same database — verify it before creating more rows. If the
+  //     just-created user is not visible via DATABASE_URL, the operator
+  //     exported the wrong URL (e.g. a dev/branch DB): cleanup would sweep
+  //     that wrong DB, print "matched 0 test user(s)", and falsely report
+  //     success while the *test.local user persists in prod forever.
+  const visible = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(eq(user.id, userId));
+  if (visible.length === 0) {
+    throw new Error(
+      `[measure-cwv] DATABASE_URL does not contain just-created user ${email} — ` +
+        "it points at a DIFFERENT database than the prod deployment's. " +
+        "Aborting before provisioning/measurement. Cleanup from this process " +
+        `CANNOT reach prod: delete ${email} manually, or re-run cleanup ` +
+        "against the real prod DB with " +
+        "CLEANUP_DB_URL=<prod DATABASE_URL> npm run measure:cleanup",
+    );
+  }
 
   // 2. Direct-insert deck via Drizzle
   const deckId = crypto.randomUUID();
