@@ -67,6 +67,10 @@ const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "..");
 
 const PROD_URL = process.env.PROD_URL ?? "https://leocards.vercel.app";
+// Cookie domain must match the measured origin or every run lands on
+// /login (WR-02). NOTE: the __Secure- cookie prefix + secure:true below
+// restrict valid PROD_URL overrides to HTTPS origins.
+const PROD_HOST = new URL(PROD_URL).hostname;
 const CHROME_PATH =
   process.env.CHROME_PATH ??
   "C:\\Users\\jfwas\\AppData\\Local\\ms-playwright\\chromium-1208\\chrome-win64\\chrome.exe";
@@ -277,7 +281,7 @@ async function injectCookie(page, token) {
   await page.setCookie({
     name: "__Secure-better-auth.session_token",
     value: token,
-    domain: "leocards.vercel.app",
+    domain: PROD_HOST,
     path: "/",
     secure: true,
     httpOnly: true,
