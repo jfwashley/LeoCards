@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
@@ -7,6 +8,8 @@ import {
   extractMetrics,
   getBundleKb,
   median,
+  resolveOutDir,
+  resolveRoutes,
 } from "../measure-cwv-lib.mjs";
 
 // Fixture is read with readFileSync + JSON.parse (not a JSON import
@@ -217,5 +220,89 @@ describe("classifyBottleneck", () => {
     const metrics = { ttfb: 50, tbt: 790, bootupTime: 100 };
     const result = classifyBottleneck(metrics, 100);
     expect(result.class).toBe("hydration");
+  });
+});
+
+describe("resolveRoutes (Phase 17 D-09)", () => {
+  it("returns the 4 key routes when filterArg is null", () => {
+    expect(resolveRoutes(null)).toEqual([
+      "/dashboard",
+      "/study",
+      "/deck/new-card",
+      "/deck/browse",
+    ]);
+  });
+
+  it("returns the 4 key routes when filterArg is undefined", () => {
+    expect(resolveRoutes(undefined)).toEqual([
+      "/dashboard",
+      "/study",
+      "/deck/new-card",
+      "/deck/browse",
+    ]);
+  });
+
+  it("returns the comma-separated intersection with the 4 key routes", () => {
+    expect(resolveRoutes("/dashboard,/study")).toEqual([
+      "/dashboard",
+      "/study",
+    ]);
+  });
+
+  it("ignores whitespace around comma-separated entries", () => {
+    expect(resolveRoutes(" /dashboard , /study ")).toEqual([
+      "/dashboard",
+      "/study",
+    ]);
+  });
+
+  it("returns exactly ['/habitat'] for a /habitat-only filter (union-addable, NOT a subset filter)", () => {
+    // A plain subset filter against the 4 key routes would return [] here —
+    // /habitat is explicitly a UNION-addable opt-in for the D-11 spot-check,
+    // not a member of the 4 key routes.
+    expect(resolveRoutes("/habitat")).toEqual(["/habitat"]);
+  });
+
+  it("appends /habitat as an addable union member alongside key routes", () => {
+    expect(resolveRoutes("/dashboard,/habitat")).toEqual([
+      "/dashboard",
+      "/habitat",
+    ]);
+  });
+
+  it("ignores an unrecognized route that is neither a key route nor /habitat", () => {
+    expect(resolveRoutes("/dashboard,/not-a-real-route")).toEqual([
+      "/dashboard",
+    ]);
+  });
+
+  it("returns an empty array for an empty-string filterArg's non-key, non-habitat entries", () => {
+    expect(resolveRoutes("/not-a-real-route")).toEqual([]);
+  });
+});
+
+describe("resolveOutDir (Phase 17 D-09)", () => {
+  const root = "/repo-root";
+
+  it("defaults to the Phase-17 measurements directory when phaseOutDir is null", () => {
+    const result = resolveOutDir(root, null);
+    expect(result).toContain("17-performance-optimization");
+    expect(result).toContain("measurements");
+  });
+
+  it("defaults to the Phase-17 measurements directory when phaseOutDir is undefined", () => {
+    const result = resolveOutDir(root, undefined);
+    expect(result).toContain("17-performance-optimization");
+  });
+
+  it("NEVER contains the immutable Phase 16 baseline path substring by default (T-17-01-01)", () => {
+    const result = resolveOutDir(root, null);
+    expect(result).not.toContain("16-performance-baseline-measure/baseline");
+    expect(result).not.toContain("16-performance-baseline-measure\\baseline");
+  });
+
+  it("honors an explicit phaseOutDir override", () => {
+    const result = resolveOutDir(root, "custom/out/dir");
+    expect(result).toBe(path.join(root, "custom", "out", "dir"));
   });
 });

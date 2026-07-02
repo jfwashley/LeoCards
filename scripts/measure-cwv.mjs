@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-// scripts/measure-cwv.mjs — Phase 16 PERF-01/PERF-02
+// scripts/measure-cwv.mjs — Phase 16 PERF-01/PERF-02, extended Phase 17 D-09
 //
 // Repeatable CWV measurement harness. Authenticates a *test.local user,
 // provisions a deck+cards for realistic state, runs Lighthouse Node API
 // (n=6, discard run 1, median of runs 2-6) against warm Vercel prod for
-// 4 routes x 2 presets (mobile + desktop), parses local bundle stats,
-// classifies per-route bottleneck, writes raw JSON + markdown reports.
+// the resolved route set x 2 presets (mobile + desktop), parses local
+// bundle stats, classifies per-route bottleneck, writes raw JSON +
+// markdown reports.
 //
 // ── REQUIRED ENV ─────────────────────────────────────────────────────────
 //
@@ -16,6 +17,15 @@
 // ── OPTIONAL ENV ─────────────────────────────────────────────────────────
 //
 //   CLEANUP_DB_URL — DB URL for cleanup (falls back to DATABASE_URL)
+//   ROUTE_FILTER   — Phase 17 (D-09): comma-separated route subset to
+//                    measure, e.g. "/dashboard,/study". Unset -> all 4 key
+//                    routes (Phase-16 default shape, unchanged). "/habitat"
+//                    is addable as a UNION opt-in (D-11 spot-check) even
+//                    though it is not one of the 4 key routes.
+//   PHASE_OUT_DIR  — Phase 17 (D-09): explicit output directory, relative
+//                    to repo root. Unset -> defaults to the NEW
+//                    .planning/phases/17-performance-optimization/measurements/
+//                    directory — NEVER the immutable Phase 16 baseline path.
 //
 // ── USAGE ─────────────────────────────────────────────────────────────────
 //
@@ -24,8 +34,14 @@
 //   # must match the exact prod deployment being CWV-measured.
 //   npm run build
 //
-//   # Run the harness:
+//   # Run the full harness (all 4 key routes, Phase-17 measurements/ dir):
 //   DATABASE_URL="..." node scripts/measure-cwv.mjs
+//
+//   # Run a route-scoped re-measurement after an optimization batch (D-09):
+//   DATABASE_URL="..." ROUTE_FILTER="/dashboard,/study" node scripts/measure-cwv.mjs
+//
+//   # Run the /habitat regression spot-check (D-11):
+//   DATABASE_URL="..." ROUTE_FILTER="/habitat" node scripts/measure-cwv.mjs
 //
 // ── SECURITY ──────────────────────────────────────────────────────────────
 //
@@ -60,6 +76,8 @@ import {
   getBundleKb,
   renderRouteReport,
   renderSummary,
+  resolveOutDir,
+  resolveRoutes,
 } from "./measure-cwv-lib.mjs";
 
 // ── Root resolution (mirrors qa-run.mjs / qa-lib.mjs pattern) ────────────────
@@ -313,10 +331,17 @@ async function injectCookie(page, token) {
   });
 }
 
-// ── Route / preset / run-count constants (D-03, D-06) ────────────────────────
+// ── Route / preset / run-count constants (D-03, D-06, D-09) ──────────────────
 //
-// Exactly these 4 routes — /habitat is EXCLUDED (D-03).
-const ROUTES = ["/dashboard", "/study", "/deck/new-card", "/deck/browse"];
+// Phase 17 (D-09): ROUTES is now route-filterable via the ROUTE_FILTER env
+// var (comma-separated, e.g. "/dashboard,/study"). Unset -> all 4 key
+// routes (unchanged Phase-16 default shape). "/habitat" is a UNION-addable
+// opt-in for the D-11 regression spot-check — it is NOT one of the 4 key
+// routes (D-03 exclusion still stands for the default/full-baseline set)
+// but resolveRoutes() lets it be explicitly requested. Pure resolution
+// logic lives in measure-cwv-lib.mjs (vitest-covered); this is the sole
+// process.env read site.
+const ROUTES = resolveRoutes(process.env.ROUTE_FILTER ?? null);
 const PRESETS = ["mobile", "desktop"];
 // n=6 per route x preset: discard run 0 (cold Vercel hit), median of runs 1-5.
 const N_RUNS = 6;
@@ -569,13 +594,12 @@ async function readBundleStats() {
 
 // ── Report output ─────────────────────────────────────────────────────────
 
-const OUT_DIR = path.join(
-  ROOT,
-  ".planning",
-  "phases",
-  "16-performance-baseline-measure",
-  "baseline",
-);
+// Phase 17 (D-09): OUT_DIR now defaults to a NEW Phase-17-owned directory
+// (.planning/phases/17-performance-optimization/measurements/) and is
+// NEVER the immutable Phase 16 baseline path by default — see Pitfall 1 /
+// T-17-01-01. PHASE_OUT_DIR (relative to ROOT) overrides it explicitly when
+// set; resolution logic lives in measure-cwv-lib.mjs (vitest-covered).
+const OUT_DIR = resolveOutDir(ROOT, process.env.PHASE_OUT_DIR ?? null);
 
 /**
  * Map a route path to its filename-safe slug.

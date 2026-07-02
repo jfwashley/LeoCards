@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/measure-cwv-lib.mjs — Phase 16 PERF-01/PERF-02
+// scripts/measure-cwv-lib.mjs — Phase 16 PERF-01/PERF-02, extended Phase 17 D-09
 //
 // Pure, side-effect-free computation + render helpers for the CWV baseline
 // measurement harness. This module is the CONTRACT layer: Plan 02's
@@ -17,6 +17,15 @@
 // pure logic out here means scripts/__tests__/measure-cwv-lib.test.ts can
 // import these functions with zero side effects and no live DATABASE_URL
 // or network access required.
+//
+// Phase 17 (D-09) ADDS resolveRoutes/resolveOutDir below — same purity
+// contract: callers read process.env (ROUTE_FILTER/PHASE_OUT_DIR) and pass
+// the resulting string in as a plain argument; these functions themselves
+// never touch process.env directly. The one new import (node:path) is a
+// pure built-in — no network, no process.exit, no top-level await — so it
+// does not violate the module's import-safety contract above.
+
+import * as path from "node:path";
 
 // ── Metric shape ─────────────────────────────────────────────────────────
 // { lcp, tbt, cls, fcp, ttfb, score, bootupTime }  — all numbers; cls is
@@ -269,4 +278,76 @@ export function renderSummary(rows) {
   lines.push("");
 
   return lines.join("\n");
+}
+
+// ── Phase 17 (D-09) — route filter + OUT_DIR redirect ────────────────────
+//
+// These two functions are the pure decision-logic half of the D-09 route-
+// scoped measurement harness. measure-cwv.mjs reads ROUTE_FILTER/
+// PHASE_OUT_DIR from process.env and passes the resulting plain
+// string|null through to these functions — no env access happens here.
+
+/** The 4 canonical key routes gated by PERF-03 (unchanged from Phase 16). */
+const KEY_ROUTES = ["/dashboard", "/study", "/deck/new-card", "/deck/browse"];
+
+/**
+ * Resolve which routes a measurement run should cover, given an optional
+ * comma-separated filter string (read from ROUTE_FILTER by the caller).
+ *
+ * - filterArg null/undefined -> all 4 KEY_ROUTES (full baseline-shape run).
+ * - filterArg set -> intersect the requested routes with KEY_ROUTES, EXCEPT
+ *   "/habitat" is a UNION-addable opt-in (D-11 spot-check target) even
+ *   though it is not one of the 4 key routes. A plain subset-filter would
+ *   incorrectly return [] for "/habitat" alone — this must instead return
+ *   exactly ["/habitat"].
+ *
+ * @param {string|null|undefined} filterArg — comma-separated route list,
+ *   e.g. "/dashboard,/study" or "/habitat" or "/dashboard,/habitat".
+ * @returns {string[]} the resolved route list, in KEY_ROUTES order with
+ *   any requested "/habitat" appended last.
+ */
+export function resolveRoutes(filterArg) {
+  if (!filterArg) return [...KEY_ROUTES];
+
+  const requested = filterArg
+    .split(",")
+    .map((r) => r.trim())
+    .filter(Boolean);
+
+  const keyRoutesSelected = KEY_ROUTES.filter((r) => requested.includes(r));
+  const habitatRequested = requested.includes("/habitat");
+
+  return habitatRequested
+    ? [...keyRoutesSelected, "/habitat"]
+    : keyRoutesSelected;
+}
+
+/**
+ * Resolve the output directory a measurement run should write to, given an
+ * optional explicit override (read from PHASE_OUT_DIR by the caller).
+ *
+ * CRITICAL (T-17-01-01 / Pitfall 1): when phaseOutDir is null/undefined,
+ * this MUST default to a NEW Phase-17-owned directory and MUST NEVER
+ * default back to the immutable Phase 16 baseline path
+ * (".planning/phases/16-performance-baseline-measure/baseline"). That
+ * directory is committed and frozen — CONTEXT.md forbids editing it, and a
+ * vitest case asserts the returned default path never contains that
+ * substring.
+ *
+ * @param {string} rootDir — the repo root (mirrors measure-cwv.mjs's ROOT).
+ * @param {string|null|undefined} phaseOutDir — explicit relative-to-root
+ *   override, e.g. "custom/out/dir". When set, honored as-is.
+ * @returns {string} absolute output directory path.
+ */
+export function resolveOutDir(rootDir, phaseOutDir) {
+  if (phaseOutDir) {
+    return path.join(rootDir, phaseOutDir);
+  }
+  return path.join(
+    rootDir,
+    ".planning",
+    "phases",
+    "17-performance-optimization",
+    "measurements",
+  );
 }
