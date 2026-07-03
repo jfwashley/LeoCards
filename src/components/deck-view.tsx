@@ -1,5 +1,13 @@
 "use client";
 
+// Phase 17 (D-06): after the RSC split, dashboard/page.tsx no longer renders
+// <DeckView> directly — it server-renders this same static shell + action
+// line + StatusText itself, importing only the CountdownTimer/DashboardHeader
+// client leaves. This component and deck-view.test.tsx are kept as the
+// pre-split behavior-preservation baseline (17-01) — the load-bearing
+// regression reference the split must never silently diverge from, not dead
+// code. See 17-03-SUMMARY.md for the full rationale.
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
