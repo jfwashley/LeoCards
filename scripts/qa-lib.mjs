@@ -119,6 +119,15 @@ function cookieHeader(token) {
  * Sign up a new test user via POST /api/auth/sign-up/email.
  * Returns only the session token (never logs it).
  *
+ * Rule-3 fix (found running this wave's D-10 qa:run gate — NOT a Phase 17
+ * regression, this function never sent Origin): without an Origin header,
+ * better-auth's originCheckMiddleware 403s with MISSING_OR_NULL_ORIGIN
+ * before ever reaching the sign-up handler. scripts/measure-cwv.mjs already
+ * worked around the exact same gap by inlining its own signup helper with
+ * `Origin: baseUrl` (see its own doc comment citing this as RESEARCH.md
+ * Pitfall 1) rather than importing this function — that workaround is now
+ * unnecessary duplication once the root helper itself sends the header.
+ *
  * @param {string} baseUrl
  * @param {string} email
  * @param {string} password
@@ -127,7 +136,7 @@ function cookieHeader(token) {
 export async function signUp(baseUrl, email, password) {
   const res = await fetch(`${baseUrl}/api/auth/sign-up/email`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Origin: baseUrl },
     body: JSON.stringify({ email, password, name: "QA Tester" }),
   });
   if (!res.ok) {
@@ -140,6 +149,9 @@ export async function signUp(baseUrl, email, password) {
  * Sign in an existing test user via POST /api/auth/sign-in/email.
  * Returns only the session token (never logs it).
  *
+ * Rule-3 fix (same MISSING_OR_NULL_ORIGIN gap as signUp above — see its
+ * doc comment): adds the same required Origin header.
+ *
  * @param {string} baseUrl
  * @param {string} email
  * @param {string} password
@@ -148,7 +160,7 @@ export async function signUp(baseUrl, email, password) {
 export async function signIn(baseUrl, email, password) {
   const res = await fetch(`${baseUrl}/api/auth/sign-in/email`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Origin: baseUrl },
     body: JSON.stringify({ email, password, rememberMe: true }),
   });
   if (!res.ok) {
