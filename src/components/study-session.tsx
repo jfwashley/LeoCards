@@ -415,7 +415,10 @@ export function StudySession({
   if (!current) return null;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div
+      className="min-h-screen bg-background flex flex-col"
+      data-perf-ready="true"
+    >
       {/* Top bar — Daybreak chrome */}
       <div
         className="flex items-center justify-between flex-none"

@@ -2,13 +2,27 @@
 
 import { Pause, Pencil, Play, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState, useTransition } from "react";
-import { CardEditDialog, type CardRow } from "@/components/card-edit-dialog";
+import type { CardRow } from "@/components/card-edit-dialog";
 import { LionFace } from "@/components/daybreak/lion-face";
+import { DaybreakShimmer } from "@/components/daybreak/shimmer";
 import { QaStateBadge } from "@/components/qa-state-badge";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+
+// Phase 17 (D-03) — CardEditDialog is only needed on edit-click, not initial
+// paint. Lazy-loaded via next/dynamic behind the one reusable DaybreakShimmer
+// placeholder (sized to loosely approximate the dialog's card body; the
+// Dialog's own overlay/centering chrome mounts once the real chunk resolves).
+// Rendered only when `editCard !== null` (see below) so the dynamic import
+// never fires on initial page load — only on the first edit-click.
+const CardEditDialog = dynamic(
+  () =>
+    import("@/components/card-edit-dialog").then((mod) => mod.CardEditDialog),
+  { loading: () => <DaybreakShimmer width={340} height={320} radius={22} /> },
+);
 
 interface CardListProps {
   cards: CardRow[];
@@ -503,13 +517,15 @@ export const CardList = React.memo(function CardList({
         )}
       </AnimatePresence>
 
-      <CardEditDialog
-        card={editCard}
-        open={editCard !== null}
-        onOpenChange={(o) => {
-          if (!o) setEditCard(null);
-        }}
-      />
+      {editCard !== null && (
+        <CardEditDialog
+          card={editCard}
+          open={editCard !== null}
+          onOpenChange={(o) => {
+            if (!o) setEditCard(null);
+          }}
+        />
+      )}
     </div>
   );
 });

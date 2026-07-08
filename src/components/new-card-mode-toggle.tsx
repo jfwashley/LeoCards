@@ -1,12 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { ACContext } from "@/components/daybreak/ac-context";
 import { ACSeg } from "@/components/daybreak/ac-seg";
 import { ACTop } from "@/components/daybreak/ac-top";
+import { DaybreakShimmer } from "@/components/daybreak/shimmer";
 import type { DeckOption } from "@/components/deck-switcher";
-import { ImageUploadFlow } from "@/components/image-upload-flow";
 import { TranslationForm } from "@/components/translation-form";
+
+// Phase 17 (D-03) — ImageUploadFlow is only needed on the "From an image"
+// path, not the default "Type a word" mode. Lazy-loaded via next/dynamic
+// behind the one reusable DaybreakShimmer placeholder; already conditionally
+// rendered below (mode === "image"), so the chunk is never fetched until the
+// user actually toggles to that mode.
+const ImageUploadFlow = dynamic(
+  () =>
+    import("@/components/image-upload-flow").then((mod) => mod.ImageUploadFlow),
+  { loading: () => <DaybreakShimmer width="100%" height={280} radius={22} /> },
+);
 
 interface NewCardModeToggleProps {
   decks: DeckOption[];
@@ -28,7 +40,10 @@ export function NewCardModeToggle({
   const [mode, setMode] = useState<"type" | "image">("type");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", gap: 18 }}
+      data-perf-ready="true"
+    >
       {/* ACTop: "‹ My deck" escape link + "Add a Card" Baloo 2 title + D-03 Browse entry in type mode */}
       <ACTop
         browsePath={

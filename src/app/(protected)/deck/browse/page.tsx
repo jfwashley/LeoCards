@@ -70,7 +70,10 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="px-8 py-8 max-w-4xl mx-auto w-full">
+      <main
+        className="px-8 py-8 max-w-4xl mx-auto w-full"
+        data-perf-ready="true"
+      >
         {requestedTopic ? (
           <BrowseList
             words={wordList.words}
