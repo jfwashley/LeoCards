@@ -1,6 +1,8 @@
 import { expect, test } from "playwright/test";
 import {
   addWordsFromBrowser,
+  clickAndWaitForNetworkSettle,
+  ensureWordsAccordionOpen,
   signUpWithDeck,
   waitForCompilation,
 } from "./helpers";
@@ -153,11 +155,17 @@ test.describe("Mobile responsiveness", () => {
     await expect(page.getByTestId("card-row").first()).toBeVisible();
 
     // Pause: button is inside the expanded accordion (aria-label preserved from pre-Daybreak)
+    // clickAndWaitForNetworkSettle + ensureWordsAccordionOpen (not a bare
+    // .click()) — a pre-existing bug (NOT caused by Phase 17; see ./helpers'
+    // doc comments) means togglePause's fetch()+router.refresh() can land
+    // AFTER a bare click already moved on, remounting CardList and silently
+    // collapsing this same accordion out from under the "Paused" assertion.
     const pause = page
       .locator('[aria-label="Pause this card"]:visible')
       .first();
     await expect(pause).toBeVisible();
-    await pause.click();
+    await clickAndWaitForNetworkSettle(page, pause);
+    await ensureWordsAccordionOpen(page);
     // The visible (mobile-layout) "Paused" badge — the desktop table also has a
     // hidden one, so scope to :visible rather than DOM-order .first().
     await expect(
@@ -169,7 +177,8 @@ test.describe("Mobile responsiveness", () => {
       .locator('[aria-label="Resume this card"]:visible')
       .first();
     await expect(resume).toBeVisible();
-    await resume.click();
+    await clickAndWaitForNetworkSettle(page, resume);
+    await ensureWordsAccordionOpen(page);
 
     // Edit: opens the dialog on mobile.
     const edit = page.locator('[aria-label="Edit card"]:visible').first();

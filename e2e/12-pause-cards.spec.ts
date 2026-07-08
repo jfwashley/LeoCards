@@ -1,5 +1,10 @@
 import { expect, test } from "playwright/test";
-import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
+import {
+  addWordsFromBrowser,
+  clickAndWaitForNetworkSettle,
+  ensureWordsAccordionOpen,
+  signUpWithDeck,
+} from "./helpers";
 
 /**
  * Phase 12 — Pause cards in active deck review.
@@ -23,7 +28,15 @@ import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
  * a successful pause/unpause API call) causes Next.js to re-mount the CardList
  * RSC subtree, resetting the local accordion open state to false (collapsed).
  * Tests that read the "Paused" badge or card rows AFTER a pause/resume action
- * must re-expand the accordion.
+ * must re-expand the accordion via ensureWordsAccordionOpen (./helpers) —
+ * and must click the pause/resume toggle itself via
+ * clickAndWaitForNetworkSettle (./helpers), not a bare .click(), or the
+ * refresh can land AFTER the test already moved on and silently collapse the
+ * panel out from under the next assertion. See both helpers' doc comments
+ * in ./helpers for the full pre-existing-bug diagnosis (found via this
+ * wave's D-10 e2e gate — NOT caused by Phase 17; reproduces identically
+ * against the pre-Phase-17 AnimatePresence/motion.div CardList, confirmed
+ * via git-checkout isolation against the Wave-3 HEAD).
  *
  * No arbitrary sleeps — Playwright's web-first auto-waiting assertions only.
  */
@@ -45,24 +58,6 @@ test.describe("Pause cards — Phase 12", () => {
     await expect(page.getByTestId("card-row").first()).toBeVisible();
   });
 
-  /**
-   * Helper: ensure the accordion is expanded so card rows are visible.
-   * router.refresh() resets CardList's open state; call this after any
-   * pause/unpause action to re-expand before making assertions.
-   */
-  async function ensureAccordionOpen(
-    page: import("playwright/test").Page,
-  ): Promise<void> {
-    const header = page.getByTestId("words-accordion-header");
-    // Wait for the header to settle (may be animating after router.refresh)
-    await header.waitFor({ state: "visible" });
-    const isExpanded = await header.getAttribute("aria-expanded");
-    if (isExpanded !== "true") {
-      await header.click();
-      await expect(page.getByTestId("card-row").first()).toBeVisible();
-    }
-  }
-
   test("pausing a card removes it from the study session", async ({ page }) => {
     // Capture the first card's front text BEFORE any pause action — the
     // variable must stay stable across UI mutations (rows reorder / re-render
@@ -79,10 +74,13 @@ test.describe("Pause cards — Phase 12", () => {
     ).toBeTruthy();
 
     // Pause the first card via its aria-labelled button.
-    await firstRow.getByLabel(/Pause this card/).click();
+    await clickAndWaitForNetworkSettle(
+      page,
+      firstRow.getByLabel(/Pause this card/),
+    );
 
     // router.refresh() resets accordion open state — re-expand before asserting
-    await ensureAccordionOpen(page);
+    await ensureWordsAccordionOpen(page);
 
     // Row has the "Paused" badge and the pause button is now "Resume this card".
     const pausedRow = page
@@ -141,19 +139,25 @@ test.describe("Pause cards — Phase 12", () => {
     expect(firstCardFront).toBeTruthy();
 
     // Pause.
-    await firstRow.getByLabel(/Pause this card/).click();
+    await clickAndWaitForNetworkSettle(
+      page,
+      firstRow.getByLabel(/Pause this card/),
+    );
     // router.refresh() resets accordion open state — re-expand before asserting badge
-    await ensureAccordionOpen(page);
+    await ensureWordsAccordionOpen(page);
     const pausedRow = page
       .getByTestId("card-row")
       .filter({ hasText: firstCardFront ?? "" });
     await expect(pausedRow.getByText("Paused")).toBeVisible();
 
     // Resume.
-    await pausedRow.getByLabel(/Resume this card/).click();
+    await clickAndWaitForNetworkSettle(
+      page,
+      pausedRow.getByLabel(/Resume this card/),
+    );
 
     // router.refresh() resets accordion open state — re-expand before asserting
-    await ensureAccordionOpen(page);
+    await ensureWordsAccordionOpen(page);
 
     // Badge gone everywhere; Pause aria-label is back on the same row.
     await expect(page.getByText("Paused")).toHaveCount(0);
@@ -176,15 +180,15 @@ test.describe("Pause cards — Phase 12", () => {
     // drops by one, confirming each pause was persisted before continuing.
     for (let i = 0; i < 3; i++) {
       // Accordion must be open to locate card rows
-      await ensureAccordionOpen(page);
+      await ensureWordsAccordionOpen(page);
       const pauseButton = cardRows.getByLabel(/Pause this card/).first();
       await expect(pauseButton).toBeVisible();
-      await pauseButton.click();
+      await clickAndWaitForNetworkSettle(page, pauseButton);
 
       if (i < 2) {
         // After the pause + router.refresh, accordion collapses.
         // Re-expand and verify remaining Pause button count dropped by 1.
-        await ensureAccordionOpen(page);
+        await ensureWordsAccordionOpen(page);
         await expect(cardRows.getByLabel(/Pause this card/)).toHaveCount(2 - i);
       }
     }
@@ -194,11 +198,11 @@ test.describe("Pause cards — Phase 12", () => {
     await expect(page.getByText("All paused")).toBeVisible({ timeout: 10_000 });
 
     // Unpause one card → message disappears.
-    await ensureAccordionOpen(page);
-    await cardRows
-      .getByLabel(/Resume this card/)
-      .first()
-      .click();
+    await ensureWordsAccordionOpen(page);
+    await clickAndWaitForNetworkSettle(
+      page,
+      cardRows.getByLabel(/Resume this card/).first(),
+    );
     await expect(page.getByText("All paused")).toHaveCount(0);
   });
 
@@ -218,16 +222,22 @@ test.describe("Pause cards — Phase 12", () => {
     expect(firstCardFront).toBeTruthy();
 
     // Pause then unpause.
-    await firstRow.getByLabel(/Pause this card/).click();
+    await clickAndWaitForNetworkSettle(
+      page,
+      firstRow.getByLabel(/Pause this card/),
+    );
     // router.refresh() resets accordion open state — re-expand before asserting badge
-    await ensureAccordionOpen(page);
+    await ensureWordsAccordionOpen(page);
     const pausedRow = page
       .getByTestId("card-row")
       .filter({ hasText: firstCardFront ?? "" });
     await expect(pausedRow.getByText("Paused")).toBeVisible();
-    await pausedRow.getByLabel(/Resume this card/).click();
+    await clickAndWaitForNetworkSettle(
+      page,
+      pausedRow.getByLabel(/Resume this card/),
+    );
     // router.refresh() resets accordion again — re-expand before asserting count
-    await ensureAccordionOpen(page);
+    await ensureWordsAccordionOpen(page);
     await expect(page.getByText("Paused")).toHaveCount(0);
 
     // Start the next session. The full SRS cadence math (NULL cooldown stays

@@ -152,17 +152,26 @@ export const CardList = React.memo(function CardList({
   // Phase 17 (D-05) — CSS-only accordion (was AnimatePresence + motion.div).
   // `open` is the semantic state (drives aria-expanded on the header button).
   // `panelMounted` tracks whether the panel exists in the DOM at all — it
-  // unmounts only once the close transition finishes, matching
+  // unmounts only once the close animation finishes, matching
   // AnimatePresence's exit-then-unmount behavior exactly (so closed-state
   // content stays out of the DOM/tab-order/a11y tree, not just visually
   // hidden — see the "search input is NOT in the document when collapsed"
-  // test this preserves). `panelExpanded` drives the "-open" CSS class one
-  // animation frame after mount so the browser paints the collapsed (0fr)
-  // state first; a CSS transition needs two separate paints to interpolate
-  // between, so applying the open class in the SAME paint as the initial
-  // mount would pop the panel open instantly instead of animating it.
+  // test this preserves).
+  //
+  // Mounting is driven by a CSS @keyframes `animation` (cl-accordion-open-kf
+  // in globals.css), NOT a `transition` — an `animation` plays its full
+  // keyframe sequence as soon as the class is applied, even on the element's
+  // very first paint, unlike `transition` which needs two SEPARATE paints to
+  // interpolate between (an earlier version of this component used
+  // `transition` + a requestAnimationFrame-delayed class flip to fake a
+  // from-state; that multi-render-tick window was long enough for
+  // router.refresh()'s CardList remount (see togglePause below) to land
+  // mid-sequence and reset panelMounted back to false, which broke
+  // e2e/12-pause-cards.spec.ts — pausing a card never showed the re-opened
+  // accordion's rows. Driving the animation via @keyframes lets `open` and
+  // `panelMounted` be set SYNCHRONOUSLY in the same click-handler call,
+  // closing that race entirely).
   const [panelMounted, setPanelMounted] = useState(false);
-  const [panelExpanded, setPanelExpanded] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
   const [pendingCardIds, setPendingCardIds] = useState<Set<string>>(
@@ -170,33 +179,47 @@ export const CardList = React.memo(function CardList({
   );
   const [, startTransition] = useTransition();
 
-  useEffect(() => {
-    if (open) {
-      if (closeTimerRef.current !== null) {
-        clearTimeout(closeTimerRef.current);
-        closeTimerRef.current = null;
-      }
-      setPanelMounted(true);
-      const raf = requestAnimationFrame(() => setPanelExpanded(true));
-      return () => cancelAnimationFrame(raf);
-    }
-    setPanelExpanded(false);
-    // Safety-net unmount: the panel's own onTransitionEnd (below) is the
-    // primary signal, but this timeout also covers prefers-reduced-motion
-    // (a 0s transition never fires transitionend) and any environment with
-    // no real CSS transition timing (e.g. jsdom in unit tests) — slightly
-    // longer than the 0.22s CSS transition in globals.css.
-    closeTimerRef.current = setTimeout(() => {
-      setPanelMounted(false);
+  function clearCloseTimer() {
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
-    }, 260);
+    }
+  }
+
+  // Unmount-on-close safety net: covers prefers-reduced-motion (a `none`
+  // animation never fires animationend) and any environment with no real
+  // CSS animation timing (e.g. jsdom in unit tests) — slightly longer than
+  // the 0.22s CSS animation in globals.css. The panel's own onAnimationEnd
+  // (below) is the primary, faster signal in a real browser. Inlined
+  // (rather than referencing the clearCloseTimer function declared above)
+  // so the effect only touches the stable closeTimerRef — closures over a
+  // plain function re-created every render would otherwise need it listed
+  // as an exhaustive-deps dependency, which would defeat the "only run on
+  // unmount" intent of the empty dependency array.
+  useEffect(() => {
     return () => {
       if (closeTimerRef.current !== null) {
         clearTimeout(closeTimerRef.current);
         closeTimerRef.current = null;
       }
     };
-  }, [open]);
+  }, []);
+
+  function handleAccordionToggle() {
+    setOpen((prev) => {
+      const next = !prev;
+      clearCloseTimer();
+      if (next) {
+        setPanelMounted(true);
+      } else {
+        closeTimerRef.current = setTimeout(() => {
+          setPanelMounted(false);
+          closeTimerRef.current = null;
+        }, 260);
+      }
+      return next;
+    });
+  }
 
   const togglePause = (card: CardRow) => {
     setPendingCardIds((prev) => new Set(prev).add(card.id));
@@ -297,7 +320,7 @@ export const CardList = React.memo(function CardList({
         aria-expanded={open}
         aria-controls="words-panel"
         data-testid="words-accordion-header"
-        onClick={() => setOpen((o) => !o)}
+        onClick={handleAccordionToggle}
         style={{
           background: "#FFFFFF",
           border: "1px solid #F0E3CF",
@@ -348,26 +371,20 @@ export const CardList = React.memo(function CardList({
         </div>
       </button>
 
-      {/* Panel — search + word rows (Phase 17 D-05: CSS grid-template-rows
-          0fr→1fr transition, was AnimatePresence + motion.div height/opacity
-          tween). Conditionally mounted on panelMounted — matches the
-          original's exit-then-unmount behavior exactly (see the
-          panelMounted/panelExpanded effect above); cl-accordion /
-          cl-accordion-open + the paired prefers-reduced-motion override live
-          in globals.css. */}
+      {/* Panel — search + word rows (Phase 17 D-05: CSS @keyframes animation,
+          was AnimatePresence + motion.div height/opacity tween). Conditionally
+          mounted on panelMounted — matches the original's exit-then-unmount
+          behavior exactly (see handleAccordionToggle above); cl-accordion-open
+          / cl-accordion-closing + the paired prefers-reduced-motion override
+          live in globals.css. */}
       {panelMounted && (
         <section
           id="words-panel"
           aria-label="Your words"
-          className={["cl-accordion", panelExpanded && "cl-accordion-open"]
-            .filter(Boolean)
-            .join(" ")}
-          onTransitionEnd={(e) => {
+          className={open ? "cl-accordion-open" : "cl-accordion-closing"}
+          onAnimationEnd={(e) => {
             if (e.target !== e.currentTarget || open) return;
-            if (closeTimerRef.current !== null) {
-              clearTimeout(closeTimerRef.current);
-              closeTimerRef.current = null;
-            }
+            clearCloseTimer();
             setPanelMounted(false);
           }}
         >
