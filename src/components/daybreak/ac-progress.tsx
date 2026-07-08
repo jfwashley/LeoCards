@@ -1,5 +1,3 @@
-import { motion } from "motion/react";
-
 import { LionFace } from "@/components/daybreak/lion-face";
 
 // ACProgress — Daybreak calm long-wait atom.
@@ -111,7 +109,9 @@ export function ACProgress({ title, sub, searching }: ACProgressProps) {
         {title}
       </span>
 
-      {/* Indeterminate amber bar — motion/react */}
+      {/* Indeterminate amber bar — CSS keyframe (Phase 17 D-05, was
+          motion/react); ac-progress-slide + reduced-motion override live in
+          globals.css, following the hab-fall convention. */}
       <div
         style={{
           width: "74%",
@@ -122,9 +122,8 @@ export function ACProgress({ title, sub, searching }: ACProgressProps) {
           position: "relative",
         }}
       >
-        <motion.div
-          animate={{ x: ["-100%", "100%"] }}
-          transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+        <div
+          className="ac-progress-bar"
           style={{
             position: "absolute",
             top: 0,

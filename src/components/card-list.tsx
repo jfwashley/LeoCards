@@ -1,16 +1,20 @@
 "use client";
 
 import { Pause, Pencil, Play, Search, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState, useTransition } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import type { CardRow } from "@/components/card-edit-dialog";
 import { LionFace } from "@/components/daybreak/lion-face";
 import { DaybreakShimmer } from "@/components/daybreak/shimmer";
 import { QaStateBadge } from "@/components/qa-state-badge";
-import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 // Phase 17 (D-03) — CardEditDialog is only needed on edit-click, not initial
 // paint. Lazy-loaded via next/dynamic behind the one reusable DaybreakShimmer
@@ -145,12 +149,54 @@ export const CardList = React.memo(function CardList({
   const [query, setQuery] = useState("");
   const [editCard, setEditCard] = useState<CardRow | null>(null);
   const [open, setOpen] = useState(false);
+  // Phase 17 (D-05) — CSS-only accordion (was AnimatePresence + motion.div).
+  // `open` is the semantic state (drives aria-expanded on the header button).
+  // `panelMounted` tracks whether the panel exists in the DOM at all — it
+  // unmounts only once the close transition finishes, matching
+  // AnimatePresence's exit-then-unmount behavior exactly (so closed-state
+  // content stays out of the DOM/tab-order/a11y tree, not just visually
+  // hidden — see the "search input is NOT in the document when collapsed"
+  // test this preserves). `panelExpanded` drives the "-open" CSS class one
+  // animation frame after mount so the browser paints the collapsed (0fr)
+  // state first; a CSS transition needs two separate paints to interpolate
+  // between, so applying the open class in the SAME paint as the initial
+  // mount would pop the panel open instantly instead of animating it.
+  const [panelMounted, setPanelMounted] = useState(false);
+  const [panelExpanded, setPanelExpanded] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
   const [pendingCardIds, setPendingCardIds] = useState<Set<string>>(
     () => new Set(),
   );
   const [, startTransition] = useTransition();
-  const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (open) {
+      if (closeTimerRef.current !== null) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+      setPanelMounted(true);
+      const raf = requestAnimationFrame(() => setPanelExpanded(true));
+      return () => cancelAnimationFrame(raf);
+    }
+    setPanelExpanded(false);
+    // Safety-net unmount: the panel's own onTransitionEnd (below) is the
+    // primary signal, but this timeout also covers prefers-reduced-motion
+    // (a 0s transition never fires transitionend) and any environment with
+    // no real CSS transition timing (e.g. jsdom in unit tests) — slightly
+    // longer than the 0.22s CSS transition in globals.css.
+    closeTimerRef.current = setTimeout(() => {
+      setPanelMounted(false);
+      closeTimerRef.current = null;
+    }, 260);
+    return () => {
+      if (closeTimerRef.current !== null) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+    };
+  }, [open]);
 
   const togglePause = (card: CardRow) => {
     setPendingCardIds((prev) => new Set(prev).add(card.id));
@@ -302,220 +348,229 @@ export const CardList = React.memo(function CardList({
         </div>
       </button>
 
-      {/* Animated panel — search + word rows (height/opacity, D-03) */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id="words-panel"
-            role="region"
-            aria-label="Your words"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: reduced ? 0 : 0.22, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }} // CRITICAL: Pitfall 1 — overflow hidden required on motion.div
-          >
-            <div className="flex flex-col gap-4 pt-2">
-              {/* Search bar — lives INSIDE the accordion panel (Pitfall 6) */}
-              <div
-                className="relative"
+      {/* Panel — search + word rows (Phase 17 D-05: CSS grid-template-rows
+          0fr→1fr transition, was AnimatePresence + motion.div height/opacity
+          tween). Conditionally mounted on panelMounted — matches the
+          original's exit-then-unmount behavior exactly (see the
+          panelMounted/panelExpanded effect above); cl-accordion /
+          cl-accordion-open + the paired prefers-reduced-motion override live
+          in globals.css. */}
+      {panelMounted && (
+        <section
+          id="words-panel"
+          aria-label="Your words"
+          className={["cl-accordion", panelExpanded && "cl-accordion-open"]
+            .filter(Boolean)
+            .join(" ")}
+          onTransitionEnd={(e) => {
+            if (e.target !== e.currentTarget || open) return;
+            if (closeTimerRef.current !== null) {
+              clearTimeout(closeTimerRef.current);
+              closeTimerRef.current = null;
+            }
+            setPanelMounted(false);
+          }}
+        >
+          <div className="cl-accordion-inner flex flex-col gap-4 pt-2">
+            {/* Search bar — lives INSIDE the accordion panel (Pitfall 6) */}
+            <div
+              className="relative"
+              style={{
+                height: 42,
+                borderRadius: 12,
+                background: "var(--db-field-bg, #FAF6F0)",
+                border: "1.5px solid #EDDFC9",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <input
+                data-testid="words-search-input"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search your words"
                 style={{
-                  height: 42,
-                  borderRadius: 12,
-                  background: "var(--db-field-bg, #FAF6F0)",
-                  border: "1.5px solid #EDDFC9",
-                  display: "flex",
-                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  paddingLeft: 36,
+                  paddingRight: query ? 36 : 12,
+                  fontSize: 14,
+                  color: "#4A331C",
                 }}
-              >
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-                <input
-                  data-testid="words-search-input"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search your words"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    paddingLeft: 36,
-                    paddingRight: query ? 36 : 12,
-                    fontSize: 14,
-                    color: "#4A331C",
-                  }}
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={() => setQuery("")}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label="Clear search"
-                  >
-                    <X className="size-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* No results — Daybreak ObNoSearch (inside the panel per DSH-07) */}
-              {filtered.length === 0 && query && (
-                <div className="flex flex-col items-center justify-center py-12 gap-[13px] text-center">
-                  {/* Leo medallion — 96px #F3E3C6 circle (ObNoSearch) */}
-                  <div
-                    className="flex items-center justify-center rounded-full flex-none"
-                    style={{ width: 96, height: 96, background: "#F3E3C6" }}
-                  >
-                    <LionFace
-                      size={56}
-                      mane="#E8973B"
-                      face="#FFD9A6"
-                      muzzle="#FFF1DC"
-                      ink="#4A331C"
-                    />
-                  </div>
-                  <h2 className="font-display text-[20px] font-bold text-foreground">
-                    No words match &ldquo;{query}&rdquo;
-                  </h2>
-                  <p className="text-[14px] text-muted-foreground leading-[1.45] max-w-[230px]">
-                    Try a different spelling, or clear the search.
-                  </p>
-                  {/* Ghost: Clear search */}
-                  <button
-                    type="button"
-                    onClick={() => setQuery("")}
-                    className="flex items-center justify-center rounded-[14px] font-display text-[15px] font-bold text-foreground hover:brightness-[0.97] transition-[filter] px-[18px]"
-                    style={{
-                      height: 44,
-                      background: "var(--background)",
-                      border: "1.5px solid #EDDFC9",
-                    }}
-                  >
-                    Clear search
-                  </button>
-                </div>
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="Clear search"
+                >
+                  <X className="size-4" />
+                </button>
               )}
+            </div>
 
-              {/* Word rows — Daybreak CardRow (DSH-05) */}
-              {filtered.length > 0 && (
-                <div className="flex flex-col">
-                  {filtered.map((card) => {
-                    // Derive stage from masteryRound for QA badge (no per-session stage).
-                    const browseStage: "n2t" | "t2n" =
-                      (card.masteryRound ?? 0) === 1 ? "t2n" : "n2t";
-                    const paused = !!card.pausedAt;
+            {/* No results — Daybreak ObNoSearch (inside the panel per DSH-07) */}
+            {filtered.length === 0 && query && (
+              <div className="flex flex-col items-center justify-center py-12 gap-[13px] text-center">
+                {/* Leo medallion — 96px #F3E3C6 circle (ObNoSearch) */}
+                <div
+                  className="flex items-center justify-center rounded-full flex-none"
+                  style={{ width: 96, height: 96, background: "#F3E3C6" }}
+                >
+                  <LionFace
+                    size={56}
+                    mane="#E8973B"
+                    face="#FFD9A6"
+                    muzzle="#FFF1DC"
+                    ink="#4A331C"
+                  />
+                </div>
+                <h2 className="font-display text-[20px] font-bold text-foreground">
+                  No words match &ldquo;{query}&rdquo;
+                </h2>
+                <p className="text-[14px] text-muted-foreground leading-[1.45] max-w-[230px]">
+                  Try a different spelling, or clear the search.
+                </p>
+                {/* Ghost: Clear search */}
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="flex items-center justify-center rounded-[14px] font-display text-[15px] font-bold text-foreground hover:brightness-[0.97] transition-[filter] px-[18px]"
+                  style={{
+                    height: 44,
+                    background: "var(--background)",
+                    border: "1.5px solid #EDDFC9",
+                  }}
+                >
+                  Clear search
+                </button>
+              </div>
+            )}
 
-                    return (
-                      <div
-                        key={card.id}
-                        data-testid="card-row"
-                        data-card-id={card.id}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          padding: "12px 2px",
-                          borderBottom: "1px solid #F4ECDD",
-                          opacity: paused ? 0.55 : 1,
-                          position: "relative",
-                        }}
-                      >
-                        {/* QA badge — preserved from pre-restyle position (DSH-07) */}
-                        {qaMode && (
-                          <QaStateBadge
-                            data={{
-                              masteryRound: card.masteryRound ?? 0,
-                              stage: browseStage,
-                              cooldownUntil: card.cooldownUntil ?? null,
-                              pausedAt: card.pausedAt,
-                            }}
-                          />
-                        )}
+            {/* Word rows — Daybreak CardRow (DSH-05) */}
+            {filtered.length > 0 && (
+              <div className="flex flex-col">
+                {filtered.map((card) => {
+                  // Derive stage from masteryRound for QA badge (no per-session stage).
+                  const browseStage: "n2t" | "t2n" =
+                    (card.masteryRound ?? 0) === 1 ? "t2n" : "n2t";
+                  const paused = !!card.pausedAt;
 
-                        {/* Word text — D-04: native FIRST (bold) / target SECOND (muted) */}
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          {/* D-04: native-on-top override of the handoff CardRow — intentional, do not "correct" */}
-                          <div
+                  return (
+                    <div
+                      key={card.id}
+                      data-testid="card-row"
+                      data-card-id={card.id}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "12px 2px",
+                        borderBottom: "1px solid #F4ECDD",
+                        opacity: paused ? 0.55 : 1,
+                        position: "relative",
+                      }}
+                    >
+                      {/* QA badge — preserved from pre-restyle position (DSH-07) */}
+                      {qaMode && (
+                        <QaStateBadge
+                          data={{
+                            masteryRound: card.masteryRound ?? 0,
+                            stage: browseStage,
+                            cooldownUntil: card.cooldownUntil ?? null,
+                            pausedAt: card.pausedAt,
+                          }}
+                        />
+                      )}
+
+                      {/* Word text — D-04: native FIRST (bold) / target SECOND (muted) */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {/* D-04: native-on-top override of the handoff CardRow — intentional, do not "correct" */}
+                        <div
+                          style={{
+                            fontSize: 16.5,
+                            fontWeight: 700,
+                            color: "#4A331C",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {card.front}
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            marginTop: 3,
+                          }}
+                        >
+                          <span
                             style={{
-                              fontSize: 16.5,
-                              fontWeight: 700,
-                              color: "#4A331C",
+                              fontSize: 13.5,
+                              color: "#8C7A63",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
                             }}
                           >
-                            {card.front}
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 8,
-                              marginTop: 3,
-                            }}
-                          >
-                            <span
-                              style={{
-                                fontSize: 13.5,
-                                color: "#8C7A63",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {card.back}
-                            </span>
-                            <SourceTag src={card.source} paused={paused} />
-                          </div>
+                            {card.back}
+                          </span>
+                          <SourceTag src={card.source} paused={paused} />
                         </div>
+                      </div>
 
-                        {/* Mastery meter — 3 bars, paused rows pass step 0 */}
-                        <MasteryMeter
-                          step={card.masteryRound ?? 0}
-                          paused={paused}
-                        />
+                      {/* Mastery meter — 3 bars, paused rows pass step 0 */}
+                      <MasteryMeter
+                        step={card.masteryRound ?? 0}
+                        paused={paused}
+                      />
 
-                        {/* Pause/Resume icon button */}
-                        <IconBtn
-                          aria-label={
-                            paused ? "Resume this card" : "Pause this card"
-                          }
-                          disabled={pendingCardIds.has(card.id)}
-                          onClick={() => togglePause(card)}
-                        >
-                          {paused ? (
-                            <Play
-                              className="size-4"
-                              style={{ color: "#8C7A63" }}
-                            />
-                          ) : (
-                            <Pause
-                              className="size-4"
-                              style={{ color: "#8C7A63" }}
-                            />
-                          )}
-                        </IconBtn>
-
-                        {/* Edit icon button */}
-                        <IconBtn
-                          aria-label="Edit card"
-                          onClick={() => setEditCard(card)}
-                        >
-                          <Pencil
+                      {/* Pause/Resume icon button */}
+                      <IconBtn
+                        aria-label={
+                          paused ? "Resume this card" : "Pause this card"
+                        }
+                        disabled={pendingCardIds.has(card.id)}
+                        onClick={() => togglePause(card)}
+                      >
+                        {paused ? (
+                          <Play
                             className="size-4"
                             style={{ color: "#8C7A63" }}
                           />
-                        </IconBtn>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                        ) : (
+                          <Pause
+                            className="size-4"
+                            style={{ color: "#8C7A63" }}
+                          />
+                        )}
+                      </IconBtn>
+
+                      {/* Edit icon button */}
+                      <IconBtn
+                        aria-label="Edit card"
+                        onClick={() => setEditCard(card)}
+                      >
+                        <Pencil
+                          className="size-4"
+                          style={{ color: "#8C7A63" }}
+                        />
+                      </IconBtn>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {editCard !== null && (
         <CardEditDialog

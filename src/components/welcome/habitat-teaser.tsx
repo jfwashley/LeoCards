@@ -1,9 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
-
 import { LionFace } from "@/components/daybreak/lion-face";
-import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 // Static sunrise scene elements — same CSS geometry as DaybreakAuthScene
 // (auth-card.tsx), sized for the 210px teaser container. DOM/CSS only — no Three.js,
@@ -12,7 +9,9 @@ function TeaserScene() {
   return (
     <div
       className="absolute inset-0"
-      style={{ background: "linear-gradient(180deg, #FFE7BC 0%, #FFF3DC 100%)" }}
+      style={{
+        background: "linear-gradient(180deg, #FFE7BC 0%, #FFF3DC 100%)",
+      }}
     >
       {/* Sun disc */}
       <div
@@ -110,8 +109,6 @@ function TeaserScene() {
 }
 
 export function HabitatTeaser() {
-  const reduced = usePrefersReducedMotion();
-
   return (
     <div
       className="relative w-full overflow-hidden"
@@ -121,20 +118,22 @@ export function HabitatTeaser() {
       {/* Static scene — always renders (SSR-safe, no animation dependency) */}
       <TeaserScene />
 
-      {/* Ambient glow — additive overlay, only when reduced-motion is off */}
-      {!reduced && (
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 40%, rgba(255, 201, 92, 0.35) 0%, transparent 65%)",
-            opacity: 0,
-          }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          aria-hidden="true"
-        />
-      )}
+      {/* Ambient glow — CSS keyframe (Phase 17 D-05, was motion/react).
+          habitat-teaser-glow-pulse + a `display: none` reduced-motion
+          override live in globals.css. Unlike the previous
+          usePrefersReducedMotion-gated mount, this is CSS-only from first
+          paint — no SSR-default-false flash window (the hook always
+          defaults to `reduced=false` during SSR/initial render, so the old
+          conditional mount could briefly animate for reduced-motion users
+          before the effect corrected it; a media query has no such gap). */}
+      <div
+        className="habitat-teaser-glow absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 40%, rgba(255, 201, 92, 0.35) 0%, transparent 65%)",
+        }}
+        aria-hidden="true"
+      />
     </div>
   );
 }

@@ -144,3 +144,95 @@
     animation: none;
   }
 }
+
+/* Phase 17 (D-05) — study-session.tsx end-screen mount fade (CSS-only,
+   mirrors the hab-fall convention: named keyframe + paired
+   prefers-reduced-motion override). Was a motion.div opacity/y tween. */
+@keyframes ss-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ss-fade-up {
+  animation: ss-fade-up 0.4s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-fade-up {
+    animation: none;
+  }
+}
+
+/* Phase 17 (D-05) — card-list.tsx "Your words" accordion (CSS-only,
+   grid-template-rows 0fr→1fr + opacity transition; was AnimatePresence +
+   motion.div height/opacity). Conditionally mounted by card-list.tsx's own
+   panelMounted/panelExpanded state (see the component for the mount/unmount
+   timing) — matches the original's exit-then-unmount behavior exactly, so
+   this is purely the visual transition, not a visibility/mount mechanism. */
+.cl-accordion {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.22s ease-in-out,
+    opacity 0.22s ease-in-out;
+}
+.cl-accordion-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.cl-accordion-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cl-accordion {
+    transition: none;
+  }
+}
+
+/* Phase 17 (D-05) — ac-progress.tsx indeterminate bar (CSS-only, was a
+   motion/react x:["-100%","100%"] infinite tween). */
+@keyframes ac-progress-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.ac-progress-bar {
+  animation: ac-progress-slide 1.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ac-progress-bar {
+    animation: none;
+  }
+}
+
+/* Phase 17 (D-05) — habitat-teaser.tsx ambient glow pulse (CSS-only, was a
+   motion/react opacity:[0,1,0] infinite tween gated behind
+   usePrefersReducedMotion). `display: none` under reduced-motion replicates
+   the previous "never mounted" end-state with no SSR-flash window. */
+@keyframes habitat-teaser-glow-pulse {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.habitat-teaser-glow {
+  opacity: 0;
+  animation: habitat-teaser-glow-pulse 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .habitat-teaser-glow {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CardStack } from "@/components/card-stack";
@@ -348,12 +348,10 @@ export function StudySession({
           )}
         </AnimatePresence>
         <div className="min-h-screen bg-background flex items-center justify-center">
-          <motion.div
-            className="flex flex-col items-center gap-6 sm:gap-8 px-4 sm:px-8 text-center"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          >
+          {/* Phase 17 (D-05) — CSS-only mount fade (was motion.div opacity/y
+              tween); ss-fade-up keyframe + reduced-motion override live in
+              globals.css, following the hab-fall convention. */}
+          <div className="ss-fade-up flex flex-col items-center gap-6 sm:gap-8 px-4 sm:px-8 text-center">
             {/* LionFace replaces 🐯 emoji (D-04) */}
             <LionFace size={80} />
             <h1 className="font-display text-[20px] font-bold text-foreground">
@@ -387,7 +385,7 @@ export function StudySession({
             >
               Back to deck
             </TBtn>
-          </motion.div>
+          </div>
         </div>
       </>
     );
