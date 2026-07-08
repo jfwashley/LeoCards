@@ -2,4 +2,4 @@
 
 | Route | Mobile Perf | Desktop Perf | Bundle KB | Top Class |
 |-------|-------------|--------------|-----------|-----------|
-| /habitat | 81 | 90 | 580 | bundle |
+| /dashboard | 86 | 85 | 886 | bundle |
