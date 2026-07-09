@@ -213,6 +213,7 @@ export function mintTestEmail() {
  * @param {{ cards: Array<{front: string, back: string}>, language?: string }} opts
  * @returns {Promise<{
  *   email: string,
+ *   password: string,
  *   sessionToken: string,
  *   userId: string,
  *   deckId: string,
@@ -258,9 +259,14 @@ export async function provision(baseUrl, opts) {
   }
   console.log(`[qa-lib] provisioned ${cardIds.length} card(s)`);
 
-  // Return manifest — sessionToken is part of the return value but callers must
-  // handle it carefully and never log it.
-  return { email, sessionToken, userId, deckId, cardIds };
+  // Return manifest — sessionToken and password are part of the return value but
+  // callers must handle them carefully and never log them. password is required
+  // by callers that re-authenticate later (e.g. qa-03-resume.mjs Phase B) — omitting
+  // it here left `password: undefined` at the call site, which JSON.stringify then
+  // drops from any persisted manifest, producing a password-less sign-in payload
+  // that better-auth's request-body validation 400s on (VALIDATION_ERROR:
+  // "[body.password] Invalid input: expected string, received undefined").
+  return { email, password, sessionToken, userId, deckId, cardIds };
 }
 
 // ── Grade submission ──────────────────────────────────────────────────────────
