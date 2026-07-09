@@ -4,20 +4,56 @@
 // Journey: habitat level progression — cross L1→2 (effectiveCardCount>=5) and
 // a representative higher transition (L2→3, effectiveCardCount>=15).
 //
-// This script runs with DEFAULT zero-cooldown (do NOT set STUDY_COOLDOWN_MINUTES)
-// and performs NO time-shift, so quality stays 1.0 (sessions are within the 2-day
-// grace period) → effectiveCardCount == learnedCardCount exactly.
+// This script performs NO time-shift, so quality stays 1.0 (sessions are within
+// the 2-day grace period) → effectiveCardCount == learnedCardCount exactly. It
+// works under either cooldown regime (POST /api/study/complete never gates a
+// grade submission on cooldownUntil — cooldown is output data for the client's
+// due-queue selection, not a server-side write guard), so it is safe to run
+// against the single STUDY_COOLDOWN_MINUTES=1 server boot qa-run.mjs uses for
+// all five journeys, or a standalone zero-cooldown boot.
 //
 // LEVEL_THRESHOLDS (from src/lib/habitat-engine.ts):
 //   [5, 15, 30, 50, 80, 120, 170, 230]
 //   index 0 (5)  → level 2
 //   index 1 (15) → level 3
 //
-// This script provisions 15 cards and learns them all in 4-round sessions.
+// This script provisions 15 cards and learns them all via BATCHED round-advance
+// commits (one POST per round covering every card still at that round), mirroring
+// how the real app's study-session.tsx commits an entire session's graded cards
+// in a single POST rather than one POST per card (see the commit() effect there).
+//
+// Rule-1 fix (found running this wave's D-10 qa:run gate — NOT a Phase 17
+// regression; latent since Phase 15-03, never live-run until now per that
+// plan's own guardrail note "Live DB run NOT executed"): the original
+// implementation graded ONE card per POST, 3 POSTs per card × 15 cards = 45
+// sequential requests to /api/study/complete for a single freshly-provisioned
+// user, all completing in ~20s. /api/study/complete's studyCompleteLimiter
+// (src/app/api/study/complete/route.ts, added Phase 07-03) allows 10
+// requests/60s per user — the 45-request pattern deterministically 429s at
+// request #11 regardless of any prior same-day harness runs (reproduced on a
+// brand-new dev server process + a brand-new test user with zero rate-limiter
+// history: HTTP 429 {"error":"Too many requests"} at card 4's second round).
+// The fix batches multiple cards' SAME-round grades into a single commit
+// (the API and study-engine.ts both already support this: computeCardUpdate
+// advances each cardId independently within one request, capped at +1 round
+// per card per request — see study-engine.ts's anti-inflation comment), which
+// both fixes the false-failure AND is a more faithful emulation of real usage.
+// This drops the journey to 5 total gradeSession calls (well under the limit):
+//   1. round 0→1 for all 15 cards (batched)
+//   2. round 1→2 for all 15 cards (batched)
+//   3. round 2→3 for cards 1-4 (batched — pre-threshold, must NOT cross L1→L2)
+//   4. round 2→3 for card 5 ALONE (isolated — captures the L1→L2 crossing leveledUp)
+//   5. round 2→3 for cards 6-15 (batched — drives the L2→L3 crossing)
+// Rounds 0→1 and 1→2 can be fully batched across all 15 cards regardless of the
+// later per-card assertions because effectiveCardCount only moves on the round
+// 2→3 (learned) transition (Math.floor(quality * learnedCardCount) — see
+// habitat-engine.ts); only that final transition needs the split-batch treatment
+// to preserve the existing crossing-assertion granularity.
+//
 // After the 5th learned card it asserts:
 //   - real.effectiveCardCount >= 5
 //   - real.level >= 2
-//   - gradeSession leveledUp === 2 on the crossing session
+//   - gradeSession leveledUp === 2 on the crossing commit
 //   - GET /api/habitat level matches GET /api/debug/state real.level
 // After the 15th learned card it asserts:
 //   - real.level >= 3 (representative higher transition)
@@ -26,7 +62,7 @@
 // Prerequisites:
 //   DATABASE_URL           — Neon Postgres connection string (provisioning)
 //   DEBUG_CHEAT_SECRET     — Secret for /api/debug/state
-//   npm run dev running (WITHOUT STUDY_COOLDOWN_MINUTES — default zero-cooldown)
+//   npm run dev running (any cooldown regime — see note above)
 //
 // Optional:
 //   QA_BASE_URL  — App origin (default: http://localhost:3000)
@@ -75,42 +111,31 @@ const CARD_PAIRS = [
 ];
 
 /**
- * Fully learn a single card from masteryRound=0 to masteryRound=3 via three
- * separate gradeSession calls (one per round: 0→1, 1→2, 2→3).
- *
- * Returns the gradeSession response from the final (round-2) session,
- * which contains { success, leveledUp } — leveledUp is non-null when this
- * session crossed a habitat level threshold.
+ * Submit ONE round-advance for a batch of cards in a SINGLE POST to
+ * /api/study/complete (one grade entry per cardId), mirroring how the real
+ * app's study-session.tsx commits an entire session's grades in one request.
+ * Each cardId in the batch must currently be AT the round this direction
+ * targets (round 0 → n2t, round 1 → t2n, round 2 → "either", submitted as
+ * n2t per the existing directionForRound(2) convention — see qa-lib.mjs).
  *
  * @param {string} baseUrl
  * @param {string} token
  * @param {string} deckId
- * @param {string} cardId
+ * @param {string[]} cardIds — cards currently at the same round, advanced together
+ * @param {"n2t"|"t2n"} direction
  * @returns {Promise<{ success: boolean, leveledUp: number | null }>}
  */
-async function learnCard(baseUrl, token, deckId, cardId) {
-  // Round 0 → 1: direction n2t
-  const r0 = await gradeSession(baseUrl, token, {
+async function gradeRoundBatch(baseUrl, token, deckId, cardIds, direction) {
+  const result = await gradeSession(baseUrl, token, {
     deckId,
-    grades: [{ cardId, direction: directionForRound(0), correct: true }],
+    grades: cardIds.map((cardId) => ({ cardId, direction, correct: true })),
   });
-  if (!r0.success) throw new Error(`round-0 grade failed for card ${cardId}`);
-
-  // Round 1 → 2: direction t2n
-  const r1 = await gradeSession(baseUrl, token, {
-    deckId,
-    grades: [{ cardId, direction: directionForRound(1), correct: true }],
-  });
-  if (!r1.success) throw new Error(`round-1 grade failed for card ${cardId}`);
-
-  // Round 2 → 3: either direction — submit n2t (both are accepted at round 2)
-  const r2 = await gradeSession(baseUrl, token, {
-    deckId,
-    grades: [{ cardId, direction: "n2t", correct: true }],
-  });
-  if (!r2.success) throw new Error(`round-2 grade failed for card ${cardId}`);
-
-  return r2; // contains leveledUp for the crossing session
+  if (!result.success) {
+    throw new Error(
+      `batch grade (direction=${direction}) failed for ${cardIds.length} card(s)`,
+    );
+  }
+  return result;
 }
 
 async function run() {
@@ -136,20 +161,47 @@ async function run() {
   }
   console.log("[QAJ-04] baseline: level=1 effectiveCardCount=0 OK");
 
-  // ── 3. Learn cards 1-4 (below L1→L2 threshold of 5) ──────────────────────
-  console.log("[QAJ-04] Learning cards 1-4 (pre-threshold)...");
-  for (let i = 0; i < 4; i++) {
-    const cardId = cardIds[i];
-    const result = await learnCard(BASE_URL, sessionToken, deckId, cardId);
-    console.log(
-      `[QAJ-04]   card ${i + 1}/15 learned (leveledUp=${result.leveledUp})`,
+  // ── 3. Advance ALL 15 cards through rounds 0→1 and 1→2 (batched) ──────────
+  // Safe to fully batch: effectiveCardCount only moves on the round 2→3
+  // (learned) transition, so no assertion below depends on ordering here.
+  await gradeRoundBatch(
+    BASE_URL,
+    sessionToken,
+    deckId,
+    cardIds,
+    directionForRound(0), // "n2t"
+  );
+  console.log(`[QAJ-04] round 0→1 batched for all ${cardIds.length} cards`);
+
+  await gradeRoundBatch(
+    BASE_URL,
+    sessionToken,
+    deckId,
+    cardIds,
+    directionForRound(1), // "t2n"
+  );
+  console.log(`[QAJ-04] round 1→2 batched for all ${cardIds.length} cards`);
+
+  // ── 4. Learn cards 1-4 (round 2→3, below L1→L2 threshold of 5) ────────────
+  const preThresholdIds = cardIds.slice(0, 4);
+  console.log(
+    `[QAJ-04] Learning cards 1-4 (pre-threshold, batched round 2→3)...`,
+  );
+  const preThresholdResult = await gradeRoundBatch(
+    BASE_URL,
+    sessionToken,
+    deckId,
+    preThresholdIds,
+    "n2t", // round 2 accepts either direction; n2t per directionForRound(2) convention
+  );
+  console.log(
+    `[QAJ-04]   cards 1-4/15 learned (leveledUp=${preThresholdResult.leveledUp})`,
+  );
+  // This batch should not cross level 2 (only 4 learned so far)
+  if (preThresholdResult.leveledUp === 2) {
+    throw new Error(
+      "[QAJ-04] ASSERT FAIL: unexpected level-up to 2 after cards 1-4 (expected only after card 5)",
     );
-    // These sessions should not cross level 2 (only 1-4 learned so far)
-    if (result.leveledUp === 2) {
-      throw new Error(
-        `[QAJ-04] ASSERT FAIL: unexpected level-up to 2 after card ${i + 1} (expected only after card 5)`,
-      );
-    }
   }
 
   // Verify still at level 1 after 4 cards
@@ -173,14 +225,17 @@ async function run() {
     `[QAJ-04] After 4 cards: level=1 effectiveCardCount=${preThreshState.real.effectiveCardCount} (still pre-threshold) OK`,
   );
 
-  // ── 4. Learn card 5 — crossing L1→2 (effectiveCardCount>=5) ───────────────
+  // ── 5. Learn card 5 — crossing L1→2 (effectiveCardCount>=5) ───────────────
+  // Isolated (not batched) so this commit's leveledUp response is unambiguously
+  // attributable to card 5 becoming the 5th learned card.
   console.log("[QAJ-04] Learning card 5 (crossing L1→L2 threshold)...");
   const card5Id = cardIds[4];
-  const crossingResult = await learnCard(
+  const crossingResult = await gradeRoundBatch(
     BASE_URL,
     sessionToken,
     deckId,
-    card5Id,
+    [card5Id],
+    "n2t",
   );
   console.log(`[QAJ-04] card 5 leveledUp=${crossingResult.leveledUp}`);
 
@@ -220,24 +275,26 @@ async function run() {
     `[QAJ-04] /api/habitat level=${habitatL2.level} agrees with /api/debug/state real.level=${postL2State.real.level} OK`,
   );
 
-  // ── 5. Learn cards 6-15 (to cross L2→3 threshold at effectiveCardCount>=15) ─
-  console.log("[QAJ-04] Learning cards 6-15 (toward L2→L3 threshold at 15)...");
-  for (let i = 5; i < 15; i++) {
-    const cardId = cardIds[i];
-    const result = await learnCard(BASE_URL, sessionToken, deckId, cardId);
-    const learnedCount = i + 1;
-    console.log(
-      `[QAJ-04]   card ${learnedCount}/15 learned (leveledUp=${result.leveledUp})`,
-    );
-    // Log the session that crosses L2→L3 (leveledUp === 3 when effectiveCardCount hits 15)
-    if (result.leveledUp === 3) {
-      console.log(
-        `[QAJ-04]   ^ L2→L3 crossing detected at card ${learnedCount}`,
-      );
-    }
+  // ── 6. Learn cards 6-15 (round 2→3, batched — toward L2→L3 at 15) ─────────
+  const remainingIds = cardIds.slice(5);
+  console.log(
+    `[QAJ-04] Learning cards 6-15 (batched round 2→3, toward L2→L3 threshold at 15)...`,
+  );
+  const remainingResult = await gradeRoundBatch(
+    BASE_URL,
+    sessionToken,
+    deckId,
+    remainingIds,
+    "n2t",
+  );
+  console.log(
+    `[QAJ-04]   cards 6-15/15 learned (leveledUp=${remainingResult.leveledUp})`,
+  );
+  if (remainingResult.leveledUp === 3) {
+    console.log("[QAJ-04]   ^ L2→L3 crossing detected in cards 6-15 batch");
   }
 
-  // ── 6. Assert L2→L3 crossing occurred ─────────────────────────────────────
+  // ── 7. Assert L2→L3 crossing occurred ─────────────────────────────────────
   const postL3State = await readState(BASE_URL, sessionToken, SECRET, deckId);
   if (postL3State.real.effectiveCardCount < 15) {
     throw new Error(
