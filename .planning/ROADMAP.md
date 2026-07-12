@@ -65,7 +65,7 @@ Full details: [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
-## 🚧 v3.0 Performance & QA (Phases 14-18)
+## 🚧 v3.0 Performance & QA (Phases 14-18, 25)
 
 **Milestone goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
 
@@ -76,6 +76,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization (completed 2026-07-02)
 - [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
+- [ ] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard
 
 ## Phase Details (v3.0)
 
@@ -165,6 +166,21 @@ QA comes first deliberately: the harness must protect the core journey before pe
 
 **Plans**: TBD
 
+### Phase 25: My Account
+
+**Goal**: Users can manage their own account from the dashboard — a Daybreak-styled My Account section where they can view their account details, change their password, log out, and permanently delete their account (the account/settings page deferred out of v4.0 Daybreak scope)
+**Depends on**: Phase 24 (Daybreak design system — atoms, tokens, and chrome the section must be styled with); independent of Phases 17/18
+**Requirements**: TBD (define at discuss/plan time)
+**Success Criteria** (what must be TRUE):
+
+  1. A signed-in user can reach a My Account section from the dashboard and see their account details (at minimum email and account metadata)
+  2. The user can change their password via the real auth pipeline (better-auth), with current-password verification and validation errors surfaced in the UI
+  3. The user can log out from the section, ending the session and returning to the login screen
+  4. The user can delete their account behind an explicit confirmation; deletion removes their data (cards, decks, SRS state, sessions) and invalidates the session — a deleted user can no longer sign in
+  5. The section is Daybreak-styled, consistent with the v4.0 design system on desktop and mobile
+
+**Plans**: TBD
+
 ## Progress
 
 | Milestone | Phases | Plans | Status | Shipped |
@@ -173,7 +189,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18 | 8/TBD | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18, 25 | 8/TBD | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -184,6 +200,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 3/5 | In Progress|  |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
+| 25. My Account | 0/TBD | Not started | - |
 
 ## Backlog
 
@@ -200,3 +217,4 @@ QA comes first deliberately: the harness must protect the core journey before pe
 ### Upstream
 
 - `gsd-sdk phase.complete` ROADMAP-fallback scan could mispick backlog `999.x` headings (`phase.cjs` ~1292–1306); worth an upstream report.
+- `gsd-sdk phase.add` appended the new phase's detail block to the end of the file (inside Backlog) instead of the current milestone's Phase Details section, and skipped the milestone checklist — relocated manually for Phase 25 (2026-07-12); likely the same fallback-scan root cause as above.

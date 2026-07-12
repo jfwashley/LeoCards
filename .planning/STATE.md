@@ -46,6 +46,10 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 ## Accumulated Context
 
+### Roadmap Evolution
+
+- Phase 25 added (2026-07-12): My Account — dashboard-accessible, Daybreak-styled account section: view account details, change password, log out, delete account. This is the account/settings page explicitly deferred out of v4.0 Daybreak scope. Depends on Phase 24 (Daybreak design system); independent of Phases 17/18.
+
 ### Decisions (v3.0-relevant)
 
 - Phase 15-04: qa-03 manifest path = scripts/qa-manifest-qa03.json (fixed default, overridable via RESUME_MANIFEST env); Phase B shift = max(resumeAfter−now+1s, 90_000ms) fast-path.
