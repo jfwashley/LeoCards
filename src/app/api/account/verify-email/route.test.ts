@@ -135,7 +135,9 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
     const res = await GET(makeReq());
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe(`${ORIGIN}/account?verified=expired`);
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=expired`,
+    );
     expect(mockDbSelect).not.toHaveBeenCalled();
   });
 
@@ -144,7 +146,9 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
 
     const res = await GET(makeReq("wrong-token"));
 
-    expect(res.headers.get("location")).toBe(`${ORIGIN}/account?verified=expired`);
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=expired`,
+    );
   });
 
   it("redirects to expired when the matching row has already expired", async () => {
@@ -152,7 +156,9 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
 
     const res = await GET(makeReq(GOOD_TOKEN));
 
-    expect(res.headers.get("location")).toBe(`${ORIGIN}/account?verified=expired`);
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=expired`,
+    );
   });
 
   it("redirects to expired and deletes the row when the target user no longer exists", async () => {
@@ -163,7 +169,9 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
 
     const res = await GET(makeReq(GOOD_TOKEN));
 
-    expect(res.headers.get("location")).toBe(`${ORIGIN}/account?verified=expired`);
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=expired`,
+    );
     expect(mockDbDelete).toHaveBeenCalled();
     expect(mockDbUpdate).not.toHaveBeenCalled();
   });
@@ -177,7 +185,9 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
 
     const res = await GET(makeReq(GOOD_TOKEN));
 
-    expect(res.headers.get("location")).toBe(`${ORIGIN}/account?verified=expired`);
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=expired`,
+    );
     expect(mockDbDelete).toHaveBeenCalled();
     expect(mockDbUpdate).not.toHaveBeenCalled();
   });
@@ -196,6 +206,8 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
       expect.objectContaining({ email: NEW_EMAIL }),
     );
     expect(mockDbDelete).toHaveBeenCalled();
-    expect(res.headers.get("location")).toBe(`${ORIGIN}/account?verified=success`);
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=success`,
+    );
   });
 });
