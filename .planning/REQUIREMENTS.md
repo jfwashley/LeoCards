@@ -30,8 +30,8 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 
 ### Performance — Optimize
 
-- [ ] **PERF-03**: Each key route meets CWV "Good" gates on warm prod mobile: LCP ≤2500 ms, TBT ≤200 ms, CLS ≤0.1, Perf ≥90 (n≥5 medians) — every optimization lands with a measured before/after vs the PERF-02 baseline
-- [ ] **PERF-04**: Warm client-side navigation between key routes feels instant (<~100 ms perceived), instrumented via Playwright navigation timing extending the `e2e/13-perf.spec.ts` pattern
+- [x] **PERF-03**: Each key route meets CWV "Good" gates on warm prod mobile: LCP ≤2500 ms, TBT ≤200 ms, CLS ≤0.1, Perf ≥90 (n≥5 medians) — every optimization lands with a measured before/after vs the PERF-02 baseline
+- [x] **PERF-04**: Warm client-side navigation between key routes feels instant (<~100 ms perceived), instrumented via Playwright navigation timing extending the `e2e/13-perf.spec.ts` pattern
 
 ### Performance — Field Validation & Guardrails
 
@@ -81,8 +81,8 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | QAJ-06 | Phase 15 | Complete |
 | PERF-01 | Phase 16 | Complete |
 | PERF-02 | Phase 16 | Complete |
-| PERF-03 | Phase 17 | Pending |
-| PERF-04 | Phase 17 | Pending |
+| PERF-03 | Phase 17 | Complete |
+| PERF-04 | Phase 17 | Complete |
 | PERF-05 | Phase 18 | Pending |
 | PERF-06 | Phase 18 | Pending |
 | ACC-01 | Phase 25 | Pending |

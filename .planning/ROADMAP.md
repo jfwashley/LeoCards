@@ -195,7 +195,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18, 25 | 8/TBD | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18, 25 | 13/TBD | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -204,7 +204,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
-| 17. Performance optimization | 4/5 | In Progress|  |
+| 17. Performance optimization | 5/5 | Complete    | 2026-07-19 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 0/5 | Not started | - |
 
