@@ -611,7 +611,12 @@ vi.mock("@/lib/account-actions", () => ({
 | A5 | On a combined name+email save, the "Details updated" quiet fade should NOT also fire when the email-changed pending banner is about to show (i.e., the banner alone is the success signal for that submission) | Pitfall 9 | Low-medium — UI-SPEC doesn't explicitly disambiguate this combined case; a wrong guess here is a one-line conditional fix during UI review, not a rework |
 | A6 | `src/lib/auth.ts` needs literally zero changes for this entire phase | Summary | Medium if wrong — this is the load-bearing claim of the whole research; verified by reading `updateUser`/`changePassword`'s source directly (neither checks a config flag) and by design (the custom actions for D-07/D-14 don't touch better-auth endpoints at all). If a future requirement needs the built-in `changeEmail`/`deleteUser` after all, this assumption would need revisiting — but nothing in this phase's locked decisions points that direction |
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> **Resolved by gsd-planner during Phase 25 planning (2026-07-19):**
+> 1. **Token TTL** — 24h, shipped as `TOKEN_TTL_MS = 24 * 60 * 60 * 1000` in `src/lib/account-actions.ts` (plan 25-01); single named constant per A1.
+> 2. **Resend rate-limit** — adopted: `createRateLimiter({ windowMs: 3_600_000, maxRequests: 5 })` keyed by userId in `requestEmailChange` (plan 25-01); over-limit returns `{ ok:false, error:"rate-limited" }`, surfaced as the generic inline save error in the details card.
+> 3. **A5 combined-save fade suppression** — on a combined name+email Save, show ONLY the pending-email banner; the "Details updated" quiet fade fires ONLY when the email did not change (plan 25-03).
 
 1. **Exact email-change token TTL (24h chosen, see A1).**
    - What we know: better-auth's own analogous flows use either 1h (`emailVerification.expiresIn` default) or 24h (`deleteUser`'s `deleteTokenExpiresIn` default) depending on which flow.
