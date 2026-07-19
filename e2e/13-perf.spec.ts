@@ -338,11 +338,17 @@ async function measureNavTap(
 ): Promise<number> {
   const t0 = Date.now();
   await click();
+  // Next's App Router keeps the OUTGOING page fully mounted (no intermediate
+  // teardown) until the destination's payload is ready to swap in — so this
+  // phase-1 wait is NOT a cheap "did it start yet?" check, it can legitimately
+  // span the entire navigation latency. Budget it the same as the overall
+  // timeout (not a short fixed window) so a slow, non-prefetched round trip
+  // is measured accurately rather than truncated and under-reported.
   await page
     .waitForFunction(
       (attr) => !document.querySelector(`[${attr}="true"]`),
       PERF_READY_ATTR,
-      { timeout: 2000 },
+      { timeout: timeoutMs },
     )
     .catch(() => {
       // Source page may have had no data-perf-ready root (or already gone by
@@ -390,10 +396,25 @@ test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => 
       const studyMs = await measureNavTap(page, () => studyLink.click());
       if (studyMs >= 0) toStudy.push(studyMs);
 
-      // Quit immediately (zero grades submitted) — safe to repeat every
-      // round, never consumes a due card, so "Start studying" stays visible
-      // for the next iteration.
+      // /api/study/complete's CommitSchema requires grades.min(1) — a
+      // genuinely empty-grades quit is rejected (400), landing on the error
+      // screen instead of "Back to deck". Grade exactly the FIRST card of
+      // the 3-card queue INCORRECT (ArrowLeft), then quit: an incorrect
+      // grade never advances masteryRound/cooldown (computeCardUpdate), so
+      // all 3 cards stay due for every subsequent round. Grading index 0
+      // (not the last card) keeps the reducer in "studying" phase (not the
+      // end-of-queue still-learning requeue branch), so the explicit quit
+      // below reliably reaches "committing"/"end".
       await page.waitForSelector('text="Tap to reveal"', { timeout: 10_000 });
+      // Click (not keyboard Enter) — the card's role="button" container has
+      // tabIndex=0 but is NOT auto-focused, so a bare keyboard.press("Enter")
+      // lands nowhere; clicking both flips (onClick={!flipped ? onFlip} on
+      // study-card.tsx) AND focuses the element so the subsequent ArrowLeft
+      // keydown is actually received by its onKeyDown handler.
+      await page.getByRole("button", { name: /Question:/ }).click();
+      await page.waitForTimeout(500);
+      await page.keyboard.press("ArrowLeft");
+      await page.waitForTimeout(500);
       await page.getByRole("button", { name: /quit study session/i }).click();
       await page.getByRole("button", { name: "Save and quit" }).click();
       await page.waitForSelector('text="Back to deck"', { timeout: 15_000 });
