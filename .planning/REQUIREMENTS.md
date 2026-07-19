@@ -44,10 +44,10 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 
 - [ ] **ACC-01**: A signed-in user can reach a Daybreak My Account section from the dashboard header and view their account details — name, email, member-since (account-creation month/year), and native language ("I speak") — all display-only in view mode (native language is not editable this phase)
 - [x] **ACC-02**: The user can edit their name and email in a single edit mode; the name applies immediately, while an email change applies ONLY after the user clicks a verification link sent to the NEW inbox (the sign-in identifier and old email stay active until then), with a server-persisted pending state and an honest "already in use" error for a taken address (D-06/D-07)
-- [ ] **ACC-03**: The user can change their password via the real better-auth pipeline with current-password verification, inline (never toast) validation errors, and all other sessions revoked on success (D-08/D-09/D-10)
+- [x] **ACC-03**: The user can change their password via the real better-auth pipeline with current-password verification, inline (never toast) validation errors, and all other sessions revoked on success (D-08/D-09/D-10)
 - [ ] **ACC-04**: The user can log out from the section, ending the session and returning to `/login` (dashboard-header logout moves inside the section)
 - [x] **ACC-05**: The user can delete their account behind an explicit two-step confirmation (no password re-entry, no typed confirmation); deletion removes all their data (decks, words/cards, SRS/recall state, sessions, habitat progress) and invalidates the session — a deleted user can no longer sign in and their email frees up (D-12/D-13/D-14)
-- [ ] **ACC-06**: The section is Daybreak-styled and consistent with the v4.0 design system on desktop and mobile, per `.planning/phases/25-my-account/25-UI-SPEC.md`
+- [x] **ACC-06**: The section is Daybreak-styled and consistent with the v4.0 design system on desktop and mobile, per `.planning/phases/25-my-account/25-UI-SPEC.md`
 
 ## Future Requirements (deferred)
 
@@ -87,7 +87,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-06 | Phase 18 | Pending |
 | ACC-01 | Phase 25 | Pending |
 | ACC-02 | Phase 25 | Complete |
-| ACC-03 | Phase 25 | Pending |
+| ACC-03 | Phase 25 | Complete |
 | ACC-04 | Phase 25 | Pending |
 | ACC-05 | Phase 25 | Complete |
-| ACC-06 | Phase 25 | Pending |
+| ACC-06 | Phase 25 | Complete |

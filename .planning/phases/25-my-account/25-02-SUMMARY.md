@@ -124,3 +124,18 @@ None - no external service configuration required.
 ---
 *Phase: 25-my-account*
 *Completed: 2026-07-19*
+
+## Self-Check: PASSED
+
+All created/modified files verified present on disk:
+- FOUND: src/components/account-dirty-context.tsx
+- FOUND: src/components/change-password-card.tsx
+- FOUND: src/components/change-password-card.test.tsx
+- FOUND: src/app/globals.css
+- FOUND: .planning/phases/25-my-account/25-02-SUMMARY.md
+
+All task commits verified present in git log:
+- FOUND: 553a60b (Task 1)
+- FOUND: 38e5993 (Task 2 RED)
+- FOUND: fc1e8cb (Task 2 GREEN)
+- FOUND: a91d8ac (docs: plan summary)

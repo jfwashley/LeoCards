@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 25-01-PLAN.md -- account-mutation backend (requestEmailChange, deleteAccount, getPendingEmailChange, verify-email route); all 6 files + SUMMARY committed, full tsc/vitest/biome green
-last_updated: "2026-07-19T16:19:05.922Z"
+stopped_at: Completed 25-02-PLAN.md -- ChangePasswordCard + AccountDirtyProvider + globals.css keyframes (D-08/D-09/D-10/D-11, D-04 foundation); all 4 files + SUMMARY committed, full tsc/vitest/biome green
+last_updated: "2026-07-19T16:46:34.619Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 14
+  completed_plans: 15
   percent: 50
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 25 (my-account) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-19
 
@@ -80,6 +80,9 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 25-01: Rule 1 fix — wrapped the Resend send in try/catch (not just `.catch()` on the send promise). `new Resend(undefined)` throws synchronously when RESEND_API_KEY is unset (the local/CI default), which a `.catch()` chained onto a call that never happens cannot protect against. Caught via TDD GREEN using the real, unmocked `resend` package.
 - Phase 25-01: cast the userId parsed from the verification identifier suffix `as UserId` in verify-email/route.ts — required by strict + noUncheckedIndexedAccess tsc against user.id's branded column type; RESEARCH's illustrative snippet omitted this cast.
 - Phase 25-01: known SDK quirk — `gsd-sdk query state.update-progress` no-ops on this project's `Progress (v3.0): [...]` line (regex expects literal `**Progress:**` or `^Progress:`, not `Progress (v3.0):`); left unfixed as out-of-scope tooling, noted here for the next plan's executor.
+- Phase 25-02: SDK data-integrity bug found and repaired — `gsd-sdk query state.update-progress` doesn't just no-op on the `Progress (v3.0): [...]` status line (line 34); its regex also matches the FIRST occurrence of the literal substring `**Progress:**` anywhere in the file, including inside the Phase 25-01 decision entry above that merely quotes that string while documenting the no-op. Running `state.update-progress` truncated that decision entry mid-sentence and spliced in a `[████████░░] 83%` progress-bar fragment. Restored the entry to its original text here; flagging so future executors verify STATE.md content (not just the command's own JSON return value) after calling `state.update-progress` on this project.
+- Phase 25-02: AccountDirtyProvider/useAccountDirty (this project's first hand-authored React Context) stores ONLY a derived boolean, never the typed password text (D-04 leak guard, T-25-02-B) — passwordDirty is derived reactively via react-hook-form's watch() + a single useEffect rather than wrapping each field's onChange, so `reset()` on successful save automatically drives it back to false with no separate reset call needed.
+- Phase 25-02: change-password-card.tsx mirrors card-list.tsx's exact panelMounted + safety-net setTimeout accordion pattern (not a simpler always-mounted approach) so the collapsed panel stays out of the DOM/tab-order in real browsers and still unmounts reliably in jsdom, which never fires animationend; `gsd-sdk query state.add-decision` no-ops on this project's "### Decisions (v3.0-relevant)" heading (confirmed via `added: false`) — entries hand-edited directly, consistent with the existing project gotcha note.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -105,8 +108,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-19T16:19:05.910Z
-Stopped at: Completed 25-01-PLAN.md -- account-mutation backend (requestEmailChange, deleteAccount, getPendingEmailChange, verify-email route); all 6 files + SUMMARY committed, full tsc/vitest/biome green
+Last session: 2026-07-19T16:46:34.606Z
+Stopped at: Completed 25-02-PLAN.md -- ChangePasswordCard + AccountDirtyProvider + globals.css keyframes (D-08/D-09/D-10/D-11, D-04 foundation); all 4 files + SUMMARY committed, full tsc/vitest/biome green
 Resume file: None
 
 ## Performance Metrics
@@ -122,3 +125,4 @@ Resume file: None
 | Phase 17 P04 | n/a (continuation close-out) | 2 tasks + checkpoint | 22 files |
 | Phase 17 P05 | n/a (continuation close-out) | 2 tasks + checkpoint | 6 files |
 | Phase 25 P01 | 20min | 3 tasks | 6 files |
+| Phase 25 P02 | 18min | 2 tasks | 4 files |
