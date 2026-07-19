@@ -240,6 +240,16 @@ describe("AccountDetailsCard — email-change save", () => {
     const updateUserOrder = mockUpdateUser.mock.invocationCallOrder[0];
     const requestEmailChangeOrder =
       mockRequestEmailChange.mock.invocationCallOrder[0];
+    // noUncheckedIndexedAccess narrowing — both mocks were asserted called
+    // above, so these indices must be defined; guard instead of `!` (biome).
+    if (
+      updateUserOrder === undefined ||
+      requestEmailChangeOrder === undefined
+    ) {
+      throw new Error(
+        "Expected both updateUser and requestEmailChange to have been called",
+      );
+    }
     expect(updateUserOrder).toBeLessThan(requestEmailChangeOrder);
 
     // Combined save also does NOT show "Details updated" (A5).
