@@ -150,7 +150,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] 17-01-PLAN.md — Wave-0 tooling: measure-cwv route filter + OUT_DIR redirect (D-09), DaybreakShimmer atom (D-03), content-visible + prod-build scaffolds, deck-view pre-split baseline test
 - [x] 17-02-PLAN.md — Shared-infra hygiene: three→devDependencies + dead-code deletion (D-05), next.config stable-only (D-07), shared-chunk/auth-client audit (D-08), /habitat spot-check (D-11)
 - [x] 17-03-PLAN.md — Dashboard client→RSC: HabitatHero→RSC + DeckView split + CountdownTimer leaf (D-06), poster-first resolution (D-02), dashboard re-measure + D-04 checkpoint
-- [ ] 17-04-PLAN.md — study/new-card/browse client→RSC + lazy-load (D-06/D-03), Motion→CSS swaps (D-05), 3-route re-measure + D-04 checkpoint
+- [x] 17-04-PLAN.md — study/new-card/browse client→RSC + lazy-load (D-06/D-03), Motion→CSS swaps (D-05), 3-route re-measure + D-04 checkpoint
 - [ ] 17-05-PLAN.md — PERF-04 instant-nav gate: 6 nav pairs + content-visible + prod-build INP (D-13/14/15, task_d326ebac), prefetch + router.refresh invalidation (D-16/D-17), official final full run + qa:run
 
 ### Phase 18: Field validation & guardrails
@@ -198,7 +198,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
-| 17. Performance optimization | 3/5 | In Progress|  |
+| 17. Performance optimization | 4/5 | In Progress|  |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 0/TBD | Not started | - |
 

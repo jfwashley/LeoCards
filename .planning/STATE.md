@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 25 UI-SPEC approved
-last_updated: "2026-07-19T14:24:38.124Z"
-last_activity: 2026-07-08
+stopped_at: Completed 17-04-PLAN.md
+last_updated: "2026-07-19T14:42:56.000Z"
+last_activity: 2026-07-19
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 13
-  completed_plans: 11
-  percent: 33
+  completed_plans: 12
+  percent: 92
 ---
 
 # Project State
@@ -27,11 +27,11 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 17 (performance-optimization) — EXECUTING
-Plan: 4 of 5
-Status: Ready to execute
-Last activity: 2026-07-08
+Plan: 5 of 5
+Status: 17-04 complete (D-04 accepted-miss on /deck/new-card); 17-05 (PERF-04 instant-nav gate) remaining
+Last activity: 2026-07-19
 
-Progress (v3.0): [████████░░] 80% (Phases 15-16 all 8 plans complete; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied)
+Progress (v3.0): [█████████░] 92% (Phases 15-16 all 8 plans complete; Phase 17 plans 01-04 complete, 05 remaining; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied)
 
 ## Shipped Milestones
 
@@ -73,6 +73,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 17-03: HabitatHero converted to RSC ("use client" removed, zero other change); CountdownTimer extracted as a standalone client leaf; dashboard/page.tsx now server-renders the entire static shell directly, hydrating only CountdownTimer + a new DashboardHeader client leaf (AppHeader's non-serializable onDeckChange callback — the exact contingency the plan's own action text anticipated, not an unplanned architectural change).
 - Phase 17-03: D-02 resolved without new media — the Daybreak dashboard mock (design/handoff-daybreak/daybreak-dashboard.jsx) shows a fully static medallion and LCP already passes (1816ms), so the existing static approach satisfies D-02 (D-12 no gold-plating).
 - Phase 17-03: D-04 checkpoint resolved by Josh — Accept, continue to Wave 4. Re-measurement showed no material change (mobile TBT 524ms/Perf 86 vs. the Phase 16 baseline's 518ms/86, both still failing their gates; LCP 1816ms/CLS 0 still pass), proving the TBT weight lives in the shared-chunk floor (CardList's motion/react + lucide-react, auth, providers) that Wave 4 targets directly. The dashboard gate remains explicitly open pending Wave 4 + the phase-end full run; no fidelity change was made or approved.
+- Phase 17-04: D-04 accepted-miss — /deck/new-card TBT 338ms vs ≤200 gate accepted (Perf 92 passes, 62% TBT cut from 891, heaviest route 789KB); other 3 routes fully certify.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -96,9 +97,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-19T14:24:38.115Z
-Stopped at: Phase 25 UI-SPEC approved
-Resume file: .planning/phases/25-my-account/25-UI-SPEC.md
+Last session: 2026-07-19T14:42:56.000Z
+Stopped at: Completed 17-04-PLAN.md
+Resume file: .planning/phases/17-performance-optimization/17-05-PLAN.md
 
 ## Performance Metrics
 
@@ -110,3 +111,4 @@ Resume file: .planning/phases/25-my-account/25-UI-SPEC.md
 | Phase 17 P01 | 40min | 3 tasks | 8 files |
 | Phase 17 P02 | 15min | 3 tasks | 5 files |
 | Phase 17 P03 | 25min | 3 tasks | 9 files |
+| Phase 17 P04 | n/a (continuation close-out) | 2 tasks + checkpoint | 22 files |
