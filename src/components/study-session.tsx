@@ -215,7 +215,15 @@ export function StudySession({
     const leveledUp = showLevelUp;
     setShowLevelUp(null);
     if (leveledUp !== null) {
+      // Phase 17 (D-17): /api/study/complete is a Route Handler (not a Server
+      // Action), so it has no automatic client Router Cache invalidation the
+      // way deck-actions.ts's Server Actions get via revalidatePath. Calling
+      // router.refresh() immediately AFTER router.push() targets the
+      // now-current route (the destination), forcing a fresh server render
+      // so habitat state (level, mood, decay) reflects the just-completed
+      // session on landing rather than a possibly prefetch-warm stale payload.
       router.push(`/habitat?celebrate=${leveledUp}`);
+      router.refresh();
     }
   }, [showLevelUp, router]);
 
@@ -381,7 +389,14 @@ export function StudySession({
             {/* TBtn replaces shadcn Button (Pitfall 7) */}
             <TBtn
               style={{ maxWidth: 280 }}
-              onClick={() => router.push(`/dashboard?deck=${deckId}`)}
+              onClick={() => {
+                // Phase 17 (D-17) — see handleLevelUpDismiss above for why
+                // the non-experimental push()+refresh() combo is the targeted
+                // invalidation: dashboard due-count must be correct on
+                // landing, without an always-refetch on every nav.
+                router.push(`/dashboard?deck=${deckId}`);
+                router.refresh();
+              }}
             >
               Back to deck
             </TBtn>
