@@ -80,9 +80,7 @@ describe("ChangePasswordCard — collapsed/expanded accordion", () => {
     expect(row.getAttribute("aria-expanded")).toBe("false");
     expect(row.getAttribute("aria-controls")).toBe("change-password-panel");
     expect(screen.getByText("Change password")).toBeTruthy();
-    expect(
-      screen.queryByTestId("account-password-current-field"),
-    ).toBeNull();
+    expect(screen.queryByTestId("account-password-current-field")).toBeNull();
   });
 
   it("expands to reveal the three fields, the security caption, and Update password — with no Forgot-password link (D-11)", () => {
@@ -101,9 +99,9 @@ describe("ChangePasswordCard — collapsed/expanded accordion", () => {
         "For your security, all other signed-in devices will be logged out.",
       ),
     ).toBeTruthy();
-    expect(
-      screen.getByTestId("account-password-save-btn").textContent,
-    ).toBe("Update password");
+    expect(screen.getByTestId("account-password-save-btn").textContent).toBe(
+      "Update password",
+    );
     expect(screen.queryByText(/forgot/i)).toBeNull();
   });
 
