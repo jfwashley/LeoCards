@@ -1,6 +1,6 @@
 # Phase 16 Baseline — /habitat
 
-**Date:** 2026-07-02T23:57:03.937Z
+**Date:** 2026-07-19T15:12:08.571Z
 **Harness:** scripts/measure-cwv.mjs (Lighthouse 13.3.0, puppeteer-core 24.43.1)
 **Target:** https://leocards.vercel.app/habitat (warm prod)
 **Runs:** 6 per preset; run 1 discarded (cold Vercel hit); median of runs 2-6
@@ -10,8 +10,8 @@
 
 | Profile | LCP (ms) | TBT (ms) | CLS | FCP (ms) | TTFB (ms) | Perf Score |
 |---------|----------|----------|-----|----------|-----------|------------|
-| mobile  | 1652.6046000000001 | 776.9999999999999 | 0 | 806.6382903808594 | 11 | 81 |
-| desktop | 1654.2728 | 141 | 0 | 786.5595 | 10 | 90 |
+| mobile  | 1997.4416 | 308 | 0.009817976197682366 | 837.1093 | 61 | 93 |
+| desktop | 1680.8413 | 18 | 0.005240346729708432 | 819.0918149841309 | 139 | 93 |
 
 ## Bundle Composition
 
@@ -24,16 +24,16 @@
 
 - .next\static\chunks\0x.73w57rn4ou.js
 - .next\static\chunks\0i.l9589uvx0j.js
-- .next\static\chunks\0tbni7a.z5k.5.js
+- .next\static\chunks\03e206n5qu9u9.js
 - .next\static\chunks\0qj-7.4t86-8d.js
-- .next\static\chunks\0hnlp3qll~~_u.js
+- .next\static\chunks\0a65zxoakqu4e.js
 - .next\static\chunks\0-hrh_uw98wb_.js
 - .next\static\chunks\0~k6u5_j-9bf2.js
-- .next\static\chunks\04jz-y17vz80c.js
+- .next\static\chunks\0oto2~8h5br3j.js
 - .next\static\chunks\0v-nnodu33ws~.js
 - .next\static\chunks\0gyhlsobr-.-~.js
 - .next\static\chunks\0jb.wowuku9y3.js
-- .next\static\chunks\turbopack-0z5bv5-e51wux.js
+- .next\static\chunks\turbopack-0it_gg-k_slkp.js
 
 ## Bottleneck Classification
 
