@@ -133,7 +133,7 @@ The established system uses **3 body weights (400/600/700) + 1 display weight (7
 | File | Change |
 |------|--------|
 | `src/components/app-header.tsx` | Swap `<LogoutButton />` → `<AccountNavButton />` in the right cluster (same `gap: 9` slot). **Verify the 44px hit-area doesn't visually crowd `DeckSwitcher`** — reduce the cluster `gap` to ~6–7px if the extra 4px of invisible hit-padding on the new button makes the visible frames read closer together than today's 36px button did. |
-| `src/lib/auth.ts` | Add `user.deleteUser.enabled: true` (D-14); add whatever `changeEmail`/`updateUser` server config the D-07 custom-verification flow needs (backend mechanism is a planner/researcher decision, not this spec's — see §1c). |
+| `src/lib/auth.ts` | **No change** — RESOLVED by 25-RESEARCH.md (source-verified against installed better-auth v1.5.6): delete-account and email-change both ship as custom server actions (D-14 custom `db.delete(user)` cascade action; D-07 custom token flow via the existing `verification` table), bypassing the built-in `deleteUser`/`changeEmail` endpoints entirely, so no `user.deleteUser.enabled` or `changeEmail` config is needed. This row supersedes the pre-research draft that proposed config additions. |
 | `src/lib/auth-client.ts` | No shape change expected — `updateUser`, `changePassword`, `deleteUser`, `signOut` are already exposed via `createAuthClient`. |
 
 ### Net-new — this phase
