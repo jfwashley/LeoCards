@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 25 context gathered
-last_updated: "2026-07-19T13:49:15.994Z"
+stopped_at: Phase 25 UI-SPEC approved
+last_updated: "2026-07-19T14:24:38.124Z"
 last_activity: 2026-07-08
 progress:
   total_phases: 6
@@ -96,9 +96,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-19T13:49:15.982Z
-Stopped at: Phase 25 context gathered
-Resume file: .planning/phases/25-my-account/25-CONTEXT.md
+Last session: 2026-07-19T14:24:38.115Z
+Stopped at: Phase 25 UI-SPEC approved
+Resume file: .planning/phases/25-my-account/25-UI-SPEC.md
 
 ## Performance Metrics
 
