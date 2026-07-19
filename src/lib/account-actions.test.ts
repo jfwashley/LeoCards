@@ -234,7 +234,11 @@ describe("deleteAccount", () => {
 
     expect(db.delete).toHaveBeenCalledWith(user);
     expect(deleteChain.where).toHaveBeenCalledWith(
-      expect.objectContaining({ __op: "eq", col: user.id, val: "user-delete-2" }),
+      expect.objectContaining({
+        __op: "eq",
+        col: user.id,
+        val: "user-delete-2",
+      }),
     );
     expect(mockSignOut).toHaveBeenCalled();
   });
