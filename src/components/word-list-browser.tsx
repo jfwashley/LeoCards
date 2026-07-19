@@ -439,8 +439,30 @@ export function BrowseTiles({
         >
           Browse Words
         </span>
-        {/* Balancing spacer — same width as back-link area */}
-        <span style={{ width: 64, flex: "none" }} />
+        {/* Phase 17 (D-13/Rule 3 deviation) — the tiles landing previously had
+            no way back to /dashboard at all (only "Add a card", by design,
+            per the comment above). PERF-04's dashboard↔browse hub-and-spoke
+            nav pair requires a real in-app link tap in BOTH directions, so
+            this previously-inert balancing spacer now carries a real
+            "My deck" link — same visual weight/position, additive only. */}
+        <Link
+          href="/dashboard"
+          data-testid="browse-back-dashboard"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            color: "#C96F12",
+            fontWeight: 700,
+            fontSize: 15,
+            textDecoration: "none",
+            flex: "none",
+            width: 64,
+            justifyContent: "flex-end",
+          }}
+        >
+          My deck
+        </Link>
       </div>
 
       {/* Context line */}

@@ -1,5 +1,10 @@
-import { expect, test } from "playwright/test";
-import { signUpWithDeck } from "./helpers";
+import { expect, type Page, test } from "playwright/test";
+import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
+import {
+  IS_PROD_BUILD,
+  PERF_READY_ATTR,
+  waitForPerfReady,
+} from "./perf-markers";
 
 /**
  * Phase 13 Plan 06 — Core Web Vitals + widget perf measurement.
@@ -256,16 +261,233 @@ test.describe("Phase 13 Plan 06 — CWV + widget perf", () => {
   // Assert all CWV pass — Plan 06 hard gate.
   test("CWV thresholds", () => {
     for (const r of results) {
-      // LCP ≤ 2500ms, CLS ≤ 0.1, INP ≤ 200ms.
+      // LCP ≤ 2500ms, CLS ≤ 0.1 — asserted regardless of dev/prod server.
       expect
         .soft(r.lcp, `${r.route} ${r.profile} LCP`)
         .toBeLessThanOrEqual(2500);
       expect
         .soft(r.cls, `${r.route} ${r.profile} CLS`)
         .toBeLessThanOrEqual(0.1);
-      expect
-        .soft(r.inp, `${r.route} ${r.profile} INP`)
-        .toBeLessThanOrEqual(200);
+      // task_d326ebac (Phase 17 D-14 fold-in): INP measured against a `next
+      // dev` server is HMR/Turbopack noise, not a real metric — only assert
+      // it when PERF_PROD_BUILD=1 confirms this run targeted a local prod
+      // build (`next build && next start`), mirroring the existing
+      // `if (isMobile) {...}` conditional-block style above.
+      if (IS_PROD_BUILD) {
+        expect
+          .soft(r.inp, `${r.route} ${r.profile} INP`)
+          .toBeLessThanOrEqual(200);
+      }
     }
+  });
+});
+
+// ============================================================
+// Phase 17 Plan 05 (PERF-04, D-13..17) — instant-nav gate
+// ============================================================
+//
+// Extends this file with the 6 D-13 hub-and-spoke navigations (dashboard↔
+// study, dashboard↔new-card, dashboard↔browse) as IN-APP LINK TAPS. Browser
+// Back is explicitly NOT gated (D-13). D-14: this entire group only runs
+// against a LOCAL PROD BUILD, gated by PERF_PROD_BUILD=1 (test.skip
+// otherwise) — never the dev server (Pitfall 5: both `next dev` and
+// `next start` default to the same port 3000). D-15: PASS = the
+// destination's REAL content (`data-perf-ready="true"`, 17-01/17-03/17-04)
+// visible ≤100ms median n≥5, prefetch-warm — skeletons/loading.tsx never
+// carry the attribute so they cannot count.
+
+/**
+ * median() — mirrors scripts/measure-cwv-lib.mjs's median() convention,
+ * reimplemented locally since that file is a Node-ESM .mjs script not
+ * cleanly importable into this Playwright/TS test.
+ */
+function median(values: number[]): number {
+  if (values.length === 0) return -1;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 !== 0) {
+    return sorted[mid] ?? -1;
+  }
+  const lo = sorted[mid - 1];
+  const hi = sorted[mid];
+  return lo !== undefined && hi !== undefined ? (lo + hi) / 2 : -1;
+}
+
+/**
+ * measureNavTap() — times an in-app link/button tap until the destination's
+ * data-perf-ready="true" root is visible (D-15).
+ *
+ * Two-phase poll (NOT a single query-for-truthy-attribute check): since
+ * every key route shares the same `data-perf-ready` attribute name, a naive
+ * single-phase poll started right after the tap could immediately match the
+ * SOURCE page's still-mounted marker (false "instant" reading of ~0ms) if
+ * evaluate() runs before React unmounts the outgoing route tree. Phase 1
+ * waits for that marker to disappear (source page unmounting); phase 2
+ * (waitForPerfReady, the 17-01 scaffold) then times how long until the
+ * marker reappears (destination page mounted with real, non-skeleton data).
+ *
+ * Timing composition: phase 1's boundary is Node-side Date.now() (a few ms
+ * of Playwright IPC noise, biased to OVERESTIMATE — the safe direction for a
+ * pass/fail gate); phase 2 is precise in-page performance.now() timing via
+ * waitForPerfReady's own internal t0.
+ */
+async function measureNavTap(
+  page: Page,
+  click: () => Promise<void>,
+  timeoutMs = 8000,
+): Promise<number> {
+  const t0 = Date.now();
+  await click();
+  await page
+    .waitForFunction(
+      (attr) => !document.querySelector(`[${attr}="true"]`),
+      PERF_READY_ATTR,
+      { timeout: 2000 },
+    )
+    .catch(() => {
+      // Source page may have had no data-perf-ready root (or already gone by
+      // the time we checked) — fall through to phase 2 regardless.
+    });
+  const preReadyElapsed = Date.now() - t0;
+  const readyMs = await waitForPerfReady(page, timeoutMs);
+  if (readyMs < 0) return -1;
+  return preReadyElapsed + readyMs;
+}
+
+/** Drop the first (cold/compile-adjacent) sample — mirrors measureVitals'
+ * existing run-1-discard warm-up discipline. */
+function warm(values: number[]): number[] {
+  return values.slice(1);
+}
+
+test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => {
+  test.describe.configure({ mode: "serial" });
+
+  test("prod-build nav — dashboard ↔ study (6 round trips, content-visible ≤100ms)", async ({
+    page,
+  }) => {
+    test.skip(
+      !IS_PROD_BUILD,
+      "PERF-04 D-14: requires a local prod build — run `next build && next start` " +
+        "then `PERF_PROD_BUILD=1 npx playwright test e2e/13-perf.spec.ts`",
+    );
+    test.setTimeout(180_000);
+
+    await signUpWithDeck(page, "French");
+    await addWordsFromBrowser(page, 3);
+
+    // D-13: /study unconditionally redirects to /dashboard when ?deck= is
+    // absent (src/app/(protected)/study/page.tsx) — assert the gated link
+    // always carries it before relying on it for the timed taps below.
+    const studyLink = page.getByRole("link", { name: "Start studying" });
+    await expect(studyLink).toHaveAttribute("href", /\?deck=/);
+
+    const toStudy: number[] = [];
+    const toDashboard: number[] = [];
+    const ROUNDS = 6;
+
+    for (let i = 0; i < ROUNDS; i++) {
+      const studyMs = await measureNavTap(page, () => studyLink.click());
+      if (studyMs >= 0) toStudy.push(studyMs);
+
+      // Quit immediately (zero grades submitted) — safe to repeat every
+      // round, never consumes a due card, so "Start studying" stays visible
+      // for the next iteration.
+      await page.waitForSelector('text="Tap to reveal"', { timeout: 10_000 });
+      await page.getByRole("button", { name: /quit study session/i }).click();
+      await page.getByRole("button", { name: "Save and quit" }).click();
+      await page.waitForSelector('text="Back to deck"', { timeout: 15_000 });
+
+      const dashMs = await measureNavTap(page, () =>
+        page.getByRole("button", { name: "Back to deck" }).click(),
+      );
+      if (dashMs >= 0) toDashboard.push(dashMs);
+    }
+
+    expect
+      .soft(median(warm(toStudy)), "dashboard→study contentVisibleMs (median)")
+      .toBeLessThanOrEqual(100);
+    expect
+      .soft(
+        median(warm(toDashboard)),
+        "study→dashboard contentVisibleMs (median)",
+      )
+      .toBeLessThanOrEqual(100);
+  });
+
+  test("prod-build nav — dashboard ↔ new-card & dashboard ↔ browse (6 round trips each, content-visible ≤100ms)", async ({
+    page,
+  }) => {
+    test.skip(
+      !IS_PROD_BUILD,
+      "PERF-04 D-14: requires a local prod build — run `next build && next start` " +
+        "then `PERF_PROD_BUILD=1 npx playwright test e2e/13-perf.spec.ts`",
+    );
+    test.setTimeout(180_000);
+
+    // Fresh, EMPTY-deck account — the empty-state Link pair in card-list.tsx
+    // ("+ Add a card" / "Browse words") is what's exercised here; the
+    // has-cards "add-a-card" pill is a different Link only rendered once a
+    // deck is non-empty (out of scope for this pair's setup).
+    await signUpWithDeck(page, "French");
+
+    const toNewCard: number[] = [];
+    const toDashboardFromNewCard: number[] = [];
+    const toBrowse: number[] = [];
+    const toDashboardFromBrowse: number[] = [];
+    const ROUNDS = 6;
+
+    for (let i = 0; i < ROUNDS; i++) {
+      const newCardMs = await measureNavTap(page, () =>
+        page.getByRole("link", { name: "+ Add a card" }).click(),
+      );
+      if (newCardMs >= 0) toNewCard.push(newCardMs);
+
+      // ACTop's "‹ My deck" escape link (src/components/daybreak/ac-top.tsx).
+      const backFromNewCardMs = await measureNavTap(page, () =>
+        page.getByRole("link", { name: /My deck/ }).click(),
+      );
+      if (backFromNewCardMs >= 0) {
+        toDashboardFromNewCard.push(backFromNewCardMs);
+      }
+
+      const browseMs = await measureNavTap(page, () =>
+        page.getByTestId("browse-words-empty").click(),
+      );
+      if (browseMs >= 0) toBrowse.push(browseMs);
+
+      // The "My deck" link added to BrowseTiles (word-list-browser.tsx) —
+      // Phase 17 Rule 3 deviation: this pair had no dashboard-bound link
+      // before this plan (see 17-05-SUMMARY.md deviations).
+      const backFromBrowseMs = await measureNavTap(page, () =>
+        page.getByTestId("browse-back-dashboard").click(),
+      );
+      if (backFromBrowseMs >= 0) toDashboardFromBrowse.push(backFromBrowseMs);
+    }
+
+    expect
+      .soft(
+        median(warm(toNewCard)),
+        "dashboard→new-card contentVisibleMs (median)",
+      )
+      .toBeLessThanOrEqual(100);
+    expect
+      .soft(
+        median(warm(toDashboardFromNewCard)),
+        "new-card→dashboard contentVisibleMs (median)",
+      )
+      .toBeLessThanOrEqual(100);
+    expect
+      .soft(
+        median(warm(toBrowse)),
+        "dashboard→browse contentVisibleMs (median)",
+      )
+      .toBeLessThanOrEqual(100);
+    expect
+      .soft(
+        median(warm(toDashboardFromBrowse)),
+        "browse→dashboard contentVisibleMs (median)",
+      )
+      .toBeLessThanOrEqual(100);
   });
 });
