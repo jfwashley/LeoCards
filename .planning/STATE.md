@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 17-04-PLAN.md
-last_updated: "2026-07-19T14:42:56.000Z"
+stopped_at: 17-05-PLAN.md Tasks 1-2 complete, PAUSED at checkpoint (Task 3, human-verify)
+last_updated: "2026-07-19T16:20:00.000Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 6
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 17 (performance-optimization) — EXECUTING
 Plan: 5 of 5
-Status: 17-04 complete (D-04 accepted-miss on /deck/new-card); 17-05 (PERF-04 instant-nav gate) remaining
+Status: 17-05 Tasks 1-2 complete (committed); PAUSED at Task 3 checkpoint (human-verify) — see Blockers/Concerns for the PERF-04 finding awaiting Josh's decision
 Last activity: 2026-07-19
 
 Progress (v3.0): [█████████░] 92% (Phases 15-16 all 8 plans complete; Phase 17 plans 01-04 complete, 05 remaining; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied)
@@ -74,6 +74,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 17-03: D-02 resolved without new media — the Daybreak dashboard mock (design/handoff-daybreak/daybreak-dashboard.jsx) shows a fully static medallion and LCP already passes (1816ms), so the existing static approach satisfies D-02 (D-12 no gold-plating).
 - Phase 17-03: D-04 checkpoint resolved by Josh — Accept, continue to Wave 4. Re-measurement showed no material change (mobile TBT 524ms/Perf 86 vs. the Phase 16 baseline's 518ms/86, both still failing their gates; LCP 1816ms/CLS 0 still pass), proving the TBT weight lives in the shared-chunk floor (CardList's motion/react + lucide-react, auth, providers) that Wave 4 targets directly. The dashboard gate remains explicitly open pending Wave 4 + the phase-end full run; no fidelity change was made or approved.
 - Phase 17-04: D-04 accepted-miss — /deck/new-card TBT 338ms vs ≤200 gate accepted (Perf 92 passes, 62% TBT cut from 891, heaviest route 789KB); other 3 routes fully certify.
+- Phase 17-05 Tasks 1-2 (committed, not yet certified): extended e2e/13-perf.spec.ts with the 6 D-13 hub-and-spoke nav-timing tests (prod-build-gated via PERF_PROD_BUILD, D-14) + task_d326ebac INP prod-gating; wired D-17 router.refresh() after study-completion push() (habitat celebrate + "Back to deck"); D-16 recorded as "Link default prefetch already sufficient" (no code change) — see Blockers/Concerns below, this decision is now contradicted by measured evidence and needs revisiting. card-add already satisfied via existing revalidatePath() Server Actions (no change). Rule 3 deviation: added a "My deck" back-link to BrowseTiles (word-list-browser.tsx) — the page previously had zero link back to /dashboard.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -84,7 +85,9 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + a QA-gated time-shift for decay (QAJ-05) without real multi-day waits.
 
-**Non-blocking flag (Phase 17-02):** the D-11 `/habitat` regression spot-check measured mobile Perf 81 / TBT 777ms, down from the Phase 13.1-documented Perf 96 (2026-05-29). Neither of 17-02's two tasks touch `/habitat`'s render path — the regression matches the same degraded-bundle pattern already seen across all 4 key routes in the Phase 16 baseline, suggesting shared-chunk drift accumulated during the intervening v4.0 Daybreak phases (19-24). Out of scope to fix in Phase 17 (`/habitat` gets only a regression spot-check per D-11); evidence committed at `.planning/phases/17-performance-optimization/measurements/habitat-baseline.md` for any future investigation.
+**Non-blocking flag (Phase 17-02):** the D-11 `/habitat` regression spot-check measured mobile Perf 81 / TBT 777ms, down from the Phase 13.1-documented Perf 96 (2026-05-29). Neither of 17-02's two tasks touch `/habitat`'s render path — the regression matches the same degraded-bundle pattern already seen across all 4 key routes in the Phase 16 baseline, suggesting shared-chunk drift accumulated during the intervening v4.0 Daybreak phases (19-24). Out of scope to fix in Phase 17 (`/habitat` gets only a regression spot-check per D-11); evidence committed at `.planning/phases/17-performance-optimization/measurements/habitat-baseline.md` for any future investigation. **Re-measured 2026-07-19 (17-05 checkpoint):** mobile Perf 93 / TBT 308ms — improved from the 17-02 flag, still below the Phase 13.1 original; non-regressed.
+
+**BLOCKING — 17-05 checkpoint, awaiting Josh's decision (2026-07-19):** PERF-04's D-15 gate ("real content visible ≤100ms median, prefetch-warm") measured 1.3–8s across all 6 hub-and-spoke nav pairs against a local prod build — roughly 20-80x over the bar, consistently, across two independent runs. Root cause (per `node_modules/next/dist/docs/01-app/02-guides/prefetching.md`): all 4 key routes are genuinely dynamic Server Components (session + DB reads), and the docs' own prefetching-behavior table states dynamic pages are "not [fully] prefetched unless loading.js" and have "Client Cache TTL: Off, unless enabled [experimental staleTimes]" — so every nav is a real, unavoidable server round trip under the stable API surface. This contradicts 17-05 Task 2's D-16 decision ("Link default prefetch already sufficient, no code change") — that decision is now known to be wrong and needs revisiting. Options for Joss: (a) accept as a D-04-style checkpoint-flagged miss (PERF-04 stays open, carried to Phase 18 or backlog); (b) approve a `loading.tsx`-per-route shell-prefetch attempt (stable API, but the shell is a skeleton and D-15 explicitly disallows skeletons from counting as "ready" — would need D-15's bar itself revisited, not just an implementation tweak); (c) approve a proper D-07 checkpoint to evaluate Cache Components/PPR (experimental, `cacheComponents` flag) in a future plan. No code has been changed to chase this beyond Task 2's original (now-superseded) decision — this is presented as measured evidence, not fixed.
 
 ## Carried Tech Debt
 
@@ -93,13 +96,13 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 | v2.0 UAT | 10-HUMAN-UAT.md (offline vision eval reference-set) | Partial | v2.0 close |
 | v2.0 UAT | 11-HUMAN-UAT.md (live browser walkthrough) | Partial | v2.0 close |
 | v4.0 UAT | 20-24 HUMAN-UAT.md interaction/animation/live items | Partial | v4.0 close (visual UAT done 2026-06-24) |
-| v4.0 Perf | 13-perf INP-on-dev-server follow-up (task_d326ebac) | Open | v4.0 close |
+| v4.0 Perf | 13-perf INP-on-dev-server follow-up (task_d326ebac) | Cleared 2026-07-19 (17-05 Task 1 — INP assertion now IS_PROD_BUILD-gated) | v4.0 close |
 
 ## Session Continuity
 
-Last session: 2026-07-19T14:42:56.000Z
-Stopped at: Completed 17-04-PLAN.md
-Resume file: .planning/phases/17-performance-optimization/17-05-PLAN.md
+Last session: 2026-07-19T16:20:00.000Z
+Stopped at: 17-05-PLAN.md Tasks 1-2 committed; PAUSED at Task 3 (checkpoint:human-verify) awaiting Josh's decision on the PERF-04 finding (see Blockers/Concerns)
+Resume file: .planning/phases/17-performance-optimization/17-05-PLAN.md (Task 3)
 
 ## Performance Metrics
 
