@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 25-02-PLAN.md -- ChangePasswordCard + AccountDirtyProvider + globals.css keyframes (D-08/D-09/D-10/D-11, D-04 foundation); all 4 files + SUMMARY committed, full tsc/vitest/biome green
-last_updated: "2026-07-19T16:46:34.619Z"
+stopped_at: Completed 25-03-PLAN.md -- AccountDetailsCard + AccountLogoutSection (D-05/D-06/D-07, ACC-04); all 4 files + SUMMARY committed, full tsc/vitest/biome green
+last_updated: "2026-07-19T17:20:54.184Z"
 last_activity: 2026-07-19
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 15
+  completed_plans: 16
   percent: 50
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 25 (my-account) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-07-19
 
@@ -83,6 +83,10 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 25-02: SDK data-integrity bug found and repaired — `gsd-sdk query state.update-progress` doesn't just no-op on the `Progress (v3.0): [...]` status line (line 34); its regex also matches the FIRST occurrence of the literal substring `**Progress:**` anywhere in the file, including inside the Phase 25-01 decision entry above that merely quotes that string while documenting the no-op. Running `state.update-progress` truncated that decision entry mid-sentence and spliced in a `[████████░░] 83%` progress-bar fragment. Restored the entry to its original text here; flagging so future executors verify STATE.md content (not just the command's own JSON return value) after calling `state.update-progress` on this project.
 - Phase 25-02: AccountDirtyProvider/useAccountDirty (this project's first hand-authored React Context) stores ONLY a derived boolean, never the typed password text (D-04 leak guard, T-25-02-B) — passwordDirty is derived reactively via react-hook-form's watch() + a single useEffect rather than wrapping each field's onChange, so `reset()` on successful save automatically drives it back to false with no separate reset call needed.
 - Phase 25-02: change-password-card.tsx mirrors card-list.tsx's exact panelMounted + safety-net setTimeout accordion pattern (not a simpler always-mounted approach) so the collapsed panel stays out of the DOM/tab-order in real browsers and still unmounts reliably in jsdom, which never fires animationend; `gsd-sdk query state.add-decision` no-ops on this project's "### Decisions (v3.0-relevant)" heading (confirmed via `added: false`) — entries hand-edited directly, consistent with the existing project gotcha note.
+- Phase 25-03: AccountDetailsCard resolves Assumption A5 symmetrically — `if (!emailChanged) show "Details updated" fade` (not gated on nameChanged) — so a no-op save and a name-only save both fade quietly, while ANY email change (alone or combined with a name change) shows the server-persisted pending banner alone, never both signals.
+- Phase 25-03: `Card`/`ACBanner` (Daybreak atoms) only accept `{children,className}`/`{kind,children}` — neither forwards `data-testid`. Wrapped both in a plain `<div data-testid="...">` rather than widening either shared atom, extending the exact technique 25-PATTERNS.md already prescribed for ACBanner to Card too (kept both atoms and this plan's files_modified scope untouched).
+- Phase 25-03: two TS-only test fixes, both avoiding `!` per biome's noNonNullAssertion rule — (1) `mock.invocationCallOrder[0]` is `number|undefined` under noUncheckedIndexedAccess, guarded with an explicit `if (...===undefined) throw` before comparing; (2) a `let resolveSignOut | null` reassigned inside a mockImplementation's nested Promise executor and later null-checked collapsed to TS's `never` at the call site (known closure/control-flow-narrowing limitation) — sidestepped by simplifying to a never-resolving-promise test instead of manual deferred resolution.
+- Phase 25-03: confirmed (again) `gsd-sdk query state.add-decision` no-ops on this project's "### Decisions (v3.0-relevant)" heading (`added: false`, "Decisions section not found" — the regex needs a bare "Decisions"/"Decisions Made" heading, not "Decisions (v3.0-relevant)"); `state.record-metric`/`state.record-session`/`state.advance-plan` all verified safe and correct via git diff this session — only `state.update-progress` and `state.add-decision` are the known-broken pair on this project.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -108,8 +112,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-19T16:46:34.606Z
-Stopped at: Completed 25-02-PLAN.md -- ChangePasswordCard + AccountDirtyProvider + globals.css keyframes (D-08/D-09/D-10/D-11, D-04 foundation); all 4 files + SUMMARY committed, full tsc/vitest/biome green
+Last session: 2026-07-19T17:19:01.312Z
+Stopped at: Completed 25-03-PLAN.md -- AccountDetailsCard + AccountLogoutSection (D-05/D-06/D-07, ACC-04); all 4 files + SUMMARY committed, full tsc/vitest/biome green
 Resume file: None
 
 ## Performance Metrics
@@ -126,3 +130,4 @@ Resume file: None
 | Phase 17 P05 | n/a (continuation close-out) | 2 tasks + checkpoint | 6 files |
 | Phase 25 P01 | 20min | 3 tasks | 6 files |
 | Phase 25 P02 | 18min | 2 tasks | 4 files |
+| Phase 25 P03 | 24min | 2 tasks | 4 files |
