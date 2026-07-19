@@ -37,9 +37,7 @@ describe("AccountLogoutSection", () => {
     render(<AccountLogoutSection />);
 
     expect(screen.getByTestId("account-logout-card")).toBeTruthy();
-    expect(
-      screen.getByRole("heading", { name: "Sign out" }),
-    ).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Sign out" })).toBeTruthy();
     expect(
       screen.getByText("Sign out of LeoCards on this device."),
     ).toBeTruthy();
@@ -63,28 +61,18 @@ describe("AccountLogoutSection", () => {
     });
   });
 
-  it("disables the button while signOut is in flight, then re-enables after navigation", async () => {
-    let resolveSignOut: (() => void) | null = null;
-    mockSignOut.mockImplementation(
-      () =>
-        new Promise<void>((resolve) => {
-          resolveSignOut = resolve;
-        }),
-    );
+  it("disables the button while signOut is in flight", () => {
+    // A never-resolving promise is enough to observe the synchronous
+    // disabled state right after click — resolution/navigation timing is
+    // already covered by the test above.
+    mockSignOut.mockImplementation(() => new Promise<void>(() => {}));
     render(<AccountLogoutSection />);
 
     const btn = screen.getByTestId("account-logout-btn") as HTMLButtonElement;
+    expect(btn.disabled).toBe(false);
+
     fireEvent.click(btn);
 
     expect(btn.disabled).toBe(true);
-
-    if (resolveSignOut === null) {
-      throw new Error("Expected signOut to have been called");
-    }
-    resolveSignOut();
-
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith("/login");
-    });
   });
 });
