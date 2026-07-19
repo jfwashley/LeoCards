@@ -143,3 +143,7 @@ None — no external service configuration required. `RESEND_API_KEY` remains op
 ---
 *Phase: 25-my-account*
 *Completed: 2026-07-19*
+
+## Self-Check: PASSED
+
+All 6 created files verified present on disk; all 7 commits (6 task RED/GREEN + this SUMMARY's docs commit) verified present in `git log`.

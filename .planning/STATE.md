@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: "Completed 17-05-PLAN.md — PERF-04 accepted-miss (Josh, 2026-07-19); Phase 17 (Performance optimization) complete, 5/5 plans. Phase 25 (my-account) execution continues separately, currently at Plan 1 of 5."
-last_updated: "2026-07-19T16:45:00.000Z"
-last_activity: 2026-07-19 -- Completed 17-05-PLAN.md (Phase 17 closed); Phase 25 execution continues separately
+stopped_at: Completed 25-01-PLAN.md -- account-mutation backend (requestEmailChange, deleteAccount, getPendingEmailChange, verify-email route); all 6 files + SUMMARY committed, full tsc/vitest/biome green
+last_updated: "2026-07-19T16:19:05.922Z"
+last_activity: 2026-07-19
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 13
+  completed_plans: 14
   percent: 50
 ---
 
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 25 (my-account) — EXECUTING
-Plan: 1 of 5
-Status: Executing Phase 25
-Last activity: 2026-07-19 -- Phase 25 execution started
+Plan: 2 of 5
+Status: Ready to execute
+Last activity: 2026-07-19
 
 Progress (v3.0): [██████████] 96% (Phase 17 all 5 plans complete — PERF-04 accepted-miss, phase closed 2026-07-19; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied, PERF-03/PERF-04 satisfied)
 
@@ -76,6 +76,10 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 17-04: D-04 accepted-miss — /deck/new-card TBT 338ms vs ≤200 gate accepted (Perf 92 passes, 62% TBT cut from 891, heaviest route 789KB); other 3 routes fully certify.
 - Phase 17-05 Tasks 1-2 (committed, not yet certified): extended e2e/13-perf.spec.ts with the 6 D-13 hub-and-spoke nav-timing tests (prod-build-gated via PERF_PROD_BUILD, D-14) + task_d326ebac INP prod-gating; wired D-17 router.refresh() after study-completion push() (habitat celebrate + "Back to deck"); D-16 recorded as "Link default prefetch already sufficient" (no code change) — see Blockers/Concerns below, this decision is now contradicted by measured evidence and needs revisiting. card-add already satisfied via existing revalidatePath() Server Actions (no change). Rule 3 deviation: added a "My deck" back-link to BrowseTiles (word-list-browser.tsx) — the page previously had zero link back to /dashboard.
 - Phase 17-05: PERF-04 accepted-miss — ≤100ms instant-nav unreachable with stable APIs (dynamic RSC routes = server round trip per nav; measured 1.3-8s medians on local prod build). Carried to Phase 18/backlog; future paths = loading.tsx (needs D-15 relax) or PPR/CacheComponents (needs D-07). D-16 "default prefetch sufficient" corrected to insufficient-for-dynamic-routes.
+- Phase 25-01: requestEmailChange (D-07) and deleteAccount (D-14) are custom server actions that deliberately bypass better-auth's built-in changeEmail/deleteUser — changeEmail anti-enumeration-masks an already-taken email (conflicts with the honest "already in use" error this app wants), and deleteUser requires a session fresher than 24h without a password (conflicts with D-12's no-password-reentry gate for a daily-habit app). Both reuse the existing `verification` table with a deterministic `change-email:{userId}` identifier; zero schema changes.
+- Phase 25-01: Rule 1 fix — wrapped the Resend send in try/catch (not just `.catch()` on the send promise). `new Resend(undefined)` throws synchronously when RESEND_API_KEY is unset (the local/CI default), which a `.catch()` chained onto a call that never happens cannot protect against. Caught via TDD GREEN using the real, unmocked `resend` package.
+- Phase 25-01: cast the userId parsed from the verification identifier suffix `as UserId` in verify-email/route.ts — required by strict + noUncheckedIndexedAccess tsc against user.id's branded column type; RESEARCH's illustrative snippet omitted this cast.
+- Phase 25-01: known SDK quirk — `gsd-sdk query state.update-progress` no-ops on this project's `Progress (v3.0): [...]` line (regex expects literal `**Progress:**` or `^Progress:`, not `Progress (v3.0):`); left unfixed as out-of-scope tooling, noted here for the next plan's executor.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -101,9 +105,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-19T16:45:00.000Z
-Stopped at: Completed 17-05-PLAN.md — PERF-04 accepted-miss (Josh, 2026-07-19); Phase 17 complete (5/5 plans). Phase 25 (my-account) execution continues separately.
-Resume file: None (Phase 17 closed; Phase 25 is the active execution track — see .planning/phases/25-my-account/)
+Last session: 2026-07-19T16:19:05.910Z
+Stopped at: Completed 25-01-PLAN.md -- account-mutation backend (requestEmailChange, deleteAccount, getPendingEmailChange, verify-email route); all 6 files + SUMMARY committed, full tsc/vitest/biome green
+Resume file: None
 
 ## Performance Metrics
 
@@ -117,3 +121,4 @@ Resume file: None (Phase 17 closed; Phase 25 is the active execution track — s
 | Phase 17 P03 | 25min | 3 tasks | 9 files |
 | Phase 17 P04 | n/a (continuation close-out) | 2 tasks + checkpoint | 22 files |
 | Phase 17 P05 | n/a (continuation close-out) | 2 tasks + checkpoint | 6 files |
+| Phase 25 P01 | 20min | 3 tasks | 6 files |
