@@ -188,3 +188,12 @@ None — no external service configuration required. Deploy is a manual step Jos
 ---
 *Phase: 17-performance-optimization*
 *Completed: 2026-07-19*
+
+## Self-Check: PASSED
+
+- FOUND: `.planning/phases/17-performance-optimization/17-HUMAN-UAT.md`
+- FOUND: `.planning/phases/17-performance-optimization/17-05-SUMMARY.md`
+- FOUND commit `a545dff` (test(17): persist human verification items as UAT)
+- FOUND commit `5c78070` (docs(17-05): complete plan — PERF-04 accepted-miss, phase-end proof recorded)
+- FOUND commit `d03b1ec` (docs(17-05): update tracking after Wave 5)
+- CONFIRMED: `git status --porcelain .planning/phases/16-performance-baseline-measure/baseline/` is empty (immutable baseline untouched)
