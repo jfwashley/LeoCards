@@ -271,3 +271,84 @@
     display: none;
   }
 }
+
+/* Phase 25 (D-08) — change-password-card.tsx accordion (CSS-only, mirrors
+   the cl-accordion-open-kf / cl-accordion-closing-kf convention above from
+   card-list.tsx — same technique, uniquely prefixed per this file's own
+   "one keyframe pair per feature" convention; NOT the cl- prefix, which
+   means CardList specifically). */
+@keyframes acct-accordion-open-kf {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+@keyframes acct-accordion-close-kf {
+  from {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  to {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+.acct-accordion-open,
+.acct-accordion-closing {
+  display: grid;
+}
+.acct-accordion-open {
+  animation: acct-accordion-open-kf 0.22s ease-in-out forwards;
+}
+.acct-accordion-closing {
+  animation: acct-accordion-close-kf 0.22s ease-in-out forwards;
+}
+.acct-accordion-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .acct-accordion-open,
+  .acct-accordion-closing {
+    animation: none;
+  }
+  .acct-accordion-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .acct-accordion-closing {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
+/* Phase 25 (D-10) — quiet success fade for change-password-card.tsx
+   ("Password updated") and account-details-card.tsx ("Details updated").
+   Opacity ramp only, no transform. */
+@keyframes acct-success-fade {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.acct-success-fade {
+  animation: acct-success-fade 2.4s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .acct-success-fade {
+    /* Shown at full opacity; the component's own JS timeout still unmounts
+       it after the same ~2.4s window — no animated ramp, but the same
+       timed disappearance. */
+    animation: none;
+  }
+}
