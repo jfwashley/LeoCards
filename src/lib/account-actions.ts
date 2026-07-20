@@ -169,6 +169,17 @@ export async function deleteAccount(): Promise<void> {
 
   // Best-effort: the session row is already gone via cascade; signOut's
   // cookie-clearing (nextCookies() plugin `after` hook) still needs to run
-  // so the browser's session cookie is cleared on this device.
-  await auth.api.signOut({ headers: hdrs });
+  // so the browser's session cookie is cleared on this device. WR-08:
+  // guarded in its own try/catch -- the account deletion above (the
+  // operation the user actually asked for) has already fully succeeded by
+  // this point, so a throw here must not propagate out and make the
+  // caller think the whole deletion failed.
+  try {
+    await auth.api.signOut({ headers: hdrs });
+  } catch (err) {
+    console.error(
+      "[account] signOut after deleteAccount failed (best-effort):",
+      err,
+    );
+  }
 }

@@ -77,7 +77,10 @@ describe("DeleteAccountRow", () => {
     });
   });
 
-  it("shows an inline error and re-enables the buttons when deleteAccount throws", async () => {
+  it("shows an inline error, logs the error (WR-08), and re-enables the buttons when deleteAccount throws", async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
     mockDeleteAccount.mockRejectedValue(new Error("boom"));
     render(<DeleteAccountRow />);
 
@@ -94,5 +97,13 @@ describe("DeleteAccountRow", () => {
     });
     expect(mockPush).not.toHaveBeenCalled();
     expect(confirmBtn.disabled).toBe(false);
+    // WR-08 — the bare catch previously had no bound error and no
+    // logging, making an already-deleted-but-signOut-failed scenario
+    // completely undiagnosable.
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "[account] deleteAccount failed:",
+      expect.any(Error),
+    );
+    consoleErrorSpy.mockRestore();
   });
 });

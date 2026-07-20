@@ -262,4 +262,25 @@ describe("deleteAccount", () => {
     );
     expect(mockSignOut).toHaveBeenCalled();
   });
+
+  // WR-08 — signOut() was previously unguarded: a throw here propagated
+  // out of deleteAccount() even though the account deletion itself (the
+  // operation the user actually asked for) had already fully succeeded.
+  it("resolves successfully and logs (rather than throwing) when the best-effort signOut rejects", async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    mockSession("user-delete-3");
+    mockSignOut.mockRejectedValueOnce(new Error("signout boom"));
+
+    await expect(deleteAccount()).resolves.toBeUndefined();
+
+    // The account deletion itself must still have happened.
+    expect(db.delete).toHaveBeenCalledWith(user);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "[account] signOut after deleteAccount failed (best-effort):",
+      expect.any(Error),
+    );
+    consoleErrorSpy.mockRestore();
+  });
 });

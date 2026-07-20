@@ -26,7 +26,13 @@ export function DeleteAccountRow() {
     try {
       await deleteAccount();
       router.push("/login");
-    } catch {
+    } catch (err) {
+      // WR-08 — a bare catch with no bound error and no logging left this
+      // completely undiagnosable: if deleteAccount's account-deletion
+      // itself succeeded but its best-effort signOut() then threw, the
+      // account was irreversibly gone yet the user was told deletion
+      // FAILED and to retry, with no console trace anywhere.
+      console.error("[account] deleteAccount failed:", err);
       setDeleteError("Couldn't delete your account. Try again.");
     } finally {
       setDeleting(false);
