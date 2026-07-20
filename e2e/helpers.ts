@@ -327,11 +327,16 @@ export async function getPendingEmailChangeToken(
     const { db } = await import("@/db");
     const { verification } = await import("@/db/schema");
     const { like } = await import("drizzle-orm");
+    // WR-07: PENDING_EMAIL_PREFIX now lives in account-constants.ts as the
+    // single shared source of truth (account-actions.ts, verify-email/
+    // route.ts, and account-queries.ts all import it too) — dynamically
+    // imported for the same reason as @/db/@/db/schema above.
+    const { PENDING_EMAIL_PREFIX } = await import("@/lib/account-constants");
 
     const rows = await db
       .select()
       .from(verification)
-      .where(like(verification.identifier, "change-email:%"));
+      .where(like(verification.identifier, `${PENDING_EMAIL_PREFIX}%`));
 
     for (const row of rows) {
       try {

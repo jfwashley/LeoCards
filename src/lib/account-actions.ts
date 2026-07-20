@@ -7,19 +7,21 @@ import { db } from "@/db";
 import type { UserId } from "@/db/schema";
 import { user, verification } from "@/db/schema";
 import { env } from "@/env";
+import { PENDING_EMAIL_PREFIX } from "@/lib/account-constants";
 import { auth } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 // ============================================================
-// D-07 email-change token store convention (both this file and
-// src/app/api/account/verify-email/route.ts MUST agree on this shape):
-//   identifier = `change-email:${userId}`            (deterministic — one
+// D-07 email-change token store convention (this file, src/app/api/account/
+// verify-email/route.ts, AND src/lib/account-queries.ts must all agree on
+// this shape — PENDING_EMAIL_PREFIX itself is shared via
+// account-constants.ts, WR-07):
+//   identifier = `${PENDING_EMAIL_PREFIX}${userId}`   (deterministic — one
 //                                                       pending row per user)
 //   value      = JSON.stringify({ token, newEmail })  (token = crypto.randomUUID())
 //   expiresAt  = now + TOKEN_TTL_MS
 // ============================================================
 
-const PENDING_EMAIL_PREFIX = "change-email:";
 const TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24h — Open Question 1, resolved
 
 // 5 requests/hour/user — Open Question 2, resolved. Guards the resend

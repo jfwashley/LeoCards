@@ -6,11 +6,11 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import type { UserId } from "@/db/schema";
 import { verification } from "@/db/schema";
+import { PENDING_EMAIL_PREFIX } from "@/lib/account-constants";
 
-// Same deterministic identifier convention as src/lib/account-actions.ts
-// (`change-email:${userId}`). Kept as a local const rather than a
-// cross-import so this query module stays self-contained.
-const PENDING_EMAIL_PREFIX = "change-email:";
+// WR-07: PENDING_EMAIL_PREFIX now lives in account-constants.ts as the
+// single shared source of truth for the D-07 identifier convention (this
+// file, account-actions.ts, and verify-email/route.ts all import it).
 
 // ============================================================
 // getPendingEmailChange

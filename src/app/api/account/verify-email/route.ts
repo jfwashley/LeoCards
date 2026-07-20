@@ -23,9 +23,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import type { UserId } from "@/db/schema";
 import { user, verification } from "@/db/schema";
-
-// Must match src/lib/account-actions.ts's identifier convention exactly.
-const PENDING_EMAIL_PREFIX = "change-email:";
+import { PENDING_EMAIL_PREFIX } from "@/lib/account-constants";
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token");
