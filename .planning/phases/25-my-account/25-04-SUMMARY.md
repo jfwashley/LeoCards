@@ -139,3 +139,18 @@ None — no external service configuration required.
 ---
 *Phase: 25-my-account*
 *Completed: 2026-07-20*
+
+## Self-Check: PASSED
+
+All 4 created files verified present on disk:
+- FOUND: src/components/delete-account-row.tsx
+- FOUND: src/components/delete-account-row.test.tsx
+- FOUND: src/components/daybreak/account-back.tsx
+- FOUND: src/app/(protected)/account/page.tsx
+
+All 5 commits verified present in `git log` (4 task commits + this Summary's own docs commit):
+- FOUND: 93677ac (Task 1 RED)
+- FOUND: f8ef6e7 (Task 1 GREEN)
+- FOUND: 31979bb (Task 2)
+- FOUND: ac0b019 (Task 3)
+- FOUND: c37de2d (docs: plan summary)
