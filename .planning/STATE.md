@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: executing
-stopped_at: Completed 25-04-PLAN.md -- DeleteAccountRow + AccountBack + /account page shell (D-04/D-12/D-13/D-14, ACC-01/04/05/06); /account fully live and reachable; all 4 files + SUMMARY committed, full tsc/vitest/biome green
-last_updated: "2026-07-20T11:44:45.688Z"
+status: verifying
+stopped_at: Completed 25-05-PLAN.md -- header glyph swap to AccountNavButton (D-01), logout-button.tsx deleted, e2e/01+e2e/10 retargeted, e2e/25-my-account.spec.ts full-flow coverage added; static gates (tsc/biome/vitest) all green, live e2e deferred to orchestrator gate; Phase 25 (my-account) code-complete, ready for verification
+last_updated: "2026-07-20T12:25:37.321Z"
 last_activity: 2026-07-20
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 18
-  completed_plans: 17
-  percent: 50
+  completed_plans: 18
+  percent: 67
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 25 (my-account) — EXECUTING
+Phase: 25 (my-account) — CODE-COMPLETE, PENDING VERIFICATION
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-20
 
 Progress (v3.0): [██████████] 96% (Phase 17 all 5 plans complete — PERF-04 accepted-miss, phase closed 2026-07-19; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied, PERF-03/PERF-04 satisfied)
@@ -91,6 +91,10 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 25-04: `/account` page.tsx's `?verified` allow-list uses an if/else chain assigning a typed `let verified: "success" | "expired" | null`, not the plan's illustrative nested ternary — functionally identical, satisfies the same acceptance-criteria grep, avoids nested-ternary lint friction.
 - Phase 25-04: **discovered a live, concurrently-running session committing to this exact working tree/branch mid-execution** (interleaved `fix(17): WR-01..04` / `docs(17)` / `style(17)` commits — a Phase-17 code-review-fix pass, not part of this plan) — one of its commits briefly swept up this plan's freshly-staged `delete-account-row.test.tsx` (later reset back out by that same session; file content verified byte-intact throughout). Every commit in this plan from that point on used an explicit trailing pathspec (`git commit -m "..." -- <files>`) rather than a bare `git commit`, and each was individually verified via `git show --stat` to contain exactly its intended file(s) — no cross-contamination in the final state. Also caused the pre-existing port-3000 dev server to serve a stale cached 404 for the brand-new `/account` route (not restarted, to avoid disrupting that session); the plan's manual smoke-test gate was run against a dedicated port-3001 server instead. Flagging for Josh: confirm whether two GSD sessions are intentionally running against this repo concurrently — `parallelization: false` in config.json governs within-phase plan execution only, not cross-session working-tree access.
 - Phase 25-04: `/account` is now fully live — session-gated (307 redirect verified for unauthenticated requests), all sections stacked in the fixed D-03 order inside one `AccountDirtyProvider`. ACC-01/04/05/06 satisfied. 25-05 (header swap) can proceed.
+- Phase 25-05: Header glyph swap complete (D-01) — `AccountNavButton` replaces `LogoutButton` in `app-header.tsx`'s right cluster; `logout-button.tsx` deleted with zero dangling references (grep + tsc confirmed before deletion); `e2e/01` (lines 48/70/99) and `e2e/10` (line 46) retargeted through an `account-nav-btn` -> `/account` navigation hop, preserving the "Sign out" accessible name and each assertion's original behavioral intent.
+- Phase 25-05: `e2e/25-my-account.spec.ts` added — full real-pipeline coverage (reach, details render, 44px touch targets, change-password wrong+happy incl. re-login with the new password, email pending-banner, logout, delete+sign-in-rejected). New `e2e/helpers.ts` seam `getPendingEmailChangeToken(newEmail)` dynamically imports `@/db` (never at module scope, so a missing `DATABASE_URL` in the Playwright runner's env only affects this one optional assertion, not the whole suite) and mirrors `verify-email/route.ts`'s scan-and-parse technique; falls back to asserting the pending-banner state alone when no token resolves — no live inbox required either way (the round trip stays unit-covered by `route.test.ts`, 25-01).
+- Phase 25-05: **Phase 25 (my-account) is now code-complete** — all four requirements (ACC-01/04/05/06) have production code and static verification in place (full `tsc --noEmit`, scoped `biome ci`, full `vitest run` at 2174/128 unchanged from 25-04, zero new deps, `src/db/schema.ts` untouched). Live e2e execution (`e2e/25-my-account.spec.ts e2e/01-auth-signup-login.spec.ts e2e/10-mobile-responsive.spec.ts` against a freshly-restarted dev server) is deferred to the orchestrator's gate, per this run's static-only executor policy.
+- Phase 25-05: left `app-header.tsx`'s right-cluster `gap` at its existing `9` rather than preemptively narrowing it per UI-SPEC's conditional crowding note — analytically the 44px hit area is centered around the identical 36px visual frame, so the visible gap to `DeckSwitcher` grows (not shrinks); deferred to the orchestrator's live visual gate rather than making an unverified speculative CSS change.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -118,8 +122,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-20T11:44:45.676Z
-Stopped at: Completed 25-04-PLAN.md -- DeleteAccountRow + AccountBack + /account page shell (D-04/D-12/D-13/D-14, ACC-01/04/05/06); /account fully live and reachable; all 4 files + SUMMARY committed, full tsc/vitest/biome green
+Last session: 2026-07-20T12:25:37.311Z
+Stopped at: Completed 25-05-PLAN.md -- header glyph swap to AccountNavButton (D-01), logout-button.tsx deleted, e2e/01+e2e/10 retargeted, e2e/25-my-account.spec.ts full-flow coverage added; static gates (tsc/biome/vitest) all green, live e2e deferred to orchestrator gate; Phase 25 (my-account) code-complete, ready for verification
 Resume file: None
 
 ## Performance Metrics
@@ -138,3 +142,4 @@ Resume file: None
 | Phase 25 P02 | 18min | 2 tasks | 4 files |
 | Phase 25 P03 | 24min | 2 tasks | 4 files |
 | Phase 25 P04 | 22min | 3 tasks | 4 files |
+| Phase 25 P05 | 31min | 3 tasks | 7 files |

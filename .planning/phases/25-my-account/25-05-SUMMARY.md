@@ -161,3 +161,17 @@ None — no external service configuration required. The email-token seam is opp
 ---
 *Phase: 25-my-account*
 *Completed: 2026-07-20*
+
+## Self-Check: PASSED
+
+All created files verified present on disk, deleted file verified gone:
+- FOUND: src/components/account-nav-button.tsx
+- FOUND: e2e/25-my-account.spec.ts
+- CONFIRMED DELETED: src/components/logout-button.tsx
+- FOUND: .planning/phases/25-my-account/25-05-SUMMARY.md
+
+All 4 commits verified present in `git log`:
+- FOUND: 6c76491 (Task 1)
+- FOUND: d285be9 (Task 2)
+- FOUND: e167e73 (Task 3)
+- FOUND: 7d4d63c (docs: plan summary)

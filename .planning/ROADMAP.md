@@ -76,7 +76,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization (completed 2026-07-02)
 - [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
-- [ ] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard
+- [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 
 ## Phase Details (v3.0)
 
@@ -185,7 +185,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] 25-02-PLAN.md — Change-password card + UI foundations: dirty-context, accordion/success-fade CSS, changePassword flow (D-08, D-09, D-10, D-11, D-04)
 - [x] 25-03-PLAN.md — Account details card (name/email edit + pending banner) + Sign-out section (D-05, D-06, D-07)
 - [x] 25-04-PLAN.md — /account page assembly + back-button dirty guard + delete-account row (D-02, D-03, D-04, D-12, D-13, D-14)
-- [ ] 25-05-PLAN.md — Header glyph swap + e2e (nav-button, app-header, logout-button delete, e2e retargets + new spec) (D-01)
+- [x] 25-05-PLAN.md — Header glyph swap + e2e (nav-button, app-header, logout-button delete, e2e retargets + new spec) (D-01)
 
 ## Progress
 
@@ -206,7 +206,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-19 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
-| 25. My Account | 4/5 | In Progress|  |
+| 25. My Account | 5/5 | Complete   | 2026-07-20 |
 
 ## Backlog
 
