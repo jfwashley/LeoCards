@@ -215,15 +215,13 @@ export function StudySession({
     const leveledUp = showLevelUp;
     setShowLevelUp(null);
     if (leveledUp !== null) {
-      // Phase 17 (D-17): /api/study/complete is a Route Handler (not a Server
-      // Action), so it has no automatic client Router Cache invalidation the
-      // way deck-actions.ts's Server Actions get via revalidatePath. Calling
-      // router.refresh() immediately AFTER router.push() targets the
-      // now-current route (the destination), forcing a fresh server render
-      // so habitat state (level, mood, decay) reflects the just-completed
-      // session on landing rather than a possibly prefetch-warm stale payload.
+      // Phase 17 (D-17): /habitat is a dynamic route (session + DB reads),
+      // this push is not a prefetched Link, and the client Router Cache TTL
+      // for dynamic payloads is off — so the push itself always triggers a
+      // fresh server render with post-session habitat state. A trailing
+      // router.refresh() would serialize a second, redundant server round
+      // trip (measured ~2x content-visible latency on the study exit path).
       router.push(`/habitat?celebrate=${leveledUp}`);
-      router.refresh();
     }
   }, [showLevelUp, router]);
 
@@ -390,12 +388,11 @@ export function StudySession({
             <TBtn
               style={{ maxWidth: 280 }}
               onClick={() => {
-                // Phase 17 (D-17) — see handleLevelUpDismiss above for why
-                // the non-experimental push()+refresh() combo is the targeted
-                // invalidation: dashboard due-count must be correct on
-                // landing, without an always-refetch on every nav.
+                // Phase 17 (D-17) — see handleLevelUpDismiss above: the
+                // dynamic /dashboard render on this un-prefetched push is
+                // already fresh (due-counts correct on landing); a trailing
+                // router.refresh() only doubled the nav's server round trips.
                 router.push(`/dashboard?deck=${deckId}`);
-                router.refresh();
               }}
             >
               Back to deck
