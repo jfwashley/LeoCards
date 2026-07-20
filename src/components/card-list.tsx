@@ -210,19 +210,21 @@ export const CardList = React.memo(function CardList({
   }, []);
 
   function handleAccordionToggle() {
-    setOpen((prev) => {
-      const next = !prev;
-      clearCloseTimer();
-      if (next) {
-        setPanelMounted(true);
-      } else {
-        closeTimerRef.current = setTimeout(() => {
-          setPanelMounted(false);
-          closeTimerRef.current = null;
-        }, 260);
-      }
-      return next;
-    });
+    // WR-02: compute the next value from the in-scope `open` and keep ALL
+    // side effects (timer scheduling, setPanelMounted) OUTSIDE the setOpen
+    // updater — React requires updaters to be pure (they may be replayed
+    // during render / double-invoked in StrictMode).
+    const next = !open;
+    clearCloseTimer();
+    if (next) {
+      setPanelMounted(true);
+    } else {
+      closeTimerRef.current = setTimeout(() => {
+        setPanelMounted(false);
+        closeTimerRef.current = null;
+      }, 260);
+    }
+    setOpen(next);
   }
 
   const togglePause = (card: CardRow) => {
