@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: completed
+status: executing
 stopped_at: Phase 25 complete (verified, secured, reviewed)
 last_updated: "2026-07-20T15:05:04.111Z"
 last_activity: 2026-07-20
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 18
-  completed_plans: 18
-  percent: 67
+  completed_phases: 5
+  total_plans: 21
+  completed_plans: 21
+  percent: 83
 ---
 
 # Project State
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Milestone complete
+**Current focus:** Phase 18 (field validation & guardrails) — the only remaining v3.0 phase
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 25
-Plan: Not started
-Status: Milestone complete
+Phase: 25 — COMPLETE 2026-07-20 (5/5 plans; verified 6/6 must-haves, human_needed → 25-HUMAN-UAT.md ×2; code review 0C/9W all fixed; security 28/28 closed)
+Plan: 5 of 5 complete
+Status: Phase 25 complete — next up is Phase 18 (not started; milestone NOT complete)
 Last activity: 2026-07-20
 
-Progress (v3.0): [██████████] 96% (Phase 17 all 5 plans complete — PERF-04 accepted-miss, phase closed 2026-07-19; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied, PERF-03/PERF-04 satisfied)
+Progress (v3.0): [████████░░] 83% (Phases 14/15/16/17/25 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; only Phase 18 PERF-05/06 remains)
 
 ## Shipped Milestones
 
@@ -42,7 +42,7 @@ Progress (v3.0): [██████████] 96% (Phase 17 all 5 plans comp
 
 ## Milestone Note
 
-v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (2026-07-19, PERF-04 accepted-miss)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt.**
+v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)** and **Phase 25 My Account is complete (2026-07-20, ACC-01..06)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt — the only open v3.0 phase.**
 
 ## Accumulated Context
 
