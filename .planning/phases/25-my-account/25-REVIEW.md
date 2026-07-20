@@ -34,6 +34,22 @@ findings:
   info: 2
   total: 11
 status: issues_found
+fix_status: all_fixed
+fixed_at: 2026-07-20T14:18:06Z
+fix_report: 25-REVIEW-FIX.md
+fix_scope: critical_warning
+fixed: 9
+skipped: 0
+fix_log:
+  - { id: WR-01, commit: d59cd26 }
+  - { id: WR-02, commit: dfbb59b }
+  - { id: WR-03, commit: a423067 }
+  - { id: WR-04, commit: d0803cd }
+  - { id: WR-05, commit: "7812567" }
+  - { id: WR-06, commit: dab40fb }
+  - { id: WR-07, commit: 1543e4e }
+  - { id: WR-08, commit: e7dce57 }
+  - { id: WR-09, commit: c2b0dc8 }
 ---
 
 # Phase 25: Code Review Report
@@ -78,6 +94,8 @@ None found.
 
 #### WR-01: Mutation handlers use `try/finally` with no `catch` — a rejected promise produces silent no-op UI
 
+**Fixed:** commit `d59cd26` — applied as suggested (catch added to both `onSubmit` handlers, mirroring `delete-account-row.tsx`), plus a regression test per handler exercising a rejected promise.
+
 **File:** `src/components/account-details-card.tsx:101-152`, `src/components/change-password-card.tsx:138-180`
 
 **Issue:** Both `onSubmit` handlers wrap their `await` calls in `try { ... } finally { setIsPending(false); }` with **no `catch` clause**. Every error path they do handle assumes the callee *resolves* with an `{ error }` / `{ ok: false }` shape — but `requestEmailChange` (imported at `account-details-card.tsx:14`, called at `account-details-card.tsx:122`) is a `"use server"` action that can also *reject*: it does `throw new Error("Unauthorized")` at `src/lib/account-actions.ts:54` whenever `getSession()` returns null. That's a realistic runtime state, not a hypothetical — the user's session can expire or be revoked mid-edit (e.g. they changed their password in another tab, which fires `revokeOtherSessions: true` per D-09) while the `/account` edit form is still open. When that happens here, the promise rejects, nothing in `onSubmit` catches it, `serverError`/`emailTakenError` are never set (those assignments only happen inside the `if (error)` / `if (!result.ok)` branches, which are never reached), and `finally` still resets `isPending` — so the Save button just silently re-enables with the form otherwise unchanged. The user sees no error, no success, nothing. `change-password-card.tsx:142-179` has the identical shape around `authClient.changePassword`.
@@ -103,6 +121,8 @@ Apply the same `catch` to `change-password-card.tsx`'s `onSubmit`.
 
 #### WR-02: Partial-mutation success leaves the UI showing stale data
 
+**Fixed:** commit `dfbb59b` — applied as suggested (`router.refresh()` fires as soon as the name mutation succeeds), plus the exact name-succeeds/email-fails regression test this finding noted was missing.
+
 **File:** `src/components/account-details-card.tsx:101-152` (also `87-99`)
 
 **Issue:** When both name and email changed and the user submits: `authClient.updateUser({ name })` (line 114) can succeed while the follow-up `requestEmailChange(values.email)` (line 122) fails (e.g. `"email-taken"`). The function `return`s at line 129 *before* `router.refresh()`/`setEditing(false)` (lines 133-134) ever run. The server now genuinely has the new name, but the component's `name` prop is stale (not refreshed), `editing` stays `true`, and no success indicator fires. If the user then clicks "Discard changes" (`handleCancel`, line 94-99), it calls `reset({ name, email })` using that same **stale** `name` prop — so the view-mode `DetailRow` renders the *old* name, actively contradicting what the server just persisted, until the next full page load. There is no test covering this combined name+email, name-succeeds/email-fails path (`account-details-card.test.tsx`'s combined-save test only covers the both-succeed case).
@@ -117,6 +137,8 @@ if (nameChanged) {
 ```
 
 #### WR-03: `handleResend` discards the result of `requestEmailChange` — failures are completely silent
+
+**Fixed:** commit `a423067` — adapted from the suggested fix: the pending banner (and its Resend button) renders in BOTH view and edit mode, but `serverError`'s `<p>` only renders inside the `editing==true` form branch, so reusing `serverError` as literally suggested would stay invisible when the user resends from view mode (the common case). Uses a dedicated `resendError` state rendered next to the banner itself instead. Regression test added, deliberately from view mode.
 
 **File:** `src/components/account-details-card.tsx:154-163`
 
@@ -155,6 +177,8 @@ async function handleResend() {
 
 #### WR-04: `"same-email"` and `"rate-limited"` are both collapsed into the same generic, misleading error
 
+**Fixed:** commit `d0803cd` — applied as suggested, plus a regression test asserting the rate-limited-specific copy (and that the generic message does NOT also appear).
+
 **File:** `src/components/account-details-card.tsx:121-130`
 
 **Issue:** `requestEmailChange` returns three distinct error codes (`"same-email" | "email-taken" | "rate-limited"`, `src/lib/account-actions.ts:49-52`), but the caller only special-cases `"email-taken"`:
@@ -180,6 +204,8 @@ if (result.error === "email-taken") {
 
 #### WR-05: `requestEmailChange` never validates the new email is well-formed server-side
 
+**Fixed:** commit `7812567` — applied as suggested (`z.string().trim().toLowerCase().email()`, new `"invalid-email"` error variant), plus two regression tests (malformed string, empty string) asserting the uniqueness check is never reached.
+
 **File:** `src/lib/account-actions.ts:47-76`
 
 **Issue:** The only email-shape validation (`z.string().email(...)`) lives in the client's `detailsSchema` (`src/components/account-details-card.tsx:19-22`). `requestEmailChange` itself only trims/lowercases (line 66) and checks equality/uniqueness (lines 68-76) — it never confirms `newEmailRaw` actually looks like an email. Since this is a `"use server"` action, it's directly callable over the network with an arbitrary POST body, bypassing the browser's zod validation entirely. A caller can set `newEmail` to any non-empty, not-currently-taken string (e.g. `""` after trim, or garbage text), which gets written into the `verification.value` JSON and, on the (self-limited, own-account-only) verification round trip, into `user.email` — the field better-auth uses as the sign-in identifier. Blast radius is limited to the caller's own account (userId is session-derived), but it's a real "trust the client" gap on a security-relevant field.
@@ -201,6 +227,8 @@ export async function requestEmailChange(newEmailRaw: string): Promise<...> {
 
 #### WR-06: Single-use verify token is consumed by *any* GET, including automated link-scanner prefetches
 
+**Fixed:** commit `dab40fb` — deviated from the suggested interstitial in favor of the fix-guidance's alternative: idempotent-per-user consumption rather than a confirm-click interstitial. The GET no longer deletes the verification row on success, so a token stays valid and safely re-appliable (a harmless no-op re-set of the same already-current email) up to its normal 24h TTL instead of being burned on first hit. This required also teaching `getPendingEmailChange` a new `currentEmail` param so a lingering-but-already-applied row stops being reported as still-pending (would otherwise re-show a stale "verification sent" banner). Chosen over the interstitial because it needs no new UI/copy/page and leaves the existing e2e flow (`GET` → immediate success banner) untouched, versus the interstitial's `GET`-renders-confirm/`POST`-applies split, which would have required new UI-SPEC-reviewed copy and an e2e retarget. Two new regression tests added: happy path no longer deletes; a same-token replay (simulating a scanner already having consumed it) redirects to success again instead of expired.
+
 **File:** `src/app/api/account/verify-email/route.ts:26-82`
 
 **Issue:** The route is (by design, per its own header comment) unauthenticated and stateless — authority comes entirely from the URL token. It applies the email change and deletes the verification row (single-use) on a bare `GET`. Many corporate mail gateways and security products (Microsoft Defender/ATP Safe Links, Proofpoint, Mimecast, etc.) automatically follow links in incoming email to scan them *before* the user opens the message. Against this route, that prefetch **is** a real, successful verification: it applies the email update and deletes the row, so when the actual user later clicks the same link, `match` is gone and they land on `?verified=expired` — a legitimate user whose email silently already changed, told their own link is broken, with no code-visible way to tell "prefetched by a scanner" apart from "used by the user."
@@ -218,6 +246,8 @@ export async function POST(request: NextRequest) {
 
 #### WR-07: The `"change-email:"` identifier-prefix convention is duplicated across four files with no shared constant
 
+**Fixed:** commit `1543e4e` — applied as suggested, extracted to `src/lib/account-constants.ts` (named for consistency with the existing `image-constants.ts` convention rather than the suggested `verification-identifiers.ts`) and imported from all three production files plus `e2e/helpers.ts` (via the same dynamic-import pattern already used there for `@/db`/`@/db/schema`, confirmed working against the `@/*` → `./src/*` tsconfig alias).
+
 **File:** `src/lib/account-actions.ts:21`, `src/app/api/account/verify-email/route.ts:24`, `src/lib/account-queries.ts:13`, `e2e/helpers.ts:334`
 
 **Issue:** Three separate production files each independently declare `const PENDING_EMAIL_PREFIX = "change-email:";`, and `e2e/helpers.ts:334` hardcodes the same literal a fourth time inside a `like(verification.identifier, "change-email:%")` call. Every one of these locations carries a comment saying it "must match" the others — but nothing enforces that beyond code review. A future edit to any one of the four (e.g. changing the delimiter, or namespacing by environment) silently breaks token creation/consumption/banner-display/test-seam agreement with no compiler or runtime error — verification would just stop being found, degrading to "always expired" or "banner never shows."
@@ -225,6 +255,8 @@ export async function POST(request: NextRequest) {
 **Fix:** Extract to one shared module, e.g. `src/lib/verification-identifiers.ts`, exporting `PENDING_EMAIL_PREFIX` (or a `changeEmailIdentifier(userId)` helper), and import it from `account-actions.ts`, `verify-email/route.ts`, and `account-queries.ts`. `e2e/helpers.ts` already dynamically imports `@/db` and `@/db/schema` at call time (line 327-328) specifically to avoid a top-level import failure when `DATABASE_URL` is unset — it can dynamically import the same shared constant the same way.
 
 #### WR-08: `deleteAccount`'s best-effort `signOut()` is unguarded, and the caller's `catch` swallows the error without logging it
+
+**Fixed:** commit `e7dce57` — applied as suggested, plus regression tests: `deleteAccount()` resolves (rather than rejecting) and logs when `signOut` rejects; the row component logs via a `console.error` spy when `deleteAccount` throws.
 
 **File:** `src/lib/account-actions.ts:138-156`, `src/components/delete-account-row.tsx:23-34`
 
@@ -255,6 +287,8 @@ try {
 ```
 
 #### WR-09: The D-04 dirty-guard / discard-dialog flow has zero test coverage
+
+**Fixed:** commit `c2b0dc8` — added `src/components/daybreak/account-back.test.tsx` covering all four suggested cases plus a dedicated leak-guard assertion. Deviated from the suggested synthetic `setPasswordDirty` probe: renders the REAL `ChangePasswordCard` alongside `AccountBack` so `passwordDirty` is driven by genuine typed keystrokes through the real `AccountDirtyProvider` (a prior lesson-learned on this codebase requires rendered tests to type/interact for real rather than fake state transitions), which also let the leak-guard case assert the actual typed password string never appears anywhere in the rendered dialog.
 
 **File:** `src/components/daybreak/account-back.tsx` (whole file — no test file exists)
 
