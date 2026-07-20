@@ -116,6 +116,13 @@ export function AccountDetailsCard({
           setServerError("Couldn't save your changes. Try again.");
           return;
         }
+        // WR-02 — commit the name success immediately, independent of what
+        // the email step does next. Without this, a name-succeeds/
+        // email-fails combined save left the component's `name` prop
+        // stale: the server already had the new name, but `editing` stayed
+        // true and a later "Discard changes" reset() would re-show the OLD
+        // name, contradicting what the server just persisted.
+        router.refresh();
       }
 
       if (emailChanged) {

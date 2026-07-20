@@ -258,6 +258,43 @@ describe("AccountDetailsCard — email-change save", () => {
 });
 
 // -----------------------------------------------------------------------
+// Partial-mutation success (WR-02)
+// -----------------------------------------------------------------------
+describe("AccountDetailsCard — partial success, name succeeds/email fails (WR-02)", () => {
+  it("commits the name update via router.refresh even though the follow-up email change fails and the handler returns early", async () => {
+    mockUpdateUser.mockResolvedValueOnce({
+      data: { status: true },
+      error: null,
+    });
+    mockRequestEmailChange.mockResolvedValueOnce({
+      ok: false,
+      error: "email-taken",
+    });
+
+    renderCard();
+    enterEdit();
+
+    fireEvent.change(screen.getByTestId("account-name-field"), {
+      target: { value: "Joshua Ashley" },
+    });
+    fireEvent.change(screen.getByTestId("account-email-field"), {
+      target: { value: "taken@example.com" },
+    });
+    submit();
+
+    await waitFor(() => {
+      expect(screen.getByText("That email is already in use.")).toBeTruthy();
+    });
+    // The name mutation already succeeded server-side — router.refresh()
+    // must fire for it BEFORE the email step's early return, so a
+    // subsequent "Discard changes" reset() never re-shows the stale
+    // pre-edit name.
+    expect(mockUpdateUser).toHaveBeenCalledWith({ name: "Joshua Ashley" });
+    expect(mockRefresh).toHaveBeenCalled();
+  });
+});
+
+// -----------------------------------------------------------------------
 // email-taken inline error
 // -----------------------------------------------------------------------
 describe("AccountDetailsCard — email-taken error", () => {
