@@ -342,13 +342,16 @@ async function measureNavTap(
   // distinguishable. No-op when the source carries no marker (e.g. the
   // study end screen).
   await page.evaluate((attr) => {
-    document.querySelector(`[${attr}="true"]`)?.setAttribute("data-nav-stale", "1");
+    document
+      .querySelector(`[${attr}="true"]`)
+      ?.setAttribute("data-nav-stale", "1");
   }, PERF_READY_ATTR);
   const t0 = Date.now();
   await click();
   const ok = await page
     .waitForFunction(
-      (attr) => !!document.querySelector(`[${attr}="true"]:not([data-nav-stale])`),
+      (attr) =>
+        !!document.querySelector(`[${attr}="true"]:not([data-nav-stale])`),
       PERF_READY_ATTR,
       { timeout: timeoutMs },
     )
@@ -376,9 +379,10 @@ function assertNavGate(samples: number[], label: string, rounds: number): void {
     rounds - 1,
   );
   const m = median(warm(samples));
-  expect(m, `${label} median must be a real measurement`).toBeGreaterThanOrEqual(
-    0,
-  );
+  expect(
+    m,
+    `${label} median must be a real measurement`,
+  ).toBeGreaterThanOrEqual(0);
   expect.soft(m, `${label} contentVisibleMs (median)`).toBeLessThanOrEqual(100);
 }
 
