@@ -206,7 +206,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
-| 25. My Account | 5/5 | Complete   | 2026-07-20 |
+| 25. My Account | 5/5 | Complete    | 2026-07-20 |
 
 ## Backlog
 
