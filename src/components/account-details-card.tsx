@@ -65,6 +65,12 @@ export function AccountDetailsCard({
   const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [resendPending, setResendPending] = useState(false);
+  // WR-03 — separate from serverError: the pending-email banner (and its
+  // Resend button) renders regardless of `editing`, but serverError's <p>
+  // only renders inside the editing==true form branch below. Reusing
+  // serverError would leave a resend failure completely unshown whenever
+  // the user clicks Resend from view mode (the common case).
+  const [resendError, setResendError] = useState<string | null>(null);
 
   const {
     register,
@@ -170,8 +176,16 @@ export function AccountDetailsCard({
   async function handleResend() {
     if (!pendingEmail) return;
     setResendPending(true);
+    setResendError(null);
     try {
-      await requestEmailChange(pendingEmail);
+      // WR-03 — the {ok, error} result was previously discarded entirely:
+      // a rate-limited or otherwise-failed resend re-enabled the button and
+      // refreshed the page as if nothing happened, with no error text.
+      const result = await requestEmailChange(pendingEmail);
+      if (!result.ok) {
+        setResendError("Couldn't resend the email. Try again in a bit.");
+        return;
+      }
       router.refresh();
     } finally {
       setResendPending(false);
@@ -298,6 +312,9 @@ export function AccountDetailsCard({
               </span>
             </div>
           </ACBanner>
+          {resendError && (
+            <p className="text-sm text-destructive mt-2">{resendError}</p>
+          )}
         </div>
       )}
     </>

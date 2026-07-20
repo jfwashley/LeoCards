@@ -376,4 +376,28 @@ describe("AccountDetailsCard — pending email banner", () => {
       );
     });
   });
+
+  // WR-03 — the {ok, error} result was previously discarded entirely; a
+  // failed resend re-enabled the button and refreshed as if nothing
+  // happened. Exercised here from VIEW mode (not editing) deliberately —
+  // the banner/Resend button render regardless of editing state, and an
+  // error surfaced only inside the edit-mode form would stay invisible for
+  // this, the common, path.
+  it("shows an inline error near the banner (visible in view mode) when the resend fails, and does not call router.refresh", async () => {
+    mockRequestEmailChange.mockResolvedValueOnce({
+      ok: false,
+      error: "rate-limited",
+    });
+    renderCard({ pendingEmail: "pending@example.com" });
+    expect(screen.queryByTestId("account-name-field")).toBeNull(); // view mode
+
+    fireEvent.click(screen.getByTestId("account-email-resend-btn"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Couldn't resend the email. Try again in a bit."),
+      ).toBeTruthy();
+    });
+    expect(mockRefresh).not.toHaveBeenCalled();
+  });
 });
