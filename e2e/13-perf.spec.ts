@@ -363,6 +363,25 @@ function warm(values: number[]): number[] {
   return values.slice(1);
 }
 
+/**
+ * assertNavGate() — review CR-03: a direction with zero (or nearly zero)
+ * valid samples must FAIL, not silently pass. `median([])` returns the -1
+ * sentinel, and `-1 <= 100` would otherwise go green while having measured
+ * nothing. Hard-assert a minimum valid-sample count (ROUNDS - 1: at most
+ * one timed-out round tolerated) and that the median is a real,
+ * non-sentinel measurement BEFORE the soft <=100ms gate.
+ */
+function assertNavGate(samples: number[], label: string, rounds: number): void {
+  expect(samples.length, `${label} valid samples`).toBeGreaterThanOrEqual(
+    rounds - 1,
+  );
+  const m = median(warm(samples));
+  expect(m, `${label} median must be a real measurement`).toBeGreaterThanOrEqual(
+    0,
+  );
+  expect.soft(m, `${label} contentVisibleMs (median)`).toBeLessThanOrEqual(100);
+}
+
 test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => {
   test.describe.configure({ mode: "serial" });
 
@@ -422,15 +441,8 @@ test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => 
       if (dashMs >= 0) toDashboard.push(dashMs);
     }
 
-    expect
-      .soft(median(warm(toStudy)), "dashboard→study contentVisibleMs (median)")
-      .toBeLessThanOrEqual(100);
-    expect
-      .soft(
-        median(warm(toDashboard)),
-        "study→dashboard contentVisibleMs (median)",
-      )
-      .toBeLessThanOrEqual(100);
+    assertNavGate(toStudy, "dashboard→study", ROUNDS);
+    assertNavGate(toDashboard, "study→dashboard", ROUNDS);
   });
 
   test("prod-build nav — dashboard ↔ new-card & dashboard ↔ browse (6 round trips each, content-visible ≤100ms)", async ({
@@ -483,29 +495,9 @@ test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => 
       if (backFromBrowseMs >= 0) toDashboardFromBrowse.push(backFromBrowseMs);
     }
 
-    expect
-      .soft(
-        median(warm(toNewCard)),
-        "dashboard→new-card contentVisibleMs (median)",
-      )
-      .toBeLessThanOrEqual(100);
-    expect
-      .soft(
-        median(warm(toDashboardFromNewCard)),
-        "new-card→dashboard contentVisibleMs (median)",
-      )
-      .toBeLessThanOrEqual(100);
-    expect
-      .soft(
-        median(warm(toBrowse)),
-        "dashboard→browse contentVisibleMs (median)",
-      )
-      .toBeLessThanOrEqual(100);
-    expect
-      .soft(
-        median(warm(toDashboardFromBrowse)),
-        "browse→dashboard contentVisibleMs (median)",
-      )
-      .toBeLessThanOrEqual(100);
+    assertNavGate(toNewCard, "dashboard→new-card", ROUNDS);
+    assertNavGate(toDashboardFromNewCard, "new-card→dashboard", ROUNDS);
+    assertNavGate(toBrowse, "dashboard→browse", ROUNDS);
+    assertNavGate(toDashboardFromBrowse, "browse→dashboard", ROUNDS);
   });
 });
