@@ -32,7 +32,9 @@ findings:
   warning: 4
   info: 5
   total: 12
-status: issues_found
+  fixed: 7
+fixed_at: 2026-07-20
+status: fixed
 ---
 
 # Phase 17: Code Review Report
@@ -40,7 +42,7 @@ status: issues_found
 **Reviewed:** 2026-07-19T10:30:00Z
 **Depth:** standard
 **Files Reviewed:** 23
-**Status:** issues_found
+**Status:** fixed — all 3 Critical + 4 Warning findings fixed 2026-07-20 (one atomic `fix(17): <id>` commit each); Info findings intentionally left open
 
 ## Summary
 
@@ -57,6 +59,7 @@ However, the PERF-04 instant-nav gate has two structural correctness defects (it
 ### CR-01: DaybreakShimmer's prefers-reduced-motion override is dead — inline `animation` style always beats the media-query rule
 
 **File:** `src/components/daybreak/shimmer.tsx:41` (and `src/app/globals.css:141-146`)
+**Status:** fixed — commit `de1a3db` (animation declaration moved onto the `.db-shimmer` class in globals.css; inline `animation` line removed from shimmer.tsx)
 **Issue:** The shimmer declares its animation as an inline style:
 
 ```tsx
@@ -91,6 +94,7 @@ Inline styles have higher precedence than any non-`!important` author stylesheet
 ### CR-02: `measureNavTap` phase-1 wait can never succeed on an atomic route swap — every source-marked nav sample is inflated by the full 8s timeout
 
 **File:** `e2e/13-perf.spec.ts:334-361` (with `e2e/perf-markers.ts:36-58`)
+**Status:** fixed — commit `44ad5f4` (+ formatting in `65cd8b1`): source marker stamped `data-nav-stale` pre-tap; wait targets `[data-perf-ready="true"]:not([data-nav-stale])`
 **Issue:** Phase 1 waits for `!document.querySelector('[data-perf-ready="true"]')` — i.e. an observable interval in which NO marker exists. But the code's own comment (lines 341-346) correctly states that the App Router keeps the outgoing page fully mounted until the destination payload is ready, then swaps. That swap is a single React commit: the old page's marker is removed and the new page's marker is inserted in the same synchronous DOM mutation, with no paint (and no `waitForFunction` rAF poll tick) in between. Since the repo has zero `loading.tsx` files (confirmed in shimmer.tsx's own header comment), no Suspense fallback ever interposes an unmarked frame. Consequence: for the 5 of 6 gated directions whose source page carries a marker (dashboard→study, dashboard→new-card, new-card→dashboard, dashboard→browse, browse→dashboard), the phase-1 `waitForFunction` never observes absence, times out at `timeoutMs` (8000ms), is silently swallowed by the `.catch()`, and `preReadyElapsed ≈ 8000` is added to the sample. Phase 2 then finds the (already-mounted) destination marker in ~0ms. Every sample lands near 8000ms and the ≤100ms median assertion structurally cannot pass — even for a perfectly instant, prefetch-warm navigation. Only the study-end→dashboard direction escapes (the end screen carries no marker). The "biased to OVERESTIMATE... a few ms of Playwright IPC noise" comment dramatically understates this: the overestimate is the entire phase-1 timeout, not IPC noise. This gate has never been live-run (it is PERF_PROD_BUILD-gated), which is why this hasn't surfaced.
 **Fix:** Distinguish the destination's marker from the source's by instance, not by an absence window. Stamp the source marker before clicking, then wait for an unstamped marker:
 
@@ -119,6 +123,7 @@ async function measureNavTap(page: Page, click: () => Promise<void>, timeoutMs =
 ### CR-03: Instant-nav gate silently passes with ZERO samples — `median([])` returns -1, and `expect(-1).toBeLessThanOrEqual(100)` is green
 
 **File:** `e2e/13-perf.spec.ts:304-314, 428-436, 489-512`
+**Status:** fixed — commit `2a57ebd` (+ formatting in `65cd8b1`): new `assertNavGate` helper hard-asserts n ≥ ROUNDS-1 valid samples and median ≥ 0 before the soft ≤100ms gate, applied to all six direction arrays
 **Issue:** `measureNavTap` returns `-1` on timeout and callers skip that sample (`if (studyMs >= 0)`). If every round times out — e.g. a renamed testid, a route that loses its `data-perf-ready` marker in a future refactor, or `waitForPerfReady` never finding the selector — the sample array is empty, `warm([])` is `[]`, `median([])` returns the `-1` sentinel, and all eight `toBeLessThanOrEqual(100)` assertions pass. The hard perf gate reports PASS while having measured nothing. A gate that goes green on total measurement failure is worse than no gate: it certifies "content visible ≤100ms" with zero evidence.
 **Fix:** Assert a minimum sample count before asserting the median, and/or guard the sentinel:
 
@@ -136,6 +141,7 @@ Apply to all six direction arrays in both tests.
 ### WR-01: Empty-deck CTA links drop the active deck — multi-deck users add words to the wrong deck
 
 **File:** `src/components/card-list.tsx:291, 300`
+**Status:** fixed — commit `e0828c1`: `CardList` now requires `deckId`; both empty-state CTAs carry `?deck={deckId}`; dashboard page passes `activeDeck.id`, deck-view baseline passes `activeDeckId` (the parenthetical `browse-back-dashboard` note left as-is — benign, out of this finding's scope)
 **Issue:** The empty-state links are `href="/deck/browse"` and `href="/deck/new-card"` with no `?deck=` param, while every other deck-scoped link in this phase carries it (dashboard's `add-a-card` pill, BrowseTiles' links, BrowseList's back link). Both destination pages fall back to `decks[0]` when `?deck=` is absent. A user viewing an empty second deck (`/dashboard?deck=<deck2>`) who taps "Browse words" or "+ Add a card" lands scoped to deck 1 and adds cards there — a silent wrong-deck write. This also means the PERF-04 e2e pair exercises the unparameterized fallback path rather than the parameterized links real users with the intended deck context would follow (harmless in the single-deck test, but the app behavior is wrong).
 **Fix:** Thread the active deck id into `CardList` (dashboard/page.tsx already has `activeDeck.id` in scope) and parameterize both links:
 
@@ -150,6 +156,7 @@ Apply to all six direction arrays in both tests.
 ### WR-02: `handleAccordionToggle` performs side effects inside the `setOpen` updater function
 
 **File:** `src/components/card-list.tsx:208-222`
+**Status:** fixed — commit `f38b1f0`: next state computed from in-scope `open`; timer/`setPanelMounted` side effects run in the event handler, then `setOpen(next)`
 **Issue:** The updater passed to `setOpen` calls `clearCloseTimer()`, `setPanelMounted(...)`, and schedules a `setTimeout` — all side effects. React requires state updaters to be pure: they may be invoked more than once (StrictMode dev double-invocation) and may be replayed during the render phase rather than during the event dispatch. A render-phase replay would schedule/clear the close timer and enqueue a `setPanelMounted` update from inside a render of a possibly-discarded state computation. `clearCloseTimer()` at the top happens to make double-invocation idempotent today, but this is fragile by construction and exactly the class of race this component's own long comment (lines 152-173) says it was rewritten to eliminate.
 **Fix:** Compute the next value outside the updater — `open` is already in scope:
 
@@ -172,6 +179,7 @@ function handleAccordionToggle() {
 ### WR-03: measure-cwv harness runs to a "successful" no-op when ROUTE_FILTER resolves to zero routes
 
 **File:** `scripts/measure-cwv.mjs:344` (with `scripts/measure-cwv-lib.mjs:309-323`)
+**Status:** fixed — commit `bf8de40`: harness exits 1 before any provisioning when `ROUTES.length === 0`, listing the valid route names
 **Issue:** `resolveRoutes` silently drops unrecognized entries — a typo'd filter like `ROUTE_FILTER="/dashbaord"` (or `"/deck/new_card"`) resolves to `[]` (the lib's own vitest at measure-cwv-lib.test.ts:279-281 confirms this). The harness then provisions a prod test user, launches the browser, measures nothing, writes an empty `16-BASELINE-SUMMARY.md`, and prints "ALL ROUTES MEASURED — baseline artifacts written." with exit code 0. That is precisely the "silent garbage" failure class the harness's redirect guard, `extractMetrics` fail-loud, and bundle-stats freshness gate all exist to prevent — but it's unguarded at the entry point.
 **Fix:** Fail fast after resolution, before provisioning:
 
@@ -189,6 +197,7 @@ if (ROUTES.length === 0) {
 ### WR-04: Explicit PHASE_OUT_DIR can still write into the frozen Phase-16 baseline directory
 
 **File:** `scripts/measure-cwv-lib.mjs:342-353`
+**Status:** fixed — commit `20ab3c7`: explicit overrides throw when the joined (normalized, `..`-collapsed) path contains `16-performance-baseline-measure/baseline`; vitest cases added for direct and `../`-relative escapes
 **Issue:** The T-17-01-01 guard only protects the *default* path. `resolveOutDir(root, phaseOutDir)` honors any explicit override as-is via `path.join`, so `PHASE_OUT_DIR=".planning/phases/16-performance-baseline-measure/baseline"` (or a `../`-relative equivalent) silently overwrites the immutable, committed Phase-16 baseline artifacts — the exact outcome the phase constraint says must never happen. The atomic-rename writers would clobber `16-BASELINE-SUMMARY.md` and every `*-runs.json`/`*-baseline.md` without a warning. One misremembered env var in a re-measurement session is all it takes.
 **Fix:** Enforce the invariant for overrides too:
 
