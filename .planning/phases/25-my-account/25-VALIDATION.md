@@ -3,7 +3,7 @@ phase: 25
 slug: my-account
 status: draft
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-07-19
 ---
 
@@ -39,17 +39,17 @@ created: 2026-07-19
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 25-01-T1 | 25-01 | 1 | ACC-02, ACC-05 | T-25-01-A/B/D/E/H/I/J | Email-change token (crypto.randomUUID, lowercased uniqueness, replace-not-additive, rate-limited); single cascade delete + signOut | unit | `npx vitest run src/lib/account-actions.test.ts` | created in-task | ⬜ |
-| 25-01-T2 | 25-01 | 1 | ACC-02 | T-25-01-* | RSC-safe pending read; null on missing/expired/malformed | unit | `npx vitest run src/lib/account-queries.test.ts` | created in-task | ⬜ |
-| 25-01-T3 | 25-01 | 1 | ACC-02 | T-25-01-B/C/E/F/G | Single-use token consume; expiry/deleted-user/email-race; hardcoded same-origin redirect (no open redirect) | unit | `npx vitest run src/app/api/account/verify-email/route.test.ts` | created in-task | ⬜ |
-| 25-02-T1 | 25-02 | 1 | ACC-03, ACC-06 | T-25-02-B | AccountDirtyProvider stores ONLY a boolean (no typed password); keyframes + reduced-motion overrides | config/context (behaviorally exercised by 25-02-T2) | `npx tsc --noEmit && npx biome ci src/components/account-dirty-context.tsx src/app/globals.css` | created in-task | ⬜ |
-| 25-02-T2 | 25-02 | 1 | ACC-03 | T-25-02-A/C/D | changePassword({revokeOtherSessions:true}); INVALID_PASSWORD→inline copy by .code; inline (never toast) errors | unit (rendered) | `npx vitest run src/components/change-password-card.test.tsx` | created in-task | ⬜ |
-| 25-03-T1 | 25-03 | 2 | ACC-01, ACC-02 | T-25-03-A/B/C/D | updateUser({name}) alone; requestEmailChange for email; honest email-taken; server-driven pending banner; A5 fade-suppression | unit (rendered) | `npx vitest run src/components/account-details-card.test.tsx` | created in-task | ⬜ |
-| 25-03-T2 | 25-03 | 2 | ACC-04 | (V3 Session) | signOut→/login; "Sign out" accessible name preserved | unit (rendered) | `npx vitest run src/components/account-logout-section.test.tsx` | created in-task | ⬜ |
-| 25-04-T1 | 25-04 | 3 | ACC-05 | T-25-04-A/D | Two-step confirm, no password/typed gate; deleteAccount→/login | unit (rendered) | `npx vitest run src/components/delete-account-row.test.tsx` | created in-task | ⬜ |
-| 25-04-T2 | 25-04 | 3 | ACC-06 | T-25-04-C | Client back button; dirty guard reads only the boolean; dialog never echoes typed text (e2e-covered in 25-05-T3) | config/glue (behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci src/components/daybreak/account-back.tsx` | created in-task | ⬜ |
-| 25-04-T3 | 25-04 | 3 | ACC-01, ACC-06 | T-25-04-B/E | Session-gated RSC; allow-listed ?verified; server-computed props; stacked D-03 order (e2e-covered in 25-05-T3) | config/glue (no page-unit precedent — behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci "src/app/(protected)/account/page.tsx"` | created in-task | ⬜ |
-| 25-05-T1 | 25-05 | 4 | ACC-01 | T-25-05-C | RSC-safe nav glyph → /account (e2e-covered in 25-05-T2/T3) | config/glue (behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci src/components/account-nav-button.tsx` | created in-task | ⬜ |
+| 25-01-T1 | 25-01 | 1 | ACC-02, ACC-05 | T-25-01-A/B/D/E/H/I/J | Email-change token (crypto.randomUUID, lowercased uniqueness, replace-not-additive, rate-limited); single cascade delete + signOut | unit | `npx vitest run src/lib/account-actions.test.ts` | created in-task | ✅ |
+| 25-01-T2 | 25-01 | 1 | ACC-02 | T-25-01-* | RSC-safe pending read; null on missing/expired/malformed | unit | `npx vitest run src/lib/account-queries.test.ts` | created in-task | ✅ |
+| 25-01-T3 | 25-01 | 1 | ACC-02 | T-25-01-B/C/E/F/G | Single-use token consume; expiry/deleted-user/email-race; hardcoded same-origin redirect (no open redirect) | unit | `npx vitest run src/app/api/account/verify-email/route.test.ts` | created in-task | ✅ |
+| 25-02-T1 | 25-02 | 1 | ACC-03, ACC-06 | T-25-02-B | AccountDirtyProvider stores ONLY a boolean (no typed password); keyframes + reduced-motion overrides | config/context (behaviorally exercised by 25-02-T2) | `npx tsc --noEmit && npx biome ci src/components/account-dirty-context.tsx src/app/globals.css` | created in-task | ✅ |
+| 25-02-T2 | 25-02 | 1 | ACC-03 | T-25-02-A/C/D | changePassword({revokeOtherSessions:true}); INVALID_PASSWORD→inline copy by .code; inline (never toast) errors | unit (rendered) | `npx vitest run src/components/change-password-card.test.tsx` | created in-task | ✅ |
+| 25-03-T1 | 25-03 | 2 | ACC-01, ACC-02 | T-25-03-A/B/C/D | updateUser({name}) alone; requestEmailChange for email; honest email-taken; server-driven pending banner; A5 fade-suppression | unit (rendered) | `npx vitest run src/components/account-details-card.test.tsx` | created in-task | ✅ |
+| 25-03-T2 | 25-03 | 2 | ACC-04 | (V3 Session) | signOut→/login; "Sign out" accessible name preserved | unit (rendered) | `npx vitest run src/components/account-logout-section.test.tsx` | created in-task | ✅ |
+| 25-04-T1 | 25-04 | 3 | ACC-05 | T-25-04-A/D | Two-step confirm, no password/typed gate; deleteAccount→/login | unit (rendered) | `npx vitest run src/components/delete-account-row.test.tsx` | created in-task | ✅ |
+| 25-04-T2 | 25-04 | 3 | ACC-06 | T-25-04-C | Client back button; dirty guard reads only the boolean; dialog never echoes typed text (e2e-covered in 25-05-T3) | config/glue (behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci src/components/daybreak/account-back.tsx` | created in-task | ✅ |
+| 25-04-T3 | 25-04 | 3 | ACC-01, ACC-06 | T-25-04-B/E | Session-gated RSC; allow-listed ?verified; server-computed props; stacked D-03 order (e2e-covered in 25-05-T3) | config/glue (no page-unit precedent — behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci "src/app/(protected)/account/page.tsx"` | created in-task | ✅ |
+| 25-05-T1 | 25-05 | 4 | ACC-01 | T-25-05-C | RSC-safe nav glyph → /account (e2e-covered in 25-05-T2/T3) | config/glue (behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci src/components/account-nav-button.tsx` | created in-task | ✅ |
 | 25-05-T2 | 25-05 | 4 | ACC-01, ACC-04 | T-25-05-A | Header swap + logout-button deletion; retargeted sign-out blast radius (e2e/01:48,70,99 + e2e/10:46) | e2e | `npx playwright test e2e/01-auth-signup-login.spec.ts e2e/10-mobile-responsive.spec.ts` | modified/retarget | ⬜ |
 | 25-05-T3 | 25-05 | 4 | ACC-01, ACC-02, ACC-03, ACC-04, ACC-05 | T-25-05-B | Full real-pipeline flow; touch-targets ≥44 (null-guarded); pending-token seam (test-only, secret-gated) | e2e | `npx playwright test e2e/25-my-account.spec.ts` | created in-task | ⬜ |
 
