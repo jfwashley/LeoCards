@@ -74,7 +74,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 14: QA observability foundations** - QA can see exact card state and compress time, with affordances provably absent for customers (completed 2026-06-17)
 - [x] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline (completed 2026-06-25)
 - [x] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization (completed 2026-07-02)
-- [ ] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline
+- [x] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline (completed 2026-07-20)
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 
@@ -151,7 +151,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] 17-02-PLAN.md — Shared-infra hygiene: three→devDependencies + dead-code deletion (D-05), next.config stable-only (D-07), shared-chunk/auth-client audit (D-08), /habitat spot-check (D-11)
 - [x] 17-03-PLAN.md — Dashboard client→RSC: HabitatHero→RSC + DeckView split + CountdownTimer leaf (D-06), poster-first resolution (D-02), dashboard re-measure + D-04 checkpoint
 - [x] 17-04-PLAN.md — study/new-card/browse client→RSC + lazy-load (D-06/D-03), Motion→CSS swaps (D-05), 3-route re-measure + D-04 checkpoint
-- [ ] 17-05-PLAN.md — PERF-04 instant-nav gate: 6 nav pairs + content-visible + prod-build INP (D-13/14/15, task_d326ebac), prefetch + router.refresh invalidation (D-16/D-17), official final full run + qa:run
+- [x] 17-05-PLAN.md — PERF-04 instant-nav gate: 6 nav pairs + content-visible + prod-build INP (D-13/14/15, task_d326ebac), prefetch + router.refresh invalidation (D-16/D-17), official final full run + qa:run
 
 ### Phase 18: Field validation & guardrails
 
@@ -204,7 +204,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 14. QA observability foundations | 3/3 | Complete   | 2026-06-17 |
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
-| 17. Performance optimization | 5/5 | Complete    | 2026-07-19 |
+| 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete   | 2026-07-20 |
 

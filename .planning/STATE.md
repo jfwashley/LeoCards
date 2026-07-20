@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: verifying
-stopped_at: Completed 25-05-PLAN.md -- header glyph swap to AccountNavButton (D-01), logout-button.tsx deleted, e2e/01+e2e/10 retargeted, e2e/25-my-account.spec.ts full-flow coverage added; static gates (tsc/biome/vitest) all green, live e2e deferred to orchestrator gate; Phase 25 (my-account) code-complete, ready for verification
-last_updated: "2026-07-20T12:25:37.321Z"
+status: ready_to_plan
+stopped_at: Phase 17 complete (5/5) — ready to discuss Phase 25
+last_updated: 2026-07-20T13:40:59.524Z
 last_activity: 2026-07-20
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 18
-  completed_plans: 18
+  total_plans: 72
+  completed_plans: 41
   percent: 67
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 25 — my-account
+**Current focus:** Phase 25 — my account
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 25 (my-account) — CODE-COMPLETE, PENDING VERIFICATION
-Plan: 5 of 5
-Status: Phase complete — ready for verification
+Phase: 25
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-07-20
 
 Progress (v3.0): [██████████] 96% (Phase 17 all 5 plans complete — PERF-04 accepted-miss, phase closed 2026-07-19; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied, PERF-03/PERF-04 satisfied)
