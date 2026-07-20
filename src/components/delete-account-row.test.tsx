@@ -45,9 +45,7 @@ describe("DeleteAccountRow", () => {
 
     expect(screen.getByTestId("account-delete-confirm")).toBeTruthy();
     expect(screen.getByText("Delete your account?")).toBeTruthy();
-    expect(
-      screen.getByText(/decks, words, and habitat progress/),
-    ).toBeTruthy();
+    expect(screen.getByText(/decks, words, and habitat progress/)).toBeTruthy();
     expect(mockDeleteAccount).not.toHaveBeenCalled();
   });
 
