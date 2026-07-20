@@ -7,7 +7,7 @@ import { db } from "@/db";
 import type { UserId } from "@/db/schema";
 import { user, verification } from "@/db/schema";
 import { env } from "@/env";
-import { PENDING_EMAIL_PREFIX } from "@/lib/account-constants";
+import { EMAIL_FROM, PENDING_EMAIL_PREFIX } from "@/lib/account-constants";
 import { auth } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
 
@@ -119,7 +119,7 @@ export async function requestEmailChange(newEmailRaw: string): Promise<
     const resend = new Resend(process.env.RESEND_API_KEY);
     resend.emails
       .send({
-        from: "LeoCards <noreply@leocards.com>",
+        from: EMAIL_FROM,
         to: newEmail,
         subject: "Confirm your new LeoCards email",
         text: `Confirm your new email address: ${url}`,

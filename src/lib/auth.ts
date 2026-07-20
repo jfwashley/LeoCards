@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
+import { EMAIL_FROM } from "@/lib/account-constants";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -27,7 +28,7 @@ export const auth = betterAuth({
       const resend = new Resend(process.env.RESEND_API_KEY);
       resend.emails
         .send({
-          from: "LeoCards <noreply@leocards.com>",
+          from: EMAIL_FROM,
           to: user.email,
           subject: "Reset your LeoCards password",
           text: `Reset your password: ${url}`,

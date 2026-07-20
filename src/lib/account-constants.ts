@@ -10,3 +10,17 @@
 // agreement with no compiler or runtime error. This is now the single
 // source of truth; import it rather than re-declaring the literal.
 export const PENDING_EMAIL_PREFIX = "change-email:";
+
+// Sender for ALL outbound email (password reset in src/lib/auth.ts,
+// email-change verification in src/lib/account-actions.ts). Overridable per
+// environment via the EMAIL_FROM env var — production uses Resend's sandbox
+// sender "LeoCards <onboarding@resend.dev>" until a custom sending domain is
+// verified in Resend (leocards.com is NOT owned/verified; Resend rejects
+// sends from unverified domains, so the fallback literal only matters in
+// environments where sends are no-ops anyway).
+// Deliberately a raw process.env read, NOT an @/env (t3-oss) entry: this
+// module is imported (transitively, via server-action modules) by client
+// component test graphs under jsdom, where t3-env runs CLIENT-side validation
+// and would hard-fail the import over unrelated missing NEXT_PUBLIC_* vars.
+export const EMAIL_FROM =
+  process.env.EMAIL_FROM ?? "LeoCards <noreply@leocards.com>";
