@@ -305,4 +305,22 @@ describe("resolveOutDir (Phase 17 D-09)", () => {
     const result = resolveOutDir(root, "custom/out/dir");
     expect(result).toBe(path.join(root, "custom", "out", "dir"));
   });
+
+  it("throws when an explicit override targets the immutable Phase 16 baseline directory (T-17-01-01 / WR-04)", () => {
+    expect(() =>
+      resolveOutDir(
+        root,
+        ".planning/phases/16-performance-baseline-measure/baseline",
+      ),
+    ).toThrow(/immutable Phase 16 baseline/);
+  });
+
+  it("throws for a ../-relative override that resolves into the frozen baseline (WR-04)", () => {
+    expect(() =>
+      resolveOutDir(
+        root,
+        "sub/../.planning/phases/16-performance-baseline-measure/baseline/nested",
+      ),
+    ).toThrow(/immutable Phase 16 baseline/);
+  });
 });

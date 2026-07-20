@@ -334,14 +334,30 @@ export function resolveRoutes(filterArg) {
  * vitest case asserts the returned default path never contains that
  * substring.
  *
+ * Phase 17 review WR-04: EXPLICIT overrides are guarded too — any
+ * phaseOutDir that resolves inside the frozen Phase 16 baseline directory
+ * (including ../-relative equivalents; path.join normalizes them) throws
+ * instead of silently clobbering the committed baseline artifacts.
+ *
  * @param {string} rootDir — the repo root (mirrors measure-cwv.mjs's ROOT).
  * @param {string|null|undefined} phaseOutDir — explicit relative-to-root
- *   override, e.g. "custom/out/dir". When set, honored as-is.
+ *   override, e.g. "custom/out/dir". When set, honored — unless it targets
+ *   the immutable Phase 16 baseline directory, which throws.
  * @returns {string} absolute output directory path.
  */
 export function resolveOutDir(rootDir, phaseOutDir) {
   if (phaseOutDir) {
-    return path.join(rootDir, phaseOutDir);
+    // path.join normalizes separators AND collapses ".." segments, so the
+    // frozen-substring check below also catches relative-path escapes.
+    const joined = path.join(rootDir, phaseOutDir);
+    const frozen = path.join("16-performance-baseline-measure", "baseline");
+    if (joined.includes(frozen)) {
+      throw new Error(
+        "[measure-cwv] PHASE_OUT_DIR points at the immutable Phase 16 baseline " +
+          "directory — refusing to write there (T-17-01-01)",
+      );
+    }
+    return joined;
   }
   return path.join(
     rootDir,
