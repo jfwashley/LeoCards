@@ -43,7 +43,9 @@ test.describe("Mobile responsiveness", () => {
     await signUpWithDeck(page, "French");
 
     await expect(page.getByText("LeoCards")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
+    // D-01: the header's account-nav glyph replaces the old bare "Sign out"
+    // button; this still verifies mobile header chrome doesn't overflow.
+    await expect(page.getByTestId("account-nav-btn")).toBeVisible();
 
     const scrollWidth = await page.evaluate(
       () => document.documentElement.scrollWidth,

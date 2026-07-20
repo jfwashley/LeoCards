@@ -1,8 +1,8 @@
 "use client";
 
+import { AccountNavButton } from "@/components/account-nav-button";
 import { LionFace } from "@/components/daybreak/lion-face";
 import { type DeckOption, DeckSwitcher } from "@/components/deck-switcher";
-import { LogoutButton } from "@/components/logout-button";
 
 interface AppHeaderProps {
   decks: DeckOption[];
@@ -41,7 +41,8 @@ export function AppHeader({
         </span>
       </div>
 
-      {/* Right cluster — deck picker + logout glyph */}
+      {/* Right cluster — deck picker + account nav glyph (D-01: sign-out
+          moved inside the /account section; this now navigates there). */}
       <div className="flex items-center" style={{ gap: 9 }}>
         {decks.length > 0 && (
           <DeckSwitcher
@@ -51,7 +52,7 @@ export function AppHeader({
             nativeLang={nativeLang}
           />
         )}
-        <LogoutButton />
+        <AccountNavButton />
       </div>
     </header>
   );

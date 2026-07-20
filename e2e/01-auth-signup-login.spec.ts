@@ -44,7 +44,10 @@ test.describe("Authentication — signup and login", () => {
     const password = "TestPass123!";
     const { email } = await signUpWithDeck(page);
 
-    // Sign out (header visible after deck creation)
+    // Sign out — navigate to /account first (D-01: the header no longer has
+    // a bare "Sign out" button; it now has an account-nav glyph).
+    await page.getByTestId("account-nav-btn").click();
+    await page.waitForURL(/\/account/, { timeout: 10_000 });
     await page.getByRole("button", { name: "Sign out" }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
 
@@ -66,7 +69,9 @@ test.describe("Authentication — signup and login", () => {
     const password = "TestPass123!";
     const { email } = await signUpWithDeck(page);
 
-    // Sign out
+    // Sign out — navigate to /account first (D-01).
+    await page.getByTestId("account-nav-btn").click();
+    await page.waitForURL(/\/account/, { timeout: 10_000 });
     await page.getByRole("button", { name: "Sign out" }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
 
@@ -95,7 +100,10 @@ test.describe("Authentication — signup and login", () => {
     const password = "TestPass123!";
     const { email } = await signUpWithDeck(page);
 
-    // Sign out so we hit a fresh, unauthenticated login form
+    // Sign out so we hit a fresh, unauthenticated login form — navigate to
+    // /account first (D-01).
+    await page.getByTestId("account-nav-btn").click();
+    await page.waitForURL(/\/account/, { timeout: 10_000 });
     await page.getByRole("button", { name: "Sign out" }).click();
     await page.waitForURL(/\/login/, { timeout: 10_000 });
 
