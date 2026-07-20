@@ -374,6 +374,17 @@ function warm(values: number[]): number[] {
  * one timed-out round tolerated) and that the median is a real,
  * non-sentinel measurement BEFORE the soft <=100ms gate.
  */
+/**
+ * D-15 re-baseline (Josh, 2026-07-20): the original ≤100ms bar is
+ * architecturally unreachable for this app's genuinely dynamic RSC routes —
+ * every nav is a real server render (session + Neon reads) with a measured
+ * ~600ms warm floor on a local prod build. After the Phase 17 nav-profile
+ * investigation fixed the study-exit outlier (redundant refresh, Neon
+ * socket keep-alive, animation-stability measurement skew), all six pairs
+ * measure ~470-690ms; the gate is set to 850ms per Josh's directive.
+ */
+const NAV_GATE_MS = 850;
+
 function assertNavGate(samples: number[], label: string, rounds: number): void {
   expect(samples.length, `${label} valid samples`).toBeGreaterThanOrEqual(
     rounds - 1,
@@ -383,7 +394,9 @@ function assertNavGate(samples: number[], label: string, rounds: number): void {
     m,
     `${label} median must be a real measurement`,
   ).toBeGreaterThanOrEqual(0);
-  expect.soft(m, `${label} contentVisibleMs (median)`).toBeLessThanOrEqual(100);
+  expect
+    .soft(m, `${label} contentVisibleMs (median)`)
+    .toBeLessThanOrEqual(NAV_GATE_MS);
 }
 
 test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => {
@@ -439,8 +452,18 @@ test.describe("Phase 17 Plan 05 — PERF-04 instant-nav gate (D-13..17)", () => 
       await page.getByRole("button", { name: "Save and quit" }).click();
       await page.waitForSelector('text="Back to deck"', { timeout: 15_000 });
 
+      // The end screen mounts inside the ss-fade-up 0.4s animation and
+      // Playwright's click waits for the target's bounding box to stabilise —
+      // that wait would otherwise land INSIDE the timed window and inflate
+      // every sample by ~400ms. A trial click performs the actionability
+      // checks (and absorbs the animation wait) without clicking, so the
+      // timed real click below dispatches immediately.
+      await page
+        .getByRole("link", { name: "Back to deck" })
+        .click({ trial: true });
+
       const dashMs = await measureNavTap(page, () =>
-        page.getByRole("button", { name: "Back to deck" }).click(),
+        page.getByRole("link", { name: "Back to deck" }).click(),
       );
       if (dashMs >= 0) toDashboard.push(dashMs);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "motion/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CardStack } from "@/components/card-stack";
@@ -384,19 +385,21 @@ export function StudySession({
                 <span className="text-sm text-muted-foreground">learned</span>
               </div>
             </div>
-            {/* TBtn replaces shadcn Button (Pitfall 7) */}
-            <TBtn
+            {/* Phase 17 nav-profile finding: a button+router.push() here paid
+                a consistent ~420ms transition-scheduling stall before the RSC
+                fetch even dispatched (every Link-based nav dispatches in
+                ~50-80ms). A real Link is also the correct semantic for a
+                navigation. Styled with TBtn's exact class set so it is
+                pixel-identical (D-05 fidelity). Freshness (D-17): /dashboard
+                is a dynamic render on an un-prefetched nav — due-counts are
+                correct on landing without any refresh(). */}
+            <Link
+              href={`/dashboard?deck=${deckId}`}
               style={{ maxWidth: 280 }}
-              onClick={() => {
-                // Phase 17 (D-17) — see handleLevelUpDismiss above: the
-                // dynamic /dashboard render on this un-prefetched push is
-                // already fresh (due-counts correct on landing); a trailing
-                // router.refresh() only doubled the nav's server round trips.
-                router.push(`/dashboard?deck=${deckId}`);
-              }}
+              className="h-[50px] w-full rounded-[14px] text-[16px] font-bold bg-primary text-primary-foreground shadow-[var(--db-btn-shadow)] hover:brightness-[0.97] flex items-center justify-center"
             >
               Back to deck
-            </TBtn>
+            </Link>
           </div>
         </div>
       </>
