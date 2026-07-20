@@ -38,7 +38,9 @@ export function DaybreakShimmer({
         flex: "none",
         background: `linear-gradient(90deg, ${SHIMMER_BASE} 25%, ${SHIMMER_SWEEP} 50%, ${SHIMMER_BASE} 75%)`,
         backgroundSize: "200% 100%",
-        animation: "shimmer-pulse 1.6s ease-in-out infinite",
+        // NOTE: the `animation` declaration deliberately lives on the
+        // .db-shimmer class in globals.css, NOT here — an inline animation
+        // style would defeat the prefers-reduced-motion override (CR-01).
       }}
     />
   );

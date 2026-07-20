@@ -138,6 +138,13 @@
   }
 }
 
+/* Class-declared (NOT inline in shimmer.tsx) so the reduced-motion media
+   query below can actually override it — an inline style would beat any
+   non-!important stylesheet rule, media query or not (review CR-01). */
+.db-shimmer {
+  animation: shimmer-pulse 1.6s ease-in-out infinite;
+}
+
 /* Respect prefers-reduced-motion: disable the shimmer pulse for .db-shimmer elements */
 @media (prefers-reduced-motion: reduce) {
   .db-shimmer {
