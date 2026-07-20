@@ -1,10 +1,6 @@
 import { expect, type Page, test } from "playwright/test";
 import { addWordsFromBrowser, signUpWithDeck } from "./helpers";
-import {
-  IS_PROD_BUILD,
-  PERF_READY_ATTR,
-  waitForPerfReady,
-} from "./perf-markers";
+import { IS_PROD_BUILD, PERF_READY_ATTR } from "./perf-markers";
 
 /**
  * Phase 13 Plan 06 — Core Web Vitals + widget perf measurement.
@@ -317,47 +313,48 @@ function median(values: number[]): number {
  * measureNavTap() — times an in-app link/button tap until the destination's
  * data-perf-ready="true" root is visible (D-15).
  *
- * Two-phase poll (NOT a single query-for-truthy-attribute check): since
- * every key route shares the same `data-perf-ready` attribute name, a naive
- * single-phase poll started right after the tap could immediately match the
- * SOURCE page's still-mounted marker (false "instant" reading of ~0ms) if
- * evaluate() runs before React unmounts the outgoing route tree. Phase 1
- * waits for that marker to disappear (source page unmounting); phase 2
- * (waitForPerfReady, the 17-01 scaffold) then times how long until the
- * marker reappears (destination page mounted with real, non-skeleton data).
+ * Since every key route shares the same `data-perf-ready` attribute name, a
+ * naive query started right after the tap could immediately match the SOURCE
+ * page's still-mounted marker (false "instant" reading of ~0ms). And waiting
+ * for the marker's ABSENCE first can never succeed: the App Router keeps the
+ * outgoing page fully mounted until the destination payload is ready, then
+ * swaps in a SINGLE React commit — the old marker is removed and the new one
+ * inserted in the same synchronous DOM mutation, with no unmarked frame in
+ * between (this repo has zero loading.tsx files, so no Suspense fallback
+ * ever interposes one). Review CR-02.
  *
- * Timing composition: phase 1's boundary is Node-side Date.now() (a few ms
- * of Playwright IPC noise, biased to OVERESTIMATE — the safe direction for a
- * pass/fail gate); phase 2 is precise in-page performance.now() timing via
- * waitForPerfReady's own internal t0.
+ * Instead we distinguish the destination's marker from the source's by
+ * INSTANCE: stamp the source page's marker with `data-nav-stale` before the
+ * tap, then wait for a marker WITHOUT the stamp — the destination's fresh
+ * node — which resolves correctly even across the atomic single-commit swap.
+ *
+ * Timing is Node-side Date.now() around the whole tap→marker window (a few
+ * ms of Playwright IPC noise, biased to OVERESTIMATE — the safe direction
+ * for a pass/fail gate). Returns -1 if the destination's marker never
+ * appears within timeoutMs.
  */
 async function measureNavTap(
   page: Page,
   click: () => Promise<void>,
   timeoutMs = 8000,
 ): Promise<number> {
+  // Stamp the SOURCE page's marker so the destination's fresh node is
+  // distinguishable. No-op when the source carries no marker (e.g. the
+  // study end screen).
+  await page.evaluate((attr) => {
+    document.querySelector(`[${attr}="true"]`)?.setAttribute("data-nav-stale", "1");
+  }, PERF_READY_ATTR);
   const t0 = Date.now();
   await click();
-  // Next's App Router keeps the OUTGOING page fully mounted (no intermediate
-  // teardown) until the destination's payload is ready to swap in — so this
-  // phase-1 wait is NOT a cheap "did it start yet?" check, it can legitimately
-  // span the entire navigation latency. Budget it the same as the overall
-  // timeout (not a short fixed window) so a slow, non-prefetched round trip
-  // is measured accurately rather than truncated and under-reported.
-  await page
+  const ok = await page
     .waitForFunction(
-      (attr) => !document.querySelector(`[${attr}="true"]`),
+      (attr) => !!document.querySelector(`[${attr}="true"]:not([data-nav-stale])`),
       PERF_READY_ATTR,
       { timeout: timeoutMs },
     )
-    .catch(() => {
-      // Source page may have had no data-perf-ready root (or already gone by
-      // the time we checked) — fall through to phase 2 regardless.
-    });
-  const preReadyElapsed = Date.now() - t0;
-  const readyMs = await waitForPerfReady(page, timeoutMs);
-  if (readyMs < 0) return -1;
-  return preReadyElapsed + readyMs;
+    .then(() => true)
+    .catch(() => false);
+  return ok ? Date.now() - t0 : -1;
 }
 
 /** Drop the first (cold/compile-adjacent) sample — mirrors measureVitals'
