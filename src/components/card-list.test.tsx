@@ -84,6 +84,7 @@ function renderCardList(cards = FIXTURE_CARDS) {
   return render(
     <CardList
       cards={cards}
+      deckId="deck-test-1"
       nativeLangLabel="English"
       targetLangLabel="French"
     />,

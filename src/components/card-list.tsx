@@ -30,6 +30,9 @@ const CardEditDialog = dynamic(
 
 interface CardListProps {
   cards: CardRow[];
+  /** Active deck id — threaded into the empty-state CTA links so multi-deck
+   *  users add/browse words in THIS deck, not the decks[0] fallback (WR-01). */
+  deckId: string;
   nativeLangLabel: string;
   targetLangLabel: string;
   qaMode?: boolean;
@@ -142,6 +145,7 @@ function IconBtn({
 
 export const CardList = React.memo(function CardList({
   cards,
+  deckId,
   nativeLangLabel: _nativeLangLabel,
   targetLangLabel: _targetLangLabel,
   qaMode = false,
@@ -288,7 +292,7 @@ export const CardList = React.memo(function CardList({
         <div className="flex flex-col gap-[11px] w-[80%]">
           {/* Primary: Browse words */}
           <Link
-            href="/deck/browse"
+            href={`/deck/browse?deck=${deckId}`}
             data-testid="browse-words-empty"
             className="flex items-center justify-center w-full rounded-[14px] bg-primary text-primary-foreground font-display text-[16px] font-bold shadow-[var(--db-btn-shadow)] hover:brightness-[0.97] transition-[filter]"
             style={{ height: 50 }}
@@ -297,7 +301,7 @@ export const CardList = React.memo(function CardList({
           </Link>
           {/* Ghost: + Add a card */}
           <Link
-            href="/deck/new-card"
+            href={`/deck/new-card?deck=${deckId}`}
             className="flex items-center justify-center w-full rounded-[14px] font-display text-[16px] font-bold text-foreground hover:brightness-[0.97] transition-[filter]"
             style={{
               height: 50,

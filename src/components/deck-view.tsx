@@ -362,6 +362,7 @@ export function DeckView({
 
         <CardList
           cards={initialCards}
+          deckId={activeDeckId}
           nativeLangLabel={nativeLangLabel}
           targetLangLabel={targetLangLabel}
           qaMode={qaMode}

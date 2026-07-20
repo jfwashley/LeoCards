@@ -424,6 +424,7 @@ export default async function DashboardPage({
         <div data-perf-ready="true">
           <CardList
             cards={cardRows}
+            deckId={activeDeck.id}
             nativeLangLabel={nativeLangLabel}
             targetLangLabel={targetLangLabel}
             qaMode={qaMode}
