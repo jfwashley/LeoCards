@@ -298,3 +298,64 @@ export async function ensureWordsAccordionOpen(page: Page): Promise<void> {
     });
   }).toPass({ timeout: 10_000 });
 }
+
+/**
+ * D-07 email-change token seam (test-only; no live inbox is available to
+ * e2e). Reads the pending `verification` row's token directly via the same
+ * Drizzle `db` client the app uses, mirroring the exact scan-and-parse
+ * technique GET /api/account/verify-email itself uses (bounded to the
+ * `change-email:` identifier prefix — see src/lib/account-actions.ts's
+ * token-store convention comment). Keyed by the pending (new) email address
+ * rather than userId, since signUpFreshUser/signUpWithDeck only return
+ * `{ email }` — this avoids threading userId through every existing caller.
+ *
+ * `@/db` is imported dynamically (not at module scope) so a failure here —
+ * e.g. DATABASE_URL not being set in the Playwright runner's environment,
+ * unlike the Next.js dev server, which loads .env.local automatically —
+ * only affects this one helper's caller. A top-level import would instead
+ * throw at spec-collection time for every file that imports ./helpers,
+ * breaking the entire suite. Returns null (never throws) on any failure,
+ * so callers can gracefully fall back to asserting only the pending-banner
+ * state; the request->click->success round trip stays unit-covered by
+ * src/app/api/account/verify-email/route.test.ts regardless (RESEARCH.md's
+ * Validation Architecture — no live inbox is required either way).
+ */
+export async function getPendingEmailChangeToken(
+  newEmail: string,
+): Promise<string | null> {
+  try {
+    const { db } = await import("@/db");
+    const { verification } = await import("@/db/schema");
+    const { like } = await import("drizzle-orm");
+
+    const rows = await db
+      .select()
+      .from(verification)
+      .where(like(verification.identifier, "change-email:%"));
+
+    for (const row of rows) {
+      try {
+        const parsed = JSON.parse(row.value) as {
+          token?: string;
+          newEmail?: string;
+        };
+        if (parsed.newEmail === newEmail && typeof parsed.token === "string") {
+          return parsed.token;
+        }
+      } catch {
+        // Skip malformed/unrelated verification rows (this table also
+        // holds better-auth's own password-reset tokens under a different
+        // identifier shape).
+      }
+    }
+    return null;
+  } catch (err) {
+    console.warn(
+      "[e2e] getPendingEmailChangeToken: DB seam unavailable in this " +
+        "environment (e.g. DATABASE_URL not configured for the Playwright " +
+        "runner) -- falling back to pending-banner-only assertion.",
+      err,
+    );
+    return null;
+  }
+}
