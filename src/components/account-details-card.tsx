@@ -134,8 +134,14 @@ export function AccountDetailsCard({
       if (emailChanged) {
         const result = await requestEmailChange(values.email);
         if (!result.ok) {
+          // WR-04 — "rate-limited" was previously collapsed into the same
+          // generic "Try again" message as everything else, which is
+          // actively misleading: retrying immediately can't help since the
+          // whole point of the limiter is that it won't allow it yet.
           if (result.error === "email-taken") {
             setEmailTakenError("That email is already in use.");
+          } else if (result.error === "rate-limited") {
+            setServerError("Too many attempts. Try again in a bit.");
           } else {
             setServerError("Couldn't save your changes. Try again.");
           }

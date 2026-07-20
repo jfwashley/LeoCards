@@ -319,6 +319,32 @@ describe("AccountDetailsCard — email-taken error", () => {
     expect(screen.getByTestId("account-email-field")).toBeTruthy();
     expect(screen.queryByText("Details updated")).toBeNull();
   });
+
+  // WR-04 — "rate-limited" was previously collapsed into the same
+  // misleading "Try again" copy as every other failure.
+  it("shows 'Too many attempts. Try again in a bit.' (not the generic message) when rate-limited", async () => {
+    mockRequestEmailChange.mockResolvedValueOnce({
+      ok: false,
+      error: "rate-limited",
+    });
+
+    renderCard();
+    enterEdit();
+
+    fireEvent.change(screen.getByTestId("account-email-field"), {
+      target: { value: "new@example.com" },
+    });
+    submit();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Too many attempts. Try again in a bit."),
+      ).toBeTruthy();
+    });
+    expect(
+      screen.queryByText("Couldn't save your changes. Try again."),
+    ).toBeNull();
+  });
 });
 
 // -----------------------------------------------------------------------
