@@ -39,7 +39,10 @@ describe("getPendingEmailChange", () => {
   it("returns null when no row exists", async () => {
     mockDb._internals.mockWhere.mockResolvedValueOnce([]);
 
-    const result = await getPendingEmailChange(TEST_USER_ID);
+    const result = await getPendingEmailChange(
+      TEST_USER_ID,
+      "current@example.com",
+    );
 
     expect(result).toBeNull();
   });
@@ -53,7 +56,10 @@ describe("getPendingEmailChange", () => {
       },
     ]);
 
-    const result = await getPendingEmailChange(TEST_USER_ID);
+    const result = await getPendingEmailChange(
+      TEST_USER_ID,
+      "current@example.com",
+    );
 
     expect(result).toBeNull();
   });
@@ -67,7 +73,10 @@ describe("getPendingEmailChange", () => {
       },
     ]);
 
-    const result = await getPendingEmailChange(TEST_USER_ID);
+    const result = await getPendingEmailChange(
+      TEST_USER_ID,
+      "current@example.com",
+    );
 
     expect(result).toBeNull();
   });
@@ -82,8 +91,31 @@ describe("getPendingEmailChange", () => {
       },
     ]);
 
-    const result = await getPendingEmailChange(TEST_USER_ID);
+    const result = await getPendingEmailChange(
+      TEST_USER_ID,
+      "current@example.com",
+    );
 
     expect(result).toEqual({ newEmail: "new@example.com", expiresAt });
+  });
+
+  // WR-06 — the verify-email route no longer deletes the token row
+  // immediately on success, so a row can legitimately linger after the
+  // change it describes has already applied. That must not be reported as
+  // still-pending (it would re-show a stale "verification sent" banner for
+  // an email that's already live).
+  it("returns null when the stored newEmail already matches currentEmail (already applied)", async () => {
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
+    mockDb._internals.mockWhere.mockResolvedValueOnce([
+      {
+        identifier: `change-email:${TEST_USER_ID}`,
+        value: JSON.stringify({ token: "abc", newEmail: "new@example.com" }),
+        expiresAt,
+      },
+    ]);
+
+    const result = await getPendingEmailChange(TEST_USER_ID, "new@example.com");
+
+    expect(result).toBeNull();
   });
 });

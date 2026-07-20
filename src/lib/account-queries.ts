@@ -18,12 +18,19 @@ const PENDING_EMAIL_PREFIX = "change-email:";
 
 /**
  * Returns the pending D-07 email-change verification row for a user, or
- * null if none exists, it has expired, or its stored value is malformed
- * JSON. Drives the account page's pending-email banner from
- * server-persisted state that spans sessions/devices.
+ * null if none exists, it has expired, its stored value is malformed JSON,
+ * or the stored newEmail already matches currentEmail. That last case is
+ * WR-06: the verify-email route no longer deletes the token row
+ * immediately on success (so a link-scanner's prefetch GET doesn't burn it
+ * before the real user clicks) — so a row can legitimately linger, unused,
+ * after the change it describes has already applied. Reporting that as
+ * still-pending would re-show a stale "verification sent" banner for an
+ * email that's already live. Drives the account page's pending-email
+ * banner from server-persisted state that spans sessions/devices.
  */
 export async function getPendingEmailChange(
   userId: UserId,
+  currentEmail: string,
 ): Promise<{ newEmail: string; expiresAt: Date } | null> {
   const [row] = await db
     .select()
@@ -35,6 +42,7 @@ export async function getPendingEmailChange(
 
   try {
     const { newEmail } = JSON.parse(row.value) as { newEmail: string };
+    if (newEmail === currentEmail) return null;
     return { newEmail, expiresAt: row.expiresAt };
   } catch {
     return null;

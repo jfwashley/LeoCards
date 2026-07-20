@@ -192,7 +192,7 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
     expect(mockDbUpdate).not.toHaveBeenCalled();
   });
 
-  it("applies the email update, deletes the row (single-use), and redirects to success on the happy path", async () => {
+  it("applies the email update and redirects to success on the happy path — does NOT delete the row (WR-06: idempotent, not single-use)", async () => {
     setSelectResults(
       [pendingRow()], // scan
       [userRow()], // targetUser found
@@ -205,9 +205,28 @@ describe("GET /api/account/verify-email — D-07 verification", () => {
     expect(updateChain.set).toHaveBeenCalledWith(
       expect.objectContaining({ email: NEW_EMAIL }),
     );
-    expect(mockDbDelete).toHaveBeenCalled();
+    expect(mockDbDelete).not.toHaveBeenCalled();
     expect(res.headers.get("location")).toBe(
       `${ORIGIN}/account?verified=success`,
     );
+  });
+
+  // WR-06 — the exact scanner-prefetch scenario: a corporate mail-security
+  // gateway already followed (and consumed the effect of) this link before
+  // the real user's click. The row was NOT deleted (previous test), so a
+  // replay must redirect to success again instead of expired.
+  it("a token replay after a prior successful consumption is idempotent — redirects to success again, not expired", async () => {
+    setSelectResults(
+      [pendingRow()], // scan — row still exists, not deleted by the earlier hit
+      [userRow({ email: NEW_EMAIL })], // targetUser — email already applied
+      [userRow({ email: NEW_EMAIL })], // clash check finds ITSELF (same id) — not a real clash
+    );
+
+    const res = await GET(makeReq(GOOD_TOKEN));
+
+    expect(res.headers.get("location")).toBe(
+      `${ORIGIN}/account?verified=success`,
+    );
+    expect(mockDbDelete).not.toHaveBeenCalled();
   });
 });

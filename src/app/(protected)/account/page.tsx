@@ -38,7 +38,8 @@ export default async function AccountPage({
   }).format(session.user.createdAt);
   const nativeLanguage = session.user.nativeLanguage ?? "en";
   const nativeLanguageLabel = LANGUAGE_LABELS[nativeLanguage] ?? nativeLanguage;
-  const pendingEmail = (await getPendingEmailChange(userId))?.newEmail ?? null;
+  const pendingEmail =
+    (await getPendingEmailChange(userId, session.user.email))?.newEmail ?? null;
 
   const params = await searchParams;
   // T-25-04-B: allow-list ?verified to exactly "success"/"expired"/null --
