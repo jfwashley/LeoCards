@@ -25,3 +25,23 @@ task that surfaced them.
   purely decorative) is a separate a11y cleanup task.
 - **Where:** `src/components/welcome/habitat-teaser.tsx`, the `HabitatTeaser` outer
   wrapper div (onboarding/welcome flow — not one of Phase 17's three gated routes).
+
+## 17-05 (post-review PERF-04 investigation, 2026-07-20)
+
+### <100ms instant-nav aspiration
+
+- **Found during:** the post-review PERF-04 nav-outlier investigation (see
+  `17-05-SUMMARY.md` addendum and `.planning/STATE.md` decisions).
+- **Finding:** even after fixing the study→dashboard outlier (Neon undici
+  keep-alive + Link exit + redundant-refresh removal), all six hub-and-spoke
+  nav pairs floor at ~470-690ms, not the originally-desired <100ms
+  instant-nav feel. D-15's gate was re-baselined to 850ms (Josh's directive,
+  2026-07-20) because ~600ms is the architectural floor for genuinely
+  dynamic RSC routes (real server render + Neon round trip per navigation)
+  under the stable Next API surface.
+- **Not fixed:** achieving true <100ms instant-nav would require Partial
+  Prerendering / Cache Components (`cacheComponents` flag), which is
+  experimental and requires its own D-07 checkpoint before adoption — out of
+  scope for this phase's re-baselined, Josh-accepted 850ms gate.
+- **Where:** all four key routes (`/dashboard`, `/study`, `/deck/new-card`,
+  `/deck/browse`) and `e2e/13-perf.spec.ts`'s `NAV_GATE_MS` constant.
