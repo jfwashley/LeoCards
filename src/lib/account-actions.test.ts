@@ -105,6 +105,26 @@ describe("requestEmailChange", () => {
     );
   });
 
+  // WR-05 — server-side hardening: a "use server" action is directly
+  // callable over the network, bypassing the client's zod check entirely.
+  it("rejects a malformed email server-side, before any uniqueness check", async () => {
+    mockSession("user-invalid-email");
+
+    const result = await requestEmailChange("not-an-email");
+
+    expect(result).toEqual({ ok: false, error: "invalid-email" });
+    expect(db.select).not.toHaveBeenCalled();
+  });
+
+  it("rejects an empty string server-side (e.g. a bypassed-client empty payload)", async () => {
+    mockSession("user-empty-email");
+
+    const result = await requestEmailChange("");
+
+    expect(result).toEqual({ ok: false, error: "invalid-email" });
+    expect(db.select).not.toHaveBeenCalled();
+  });
+
   it("rejects same-email (case-insensitive compare)", async () => {
     mockSession("user-same-email", "same@example.com");
     const result = await requestEmailChange("SAME@Example.com");

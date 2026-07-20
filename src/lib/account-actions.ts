@@ -2,6 +2,7 @@
 
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { z } from "zod";
 import { db } from "@/db";
 import type { UserId } from "@/db/schema";
 import { user, verification } from "@/db/schema";
@@ -28,6 +29,13 @@ const emailChangeLimiter = createRateLimiter({
   maxRequests: 5,
 });
 
+// WR-05: requestEmailChange is a "use server" action, directly callable
+// over the network with an arbitrary payload — the client's zod check
+// (detailsSchema in account-details-card.tsx) never runs for a caller that
+// bypasses the browser. This schema re-validates + normalizes server-side
+// before the value is ever written into the verification row / user.email.
+const newEmailSchema = z.string().trim().toLowerCase().email();
+
 // ============================================================
 // requestEmailChange
 // ============================================================
@@ -44,11 +52,12 @@ const emailChangeLimiter = createRateLimiter({
  * app's explicit "That email is already in use." UI contract (RESEARCH
  * Anti-Patterns).
  */
-export async function requestEmailChange(
-  newEmailRaw: string,
-): Promise<
+export async function requestEmailChange(newEmailRaw: string): Promise<
   | { ok: true }
-  | { ok: false; error: "same-email" | "email-taken" | "rate-limited" }
+  | {
+      ok: false;
+      error: "same-email" | "email-taken" | "rate-limited" | "invalid-email";
+    }
 > {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error("Unauthorized");
@@ -59,11 +68,18 @@ export async function requestEmailChange(
     return { ok: false as const, error: "rate-limited" as const };
   }
 
+  // WR-05: reject anything that isn't a well-formed email BEFORE it's
+  // trusted for the uniqueness check / verification-row write.
+  const parsed = newEmailSchema.safeParse(newEmailRaw);
+  if (!parsed.success) {
+    return { ok: false as const, error: "invalid-email" as const };
+  }
   // Pitfall 5: lowercase before BOTH the uniqueness check and the insert
   // value — user.email is a case-sensitive unique column, but better-auth's
   // own sign-up flow normalizes to lowercase, so uniqueness must match that
-  // convention rather than the raw DB constraint.
-  const newEmail = newEmailRaw.trim().toLowerCase();
+  // convention rather than the raw DB constraint. (newEmailSchema's own
+  // .toLowerCase() step above already performs this normalization.)
+  const newEmail = parsed.data;
 
   if (newEmail === session.user.email) {
     return { ok: false as const, error: "same-email" as const };
