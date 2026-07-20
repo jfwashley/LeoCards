@@ -174,6 +174,11 @@ export function ChangePasswordCard() {
         setShowSuccess(false);
         successTimerRef.current = null;
       }, SUCCESS_FADE_MS);
+    } catch {
+      // WR-01 — authClient.changePassword can REJECT, not just resolve
+      // with {error}. Without this catch a rejected promise left the
+      // Update-password button silently re-enabling with no feedback.
+      setServerError("Couldn't update your password. Try again.");
     } finally {
       setIsPending(false);
     }

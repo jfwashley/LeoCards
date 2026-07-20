@@ -285,6 +285,35 @@ describe("AccountDetailsCard — email-taken error", () => {
 });
 
 // -----------------------------------------------------------------------
+// Rejected promise (WR-01)
+// -----------------------------------------------------------------------
+describe("AccountDetailsCard — rejected promise (WR-01)", () => {
+  it("shows the generic error and re-enables Save when requestEmailChange REJECTS (e.g. session expired mid-edit)", async () => {
+    mockRequestEmailChange.mockRejectedValueOnce(new Error("Unauthorized"));
+
+    renderCard();
+    enterEdit();
+
+    fireEvent.change(screen.getByTestId("account-email-field"), {
+      target: { value: "new@example.com" },
+    });
+    submit();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Couldn't save your changes. Try again."),
+      ).toBeTruthy();
+    });
+    // isPending resets — Save becomes clickable again, not silently
+    // re-enabled with zero feedback (the pre-fix behavior).
+    expect(
+      (screen.getByTestId("account-save-btn") as HTMLButtonElement).disabled,
+    ).toBe(false);
+    expect(mockRefresh).not.toHaveBeenCalled();
+  });
+});
+
+// -----------------------------------------------------------------------
 // Pending email banner (server-persisted prop, not local state)
 // -----------------------------------------------------------------------
 describe("AccountDetailsCard — pending email banner", () => {

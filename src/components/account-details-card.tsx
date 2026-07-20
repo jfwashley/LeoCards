@@ -146,6 +146,15 @@ export function AccountDetailsCard({
           successTimerRef.current = null;
         }, SUCCESS_FADE_MS);
       }
+    } catch {
+      // WR-01 — requestEmailChange is a "use server" action that can
+      // REJECT (throws "Unauthorized" when the session expired/was revoked
+      // mid-edit, e.g. a password change on another tab firing
+      // revokeOtherSessions). Every branch above assumes the callee
+      // RESOLVES with an {error}/{ok:false} shape; without this catch a
+      // rejected promise left the Save button silently re-enabling with no
+      // feedback at all.
+      setServerError("Couldn't save your changes. Try again.");
     } finally {
       setIsPending(false);
     }

@@ -280,4 +280,29 @@ describe("ChangePasswordCard — submit errors", () => {
     });
     expect(screen.queryByText("Something else broke")).toBeNull();
   });
+
+  // WR-01 — authClient.changePassword can REJECT (not just resolve with
+  // {error}); without a catch, the button silently re-enabled with zero
+  // feedback and passwordDirty stayed stuck true even though nothing saved.
+  it("shows the generic error and re-enables Update password when changePassword REJECTS", async () => {
+    vi.mocked(authClient.changePassword).mockRejectedValueOnce(
+      new Error("network down"),
+    );
+
+    renderCard();
+    expandPanel();
+    fillFields("oldpass123", "myNewPass1", "myNewPass1");
+
+    submit();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Couldn't update your password. Try again."),
+      ).toBeTruthy();
+    });
+    expect(
+      (screen.getByTestId("account-password-save-btn") as HTMLButtonElement)
+        .disabled,
+    ).toBe(false);
+  });
 });
