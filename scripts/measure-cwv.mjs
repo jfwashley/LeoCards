@@ -342,6 +342,19 @@ async function injectCookie(page, token) {
 // logic lives in measure-cwv-lib.mjs (vitest-covered); this is the sole
 // process.env read site.
 const ROUTES = resolveRoutes(process.env.ROUTE_FILTER ?? null);
+// Phase 17 review WR-03: a typo'd ROUTE_FILTER (e.g. "/dashbaord") silently
+// resolves to [] — the harness would then provision a user, launch the
+// browser, measure NOTHING, write an empty summary, and exit 0 printing
+// success. That is the same "silent garbage" failure class the redirect
+// guard / extractMetrics fail-loud / bundle-stats freshness gate all exist
+// to prevent — so fail fast here, before any provisioning.
+if (ROUTES.length === 0) {
+  console.error(
+    `[measure-cwv] FATAL: ROUTE_FILTER="${process.env.ROUTE_FILTER}" matched no known routes ` +
+      "(valid: /dashboard, /study, /deck/new-card, /deck/browse, /habitat)",
+  );
+  process.exit(1);
+}
 const PRESETS = ["mobile", "desktop"];
 // n=6 per route x preset: discard run 0 (cold Vercel hit), median of runs 1-5.
 const N_RUNS = 6;
