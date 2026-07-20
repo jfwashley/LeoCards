@@ -50,8 +50,8 @@ created: 2026-07-19
 | 25-04-T2 | 25-04 | 3 | ACC-06 | T-25-04-C | Client back button; dirty guard reads only the boolean; dialog never echoes typed text (e2e-covered in 25-05-T3) | config/glue (behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci src/components/daybreak/account-back.tsx` | created in-task | ✅ |
 | 25-04-T3 | 25-04 | 3 | ACC-01, ACC-06 | T-25-04-B/E | Session-gated RSC; allow-listed ?verified; server-computed props; stacked D-03 order (e2e-covered in 25-05-T3) | config/glue (no page-unit precedent — behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci "src/app/(protected)/account/page.tsx"` | created in-task | ✅ |
 | 25-05-T1 | 25-05 | 4 | ACC-01 | T-25-05-C | RSC-safe nav glyph → /account (e2e-covered in 25-05-T2/T3) | config/glue (behaviorally e2e-covered) | `npx tsc --noEmit && npx biome ci src/components/account-nav-button.tsx` | created in-task | ✅ |
-| 25-05-T2 | 25-05 | 4 | ACC-01, ACC-04 | T-25-05-A | Header swap + logout-button deletion; retargeted sign-out blast radius (e2e/01:48,70,99 + e2e/10:46) | e2e | `npx playwright test e2e/01-auth-signup-login.spec.ts e2e/10-mobile-responsive.spec.ts` | modified/retarget | ⬜ |
-| 25-05-T3 | 25-05 | 4 | ACC-01, ACC-02, ACC-03, ACC-04, ACC-05 | T-25-05-B | Full real-pipeline flow; touch-targets ≥44 (null-guarded); pending-token seam (test-only, secret-gated) | e2e | `npx playwright test e2e/25-my-account.spec.ts` | created in-task | ⬜ |
+| 25-05-T2 | 25-05 | 4 | ACC-01, ACC-04 | T-25-05-A | Header swap + logout-button deletion; retargeted sign-out blast radius (e2e/01:48,70,99 + e2e/10:46) | e2e | `npx playwright test e2e/01-auth-signup-login.spec.ts e2e/10-mobile-responsive.spec.ts` | modified/retarget | ✅ |
+| 25-05-T3 | 25-05 | 4 | ACC-01, ACC-02, ACC-03, ACC-04, ACC-05 | T-25-05-B | Full real-pipeline flow; touch-targets ≥44 (null-guarded); pending-token seam (test-only, secret-gated) | e2e | `npx playwright test e2e/25-my-account.spec.ts` | created in-task | ✅ |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
