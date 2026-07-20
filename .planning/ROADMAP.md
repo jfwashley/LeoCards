@@ -184,7 +184,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] 25-01-PLAN.md — Account mutation backend: requestEmailChange + deleteAccount actions, getPendingEmailChange query, verify-email GET route (D-07, D-14)
 - [x] 25-02-PLAN.md — Change-password card + UI foundations: dirty-context, accordion/success-fade CSS, changePassword flow (D-08, D-09, D-10, D-11, D-04)
 - [x] 25-03-PLAN.md — Account details card (name/email edit + pending banner) + Sign-out section (D-05, D-06, D-07)
-- [ ] 25-04-PLAN.md — /account page assembly + back-button dirty guard + delete-account row (D-02, D-03, D-04, D-12, D-13, D-14)
+- [x] 25-04-PLAN.md — /account page assembly + back-button dirty guard + delete-account row (D-02, D-03, D-04, D-12, D-13, D-14)
 - [ ] 25-05-PLAN.md — Header glyph swap + e2e (nav-button, app-header, logout-button delete, e2e retargets + new spec) (D-01)
 
 ## Progress
@@ -206,7 +206,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-19 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
-| 25. My Account | 3/5 | In Progress|  |
+| 25. My Account | 4/5 | In Progress|  |
 
 ## Backlog
 

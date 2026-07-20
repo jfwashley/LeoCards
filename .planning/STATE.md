@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 25-03-PLAN.md -- AccountDetailsCard + AccountLogoutSection (D-05/D-06/D-07, ACC-04); all 4 files + SUMMARY committed, full tsc/vitest/biome green
-last_updated: "2026-07-19T17:20:54.184Z"
-last_activity: 2026-07-19
+stopped_at: Completed 25-04-PLAN.md -- DeleteAccountRow + AccountBack + /account page shell (D-04/D-12/D-13/D-14, ACC-01/04/05/06); /account fully live and reachable; all 4 files + SUMMARY committed, full tsc/vitest/biome green
+last_updated: "2026-07-20T11:44:45.688Z"
+last_activity: 2026-07-20
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 16
+  completed_plans: 17
   percent: 50
 ---
 
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 25 (my-account) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
-Last activity: 2026-07-19
+Last activity: 2026-07-20
 
 Progress (v3.0): [██████████] 96% (Phase 17 all 5 plans complete — PERF-04 accepted-miss, phase closed 2026-07-19; Phase 16's immutable warm-prod baseline committed, PERF-01/PERF-02 satisfied, PERF-03/PERF-04 satisfied)
 
@@ -87,6 +87,10 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 25-03: `Card`/`ACBanner` (Daybreak atoms) only accept `{children,className}`/`{kind,children}` — neither forwards `data-testid`. Wrapped both in a plain `<div data-testid="...">` rather than widening either shared atom, extending the exact technique 25-PATTERNS.md already prescribed for ACBanner to Card too (kept both atoms and this plan's files_modified scope untouched).
 - Phase 25-03: two TS-only test fixes, both avoiding `!` per biome's noNonNullAssertion rule — (1) `mock.invocationCallOrder[0]` is `number|undefined` under noUncheckedIndexedAccess, guarded with an explicit `if (...===undefined) throw` before comparing; (2) a `let resolveSignOut | null` reassigned inside a mockImplementation's nested Promise executor and later null-checked collapsed to TS's `never` at the call site (known closure/control-flow-narrowing limitation) — sidestepped by simplifying to a never-resolving-promise test instead of manual deferred resolution.
 - Phase 25-03: confirmed (again) `gsd-sdk query state.add-decision` no-ops on this project's "### Decisions (v3.0-relevant)" heading (`added: false`, "Decisions section not found" — the regex needs a bare "Decisions"/"Decisions Made" heading, not "Decisions (v3.0-relevant)"); `state.record-metric`/`state.record-session`/`state.advance-plan` all verified safe and correct via git diff this session — only `state.update-progress` and `state.add-decision` are the known-broken pair on this project.
+- Phase 25-04: `session.user.nativeLanguage` types as `string | null | undefined` despite its `defaultValue: "en"` additionalField config — normalized via a local `?? "en"`-guarded const before both the `LANGUAGE_LABELS` lookup and its own fallback use in `page.tsx`, rather than the plan's single-expression illustrative snippet (which failed `tsc`).
+- Phase 25-04: `/account` page.tsx's `?verified` allow-list uses an if/else chain assigning a typed `let verified: "success" | "expired" | null`, not the plan's illustrative nested ternary — functionally identical, satisfies the same acceptance-criteria grep, avoids nested-ternary lint friction.
+- Phase 25-04: **discovered a live, concurrently-running session committing to this exact working tree/branch mid-execution** (interleaved `fix(17): WR-01..04` / `docs(17)` / `style(17)` commits — a Phase-17 code-review-fix pass, not part of this plan) — one of its commits briefly swept up this plan's freshly-staged `delete-account-row.test.tsx` (later reset back out by that same session; file content verified byte-intact throughout). Every commit in this plan from that point on used an explicit trailing pathspec (`git commit -m "..." -- <files>`) rather than a bare `git commit`, and each was individually verified via `git show --stat` to contain exactly its intended file(s) — no cross-contamination in the final state. Also caused the pre-existing port-3000 dev server to serve a stale cached 404 for the brand-new `/account` route (not restarted, to avoid disrupting that session); the plan's manual smoke-test gate was run against a dedicated port-3001 server instead. Flagging for Josh: confirm whether two GSD sessions are intentionally running against this repo concurrently — `parallelization: false` in config.json governs within-phase plan execution only, not cross-session working-tree access.
+- Phase 25-04: `/account` is now fully live — session-gated (307 redirect verified for unauthenticated requests), all sections stacked in the fixed D-03 order inside one `AccountDirtyProvider`. ACC-01/04/05/06 satisfied. 25-05 (header swap) can proceed.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -98,6 +102,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + a QA-gated time-shift for decay (QAJ-05) without real multi-day waits.
 
 **Non-blocking flag (Phase 17-02):** the D-11 `/habitat` regression spot-check measured mobile Perf 81 / TBT 777ms, down from the Phase 13.1-documented Perf 96 (2026-05-29). Neither of 17-02's two tasks touch `/habitat`'s render path — the regression matches the same degraded-bundle pattern already seen across all 4 key routes in the Phase 16 baseline, suggesting shared-chunk drift accumulated during the intervening v4.0 Daybreak phases (19-24). Out of scope to fix in Phase 17 (`/habitat` gets only a regression spot-check per D-11); evidence committed at `.planning/phases/17-performance-optimization/measurements/habitat-baseline.md` for any future investigation. **Re-measured 2026-07-19 (17-05 checkpoint):** mobile Perf 93 / TBT 308ms — improved from the 17-02 flag, still below the Phase 13.1 original; non-regressed.
+
+**Non-blocking flag (Phase 25-04):** during this plan's execution, commits from a live, concurrently-running session (`fix(17): WR-01` through `WR-04`, `docs(17)`, `style(17)`) landed interleaved with 25-04's own commits on this exact working tree/branch — one briefly swept up 25-04's staged test file into its own commit (self-corrected via that session's own `git reset`; no data lost, verified byte-intact). 25-04 adopted pathspec-scoped commits (`git commit -- <files>`) for the remainder of its execution and every commit was individually verified clean. No corrective action needed on this plan's own output, but flagging for Josh: if two GSD sessions are running against this repo at once, confirm that's intentional — `parallelization: false` in `.planning/config.json` only governs within-phase plan execution, not cross-session working-tree access.
 
 **RESOLVED — 17-05 checkpoint (Josh, 2026-07-19):** PERF-04's D-15 gate ("real content visible ≤100ms median, prefetch-warm") measured 1.3-8s across all 6 hub-and-spoke nav pairs against a local prod build — roughly 20-80x over the bar. Root cause (per `node_modules/next/dist/docs/01-app/02-guides/prefetching.md`): all 4 key routes are genuinely dynamic Server Components (session + DB reads), and the docs' own prefetching-behavior table states dynamic pages are "not [fully] prefetched unless loading.js" and have "Client Cache TTL: Off, unless enabled [experimental staleTimes]" — so every nav is a real, unavoidable server round trip under the stable API surface. **Verdict: PERF-04 = ACCEPTED MISS, phase closed.** The instant-nav goal carries to Phase 18/backlog; candidate future paths recorded but NOT chosen this phase: (a) `loading.tsx` shells (would require relaxing D-15's skeletons-don't-count bar) or (b) Cache Components/PPR (experimental, needs a dedicated D-07 checkpoint). D-16 ("default prefetch sufficient") is corrected to measured-wrong for dynamic routes. Gates that DID pass: qa:run 5/5 (criterion-4, zero residue, 19 stale test users swept); /habitat D-11 non-regressed (mobile Perf 93/TBT 308ms vs previously-flagged 81/777ms); PERF-03 after-record = the committed 2026-07-17T23:07Z full run (3 of 4 routes certify, new-card D-04 accepted-miss per 17-04); immutable Phase 16 baseline untouched across the whole phase; task_d326ebac (INP prod-build-only) cleared. Three items parked as manual UAT — see `.planning/phases/17-performance-optimization/17-HUMAN-UAT.md`. Deploy HELD — Josh will deploy manually later; prod still runs the 2026-07-15 deployment, Phase 17 Wave 4/5 code is not yet live.
 
@@ -112,8 +118,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-19T17:19:01.312Z
-Stopped at: Completed 25-03-PLAN.md -- AccountDetailsCard + AccountLogoutSection (D-05/D-06/D-07, ACC-04); all 4 files + SUMMARY committed, full tsc/vitest/biome green
+Last session: 2026-07-20T11:44:45.676Z
+Stopped at: Completed 25-04-PLAN.md -- DeleteAccountRow + AccountBack + /account page shell (D-04/D-12/D-13/D-14, ACC-01/04/05/06); /account fully live and reachable; all 4 files + SUMMARY committed, full tsc/vitest/biome green
 Resume file: None
 
 ## Performance Metrics
@@ -131,3 +137,4 @@ Resume file: None
 | Phase 25 P01 | 20min | 3 tasks | 6 files |
 | Phase 25 P02 | 18min | 2 tasks | 4 files |
 | Phase 25 P03 | 24min | 2 tasks | 4 files |
+| Phase 25 P04 | 22min | 3 tasks | 4 files |
