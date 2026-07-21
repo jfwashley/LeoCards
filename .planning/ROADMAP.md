@@ -165,7 +165,16 @@ QA comes first deliberately: the harness must protect the core journey before pe
   2. A single command re-certifies all perf gates (warm-prod lab regression guardrail across the four routes), runnable on demand before any release
   3. The re-certification gate fails loudly when any route regresses below its gates — demonstrated, not assumed
 
-**Plans**: TBD
+**Plans**: 5 plans in 2 waves
+
+Wave 1 (deployable alone — Josh approves the push):
+- [ ] 26-01-PLAN.md — PERF-09 DeepL translation batching (fixes the live >30-word 429 failure)
+
+Wave 2 (after PERF-09 ships):
+- [ ] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
+- [ ] 26-03-PLAN.md — PERF-08 review-commit one server action + one multi-row insert
+- [ ] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
+- [ ] 26-05-PLAN.md — PERF-11 immutable Cache-Control for /habitat/clips/* + D-08 naming rule
 
 ### Phase 25: My Account
 
@@ -226,7 +235,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
-| 26. Performance batch | 0/TBD | Not started | - |
+| 26. Performance batch | 0/5 | Planned | - |
 
 ## Backlog
 
