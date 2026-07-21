@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 26-01-PLAN.md
-last_updated: "2026-07-21T23:34:33.300Z"
+stopped_at: Completed 26-02-PLAN.md
+last_updated: "2026-07-21T23:42:08.000Z"
 last_activity: 2026-07-21
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 26
-  completed_plans: 22
-  percent: 85
+  completed_plans: 23
+  percent: 88
 ---
 
 # Project State
@@ -27,11 +27,11 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 26 (performance-batch) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-21
 
-Progress (v3.0): [████████░░] 81% (Phases 14/15/16/17/25 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 PERF-07..11 added 2026-07-21 not started; Phase 18 PERF-05/06 runs last so its re-cert gate certifies the optimized code)
+Progress (v3.0): [████████░░] 82% (Phases 14/15/16/17/25 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 PERF-07 (26-02) + PERF-09 (26-01) complete, PERF-08/10/11 remain; Phase 18 PERF-05/06 runs last so its re-cert gate certifies the optimized code)
 
 ## Shipped Milestones
 
@@ -98,6 +98,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 25-05: left `app-header.tsx`'s right-cluster `gap` at its existing `9` rather than preemptively narrowing it per UI-SPEC's conditional crowding note — analytically the 44px hit area is centered around the identical 36px visual frame, so the visible gap to `DeckSwitcher` grows (not shrinks); deferred to the orchestrator's live visual gate rather than making an unverified speculative CSS change.
 - Phase 17-05 (supersedes accepted-miss): PERF-04 MET at re-baselined 850ms gate (Josh 2026-07-20) — nav outlier fixed via Neon undici 60s keep-alive + Link exit + refresh() removal; all 6 pairs ~470-690ms on local prod build; <100ms instant-nav → backlog (PPR needs D-07). Review CR-02/03 had invalidated the original 8s-artifact measurements.
 - Phase 26-01: fixed the live >30-word 429 "Translation unavailable" bug (PERF-09) — `/api/translate` gained an additive `texts: string[].max(50)` array mode alongside the frozen singular `text`/`translation` contract (`.refine()` mutual-exclusivity guard); `runTranslationFanOut` now issues one batched fetch with one automatic retry, falling back to the existing per-word placeholder on total failure. First-ever test coverage for `/api/translate` added. Independently deployable (Wave 1) — `translation-form.tsx` and `e2e/04-manual-card-entry.spec.ts` untouched. Also re-confirmed `gsd-sdk query state.advance-plan` corrupts this file's frontmatter `progress:` numbers on this project (completed_phases/total_plans/completed_plans/percent all wrong after the call) and `state.update-progress` re-triggered the documented `**Progress:**`-substring-match bug, truncating the Phase 25-01 decision entry below mid-sentence again — both hand-repaired this session; add to the known-broken SDK list alongside `state.add-decision`.
+- Phase 26-02: collapsed the study-commit's step-6 write phase (recall_events insert + N sequential per-card `await db.update` + habitat upsert, 1+N+1 round trips) into ONE atomic `db.batch()` call — a real single-round-trip Neon `sql.transaction()` (PERF-07). D-01 honored: WR-04's commitId idempotency machinery kept byte-identical (belt-and-braces, smallest diff); D-02 proof landed as a `batchCalls===1` unit assertion, not a timing gate. Rule 1 fix: 26-RESEARCH.md's illustrative `Batchable` type (`ReturnType<typeof db.insert> | ReturnType<typeof db.update>`) failed `tsc` (pre-`.values()` builder types don't satisfy drizzle's `BatchItem` constraint) — redeclared as `typeof insertRecallEvents | (typeof cardUpdateQueries)[number] | typeof upsertHabitat`, derived from the actual constructed query objects. Flag for future `db.batch()` usage in this codebase: use the actual-object-`typeof` pattern, not `ReturnType<typeof db.insert/db.update>`.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -125,8 +126,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-21T23:34:33.291Z
-Stopped at: Completed 26-01-PLAN.md
+Last session: 2026-07-21T23:42:08.000Z
+Stopped at: Completed 26-02-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -147,3 +148,4 @@ Resume file: None
 | Phase 25 P04 | 22min | 3 tasks | 4 files |
 | Phase 25 P05 | 31min | 3 tasks | 7 files |
 | Phase 26 P01 | 12min | 3 tasks | 4 files |
+| Phase 26 P02 | 8min | 2 tasks | 2 files |
