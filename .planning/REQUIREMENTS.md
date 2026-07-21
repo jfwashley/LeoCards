@@ -38,6 +38,16 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 - [ ] **PERF-05**: Field p75 data (Vercel Speed Insights / CrUX) confirms lab medians on key routes once traffic accrues, or variance is documented
 - [ ] **PERF-06**: A single command re-certifies all perf gates (lab regression guardrail covering the four routes), runnable on demand before any release
 
+### Performance — Batch optimizations (Phase 26, from the re-validated Fable-5 review)
+
+Provenance: 2026-06-30 Fable-5 all-phases code review, re-verified against current code 2026-07-21 (5 of 7 items still open; lazy-load ImageUploadFlow already fixed in Phase 17, LazyMotion diet deferred to backlog per D-05 carve-out).
+
+- [ ] **PERF-07**: The study-session commit updates all card mastery rows in a single round trip to Neon (`db.batch()` or equivalent) — no per-card sequential `await db.update` loop in `/api/study/complete`
+- [ ] **PERF-08**: Committing N reviewed image-cards is one server action carrying the whole array and one multi-row insert — auth/ownership checked once, not N times (`review-list.tsx` + `saveImageCards`)
+- [ ] **PERF-09**: Extractions above 30 words translate successfully via one batched DeepL request (native array API) — the deterministic per-word fan-out 429 → "Translation unavailable" failure is fixed and test-covered (live bug: front-load as Wave 1)
+- [ ] **PERF-10**: Photos are downscaled client-side (~1568 px long edge, JPEG re-encode) before upload, and the silent 3.3-5 MB dead zone (server 7 MB cap vs Vercel ~4.5 MB body limit) is closed
+- [ ] **PERF-11**: Habitat clips ship with a long-lived immutable `Cache-Control` header (next.config `headers()` for `/habitat/clips/*`), verified in response headers
+
 ### Account (v3.0 Phase 25 — My Account)
 
 The account/settings surface deferred out of v4.0 Daybreak, built on the shipped Daybreak design system + better-auth. Scope widened at discussion (D-06) to include editable name/email; delete-account is App-Store compliance (self-serve, in-app, genuinely destructive).
@@ -58,7 +68,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 
 ## Out of Scope
 
-- `/habitat` performance — already passing all CWV "Good" gates (Phase 13.1); do not re-litigate
+- `/habitat` performance — already passing all CWV "Good" gates (Phase 13.1); do not re-litigate. (Knowing exception 2026-07-21: PERF-11 adds cache headers for habitat clips — a config-only bytes-transferred win, no habitat re-measuring or CWV re-litigation)
 - Load/stress testing — single-user product at current scale
 - QA features visible to customers in any form — hard requirement, not a nice-to-have (QAOB-04 enforces)
 - Real-device farm testing — Lighthouse emulation + the user's own device remain the reference
@@ -85,6 +95,11 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-04 | Phase 17 | Complete |
 | PERF-05 | Phase 18 | Pending |
 | PERF-06 | Phase 18 | Pending |
+| PERF-07 | Phase 26 | Pending |
+| PERF-08 | Phase 26 | Pending |
+| PERF-09 | Phase 26 | Pending |
+| PERF-10 | Phase 26 | Pending |
+| PERF-11 | Phase 26 | Pending |
 | ACC-01 | Phase 25 | Complete |
 | ACC-02 | Phase 25 | Complete |
 | ACC-03 | Phase 25 | Complete |

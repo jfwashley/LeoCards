@@ -65,7 +65,7 @@ Full details: [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
-## 🚧 v3.0 Performance & QA (Phases 14-18, 25)
+## 🚧 v3.0 Performance & QA (Phases 14-18, 25-26)
 
 **Milestone goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
 
@@ -77,6 +77,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline (completed 2026-07-20)
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
+- [ ] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips
 
 ## Phase Details (v3.0)
 
@@ -187,6 +188,24 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] 25-04-PLAN.md — /account page assembly + back-button dirty guard + delete-account row (D-02, D-03, D-04, D-12, D-13, D-14)
 - [x] 25-05-PLAN.md — Header glyph swap + e2e (nav-button, app-header, logout-button delete, e2e retargets + new spec) (D-01)
 
+### Phase 26: Performance batch
+
+**Goal**: The five still-open recommendations from the re-validated Fable-5 performance review (2026-06-30 review, re-verified against current code 2026-07-21) are shipped: server round trips are batched on the two hot write paths, translation of large extractions works instead of failing, photo uploads shrink by an order of magnitude, and habitat clips stop re-downloading on every visit
+**Depends on**: Phase 17 (optimizations land on the post-17 measured code; Phase 15 harness guards the learning pipeline during refactors). Independent of Phase 18 — runs BEFORE it so the Phase 18 re-cert gate certifies the final optimized code
+**Requirements**: PERF-07, PERF-08, PERF-09, PERF-10, PERF-11
+**Success Criteria** (what must be TRUE):
+
+  1. The study-session commit performs its per-card mastery updates in a single round trip to Neon (`db.batch()` or equivalent — no per-card sequential `await db.update` loop in `/api/study/complete`), measurably shortening the "Saving your progress…" wait (PERF-07)
+  2. Committing N reviewed image-cards is one server action carrying the whole array and one multi-row insert — not N sequential server-action calls each re-running auth/ownership checks (`review-list.tsx` + `saveImageCards` in `deck-actions.ts`) (PERF-08)
+  3. An extraction with more than 30 words translates successfully — one batched DeepL request (native array API) instead of a per-word fan-out into the route's own 30/min rate limit; the deterministic 429 → "Translation unavailable" failure is gone and covered by a test (PERF-09)
+  4. Photos are downscaled client-side (~1568 px long edge, JPEG re-encode) before upload; a 5 MB phone photo uploads as a few hundred KB, and the silent 3.3-5 MB dead zone (server 7 MB cap vs Vercel ~4.5 MB body limit) is closed (PERF-10)
+  5. Habitat clips under `/habitat/clips/` ship with a long-lived immutable `Cache-Control` header via `next.config.ts` `headers()`, verified in response headers — repeat visits no longer re-fetch the 240 KB-1 MB clip (PERF-11)
+  6. The Phase 15 core-journey harness and the unit + e2e suites still pass after all changes — no learning-pipeline regressions
+
+**Wave-order constraint**: PERF-09 (translation batching) is a live user-facing bug fix — front-load it as Wave 1 so it can deploy ahead of the rest (every push to main auto-deploys prod).
+
+**Plans**: TBD
+
 ## Progress
 
 | Milestone | Phases | Plans | Status | Shipped |
@@ -195,7 +214,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18, 25 | 13/TBD | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18, 25-26 | 13/TBD | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -207,6 +226,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
+| 26. Performance batch | 0/TBD | Not started | - |
 
 ## Backlog
 
@@ -223,4 +243,9 @@ QA comes first deliberately: the harness must protect the core journey before pe
 ### Upstream
 
 - `gsd-sdk phase.complete` ROADMAP-fallback scan could mispick backlog `999.x` headings (`phase.cjs` ~1292–1306); worth an upstream report.
-- `gsd-sdk phase.add` appended the new phase's detail block to the end of the file (inside Backlog) instead of the current milestone's Phase Details section, and skipped the milestone checklist — relocated manually for Phase 25 (2026-07-12); likely the same fallback-scan root cause as above.
+- `gsd-sdk phase.add` appended the new phase's detail block to the end of the file (inside Backlog) instead of the current milestone's Phase Details section, and skipped the milestone checklist — relocated manually for Phase 25 (2026-07-12) and again for Phase 26 (2026-07-21); likely the same fallback-scan root cause as above.
+
+### Deferred from the Fable-5 perf review (2026-07-21 triage)
+
+- LazyMotion/`m` diet for the 3 remaining `motion/react` importers (`study-card.tsx`, `study-session.tsx`, `level-up-overlay.tsx`, all /study-only) — deliberately deferred: Phase 17 D-05 carved out the card-swipe drag physics as not swappable, /study already scores Perf 99, and the remaining win (~90-100 KB on one route) doesn't justify touching the load-bearing drag code. Revisit only if /study regresses.
+- Review item 3 (lazy-load ImageUploadFlow) needed nothing — already fixed in Phase 17 (D-03, `new-card-mode-toggle.tsx` `next/dynamic`).

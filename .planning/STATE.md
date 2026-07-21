@@ -7,11 +7,11 @@ stopped_at: Phase 25 complete (verified, secured, reviewed)
 last_updated: "2026-07-20T15:05:04.111Z"
 last_activity: 2026-07-20
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 5
   total_plans: 21
   completed_plans: 21
-  percent: 83
+  percent: 71
 ---
 
 # Project State
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 18 (field validation & guardrails) — the only remaining v3.0 phase
+**Current focus:** Phase 26 (Performance batch, PERF-07..11 — re-validated Fable-5 review items), then Phase 18 (field validation & guardrails) closes v3.0
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 25 — COMPLETE 2026-07-20 (5/5 plans; verified 6/6 must-haves, human_needed → 25-HUMAN-UAT.md ×2; code review 0C/9W all fixed; security 28/28 closed)
 Plan: 5 of 5 complete
-Status: Phase 25 complete — next up is Phase 18 (not started; milestone NOT complete)
-Last activity: 2026-07-20
+Status: Phase 25 complete — next up is Phase 26 (Performance batch, added 2026-07-21), then Phase 18 (milestone NOT complete)
+Last activity: 2026-07-21
 
-Progress (v3.0): [████████░░] 83% (Phases 14/15/16/17/25 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; only Phase 18 PERF-05/06 remains)
+Progress (v3.0): [███████░░░] 71% (Phases 14/15/16/17/25 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 PERF-07..11 added 2026-07-21 not started; Phase 18 PERF-05/06 runs last so its re-cert gate certifies the optimized code)
 
 ## Shipped Milestones
 
@@ -42,13 +42,14 @@ Progress (v3.0): [████████░░] 83% (Phases 14/15/16/17/25 com
 
 ## Milestone Note
 
-v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)** and **Phase 25 My Account is complete (2026-07-20, ACC-01..06)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt — the only open v3.0 phase.**
+v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)** and **Phase 25 My Account is complete (2026-07-20, ACC-01..06)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phases 26 and 18 remain unbuilt.** Phase 26 (Performance batch, added 2026-07-21 from the re-validated Fable-5 all-phases review) runs FIRST so Phase 18's one-command re-cert gate locks in the optimized numbers as the regression baseline; v3.0 closes with Phase 18.
 
 ## Accumulated Context
 
 ### Roadmap Evolution
 
 - Phase 25 added (2026-07-12): My Account — dashboard-accessible, Daybreak-styled account section: view account details, change password, log out, delete account. This is the account/settings page explicitly deferred out of v4.0 Daybreak scope. Depends on Phase 24 (Daybreak design system); independent of Phases 17/18.
+- Phase 26 added (2026-07-21): Performance batch (PERF-07..11) — the 5 still-open items from the 2026-06-30 Fable-5 all-phases perf review, re-verified against current code 2026-07-21: study-commit db.batch, review-commit single-action multi-row insert, DeepL array batching (fixes the live >30-word 429 "Translation unavailable" bug — front-loaded as Wave 1; deployable early since main auto-deploys prod), client-side image resize ~1568px, Cache-Control immutable for /habitat/clips. Sequenced BEFORE Phase 18 so the re-cert gate certifies optimized code (Josh 2026-07-21). LazyMotion diet deferred to backlog (D-05 drag carve-out, /study Perf 99); lazy-load ImageUploadFlow already fixed (17 D-03). `gsd-sdk phase.add` misplaced the block into Backlog + skipped the checklist again — relocated manually (second occurrence, see Backlog/Upstream).
 
 ### Decisions (v3.0-relevant)
 
