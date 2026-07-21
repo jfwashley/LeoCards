@@ -43,7 +43,7 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 Provenance: 2026-06-30 Fable-5 all-phases code review, re-verified against current code 2026-07-21 (5 of 7 items still open; lazy-load ImageUploadFlow already fixed in Phase 17, LazyMotion diet deferred to backlog per D-05 carve-out).
 
 - [x] **PERF-07**: The study-session commit updates all card mastery rows in a single round trip to Neon (`db.batch()` or equivalent) — no per-card sequential `await db.update` loop in `/api/study/complete`
-- [ ] **PERF-08**: Committing N reviewed image-cards is one server action carrying the whole array and one multi-row insert — auth/ownership checked once, not N times (`review-list.tsx` + `saveImageCards`)
+- [x] **PERF-08**: Committing N reviewed image-cards is one server action carrying the whole array and one multi-row insert — auth/ownership checked once, not N times (`review-list.tsx` + `saveImageCards`)
 - [x] **PERF-09**: Extractions above 30 words translate successfully via one batched DeepL request (native array API) — the deterministic per-word fan-out 429 → "Translation unavailable" failure is fixed and test-covered (live bug: front-load as Wave 1)
 - [ ] **PERF-10**: Photos are downscaled client-side (~1568 px long edge, JPEG re-encode) before upload, and the silent 3.3-5 MB dead zone (server 7 MB cap vs Vercel ~4.5 MB body limit) is closed
 - [ ] **PERF-11**: Habitat clips ship with a long-lived immutable `Cache-Control` header (next.config `headers()` for `/habitat/clips/*`), verified in response headers
@@ -96,7 +96,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-05 | Phase 18 | Pending |
 | PERF-06 | Phase 18 | Pending |
 | PERF-07 | Phase 26 | Complete |
-| PERF-08 | Phase 26 | Pending |
+| PERF-08 | Phase 26 | Complete |
 | PERF-09 | Phase 26 | Complete |
 | PERF-10 | Phase 26 | Pending |
 | PERF-11 | Phase 26 | Pending |
