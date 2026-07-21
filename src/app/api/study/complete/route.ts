@@ -88,10 +88,12 @@ export function recallEventId(commitId: string, index: number): RecallEventId {
  * 3. Verify deck ownership
  * 4. Load current card states
  * 5. Compute mastery updates via study engine
- * 6. Execute writes sequentially (Neon HTTP driver does not support transactions;
- *    a mid-sequence failure may result in partial writes). Writes are idempotent
- *    and keyed on the per-session commitId, so the client may safely retry the
- *    full batch — a replay converges instead of double-applying (WR-04).
+ * 6. Execute all writes atomically in a single db.batch() call — a real
+ *    single-round-trip Neon sql.transaction() (all queries commit or roll back
+ *    together). Writes are ALSO idempotent and keyed on the per-session
+ *    commitId (WR-04), kept as a belt-and-braces guard even though the atomic
+ *    batch already prevents partial writes — so a client retry of the full
+ *    batch still converges instead of double-applying.
  * 7. Return success with level-up info
  */
 export async function POST(request: Request) {
@@ -205,12 +207,16 @@ export async function POST(request: Request) {
     };
   });
 
-  // 6. Execute all writes (neon-http driver does not support transactions).
+  // 6. Execute all writes in ONE atomic db.batch() call — a real single-round-trip
+  // Neon sql.transaction() (drizzle-orm 0.45.1 on the neon-http driver; verified
+  // against installed source in 26-RESEARCH.md). All queries below commit or roll
+  // back together, replacing the prior 1(insert)+N(updates)+1(upsert) round trips
+  // with exactly 1 (PERF-07 / D-02).
   //
-  // The driver has no transactions, so a mid-sequence failure leaves a partial
-  // write and the client "Retry saving session" button (study-session.tsx →
-  // RETRY_COMMIT) re-POSTs the FULL grade batch. Each write below is therefore
-  // made idempotent so a replay converges instead of double-applying (WR-04):
+  // WR-04 idempotency is kept UNTOUCHED (D-01) as a belt-and-braces guard even
+  // though the atomic batch already prevents partial writes — a client retry of
+  // the full batch (study-session.tsx → RETRY_COMMIT) still converges instead of
+  // double-applying:
   //   a. recall_events ids are deterministic (commitId + index) + onConflictDoNothing
   //      → a replayed row hits the PK and is skipped, no duplicate events.
   //   b. each card UPDATE is gated on lastCommitId → the masteryRound advance and
@@ -219,52 +225,70 @@ export async function POST(request: Request) {
   //      it is updated on replay (no lost writes); an already-written card is a
   //      no-op (no double advance / double count).
   //   c. habitat_metadata upsert is already idempotent (onConflictDoUpdate).
-  try {
-    // a. Batch insert all recall_events (idempotent via deterministic ids).
-    await db
-      .insert(recall_events)
-      .values(
-        grades.map((g, i) => ({
-          id: recallEventId(commitId, i),
-          cardId: g.cardId as CardId,
-          direction: g.direction,
-          correct: g.correct,
-        })),
-      )
-      .onConflictDoNothing();
+  const insertRecallEvents = db
+    .insert(recall_events)
+    .values(
+      grades.map((g, i) => ({
+        id: recallEventId(commitId, i),
+        cardId: g.cardId as CardId,
+        direction: g.direction,
+        correct: g.correct,
+      })),
+    )
+    .onConflictDoNothing();
 
-    // b. Update each card with new mastery state, guarded on commitId so a
-    //    replayed commit is a per-card no-op.
-    for (const update of cardUpdates) {
-      await db
-        .update(cards)
-        .set({
-          masteryRound: update.newRound,
-          cooldownUntil: update.cooldownUntil,
-          recallCount: sql`"recallCount" + ${update.recallCountDelta}`,
-          lastStudiedAt: now,
-          lastCommitId: commitId,
-        })
-        .where(
-          and(
-            eq(cards.id, update.cardId),
-            or(isNull(cards.lastCommitId), ne(cards.lastCommitId, commitId)),
-          ),
-        );
-    }
-
-    // c. Upsert habitat_metadata — row may not exist yet
-    await db
-      .insert(habitat_metadata)
-      .values({
-        id: crypto.randomUUID(),
-        userId: session.user.id,
-        lastActivityAt: now,
+  // b. Update each card with new mastery state, guarded on commitId so a
+  //    replayed commit is a per-card no-op.
+  const cardUpdateQueries = cardUpdates.map((update) =>
+    db
+      .update(cards)
+      .set({
+        masteryRound: update.newRound,
+        cooldownUntil: update.cooldownUntil,
+        recallCount: sql`"recallCount" + ${update.recallCountDelta}`,
+        lastStudiedAt: now,
+        lastCommitId: commitId,
       })
-      .onConflictDoUpdate({
-        target: habitat_metadata.userId,
-        set: { lastActivityAt: now },
-      });
+      .where(
+        and(
+          eq(cards.id, update.cardId),
+          or(isNull(cards.lastCommitId), ne(cards.lastCommitId, commitId)),
+        ),
+      ),
+  );
+
+  // c. Upsert habitat_metadata — row may not exist yet
+  const upsertHabitat = db
+    .insert(habitat_metadata)
+    .values({
+      id: crypto.randomUUID(),
+      userId: session.user.id,
+      lastActivityAt: now,
+    })
+    .onConflictDoUpdate({
+      target: habitat_metadata.userId,
+      set: { lastActivityAt: now },
+    });
+
+  // Batchable is derived from the actual constructed query objects above (not
+  // ReturnType<typeof db.insert/db.update>, which are the pre-.values()
+  // builder types and don't satisfy drizzle's BatchItem constraint) — these
+  // ARE the exact runnable query types db.batch() accepts.
+  type Batchable =
+    | typeof insertRecallEvents
+    | (typeof cardUpdateQueries)[number]
+    | typeof upsertHabitat;
+
+  try {
+    // TS cannot statically prove a .map()-built array is non-empty; the tuple
+    // cast is required by db.batch()'s Readonly<[U, ...U[]]> signature
+    // (drizzle-team/drizzle-orm#1301). CommitSchema.grades is .min(1).max(500),
+    // so cardUpdateQueries.length is always >=1 at runtime — the cast is sound.
+    await db.batch([
+      insertRecallEvents,
+      ...cardUpdateQueries,
+      upsertHabitat,
+    ] as [Batchable, ...Batchable[]]);
   } catch (err) {
     console.error("[study/complete] Failed to save session:", err);
     return Response.json({ error: "Failed to save session" }, { status: 500 });
