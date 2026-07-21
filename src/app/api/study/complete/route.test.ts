@@ -34,6 +34,7 @@ const h = vi.hoisted(() => ({
   // cardId -> seed masteryRound the DB starts at (populated per test)
   knownCards: new Map<string, number>(),
   onConflictDoNothingCalls: { count: 0 },
+  batchCalls: { count: 0 },
   getSession: vi.fn(),
   limiterCheck: vi.fn(),
   getHabitatFacts: vi.fn(),
@@ -138,6 +139,15 @@ vi.mock("@/db", () => ({
         },
       }),
     }),
+    // db.batch(queries) — the array elements are already-resolved promises by
+    // the time batch() receives them, since every chain above applies its side
+    // effect eagerly (synchronously) when its terminal method is called, not at
+    // await time. Promise.all therefore correctly "executes" the batch while
+    // preserving this file's assertion-on-store-state pattern (D-02 proof).
+    batch: (queries: Promise<unknown>[]) => {
+      h.batchCalls.count++;
+      return Promise.all(queries);
+    },
   },
 }));
 
@@ -169,6 +179,7 @@ beforeEach(() => {
   h.cardStore.clear();
   h.knownCards.clear();
   h.onConflictDoNothingCalls.count = 0;
+  h.batchCalls.count = 0;
   h.getSession.mockReset().mockResolvedValue({ user: { id: "user-1" } });
   h.limiterCheck.mockReset().mockReturnValue({ allowed: true });
   h.getHabitatFacts.mockReset().mockResolvedValue({});
@@ -194,6 +205,9 @@ describe("POST /api/study/complete — happy path", () => {
       [recallEventId(COMMIT_A, 0), recallEventId(COMMIT_A, 1)].sort(),
     );
     expect(h.onConflictDoNothingCalls.count).toBe(1);
+    // D-02 proof: the whole step-6 write phase (recall_events insert + card
+    // updates + habitat upsert) executes as exactly one db.batch() round trip.
+    expect(h.batchCalls.count).toBe(1);
 
     const card = h.cardStore.get(CARD_ID);
     expect(card?.masteryRound).toBe(1); // round 0 -> 1 (n2t satisfied)
