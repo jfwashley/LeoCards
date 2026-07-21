@@ -313,29 +313,30 @@ export async function commitReviewRows(
   deckId: string,
   duplicates: string[],
 ): Promise<CommitResult> {
-  let addedCount = 0;
-  let failedCount = 0;
+  // PERF-08: one saveImageCards call carrying the whole array — auth +
+  // ownership checked once per commit, not once per card. The insert is
+  // now atomic, so outcomes are all-or-nothing.
+  try {
+    const outcomes = await saveImageCards(
+      deckId,
+      rows.map((row) => ({
+        front: row.nativeText.trim(),
+        back: row.word.trim(),
+      })),
+    );
 
-  for (const row of rows) {
-    try {
-      const [result] = await saveImageCards(deckId, [
-        { front: row.nativeText.trim(), back: row.word.trim() },
-      ]);
-      if (result?.ok) {
-        addedCount++;
-      } else {
-        failedCount++;
-      }
-    } catch {
-      failedCount++;
-    }
+    return {
+      addedCount: outcomes.filter((o) => o.ok).length,
+      failedCount: outcomes.filter((o) => !o.ok).length,
+      skippedCount: duplicates.length,
+    };
+  } catch {
+    return {
+      addedCount: 0,
+      failedCount: rows.length,
+      skippedCount: duplicates.length,
+    };
   }
-
-  return {
-    addedCount,
-    failedCount,
-    skippedCount: duplicates.length,
-  };
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────

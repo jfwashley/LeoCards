@@ -470,12 +470,12 @@ describe("translation fan-out (batched)", () => {
 describe("batch commit", () => {
   const FAKE_DECK_ID = "deck-xyz-456";
 
-  it("computes accurate addedCount / failedCount / skippedCount from mixed outcomes", async () => {
-    // saveImageCards called once per row; mock mixed results
-    mockSaveImageCards
-      .mockResolvedValueOnce([{ ok: true }])
-      .mockResolvedValueOnce([{ ok: false }])
-      .mockResolvedValueOnce([{ ok: true }]);
+  it("calls saveImageCards exactly ONCE with the whole mapped array; derives counts from the single outcomes array", async () => {
+    mockSaveImageCards.mockResolvedValueOnce([
+      { ok: true },
+      { ok: false },
+      { ok: true },
+    ]);
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "dog", translationError: null },
@@ -494,25 +494,34 @@ describe("batch commit", () => {
       FAKE_DECK_ID,
       duplicates,
     );
+
+    expect(mockSaveImageCards).toHaveBeenCalledTimes(1);
+    expect(mockSaveImageCards).toHaveBeenCalledWith(FAKE_DECK_ID, [
+      { front: "dog", back: "chien" },
+      { front: "cat", back: "chat" },
+      { front: "house", back: "maison" },
+    ]);
     expect(result.addedCount).toBe(2);
     expect(result.failedCount).toBe(1);
     expect(result.skippedCount).toBe(2); // equals duplicates.length
   });
 
-  it("continue-on-failure: a failing entry does not abort the batch", async () => {
-    mockSaveImageCards
-      .mockRejectedValueOnce(new Error("DB error"))
-      .mockResolvedValueOnce([{ ok: true }]);
+  it("all-or-nothing: a thrown error from the single call fails the whole batch, never rejects", async () => {
+    mockSaveImageCards.mockRejectedValueOnce(new Error("DB error"));
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "dog", translationError: null },
       { id: "tr-1", word: "chat", nativeText: "cat", translationError: null },
     ];
 
-    // Should NOT reject — continues processing even when one call throws
-    await expect(
-      commitReviewRows(rows, FAKE_DECK_ID, []),
-    ).resolves.toBeDefined();
+    const result = await commitReviewRows(rows, FAKE_DECK_ID, []);
+
+    expect(mockSaveImageCards).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({
+      addedCount: 0,
+      failedCount: 2,
+      skippedCount: 0,
+    });
   });
 });
 
