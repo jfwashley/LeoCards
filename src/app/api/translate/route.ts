@@ -11,11 +11,24 @@ const translateLimiter = createRateLimiter({
   maxRequests: 30,
 });
 
-const RequestSchema = z.object({
-  text: z.string().min(1).max(500),
-  sourceLang: z.enum(["en", "fr", "es"]),
-  targetLang: z.enum(["en", "fr", "es"]),
-});
+const RequestSchema = z
+  .object({
+    // Frozen contract — translation-form.tsx's manual live-translate depends
+    // on this singular field and the { translation } response shape. Do not
+    // remove or repurpose.
+    text: z.string().min(1).max(500).optional(),
+    // Additive array mode (PERF-09) — review-list.tsx's batch fan-out.
+    // .max(50) is a mandatory, independent server-side abuse guard (V5 /
+    // T-26-01): one HTTP call must not be able to carry an unbounded array
+    // to amplify DeepL cost/volume while spending only 1 of 30 rate-limit
+    // slots — independent of /api/extract's own 50-word cap.
+    texts: z.array(z.string().min(1).max(500)).min(1).max(50).optional(),
+    sourceLang: z.enum(["en", "fr", "es"]),
+    targetLang: z.enum(["en", "fr", "es"]),
+  })
+  .refine((v) => (v.text !== undefined) !== (v.texts !== undefined), {
+    message: "Provide exactly one of text or texts",
+  });
 
 // DeepL requires specific target language codes
 const TARGET_LANG_MAP: Record<string, deepl.TargetLanguageCode> = {
@@ -57,7 +70,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid input" }, { status: 400 });
   }
 
-  const { text, sourceLang, targetLang } = parsed.data;
+  const { text, texts, sourceLang, targetLang } = parsed.data;
 
   // Validate that source and target languages differ
   if (sourceLang === targetLang) {
@@ -80,8 +93,30 @@ export async function POST(request: Request) {
     targetLang
   ] as deepl.TargetLanguageCode;
 
+  // Array branch (PERF-09) — before the singular branch. The .refine() above
+  // guarantees exactly one of texts/text is present at this point.
+  if (texts) {
+    try {
+      const results = await client.translateText(
+        texts,
+        sourceLang,
+        targetLangCode,
+      );
+      return Response.json({ translations: results.map((r) => r.text) });
+    } catch {
+      return Response.json(
+        { error: "Translation service unavailable" },
+        { status: 502 },
+      );
+    }
+  }
+
   try {
-    const result = await client.translateText(text, sourceLang, targetLangCode);
+    const result = await client.translateText(
+      text as string,
+      sourceLang,
+      targetLangCode,
+    );
     return Response.json({ translation: result.text });
   } catch {
     return Response.json(
