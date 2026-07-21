@@ -474,36 +474,55 @@ describe("saveImageCards", () => {
     ]);
 
     expect(result).toEqual([{ ok: true }, { ok: true }]);
-    expect(db.insert).toHaveBeenCalledTimes(2);
+    expect(db.insert).toHaveBeenCalledTimes(1);
     expect(insertChain.values).toHaveBeenCalledWith(
-      expect.objectContaining({
-        source: "image",
-        front: "hello",
-        back: "bonjour",
-      }),
+      expect.arrayContaining([
+        expect.objectContaining({
+          source: "image",
+          front: "hello",
+          back: "bonjour",
+        }),
+      ]),
     );
     expect(revalidatePath).toHaveBeenCalledTimes(1);
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 
-  it("continue-on-failure: one insert throws but loop returns outcomes for all inputs", async () => {
+  it("all-or-nothing: a single insert rejection fails every outcome (no mixed pair)", async () => {
     mockSession();
     selectChain.where.mockResolvedValueOnce([
       { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
     ]);
 
-    insertChain.values
-      .mockRejectedValueOnce(new Error("DB error"))
-      .mockResolvedValueOnce(undefined);
+    insertChain.values.mockRejectedValueOnce(new Error("DB error"));
 
     const result = await saveImageCards(FAKE_DECK_ID, [
       { front: "hello", back: "bonjour" },
       { front: "cat", back: "chat" },
     ]);
 
-    expect(result).toHaveLength(2);
-    expect(result[0]).toEqual({ ok: false, error: "DB error" });
-    expect(result[1]).toEqual({ ok: true });
+    expect(db.insert).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([
+      { ok: false, error: "DB error" },
+      { ok: false, error: "DB error" },
+    ]);
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it("all-or-nothing: a single insert success passes every outcome", async () => {
+    mockSession();
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
+    ]);
+
+    const result = await saveImageCards(FAKE_DECK_ID, [
+      { front: "hello", back: "bonjour" },
+      { front: "cat", back: "chat" },
+      { front: "dog", back: "chien" },
+    ]);
+
+    expect(db.insert).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([{ ok: true }, { ok: true }, { ok: true }]);
     expect(revalidatePath).toHaveBeenCalledTimes(1);
   });
 });

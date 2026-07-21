@@ -227,10 +227,12 @@ export async function getSameLanguageDeckBackWords(
 
 /**
  * Batch-inserts image-extracted card pairs into a deck.
- * Single auth + ownership check before the insert loop.
- * Continues on per-card failure (Neon HTTP has no transactions — no rollback).
+ * Single auth + ownership check, then ONE multi-row insert (PERF-08) —
+ * the insert is now atomic, so outcomes are all-or-nothing (no more
+ * per-row continue-on-failure; Neon HTTP still has no transactions, but a
+ * single multi-row INSERT statement itself either fully lands or fully fails).
  * Returns an outcomes array aligned by index with cardInputs.
- * revalidatePath called once after all inserts.
+ * revalidatePath called once after the insert.
  * No card text or image data is logged (T-11-06).
  */
 export async function saveImageCards(
@@ -273,29 +275,26 @@ export async function saveImageCards(
     .where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, userId)));
   if (!deckRows[0]) throw new Error("Forbidden");
 
-  // Sequential inserts, continue-on-failure (D-12: Neon HTTP has no transactions)
-  const outcomes: Array<{ ok: boolean; error?: string }> = [];
-  for (const input of sanitizedInputs) {
-    try {
-      const id = crypto.randomUUID() as CardId;
-      await db.insert(cards).values({
-        id,
+  // Single multi-row insert (PERF-08) — mirrors the recall_events master
+  // pattern (src/app/api/study/complete/route.ts:224-234). Atomic: either
+  // every card lands or none do.
+  try {
+    await db.insert(cards).values(
+      sanitizedInputs.map((input) => ({
+        id: crypto.randomUUID() as CardId,
         deckId: deckId as DeckId,
         front: input.front,
         back: input.back,
-        source: "image",
-      });
-      outcomes.push({ ok: true });
-    } catch (err) {
-      outcomes.push({
-        ok: false,
-        error: err instanceof Error ? err.message : "Unknown error",
-      });
-    }
+        source: "image" as const,
+      })),
+    );
+  } catch (err) {
+    const error = err instanceof Error ? err.message : "Unknown error";
+    return sanitizedInputs.map(() => ({ ok: false, error }));
   }
 
-  revalidatePath("/dashboard"); // Once, after all inserts (D-12)
-  return outcomes;
+  revalidatePath("/dashboard"); // Once, after the insert
+  return sanitizedInputs.map(() => ({ ok: true }));
 }
 
 // ============================================================
