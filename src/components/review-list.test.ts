@@ -345,19 +345,50 @@ describe("reviewListReducer", () => {
 });
 
 // ============================================================
-// translation fan-out (RVW-03)
+// translation fan-out (PERF-09 — one batched request, D-03/D-04)
 // ============================================================
 
-describe("translation fan-out", () => {
-  it("maps fulfilled results to nativeText per row", async () => {
+describe("translation fan-out (batched)", () => {
+  it("issues exactly ONE fetch carrying a texts[] array and zips translations back onto rows by index", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ translations: ["dog", "cat", "house"] }),
+    });
+
+    const rows: TranslationRow[] = [
+      { id: "tr-0", word: "chien", nativeText: "", translationError: null },
+      { id: "tr-1", word: "chat", nativeText: "", translationError: null },
+      { id: "tr-2", word: "maison", nativeText: "", translationError: null },
+    ];
+
+    const results = await runTranslationFanOut(rows, "fr", "en");
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/translate",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          texts: ["chien", "chat", "maison"],
+          sourceLang: "fr",
+          targetLang: "en",
+        }),
+      }),
+    );
+    expect(results[0]?.nativeText).toBe("dog");
+    expect(results[0]?.translationError).toBeNull();
+    expect(results[1]?.nativeText).toBe("cat");
+    expect(results[1]?.translationError).toBeNull();
+    expect(results[2]?.nativeText).toBe("house");
+    expect(results[2]?.translationError).toBeNull();
+  });
+
+  it("D-04: retries the whole batch exactly once after a thrown error, then succeeds", async () => {
     mockFetch
+      .mockRejectedValueOnce(new Error("Network error"))
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ translation: "dog" }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ translation: "cat" }),
+        json: async () => ({ translations: ["dog", "cat"] }),
       });
 
     const rows: TranslationRow[] = [
@@ -366,19 +397,18 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
     expect(results[0]?.nativeText).toBe("dog");
     expect(results[0]?.translationError).toBeNull();
     expect(results[1]?.nativeText).toBe("cat");
     expect(results[1]?.translationError).toBeNull();
   });
 
-  it("maps rejected/non-ok results to translationError without blocking other rows", async () => {
+  it("D-04: falls back to the existing per-word placeholder on EVERY row when the retry also fails", async () => {
     mockFetch
       .mockRejectedValueOnce(new Error("Network error"))
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ translation: "cat" }),
-      });
+      .mockRejectedValueOnce(new Error("Network error again"));
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "", translationError: null },
@@ -386,64 +416,39 @@ describe("translation fan-out", () => {
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
     expect(results[0]?.translationError).toBe(
       "Translation unavailable — enter manually.",
     );
     expect(results[0]?.nativeText).toBe("");
-    // Second row still resolves correctly
-    expect(results[1]?.nativeText).toBe("cat");
-    expect(results[1]?.translationError).toBeNull();
+    expect(results[1]?.translationError).toBe(
+      "Translation unavailable — enter manually.",
+    );
+    expect(results[1]?.nativeText).toBe("");
   });
 
-  it("maps non-ok HTTP response to translationError", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false });
+  it("also retries then falls back to the placeholder when the batch response is non-ok (not just thrown errors)", async () => {
+    mockFetch
+      .mockResolvedValueOnce({ ok: false })
+      .mockResolvedValueOnce({ ok: false });
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "", translationError: null },
     ];
 
     const results = await runTranslationFanOut(rows, "fr", "en");
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
     expect(results[0]?.translationError).toBe(
       "Translation unavailable — enter manually.",
     );
   });
 
-  it("sends correct request body shape: { text, sourceLang: targetLang, targetLang: nativeLang } (D-08 direction)", async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ translation: "dog" }),
-    });
-
-    const rows: TranslationRow[] = [
-      { id: "tr-0", word: "chien", nativeText: "", translationError: null },
-    ];
-
-    await runTranslationFanOut(rows, "fr", "en");
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      "/api/translate",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify({
-          text: "chien",
-          sourceLang: "fr",
-          targetLang: "en",
-        }),
-      }),
-    );
-  });
-
-  it("a single failure never throws and never blocks the others", async () => {
+  it("a total batch failure never throws and always resolves one result per row", async () => {
     mockFetch
       .mockRejectedValueOnce(new Error("fail"))
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ translation: "cat" }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ translation: "house" }),
-      });
+      .mockRejectedValueOnce(new Error("fail again"));
 
     const rows: TranslationRow[] = [
       { id: "tr-0", word: "chien", nativeText: "", translationError: null },
