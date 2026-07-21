@@ -135,3 +135,7 @@ None — the new `texts[]` surface and its `.max(50)` mitigation were fully anti
 ---
 *Phase: 26-performance-batch*
 *Completed: 2026-07-21*
+
+## Self-Check: PASSED
+
+All created/modified files verified present on disk; all four commit hashes (8e4e9a7, 27d9577, 627857c, 01278e0) verified present in git log.

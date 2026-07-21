@@ -168,7 +168,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 **Plans**: 5 plans in 2 waves
 
 Wave 1 (deployable alone — Josh approves the push):
-- [ ] 26-01-PLAN.md — PERF-09 DeepL translation batching (fixes the live >30-word 429 failure)
+- [x] 26-01-PLAN.md — PERF-09 DeepL translation batching (fixes the live >30-word 429 failure)
 
 Wave 2 (after PERF-09 ships):
 - [ ] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
@@ -235,7 +235,7 @@ Wave 2 (after PERF-09 ships):
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
-| 26. Performance batch | 0/5 | Planned | - |
+| 26. Performance batch | 1/5 | In Progress|  |
 
 ## Backlog
 
