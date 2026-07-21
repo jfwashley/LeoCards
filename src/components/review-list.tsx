@@ -15,9 +15,11 @@ import {
   saveImageCards,
 } from "@/lib/deck-actions";
 
-// Re-declared locally per Pitfall 4 — do NOT import from translation-form.tsx
-const TranslationResponseSchema = z.object({
-  translation: z.string().min(1),
+// PERF-09: batched array-mode response shape for runTranslationFanOut's
+// single fetch (order-preserved, zipped back onto rows by index). Re-declared
+// locally per Pitfall 4 — do NOT import from translation-form.tsx.
+const BatchTranslationResponseSchema = z.object({
+  translations: z.array(z.string()),
 });
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -250,35 +252,51 @@ export function reviewListReducer(
 
 // ─── Orchestration helpers (exported for tests) ───────────────────────────────
 
+// D-05: extraction already caps at 50 words (src/app/api/extract/route.ts),
+// within DeepL's 50-texts-per-request limit — a single batch always
+// suffices, no chunking logic needed here.
+async function attemptTranslationBatch(
+  requestBody: string,
+): Promise<string[] | null> {
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: requestBody,
+    });
+    if (!res.ok) return null;
+    const data = BatchTranslationResponseSchema.parse(await res.json());
+    return data.translations;
+  } catch {
+    return null;
+  }
+}
+
 export async function runTranslationFanOut(
   rows: TranslationRow[],
   targetLang: string,
   nativeLang: string,
 ): Promise<TranslationFanOutResult[]> {
-  const results = await Promise.allSettled(
-    rows.map((row) =>
-      fetch("/api/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: row.word,
-          sourceLang: targetLang,
-          targetLang: nativeLang,
-        }),
-      }).then(async (res) => {
-        if (!res.ok) throw new Error("Translation failed");
-        const data = TranslationResponseSchema.parse(await res.json());
-        return data.translation;
-      }),
-    ),
-  );
+  const requestBody = JSON.stringify({
+    texts: rows.map((row) => row.word),
+    sourceLang: targetLang,
+    targetLang: nativeLang,
+  });
+
+  // D-03/D-04: ONE batched request; on failure, exactly ONE automatic retry
+  // of the whole batch; if the retry also fails, every row falls back to
+  // the existing per-word placeholder (zero new UI).
+  const translations =
+    (await attemptTranslationBatch(requestBody)) ??
+    (await attemptTranslationBatch(requestBody));
 
   return rows.map((row, i) => {
-    const result = results[i];
-    if (result?.status === "fulfilled") {
+    // DeepL preserves input order, so index-zipping is safe.
+    const translation = translations?.[i];
+    if (translation !== undefined) {
       return {
         id: row.id,
-        nativeText: result.value,
+        nativeText: translation,
         translationError: null,
       } satisfies TranslationFanOutResult;
     }
