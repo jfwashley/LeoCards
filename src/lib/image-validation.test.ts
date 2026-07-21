@@ -31,17 +31,17 @@ describe("validateImageFile — type validation", () => {
 });
 
 describe("validateImageFile — size validation", () => {
-  const FIVE_MB = 5 * 1024 * 1024;
+  const TWENTY_MB = 20 * 1024 * 1024; // D-07: client cap loosened to ~20MB
 
-  it("accepts a file at exactly 5MB", () => {
-    const file = new File([new Uint8Array(FIVE_MB)], "ok.jpg", {
+  it("accepts a file at exactly 20MB", () => {
+    const file = new File([new Uint8Array(TWENTY_MB)], "ok.jpg", {
       type: "image/jpeg",
     });
     expect(validateImageFile(file)).toEqual({ ok: true });
   });
 
-  it("rejects a file over 5MB and names the size in the message", () => {
-    const file = new File([new Uint8Array(FIVE_MB + 1)], "big.jpg", {
+  it("rejects a file over 20MB and names the size in the message", () => {
+    const file = new File([new Uint8Array(TWENTY_MB + 1)], "big.jpg", {
       type: "image/jpeg",
     });
     const result = validateImageFile(file);
@@ -49,14 +49,17 @@ describe("validateImageFile — size validation", () => {
     if (!result.ok) expect(result.message).toMatch(/MB/);
   });
 
-  it("rejects a 7.3MB file and shows correct rounded size", () => {
+  it("rejects a 22.3MB file and shows correct rounded size + cap", () => {
     const file = new File(
-      [new Uint8Array(Math.round(7.3 * 1024 * 1024))],
+      [new Uint8Array(Math.round(22.3 * 1024 * 1024))],
       "big.jpg",
       { type: "image/jpeg" },
     );
     const result = validateImageFile(file);
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.message).toContain("7.3MB");
+    if (!result.ok) {
+      expect(result.message).toContain("22.3MB");
+      expect(result.message).toContain("under 20MB");
+    }
   });
 });

@@ -53,14 +53,14 @@ test("Phase 9: image upload + deck selection flow", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByRole("img", { name: "Selected file" })).toHaveCount(0);
 
-  // 4. Oversized (>5MB) rejected, error names the size
+  // 4. Oversized (>20MB, D-07) rejected, error names the size
   await fileInput.setInputFiles({
     name: "huge.jpg",
     mimeType: "image/jpeg",
-    buffer: Buffer.alloc(5 * 1024 * 1024 + 1024, 1),
+    buffer: Buffer.alloc(20 * 1024 * 1024 + 1024, 1),
   });
   await expect(
-    page.getByTestId("file-error").getByText(/please pick one under 5MB/i),
+    page.getByTestId("file-error").getByText(/please pick one under 20MB/i),
   ).toBeVisible();
   await expect(page.getByRole("img", { name: "Selected file" })).toHaveCount(0);
 

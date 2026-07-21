@@ -23,9 +23,10 @@ export function validateImageFile(file: File): ValidationResult {
   }
   if (file.size > MAX_IMAGE_BYTES) {
     const mb = (file.size / (1024 * 1024)).toFixed(1);
+    const capMb = Math.round(MAX_IMAGE_BYTES / (1024 * 1024));
     return {
       ok: false,
-      message: `That image is ${mb}MB — please pick one under 5MB.`,
+      message: `That image is ${mb}MB — please pick one under ${capMb}MB.`,
     };
   }
   return { ok: true };
