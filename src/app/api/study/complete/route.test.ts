@@ -216,6 +216,75 @@ describe("POST /api/study/complete — happy path", () => {
   });
 });
 
+describe("POST /api/study/complete — read consolidation (PERF-21)", () => {
+  // D-09: proof is a call-count assertion + a derivation-equality assertion,
+  // never a timing gate.
+  it("calls getHabitatFacts exactly once — factsAfter is derived, not re-fetched", async () => {
+    h.knownCards.set(CARD_ID, 0);
+    h.getHabitatFacts.mockResolvedValue({
+      userId: "user-1",
+      lastActivityAt: null,
+      learnedCardCount: 5,
+    });
+
+    const res = await post({
+      deckId: "deck-1",
+      commitId: COMMIT_A,
+      grades: TWO_DIRECTION_GRADES,
+    });
+
+    expect(res.status).toBe(200);
+    expect(h.getHabitatFacts).toHaveBeenCalledTimes(1);
+  });
+
+  it("derives factsAfter equal to a live re-fetch's result when a card crosses the learned threshold", async () => {
+    // masteryRound starts at 2 ("either" requirement) — a single correct grade
+    // (n2t here) advances round 2 -> 3, crossing the masteryRound>=3 "learned" bar.
+    h.knownCards.set(CARD_ID, 2);
+    h.getHabitatFacts.mockResolvedValue({
+      userId: "user-1",
+      lastActivityAt: null,
+      learnedCardCount: 5,
+    });
+
+    await post({
+      deckId: "deck-1",
+      commitId: COMMIT_A,
+      grades: [{ cardId: CARD_ID, direction: "n2t", correct: true }],
+    });
+
+    // computeHabitatState's SECOND invocation (Step B) receives the derived
+    // factsAfter — assert it equals what a live re-fetch would have returned:
+    // same userId, lastActivityAt bumped to `now`, learnedCardCount +1.
+    const factsAfterArg = h.computeHabitatState.mock.calls[1]?.[0];
+    expect(factsAfterArg).toEqual({
+      userId: "user-1",
+      lastActivityAt: expect.any(Date),
+      learnedCardCount: 6,
+    });
+  });
+
+  it("does not increment learnedCardCount when no card crosses the threshold", async () => {
+    // masteryRound starts at 0 (requires n2t); a single correct n2t only
+    // advances 0 -> 1 — nowhere near the masteryRound>=3 "learned" bar.
+    h.knownCards.set(CARD_ID, 0);
+    h.getHabitatFacts.mockResolvedValue({
+      userId: "user-1",
+      lastActivityAt: null,
+      learnedCardCount: 5,
+    });
+
+    await post({
+      deckId: "deck-1",
+      commitId: COMMIT_A,
+      grades: [{ cardId: CARD_ID, direction: "n2t", correct: true }],
+    });
+
+    const factsAfterArg = h.computeHabitatState.mock.calls[1]?.[0];
+    expect(factsAfterArg?.learnedCardCount).toBe(5);
+  });
+});
+
 describe("POST /api/study/complete — replay safety (WR-04)", () => {
   it("replaying the same commitId does not double-apply", async () => {
     h.knownCards.set(CARD_ID, 0);

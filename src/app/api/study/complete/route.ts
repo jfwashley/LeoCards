@@ -15,6 +15,7 @@ const studyCompleteLimiter = createRateLimiter({
 
 import { env } from "@/env";
 import { readQaTimeOffset } from "@/lib/debug-cheat";
+import type { HabitatFacts } from "@/lib/habitat-engine";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
@@ -131,33 +132,42 @@ export async function POST(request: Request) {
 
   const { deckId, commitId, grades } = parsed.data;
 
-  // 3. Verify deck ownership — single query checks both existence and ownership
-  const [ownedDeck] = await db
-    .select({ id: decks.id })
-    .from(decks)
-    .where(
-      and(
-        eq(decks.id, deckId as DeckId),
-        eq(decks.userId, session.user.id as string),
-      ),
-    );
-
-  if (!ownedDeck) {
-    return Response.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  // 4. Load current card states for all graded cards
+  // Unique graded card ids — synchronous, no DB dependency, needed to build the
+  // card-load query below.
   const uniqueCardIds = [...new Set(grades.map((g) => g.cardId))];
 
-  const cardRows = await db
-    .select({ id: cards.id, masteryRound: cards.masteryRound })
-    .from(cards)
-    .where(
-      and(
-        inArray(cards.id, uniqueCardIds as CardId[]),
-        eq(cards.deckId, deckId as DeckId),
+  // 3+4+5A. Ownership check, card load, and factsBefore have ZERO interdependency
+  // (each is a pure function of deckId / session.user.id / uniqueCardIds, all
+  // known before any query runs) — collapse the prior 3-step waterfall into one
+  // Promise.all (PERF-21). The 403 ownership guard still runs AFTER this
+  // resolves, on ownedDeckRows, strictly before any write (T-27-09-01 — the
+  // access-control predicate and its ordering relative to db.batch() are
+  // unchanged, only the independent reads are parallelized).
+  const [ownedDeckRows, cardRows, factsBefore] = await Promise.all([
+    db
+      .select({ id: decks.id })
+      .from(decks)
+      .where(
+        and(
+          eq(decks.id, deckId as DeckId),
+          eq(decks.userId, session.user.id as string),
+        ),
       ),
-    );
+    db
+      .select({ id: cards.id, masteryRound: cards.masteryRound })
+      .from(cards)
+      .where(
+        and(
+          inArray(cards.id, uniqueCardIds as CardId[]),
+          eq(cards.deckId, deckId as DeckId),
+        ),
+      ),
+    getHabitatFacts(session.user.id as UserId),
+  ]);
+
+  if (!ownedDeckRows[0]) {
+    return Response.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   // Build a Map for quick lookup
   const cardMap = new Map(cardRows.map((c) => [c.id as string, c]));
@@ -176,7 +186,6 @@ export async function POST(request: Request) {
   const now = new Date(Date.now() + offset);
 
   // Step A: capture pre-session habitat level for level-up detection (per D-05)
-  const factsBefore = await getHabitatFacts(session.user.id as UserId);
   const prevLevel = computeHabitatState(factsBefore, now).level;
 
   const cardUpdates = uniqueCardIds.map((cardId) => {
@@ -294,8 +303,23 @@ export async function POST(request: Request) {
     return Response.json({ error: "Failed to save session" }, { status: 500 });
   }
 
-  // Step B: capture post-session level (Pitfall 2: must be AFTER habitat_metadata upsert)
-  const factsAfter = await getHabitatFacts(session.user.id as UserId);
+  // Step B: derive post-session facts instead of re-fetching (PERF-21) — factsAfter
+  // is fully computable from factsBefore + this commit's cardUpdates: userId is
+  // unchanged, lastActivityAt is exactly `now` (the value habitat_metadata was just
+  // upserted to in the db.batch() above), and learnedCardCount increments by however
+  // many cards crossed the masteryRound>=3 "learned" threshold in this commit.
+  // getHabitatFacts (src/lib/habitat-queries.ts) returns ONLY these three fields —
+  // confirmed against its source — so deriving instead of re-fetching drops no
+  // hidden field (T-27-09-02).
+  const crossedToLearned = cardUpdates.filter((u) => {
+    const before = cardMap.get(u.cardId)?.masteryRound ?? 0;
+    return before < 3 && u.newRound >= 3;
+  }).length;
+  const factsAfter: HabitatFacts = {
+    userId: factsBefore.userId,
+    lastActivityAt: now,
+    learnedCardCount: factsBefore.learnedCardCount + crossedToLearned,
+  };
   const newLevel = computeHabitatState(factsAfter, now).level;
 
   // Step C: detect level-up, mark milestones (per D-06, D-07)
