@@ -121,3 +121,11 @@ _Note: no plan-metadata commit issued yet — this SUMMARY commit is the final m
 - The `getSession()`/`getSessionFresh()` accessor contract from `src/lib/auth-session.ts` is now live and ready for plans 27-03 (browse) and 27-04 (dashboard consolidation) to import alongside their own query-consolidation work
 - Full `npx tsc --noEmit` clean; full `npx vitest run` green (2209 passed, 6 skipped — up from the prior 2206/6 baseline, +3 new auth-session tests)
 - Manual/prod-build verification that a protected-route navigation now issues one session-table round trip (not two) is deferred to the phase-end full verification pass per the plan's own `<verification>` section (D-10 precedent)
+
+## Self-Check: PASSED
+
+All created files and all task/summary commit hashes verified present via `git log --oneline --all` and direct file existence checks:
+- FOUND: src/lib/auth-session.ts
+- FOUND: src/lib/__tests__/auth-session.test.ts
+- FOUND: .planning/phases/27-performance-batch-2/27-01-SUMMARY.md
+- FOUND: c8da48c, 738f961, cc92edf, 425a59f, 491d473
