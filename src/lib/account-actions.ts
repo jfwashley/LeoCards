@@ -9,6 +9,7 @@ import { user, verification } from "@/db/schema";
 import { env } from "@/env";
 import { EMAIL_FROM, PENDING_EMAIL_PREFIX } from "@/lib/account-constants";
 import { auth } from "@/lib/auth";
+import { getSessionFresh } from "@/lib/auth-session";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 // ============================================================
@@ -61,7 +62,7 @@ export async function requestEmailChange(newEmailRaw: string): Promise<
       error: "same-email" | "email-taken" | "rate-limited" | "invalid-email";
     }
 > {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSessionFresh();
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;
 
@@ -155,7 +156,7 @@ export async function requestEmailChange(newEmailRaw: string): Promise<
  */
 export async function deleteAccount(): Promise<void> {
   const hdrs = await headers();
-  const session = await auth.api.getSession({ headers: hdrs });
+  const session = await getSessionFresh();
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;
 

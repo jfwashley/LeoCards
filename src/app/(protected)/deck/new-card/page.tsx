@@ -1,7 +1,6 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { NewCardModeToggle } from "@/components/new-card-mode-toggle";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth-session";
 import { getUserDecks, getUserNativeLanguage } from "@/lib/deck-queries";
 
 interface NewCardPageProps {
@@ -15,9 +14,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
 };
 
 export default async function NewCardPage({ searchParams }: NewCardPageProps) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) return null;
 

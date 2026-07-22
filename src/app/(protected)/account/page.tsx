@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { AccountDetailsCard } from "@/components/account-details-card";
 import { AccountDirtyProvider } from "@/components/account-dirty-context";
 import { AccountLogoutSection } from "@/components/account-logout-section";
@@ -8,7 +7,7 @@ import { AccountBack } from "@/components/daybreak/account-back";
 import { DeleteAccountRow } from "@/components/delete-account-row";
 import type { UserId } from "@/db/schema";
 import { getPendingEmailChange } from "@/lib/account-queries";
-import { auth } from "@/lib/auth";
+import { getSessionFresh } from "@/lib/auth-session";
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
@@ -27,7 +26,7 @@ export default async function AccountPage({
 }: {
   searchParams: Promise<{ verified?: string }>;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSessionFresh();
   if (!session) return null;
 
   const userId = session.user.id as UserId;

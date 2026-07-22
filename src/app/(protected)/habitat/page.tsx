@@ -1,7 +1,6 @@
-import { headers } from "next/headers";
 import { HabitatScene } from "@/components/habitat-scene";
 import type { UserId } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth-session";
 import { readHabitatOverride } from "@/lib/debug-cheat";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
@@ -13,7 +12,7 @@ export default async function HabitatPage({
 }: {
   searchParams: Promise<{ celebrate?: string }>;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   // Safety fallback — layout.tsx handles the redirect, but guard here in case
   if (!session) return null;

@@ -1,11 +1,10 @@
 import { and, eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { StudySession } from "@/components/study-session";
 import { db } from "@/db";
 import type { DeckId } from "@/db/schema";
 import { decks } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth-session";
 import { readQaAuth } from "@/lib/debug-cheat";
 import type { CardForSession } from "@/lib/study-engine";
 import { assembleSession } from "@/lib/study-engine";
@@ -21,7 +20,7 @@ export default async function StudyPage(props: {
     redirect("/dashboard");
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) {
     redirect("/login");
   }
