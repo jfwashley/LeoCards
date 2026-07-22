@@ -234,7 +234,7 @@ Plans:
 - [x] 27-05-PLAN.md — CardList optimistic pause + row memoization (items 9/16, PERF-13/PERF-20)
 - [x] 27-06-PLAN.md — Translation stale-response race fix + LRU cache (items 15/19, PERF-19/PERF-23)
 - [x] 27-08-PLAN.md — Habitat over-video backdrop-blur removal (item 18, PERF-22)
-- [ ] 27-09-PLAN.md — Study/complete read-path trim (item 17, PERF-21)
+- [x] 27-09-PLAN.md — Study/complete read-path trim (item 17, PERF-21)
 - [ ] 27-10-PLAN.md — Extraction latency: Haiku trial + conditional streaming (item 13, PERF-17) [checkpoint]
 
 **Wave 2** *(blocked on Wave 1 completion)*
@@ -272,7 +272,7 @@ Plans:
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
-| 27. Performance batch 2 | 4/10 | In Progress|  |
+| 27. Performance batch 2 | 5/10 | In Progress|  |
 
 ## Backlog
 

@@ -61,7 +61,7 @@ Provenance: 2026-06-30 Fable-5 all-phases code review, items 8-19 (second tranch
 - [ ] **PERF-18**: Secondary indexes on `cards(deckId)`, `decks(userId)`, `recall_events(cardId)`, `session(userId)`, applied to Neon via `db:push` (D-08).
 - [x] **PERF-19**: Translation form aborts the in-flight request on each new debounced fire (`AbortController`) so a slow earlier response never overwrites a newer one; `AbortError` is a silent no-op (correctness fix).
 - [x] **PERF-20**: CardList rows `React.memo`-extracted, search filter uses `useDeferredValue`; rows mount only after the accordion tween completes.
-- [ ] **PERF-21**: `/api/study/complete` runs ownership/card/factsBefore reads in one `Promise.all` and derives `factsAfter` in JS (no second `getHabitatFacts`).
+- [x] **PERF-21**: `/api/study/complete` runs ownership/card/factsBefore reads in one `Promise.all` and derives `factsAfter` in JS (no second `getHabitatFacts`).
 - [x] **PERF-22**: No `backdropFilter` blur remains over the playing habitat video (`h-prog-card.tsx`, `h-back.tsx`, `h-mood-chip.tsx`, `habitat-scene.tsx`); `account-back.tsx` untouched (D-02).
 - [x] **PERF-23**: Repeated identical translation requests hit an in-memory LRU (bounded, TTL'd, keyed `sourceLang:targetLang:text`) instead of DeepL on the 2nd+ call, with client-side dedupe within a fan-out (D-09).
 
@@ -126,7 +126,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-18 | Phase 27 | Pending |
 | PERF-19 | Phase 27 | Complete |
 | PERF-20 | Phase 27 | Complete |
-| PERF-21 | Phase 27 | Pending |
+| PERF-21 | Phase 27 | Complete |
 | PERF-22 | Phase 27 | Complete |
 | PERF-23 | Phase 27 | Complete |
 | ACC-01 | Phase 25 | Complete |
