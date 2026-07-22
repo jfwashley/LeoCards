@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 26 complete; Phase 18 (final v3.0 phase) not started
+stopped_at: Phase 26 complete; Phase 27 (Performance batch 2) added 2026-07-22, not discussed; Phase 18 runs last
 last_updated: 2026-07-22T01:01:55.936Z
 last_activity: 2026-07-22
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 6
   total_plans: 26
   completed_plans: 26
-  percent: 86
+  percent: 75
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 18 (Field validation & guardrails, PERF-05/06) — the final v3.0 phase; its re-cert gate certifies the Phase 26 optimized code
+**Current focus:** Phase 27 (Performance batch 2, review items 8–19) — next `/gsd-discuss-phase 27`; Phase 18 (PERF-05/06) runs last so its re-cert gate certifies the final optimized code
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 26 (performance-batch) — COMPLETE 2026-07-22 (5/5 plans; verifier 11/11 must-haves, human_needed → 26-HUMAN-UAT.md ×3; deep code review 1C/2W all fixed + e2e/11 fixture corrected; qa:run all journeys passed)
 Plan: 5 of 5 complete
-Status: Phase 26 complete — next up Phase 18 (/gsd-discuss-phase 18); NOT milestone-complete (phase.complete is_last_phase:true was the known ROADMAP-fallback-scan bug, hand-corrected)
+Status: Phase 26 complete — Phase 27 (Performance batch 2) added 2026-07-22, next up /gsd-discuss-phase 27; Phase 18 runs last; NOT milestone-complete (phase.complete is_last_phase:true was the known ROADMAP-fallback-scan bug, hand-corrected)
 Last activity: 2026-07-22
 
 Progress (v3.0): [█████████░] 86% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
@@ -49,6 +49,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 ### Roadmap Evolution
 
 - Phase 25 added (2026-07-12): My Account — dashboard-accessible, Daybreak-styled account section: view account details, change password, log out, delete account. This is the account/settings page explicitly deferred out of v4.0 Daybreak scope. Depends on Phase 24 (Daybreak design system); independent of Phases 17/18.
+- Phase 27 added (2026-07-22): Performance batch 2 — items 8–19 of the 2026-06-30 Fable-5 all-phases perf review (second tranche; items 1–7 became Phase 26), pasted by Josh 2026-07-22 and saved verbatim to `.planning/research/perf-review-2026-06-30-items-08-19.md` with pre-triage notes. NOT yet re-verified against current code — line numbers predate Phases 17/25/26; requirements minted at discussion (same protocol as 26). Sequenced BEFORE Phase 18 for the same re-cert rationale. Items 17/19 build on shipped PERF-07/PERF-09; item 15 is a correctness bug (translation-form stale-response race); item 8's cookieCache TTL interacts with Phase 25 revocation semantics. `gsd-sdk phase.add` misplaced the block into Backlog + skipped the checklist AGAIN (third occurrence) — relocated manually; auto-slug dir renamed to `27-performance-batch-2`.
 - Phase 26 added (2026-07-21): Performance batch (PERF-07..11) — the 5 still-open items from the 2026-06-30 Fable-5 all-phases perf review, re-verified against current code 2026-07-21: study-commit db.batch, review-commit single-action multi-row insert, DeepL array batching (fixes the live >30-word 429 "Translation unavailable" bug — front-loaded as Wave 1; deployable early since main auto-deploys prod), client-side image resize ~1568px, Cache-Control immutable for /habitat/clips. Sequenced BEFORE Phase 18 so the re-cert gate certifies optimized code (Josh 2026-07-21). LazyMotion diet deferred to backlog (D-05 drag carve-out, /study Perf 99); lazy-load ImageUploadFlow already fixed (17 D-03). `gsd-sdk phase.add` misplaced the block into Backlog + skipped the checklist again — relocated manually (second occurrence, see Backlog/Upstream).
 
 ### Decisions (v3.0-relevant)

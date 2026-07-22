@@ -65,7 +65,7 @@ Full details: [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
-## 🚧 v3.0 Performance & QA (Phases 14-18, 25-26)
+## 🚧 v3.0 Performance & QA (Phases 14-18, 25-27)
 
 **Milestone goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
 
@@ -78,6 +78,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 - [x] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips (completed 2026-07-22)
+- [ ] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache
 
 ## Phase Details (v3.0)
 
@@ -165,16 +166,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
   2. A single command re-certifies all perf gates (warm-prod lab regression guardrail across the four routes), runnable on demand before any release
   3. The re-certification gate fails loudly when any route regresses below its gates — demonstrated, not assumed
 
-**Plans**: 5 plans in 2 waves
-
-Wave 1 (deployable alone — Josh approves the push):
-- [x] 26-01-PLAN.md — PERF-09 DeepL translation batching (fixes the live >30-word 429 failure)
-
-Wave 2 (after PERF-09 ships):
-- [x] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
-- [x] 26-03-PLAN.md — PERF-08 review-commit one server action + one multi-row insert
-- [x] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
-- [x] 26-05-PLAN.md — PERF-11 immutable Cache-Control for /habitat/clips/* + D-08 naming rule
+**Plans**: TBD
 
 ### Phase 25: My Account
 
@@ -213,7 +205,31 @@ Wave 2 (after PERF-09 ships):
 
 **Wave-order constraint**: PERF-09 (translation batching) is a live user-facing bug fix — front-load it as Wave 1 so it can deploy ahead of the rest (every push to main auto-deploys prod).
 
+**Plans**: 5 plans in 2 waves
+
+Wave 1 (deployable alone — Josh approves the push):
+- [x] 26-01-PLAN.md — PERF-09 DeepL translation batching (fixes the live >30-word 429 failure)
+
+Wave 2 (after PERF-09 ships):
+- [x] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
+- [x] 26-03-PLAN.md — PERF-08 review-commit one server action + one multi-row insert
+- [x] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
+- [x] 26-05-PLAN.md — PERF-11 immutable Cache-Control for /habitat/clips/* + D-08 naming rule
+
+### Phase 27: Performance batch 2
+
+**Goal**: The second tranche of the Fable-5 performance review (items 8–19, source: `.planning/research/perf-review-2026-06-30-items-08-19.md`) is re-verified against current code, triaged, and the surviving items shipped — spanning session lookup dedupe + cookie caching, optimistic UI on the pause toggle, client bundle diet (zod/mini), server-side Browse filtering, dashboard query consolidation, extraction latency (Haiku trial / streaming), secondary DB indexes, the translation-form stale-response race fix (a correctness bug), CardList render memoization, the study-complete read-path trim, the habitat backdrop-blur drop, and a translation LRU cache
+**Depends on**: Phase 26 (items 17 and 19 build directly on the shipped PERF-07 db.batch() and PERF-09 texts[] handlers; Phase 15 harness guards the learning pipeline). Runs BEFORE Phase 18 for the same reason 26 did — the re-cert gate certifies final optimized code
+**Requirements**: TBD — minted at discussion after re-verification (line numbers in the review predate Phases 17/25/26; same triage protocol as Phase 26)
+**Status**: Not discussed — next: `/gsd-discuss-phase 27`
 **Plans**: TBD
+
+**Triage watch-list for discussion** (from the 2026-07-22 pre-triage, full notes in the source doc):
+- Item 17 folds into PERF-07's rework, which already shipped (26-02) — re-verify what remains of the read-path waterfall
+- Item 19 slots into PERF-09's `texts[]` batch handler, which already shipped (26-01)
+- Item 15 is a correctness bug (stale-response overwrite), not just perf
+- Item 8's cookieCache TTL delays session-revocation propagation — interacts with Phase 25's delete-account/change-password revocation semantics
+- Items 9 + 16 both touch card-list.tsx — likely one plan
 
 ## Progress
 
@@ -223,7 +239,7 @@ Wave 2 (after PERF-09 ships):
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18, 25-26 | 13/TBD | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18, 25-27 | 13/TBD | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -236,6 +252,7 @@ Wave 2 (after PERF-09 ships):
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
+| 27. Performance batch 2 | 0/TBD | Not started | - |
 
 ## Backlog
 
