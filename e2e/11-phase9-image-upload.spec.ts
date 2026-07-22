@@ -15,8 +15,13 @@ import { signUpWithDeck } from "./helpers";
 // - "Remove" replaces "Remove selected image"
 // - ACThumb uses inline styles (not Tailwind classes)
 
+// 8x8 solid-red PNG. Must be genuinely decodable by Chromium's createImageBitmap:
+// since Phase 26 (PERF-10 client resize + CR-01 decode-error handling), a
+// non-decodable fixture makes handleExtract surface the error UI before the
+// extraction fetch ever fires, so the Cancel-during-extraction path never
+// establishes. The old 1x1 fixture threw InvalidStateError in createImageBitmap.
 const PNG_1x1 = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAeImBZsAAAAASUVORK5CYII=",
+  "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAIUlEQVR4AdzKMQ0AABDCwAb/0t7T4wB2mnQ7HXxalDaAAQAA//8FNTGvAAAABklEQVQDAObDDml8cqnhAAAAAElFTkSuQmCC",
   "base64",
 );
 
