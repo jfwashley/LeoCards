@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 27-10-PLAN.md
-last_updated: "2026-07-22T21:54:59Z"
+stopped_at: Phase 27 complete (10/10 plans, verified); Phase 18 is the v3.0 finisher
+last_updated: 2026-07-22T22:48:28.739Z
 last_activity: 2026-07-22 -- Phase 27 plan 10 (extraction latency Haiku trial, PERF-17) complete -- Phase 27 fully complete (10/10)
 progress:
   total_phases: 8
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 — performance-batch-2 COMPLETE (all 10/10 plans done, PERF-12..PERF-23 all shipped); Phase 18 is the only remaining phase before v3.0 closes
+**Current focus:** Phase 27 COMPLETE (PERF-12..23 shipped, 27-HUMAN-UAT ×4 parked); Phase 18 (field validation & re-cert) is the only remaining v3.0 phase
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 27 (performance-batch-2) — COMPLETE
+Phase: 27 (performance-batch-2) — COMPLETE 2026-07-22 (10/10 plans; verifier 12/12 must-haves, human_needed → 27-HUMAN-UAT.md ×4; deep review 0C/2W both fixed; qa:run all journeys; e2e web+mobile green)
 Plan: 10 of 10 complete
-Status: Phase 27 complete; Phase 18 remains before v3.0 closes
-Last activity: 2026-07-22 -- Phase 27 plan 10 (extraction latency Haiku trial, PERF-17) complete -- Phase 27 fully complete (10/10)
+Status: Phase 27 complete — Phase 18 (field validation & re-cert, PERF-05/06) is the only remaining v3.0 phase, next /gsd-discuss-phase 18
+Last activity: 2026-07-22
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 

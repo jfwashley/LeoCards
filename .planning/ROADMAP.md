@@ -78,7 +78,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 - [x] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips (completed 2026-07-22)
-- [ ] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache
+- [x] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache (completed 2026-07-22)
 
 ## Phase Details (v3.0)
 
@@ -272,7 +272,7 @@ Plans:
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
-| 27. Performance batch 2 | 10/10 | Complete   | 2026-07-22 |
+| 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
 
 ## Backlog
 
