@@ -42,7 +42,6 @@ export function HProgCard({
         padding: "15px 17px",
         borderRadius: 20,
         background: "rgba(255,255,255,0.92)",
-        backdropFilter: "blur(6px)",
         boxShadow: "0 10px 28px rgba(120,80,30,0.18)",
         border: "1px solid rgba(255,255,255,0.7)",
         display: "flex",

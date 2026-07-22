@@ -16,7 +16,6 @@ export function HBack() {
         height: 40,
         borderRadius: "50%",
         background: "rgba(255,255,255,0.86)",
-        backdropFilter: "blur(4px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

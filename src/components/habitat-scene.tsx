@@ -305,7 +305,6 @@ export function HabitatScene({
                   padding: "10px 14px",
                   borderRadius: 13,
                   background: "rgba(74,51,28,0.82)",
-                  backdropFilter: "blur(4px)",
                   display: "flex",
                   alignItems: "center",
                   gap: 9,

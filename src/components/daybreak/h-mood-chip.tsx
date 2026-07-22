@@ -24,7 +24,6 @@ export function HMoodChip({ mood }: { mood: TigerMood }) {
         padding: "0 13px 0 11px",
         borderRadius: 999,
         background: "rgba(255,255,255,0.86)",
-        backdropFilter: "blur(4px)",
         display: "flex",
         alignItems: "center",
         gap: 8,
