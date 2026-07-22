@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 27-04-PLAN.md
-last_updated: "2026-07-22T15:36:00Z"
-last_activity: 2026-07-22 -- Phase 27 plan 04 (dashboard data-pass consolidation, PERF-16) complete
+stopped_at: Completed 27-07-PLAN.md
+last_updated: "2026-07-22T14:53:19Z"
+last_activity: 2026-07-22 -- Phase 27 plan 07 (zod/mini client bundle diet, PERF-14) complete
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 36
-  completed_plans: 34
-  percent: 94
+  completed_plans: 35
+  percent: 97
 ---
 
 # Project State
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 — performance-batch-2 (plans 01, 02, 03, 04, 05, 06, 08, 09 of 10 complete, PERF-12/PERF-13/PERF-15/PERF-16/PERF-18/PERF-19/PERF-20/PERF-21/PERF-22/PERF-23 shipped)
+**Current focus:** Phase 27 — performance-batch-2 (plans 01, 02, 03, 04, 05, 06, 07, 08, 09 of 10 complete, PERF-12/PERF-13/PERF-14/PERF-15/PERF-16/PERF-18/PERF-19/PERF-20/PERF-21/PERF-22/PERF-23 shipped)
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 27 (performance-batch-2) — EXECUTING
-Plan: 04 of 10 just completed; 27-07, 27-10 remain unexecuted
+Plan: 07 of 10 just completed; 27-10 remains unexecuted
 Status: Executing Phase 27
-Last activity: 2026-07-22 -- Phase 27 plan 04 (dashboard data-pass consolidation, PERF-16) complete
+Last activity: 2026-07-22 -- Phase 27 plan 07 (zod/mini client bundle diet, PERF-14) complete
 
-Progress (v3.0): [█████████░] 94% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 now 8/10 plans complete; Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
+Progress (v3.0): [█████████░] 97% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 now 9/10 plans complete; Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
 
 ## Shipped Milestones
 
@@ -112,6 +112,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 - Phase 27-09: shipped PERF-21 — collapsed `/api/study/complete`'s read waterfall (deck-ownership SELECT + card-state SELECT + `factsBefore` `getHabitatFacts`) into one `Promise.all`, moving the 403 ownership guard to run on `ownedDeckRows[0]` immediately after resolution (T-27-09-01 access-control ordering preserved); replaced the second `getHabitatFacts` call with a JS derivation (`factsAfter.learnedCardCount = factsBefore.learnedCardCount + crossedToLearned`, `lastActivityAt = now`), confirmed safe against `getHabitatFacts`'s source (returns only `userId`/`lastActivityAt`/`learnedCardCount`, no hidden fields) — no deviation needed. `db.batch()` write block left byte-unchanged (verified via `git diff`). 3 new tests: call-count assertion (`getHabitatFacts` called once), threshold-crossing derivation-equality (masteryRound 2→3 via round-2's "either" requirement), and a non-crossing fixture proving `learnedCardCount` stays flat. `gsd-sdk query roadmap.update-plan-progress 27` verified correct via `git diff` this session (4/10 → 5/10, no corruption); STATE.md and REQUIREMENTS.md hand-edited directly per the known-broken `state.*` verbs. One pre-existing full-suite flake (`image-upload-flow-extract-errors.test.tsx`) observed, unrelated, not chased — consistent with the documented flake set.
 
+- Phase 27-07: shipped PERF-14 — converted all 9 confirmed client-side `"use client"` zod importers (signup/login/forgot-password/reset-password pages, welcome-step-choose, review-list, translation-form, account-details-card, change-password-card) from `import { z } from "zod"` to `import * as z from "zod/mini"`, using zod/mini's functional `.check()` composition (`z.minLength`, top-level `z.email`) in place of method chaining; zero full-zod stragglers (verified via exhaustive grep across all 9 files). `zodResolver` calls left byte-unchanged across all 5 form components, confirming 27-RESEARCH.md's `_zod`-core-detection claim. Rule 1 correction of an interfaces-block detail (not a plan deviation): a live node probe against installed zod 4.3.6 showed zod/mini `z.object()` schemas have NO `.refine()` method at all (`obj.refine is not a function`) — both cross-field checks in this plan (reset-password's and change-password-card's password-match validation) use `.check(z.refine(...))` instead, independently verified to reject mismatches with the correct `path`/`message`. Full `npx tsc --noEmit` clean; `npm run build` succeeds with all 4 auth pages still static; full `npx vitest run` showed the same 4 pre-existing full-suite parallel-execution flakes already documented in Phase 27-08's entry (`deck-switcher`, `image-upload-flow-extract-errors`, `review-list-commit-guard`, `cooldown-config`), all 4 re-confirmed passing in isolation. `gsd-sdk query state.*` verbs remain known-broken on this project; STATE.md, ROADMAP.md, REQUIREMENTS.md hand-edited directly, verified via `git diff`.
+
 - Phase 27-03: shipped PERF-15 — `browse/page.tsx`'s topic-detail (BrowseList) branch now serializes only `filterWords(wordList.words, {category: requestedTopic})` (~15-25 words) instead of the full ~280-word wordlist; `categoryCounts` is only computed on the topic-picker (BrowseTiles) branch. Extracted a new pure `shapeBrowseData(words, requestedTopic)` helper returning a discriminated union (`{kind:"detail",topic,words}` | `{kind:"picker",categoryCounts}`) so the branch-shaping logic is unit-testable without a session/DB harness — first test coverage for this page. Swapped `auth.api.getSession({headers: await headers()})` to the 27-01 cached `getSession()` accessor; opportunistically swapped the separate `getUserNativeLanguage` DB round trip for `session.user.nativeLanguage ?? "en"` (same pattern already proven in `/account/page.tsx`, Phase 25-04). `?topic=` CATEGORIES validation (WR-01) kept byte-unchanged; CEFR filter stays client-side. `npx tsc --noEmit` clean; scoped `biome check` clean after one auto-format pass; full `npx vitest run` 2234 passed/6 skipped/1 failed (pre-existing documented `image-upload-flow-extract-errors.test.tsx` flake, unrelated, passes in isolation).
 
 - Phase 27-04: shipped PERF-16 — `dashboard/page.tsx` now fetches a deck's cards with exactly ONE `getDeckCards` call; the study subset is derived in JS via a new pure `deriveStudySubset(allCards)` helper in `study-queries.ts` that mirrors `getStudyCards`' `isNull(pausedAt)` filter and column projection, replacing the prior `getDeckCards`+`getStudyCards` double fetch. Eliminated the O(n²) `studyCards.find((s) => s.id === c.id)` per-row stitch AND the `masteryByCardId` Map by reading `masteryRound`/`cooldownUntil` directly off the single fetched row, guarded on `c.pausedAt` (paused cards forced to `masteryRound:0`/`cooldownUntil:null`, byte-identical to the OLD Map-fallback behavior — no behavior change). `getUserNativeLanguage` dropped from the dashboard entirely (`session.user.nativeLanguage ?? "en"`, 25-04 pattern); swapped to the 27-01 cached `getSession()`. `createdAt` dropped from the client `cardRows` payload after confirming via grep it's unread by `card-list.tsx`/`card-edit-dialog.tsx`; Rule 3 fix — made `CardRow.createdAt` (`card-edit-dialog.tsx`, outside this plan's `files_modified`) optional, since dropping the field otherwise failed `tsc` against `CardList`'s `cards: CardRow[]` prop contract. `getStudyCards`/`getUserNativeLanguage` remain exported unchanged (still used by `/study` and `/deck/new-card`). `npx tsc --noEmit` clean; scoped `biome check` clean after one auto-format pass (test file import order); full `npx vitest run` 2238 passed/6 skipped/1 failed (same pre-existing documented `image-upload-flow-extract-errors.test.tsx` flake, unrelated, passes in isolation). `gsd-sdk query roadmap.update-plan-progress 27` and `requirements.mark-complete PERF-16` both verified correct via `git diff` this session (7/10 → 8/10, no corruption); STATE.md hand-edited directly per the known-broken `state.*` verbs.
@@ -144,8 +146,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T15:36:00Z
-Stopped at: Completed 27-04-PLAN.md
+Last session: 2026-07-22T14:53:19Z
+Stopped at: Completed 27-07-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -178,3 +180,4 @@ Resume file: None
 | Phase 27 P02 | ~15min | 2 tasks (1 auto + 1 checkpoint) | 1 file |
 | Phase 27 P03 | 15min | 2 tasks | 2 files |
 | Phase 27 P04 | 20min | 2 tasks | 4 files |
+| Phase 27 P07 | 25min | 2 tasks | 9 files |
