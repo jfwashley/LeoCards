@@ -254,16 +254,36 @@ export function ImageUploadFlow({
     // upload — a UX/bandwidth optimization only, never a security control
     // (the server's MAX_SERVER_IMAGE_BYTES cap is authoritative). Guard
     // against a Cancel landing while the resize is in flight (D-03).
-    const resized = await resizeImageForUpload(file);
+    //
+    // CR-01: resize + FileReader are wrapped in try/catch so a decode
+    // failure (createImageBitmap can't decode corrupt/non-decodable bytes
+    // that pass validateImageFile's type/size-only check, or getContext/
+    // toBlob returning null) surfaces the existing error UI + reachable
+    // "Try again" instead of an unhandled rejection that leaves the UI
+    // pinned on the "Reading your image…" spinner forever.
+    let dataUrl: string;
+    try {
+      const resized = await resizeImageForUpload(file);
+      if (cancelled.current) return; // D-03 late-result guard
+      dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        // Wrap the ProgressEvent in an Error so the outer catch's
+        // `err instanceof Error` check sees a real Error (WR-03).
+        reader.onerror = () => reject(new Error("FileReader error"));
+        reader.readAsDataURL(resized);
+      });
+    } catch {
+      if (cancelled.current) return; // D-03 late-result guard
+      dispatch({
+        type: "EXTRACT_ERROR",
+        status: 415,
+        message:
+          "We couldn't read that image. Please choose a different photo.",
+      });
+      return;
+    }
     if (cancelled.current) return; // D-03 late-result guard
-    const dataUrl = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      // Wrap the ProgressEvent in an Error so the outer catch's
-      // `err instanceof Error` check sees a real Error (WR-03).
-      reader.onerror = () => reject(new Error("FileReader error"));
-      reader.readAsDataURL(resized);
-    });
 
     // deck.language is already BCP-47 ("en"/"fr"/"es") per DeckOption — no DeckOption schema change needed.
     // IN-03: Surface a missing-deck mismatch as a loud error instead of silently
