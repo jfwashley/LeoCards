@@ -1,5 +1,11 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CardList } from "@/components/card-list";
 
@@ -113,7 +119,9 @@ function renderCardList(cards = FIXTURE_CARDS) {
 async function expandAndWaitForRows() {
   const header = screen.getByTestId("words-accordion-header");
   fireEvent.click(header);
-  await waitFor(() => expect(screen.queryAllByTestId("card-row").length).toBeGreaterThan(0));
+  await waitFor(() =>
+    expect(screen.queryAllByTestId("card-row").length).toBeGreaterThan(0),
+  );
   return header;
 }
 
