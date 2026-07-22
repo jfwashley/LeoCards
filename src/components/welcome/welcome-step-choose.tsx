@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import { TBtn } from "@/components/daybreak/t-btn";
 import { authClient } from "@/lib/auth-client";

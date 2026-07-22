@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import { AuthCard, DaybreakAuthScene } from "@/components/daybreak/auth-card";
 import { TBtn } from "@/components/daybreak/t-btn";
@@ -13,9 +13,9 @@ import { TField } from "@/components/daybreak/t-field";
 import { authClient } from "@/lib/auth-client";
 
 const signupSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  name: z.string().check(z.minLength(1, "Name is required")),
+  email: z.email("Please enter a valid email"),
+  password: z.string().check(z.minLength(8, "Password must be at least 8 characters")),
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;

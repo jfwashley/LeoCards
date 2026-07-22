@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import { AuthCard, DaybreakAuthScene } from "@/components/daybreak/auth-card";
 import { TBtn } from "@/components/daybreak/t-btn";
@@ -14,13 +14,15 @@ import { authClient } from "@/lib/auth-client";
 
 const resetSchema = z
   .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
+    password: z.string().check(z.minLength(8, "Password must be at least 8 characters")),
+    confirmPassword: z.string().check(z.minLength(1, "Please confirm your password")),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+  .check(
+    z.refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }),
+  );
 
 type ResetFormValues = z.infer<typeof resetSchema>;
 

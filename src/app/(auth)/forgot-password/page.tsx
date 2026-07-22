@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import { AuthCard, DaybreakAuthScene } from "@/components/daybreak/auth-card";
 import { TBtn } from "@/components/daybreak/t-btn";
@@ -12,7 +12,7 @@ import { TField } from "@/components/daybreak/t-field";
 import { authClient } from "@/lib/auth-client";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email"),
+  email: z.email("Please enter a valid email"),
 });
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
