@@ -27,7 +27,13 @@ findings:
   warning: 2
   info: 3
   total: 6
-status: issues_found
+status: issues_found_fixed
+fix_status:
+  fixed_at: 2026-07-22T01:38:00Z
+  critical_fixed: 1
+  warning_fixed: 2
+  info_fixed: 0
+  info_skipped_by_design: 3
 ---
 
 # Phase 26: Code Review Report
@@ -107,6 +113,8 @@ try {
 
 (415 maps to the existing "file type isn't supported" friendly copy; a dedicated status/message is also fine.)
 
+**Fix status:** fixed — commit `2789dfa`. Wrapped the resize + FileReader awaits in `handleExtract` in a try/catch that dispatches `EXTRACT_ERROR` (status 415) on any decode/read failure, so the existing error banner + reachable "Try again" render instead of an unhandled rejection. Added a rendered `<ImageUploadFlow>` test (`src/components/__tests__/image-upload-flow-extract-errors.test.tsx`) covering both the resize-reject and FileReader-error paths, asserting the "Reading your image…" spinner is not left stuck and `fetch` is never reached.
+
 ## Warnings
 
 ### WR-01: New all-or-nothing `saveImageCards` + unguarded commit UI — one empty/failed translation row now fails the entire batch
@@ -145,6 +153,8 @@ const hasEmptyTranslation = state.translationRows.some(
 
 Alternatively, filter empty rows out of the `saveImageCards` payload in `commitReviewRows` and count them as failed/skipped rather than letting one empty row throw the whole batch.
 
+**Fix status:** fixed — commit `f4003fb`. Added a `hasEmptyTranslation` guard (mirroring the existing step-a `noWordsKept` pattern) that disables "Add N cards" and shows "Fill in every translation before adding." while any kept row's `nativeText` is empty; also extended `ACPairRow`'s `failed` styling to flag empty rows (not just `translationError !== null`) so a manually-cleared row is visibly flagged too. Added a rendered `<ReviewList>` test (`src/components/__tests__/review-list-commit-guard.test.tsx`) driving Step A → Step B → commit, asserting the commit button is disabled and `saveImageCards` is not called while a row is empty, and that filling in the empty row re-enables commit and saves every row.
+
 ### WR-02: `handleExtract` sends the resized image with no size ceiling below the server's 4MB cap — a large-but-decodable image fails only after the round trip
 
 **File:** `src/components/image-upload-flow.tsx:257-303`, `src/lib/image-constants.ts:10-14`
@@ -163,6 +173,8 @@ if (resized.size > MAX_SERVER_IMAGE_BYTES) {
   return;
 }
 ```
+
+**Fix status:** fixed — commit `8b6c491`. Rather than checking `resized.size` directly, the check mirrors the server's own `estimatedBytes` formula (`extract/route.ts`) against the actual base64 `dataUrl` about to be sent (`Math.ceil((dataUrl.length * 3) / 4)`), so the client-side gate is exactly faithful to the server's authoritative math rather than an approximation. Dispatches the same `EXTRACT_ERROR` (413) used for the real server 413, before the network call. Extended the CR-01 rendered test file with oversized/under-cap coverage.
 
 ## Info
 
@@ -183,6 +195,8 @@ if (resized.size > MAX_SERVER_IMAGE_BYTES) {
 **File:** `src/app/api/study/complete/route.ts:261-271`
 **Issue:** On a WR-04 replay (same `commitId`), the recall-event insert and card updates are correctly no-ops, but the habitat upsert's `onConflictDoUpdate` unconditionally sets `lastActivityAt: now` again — using the retry's `now`, not the original commit's. This is benign (activity recency only moves slightly forward, and habitat decay is time-based, not commit-counted), and the behavior is unchanged from before the batch refactor, so it is not a regression. Noting it only because the file's idempotency comment claims the whole write phase converges identically on replay — the habitat timestamp is the one field that does not.
 **Fix:** None required. If strict byte-equivalence on replay is ever desired, guard the habitat `lastActivityAt` write on the same `lastCommitId` semantics, but this is almost certainly not worth the complexity.
+
+**Fix status:** intentionally not fixed in this pass — IN-01/IN-02/IN-03 are out of scope for this fix run (IN-01 dead-code pruning deferred to a future cleanup pass; IN-02/IN-03 are notes with no required action).
 
 ---
 
