@@ -217,4 +217,48 @@ describe("POST /api/translate — LRU cache (PERF-23)", () => {
     const body = await res.json();
     expect(body).toEqual({ error: "Translation service unavailable" });
   });
+
+  it("WR-02: an empty-string DeepL result is not cached — a second identical request still calls DeepL (singular branch)", async () => {
+    mockSession();
+    mockAllowed();
+    mockTranslateText.mockResolvedValue({ text: "" });
+
+    const body = {
+      text: "cache-test-empty",
+      sourceLang: "fr",
+      targetLang: "en",
+    };
+
+    const res1 = await POST(makeRequest(body));
+    expect(res1.status).toBe(200);
+    expect(await res1.json()).toEqual({ translation: "" });
+
+    const res2 = await POST(makeRequest(body));
+    expect(res2.status).toBe(200);
+    expect(await res2.json()).toEqual({ translation: "" });
+
+    expect(mockTranslateText).toHaveBeenCalledTimes(2);
+  });
+
+  it("WR-02: an empty-string DeepL result is not cached — a second identical request still calls DeepL (array branch)", async () => {
+    mockSession();
+    mockAllowed();
+    mockTranslateText.mockResolvedValue([{ text: "" }]);
+
+    const body = {
+      texts: ["cache-test-empty-arr"],
+      sourceLang: "fr",
+      targetLang: "en",
+    };
+
+    const res1 = await POST(makeRequest(body));
+    expect(res1.status).toBe(200);
+    expect(await res1.json()).toEqual({ translations: [""] });
+
+    const res2 = await POST(makeRequest(body));
+    expect(res2.status).toBe(200);
+    expect(await res2.json()).toEqual({ translations: [""] });
+
+    expect(mockTranslateText).toHaveBeenCalledTimes(2);
+  });
 });

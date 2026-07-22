@@ -134,12 +134,16 @@ export async function POST(request: Request) {
         const translated = results[k]?.text;
         if (translated !== undefined) {
           cachedResults[origIdx] = translated;
-          translationCache.set(
-            texts[origIdx] as string,
-            sourceLang,
-            targetLang,
-            translated,
-          );
+          // WR-02: never cache an empty/whitespace-only result — the shared
+          // cache would pin a cross-user failure for the full TTL.
+          if (translated.trim() !== "") {
+            translationCache.set(
+              texts[origIdx] as string,
+              sourceLang,
+              targetLang,
+              translated,
+            );
+          }
         }
       });
       return Response.json({ translations: cachedResults as string[] });
@@ -168,7 +172,11 @@ export async function POST(request: Request) {
       sourceLang,
       targetLangCode,
     );
-    translationCache.set(text as string, sourceLang, targetLang, result.text);
+    // WR-02: never cache an empty/whitespace-only result — the shared cache
+    // would pin a cross-user failure for the full TTL.
+    if (result.text.trim() !== "") {
+      translationCache.set(text as string, sourceLang, targetLang, result.text);
+    }
     return Response.json({ translation: result.text });
   } catch {
     return Response.json(
