@@ -234,10 +234,21 @@ export function TranslationForm({
 }: TranslationFormProps) {
   const [state, dispatch] = useReducer(formReducer, initialFormState);
   const activeField = useRef<"native" | "target" | null>(null);
+  // PERF-19: single AbortController ref — only one field is realistically
+  // being typed into at a time, so aborting the previous in-flight request
+  // whenever a new one fires is sufficient to kill a stale, slower response
+  // before it can land. This COMPOSES with (does not replace) the
+  // `activeField` guard below, which protects a different race (field switch).
+  const translateAbortRef = useRef<AbortController | null>(null);
 
   const translateFrom = useCallback(
     async (text: string, direction: "native" | "target") => {
       if (!text.trim()) return;
+
+      // Kill any previous in-flight translation before starting a new one.
+      translateAbortRef.current?.abort();
+      const controller = new AbortController();
+      translateAbortRef.current = controller;
 
       dispatch({ type: "TRANSLATE_START" });
 
@@ -251,6 +262,7 @@ export function TranslationForm({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text, sourceLang, targetLang: destLang }),
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -266,7 +278,19 @@ export function TranslationForm({
             text: data.translation,
           });
         }
-      } catch {
+      } catch (err) {
+        // A superseded request was aborted — silent no-op, never a
+        // user-visible error (Pitfall 4). Checked via duck-typed `.name`
+        // (not `instanceof Error`) since a DOMException doesn't always
+        // share a realm/prototype chain with the ambient `Error`.
+        if (
+          err !== null &&
+          typeof err === "object" &&
+          "name" in err &&
+          err.name === "AbortError"
+        ) {
+          return;
+        }
         if (activeField.current === direction) {
           dispatch({
             type: "TRANSLATE_ERROR",
