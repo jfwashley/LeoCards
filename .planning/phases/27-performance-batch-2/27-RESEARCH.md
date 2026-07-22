@@ -411,14 +411,16 @@ export function createTranslationCache(opts: { maxSize: number; ttlMs: number })
 | A2 | The zod/mini bundle-size delta (~44KB+ across 9 importers) claimed in the source review doc holds for THIS project's exact schema shapes | Standard Stack / State of the Art | If the actual saving is smaller (e.g., other shared chunks already pull in full zod for a server-only reason that leaks into client bundles), the effort may be lower-value than estimated — verify with an actual before/after `next build` chunk diff, don't take the number on faith |
 | A3 | `streamObject` + `partialOutputStream` is the correct migration path for item 13's CONDITIONAL streaming (vs. some other AI SDK v6 streaming primitive) | Pattern 13 / Standard Stack | If D-06's threshold fires and a different streaming API is actually the better fit for this specific route's needs (e.g., a raw `fullStream` consumption instead), the planner should re-verify `streamObject`'s exact partial-object emission cadence against a real Haiku call before locking the client-side consumption code — this was verified via TYPE DEFINITIONS only, not a live streaming call in this research session |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Does `browse/page.tsx`'s `getWordList`/`filterWords` call sequence need restructuring, or just a smaller `categoryCounts` computation?**
+   - **RESOLVED (plan verification, 2026-07-22):** `getWordList`/`filterWords` confirmed a cheap in-memory lookup — the fix is pure prop-slicing, no data-fetch change. 27-03 Task 1 re-reads `src/lib/wordlist.ts` before touching the page.
    - What we know: `?topic=` is already validated (WR-01); `BrowseList` (topic-detail view) is passed the FULL `wordList.words` today, and filtering happens client-side inside `BrowseList`/`filterWords` usage.
    - What's unclear: whether `getWordList` itself can be filtered server-side by category cheaply (it may already be a static in-memory wordlist lookup, in which case "filtering server-side" just means slicing the array before the `<BrowseList words={...} />` prop, not touching the data-fetch call at all) or whether `getWordList` does file I/O per call that a topic-scoped variant could skip.
    - Recommendation: planner/executor re-read `src/lib/wordlist.ts`'s `getWordList` implementation before writing the item 11 plan — this research pass confirmed the validation and prop-threading shape but did not fully trace `getWordList`'s internals.
 
 2. **Exact streaming response wiring for item 13 if D-06's 4s threshold fires.**
+   - **RESOLVED (plan verification, 2026-07-22):** deliberately deferred to the D-06 measured decision — 27-10 Task 3 designs the streaming wiring ONLY if Haiku's measured median exceeds ~4s; no speculative pre-build.
    - What we know: `streamObject` + `partialOutputStream` is the right AI SDK primitive (verified in types); the route currently returns a single `Response.json({...})`.
    - What's unclear: how the route handler should shape the HTTP response for a streaming object (NDJSON? AI SDK's own stream-response helper? SSE?) and how `review-list.tsx`'s client-side extraction flow should consume it to populate "review rows progressively" — this is real UI/wiring work, not just an API swap, and needs its own design pass at plan time IF the Haiku median measured in-phase actually exceeds ~4s.
    - Recommendation: do not pre-build streaming plumbing speculatively — D-06 is explicitly threshold-gated. Measure Haiku's median first; only then design the streaming wiring.

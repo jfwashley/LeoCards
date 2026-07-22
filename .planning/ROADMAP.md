@@ -208,9 +208,11 @@ QA comes first deliberately: the harness must protect the core journey before pe
 **Plans**: 5 plans in 2 waves
 
 Wave 1 (deployable alone — Josh approves the push):
+
 - [x] 26-01-PLAN.md — PERF-09 DeepL translation batching (fixes the live >30-word 429 failure)
 
 Wave 2 (after PERF-09 ships):
+
 - [x] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
 - [x] 26-03-PLAN.md — PERF-08 review-commit one server action + one multi-row insert
 - [x] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
@@ -225,18 +227,24 @@ Wave 2 (after PERF-09 ships):
 **Plans**: 10 plans in 2 waves
 
 Plans:
+**Wave 1**
+
 - [ ] 27-01-PLAN.md — Requirements minting + session dedupe & cookie caching (item 8, PERF-12)
 - [ ] 27-02-PLAN.md — Secondary DB indexes + gated Neon db:push (item 14, PERF-18) [checkpoint]
-- [ ] 27-03-PLAN.md — Server-side Browse filtering (item 11, PERF-15)
-- [ ] 27-04-PLAN.md — Dashboard data-pass consolidation (item 12, PERF-16)
 - [ ] 27-05-PLAN.md — CardList optimistic pause + row memoization (items 9/16, PERF-13/PERF-20)
 - [ ] 27-06-PLAN.md — Translation stale-response race fix + LRU cache (items 15/19, PERF-19/PERF-23)
-- [ ] 27-07-PLAN.md — Client bundle diet: zod → zod/mini (item 10, PERF-14)
 - [ ] 27-08-PLAN.md — Habitat over-video backdrop-blur removal (item 18, PERF-22)
 - [ ] 27-09-PLAN.md — Study/complete read-path trim (item 17, PERF-21)
 - [ ] 27-10-PLAN.md — Extraction latency: Haiku trial + conditional streaming (item 13, PERF-17) [checkpoint]
 
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 27-03-PLAN.md — Server-side Browse filtering (item 11, PERF-15)
+- [ ] 27-04-PLAN.md — Dashboard data-pass consolidation (item 12, PERF-16)
+- [ ] 27-07-PLAN.md — Client bundle diet: zod → zod/mini (item 10, PERF-14)
+
 **Triage watch-list for discussion** (from the 2026-07-22 pre-triage, full notes in the source doc):
+
 - Item 17 folds into PERF-07's rework, which already shipped (26-02) — re-verify what remains of the read-path waterfall
 - Item 19 slots into PERF-09's `texts[]` batch handler, which already shipped (26-01)
 - Item 15 is a correctness bug (stale-response overwrite), not just perf
