@@ -141,3 +141,72 @@ describe("POST /api/translate", () => {
     expect(res.status).toBe(400);
   });
 });
+
+// ============================================================
+// LRU cache (PERF-23) — item 19
+// ============================================================
+
+describe("POST /api/translate — LRU cache (PERF-23)", () => {
+  it("a repeated identical request hits the cache — DeepL translateText is called exactly once across 2 calls", async () => {
+    mockSession();
+    mockAllowed();
+    mockTranslateText.mockResolvedValue({ text: "hello-translated" });
+
+    const body = {
+      text: "cache-test-alpha",
+      sourceLang: "fr",
+      targetLang: "en",
+    };
+
+    const res1 = await POST(makeRequest(body));
+    expect(res1.status).toBe(200);
+    expect(await res1.json()).toEqual({ translation: "hello-translated" });
+
+    const res2 = await POST(makeRequest(body));
+    expect(res2.status).toBe(200);
+    expect(await res2.json()).toEqual({ translation: "hello-translated" });
+
+    expect(mockTranslateText).toHaveBeenCalledTimes(1);
+  });
+
+  it("a request with a different key (different text) is a cache miss and still calls DeepL", async () => {
+    mockSession();
+    mockAllowed();
+    mockTranslateText.mockResolvedValue({ text: "beta-translated" });
+
+    await POST(
+      makeRequest({
+        text: "cache-test-beta-one",
+        sourceLang: "fr",
+        targetLang: "en",
+      }),
+    );
+    await POST(
+      makeRequest({
+        text: "cache-test-beta-two",
+        sourceLang: "fr",
+        targetLang: "en",
+      }),
+    );
+
+    expect(mockTranslateText).toHaveBeenCalledTimes(2);
+  });
+
+  it("the 502-on-DeepL-failure response shape is unchanged for a cache miss", async () => {
+    mockSession();
+    mockAllowed();
+    mockTranslateText.mockRejectedValueOnce(new Error("DeepL down"));
+
+    const res = await POST(
+      makeRequest({
+        text: "cache-test-gamma",
+        sourceLang: "fr",
+        targetLang: "en",
+      }),
+    );
+
+    expect(res.status).toBe(502);
+    const body = await res.json();
+    expect(body).toEqual({ error: "Translation service unavailable" });
+  });
+});
