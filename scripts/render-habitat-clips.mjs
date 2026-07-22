@@ -31,6 +31,16 @@
 // the full batch. The flag narrows BOTH the Playwright capture scope (via
 // CLIP_LEVELS / CLIP_MOODS env) and the encode scope.
 //
+// ── Cache-Control (Phase 26 PERF-11) ────────────────────────────────────────
+// next.config.ts sets `Cache-Control: public, max-age=31536000, immutable`
+// on /habitat/clips/:path* — browsers cache l{N}-{mood}.{mp4,webm} FOREVER.
+// D-08 NAMING RULE: any future re-render of an EXISTING l{N}-{mood} clip
+// MUST ship under a NEW filename. A same-name replacement is invisible to
+// any returning user until their cache clears — which for `immutable`
+// assets may be effectively never. Do not overwrite an existing filename
+// with new content; bump the filename (e.g. add a version/date suffix) and
+// update every reference to it instead.
+//
 // Run: `npm run clips:habitat` (requires `npm run dev` on :3000).
 
 import { spawnSync } from "node:child_process";
