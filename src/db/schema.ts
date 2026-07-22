@@ -1,5 +1,6 @@
 import {
   boolean,
+  index,
   integer,
   pgTable,
   text,
@@ -36,18 +37,22 @@ export const user = pgTable("user", {
   nativeLanguage: text("nativeLanguage").notNull().default("en"),
 });
 
-export const session = pgTable("session", {
-  id: text("id").primaryKey(),
-  expiresAt: timestamp("expiresAt").notNull(),
-  token: text("token").notNull().unique(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
-  ipAddress: text("ipAddress"),
-  userAgent: text("userAgent"),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
+export const session = pgTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+    ipAddress: text("ipAddress"),
+    userAgent: text("userAgent"),
+    userId: text("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+  },
+  (table) => [index("session_userId_idx").on(table.userId)],
+);
 
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
@@ -80,49 +85,61 @@ export const verification = pgTable("verification", {
 // App tables — defined in Phase 1, populated in later phases
 // ============================================================
 
-export const decks = pgTable("decks", {
-  id: text("id").primaryKey().$type<DeckId>(),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  language: text("language").notNull(), // "fr" | "es" | "en"
-  name: text("name").notNull(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
-});
+export const decks = pgTable(
+  "decks",
+  {
+    id: text("id").primaryKey().$type<DeckId>(),
+    userId: text("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    language: text("language").notNull(), // "fr" | "es" | "en"
+    name: text("name").notNull(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (table) => [index("decks_userId_idx").on(table.userId)],
+);
 
-export const cards = pgTable("cards", {
-  id: text("id").primaryKey().$type<CardId>(),
-  deckId: text("deckId")
-    .notNull()
-    .references(() => decks.id, { onDelete: "cascade" }),
-  front: text("front").notNull(), // word in native language
-  back: text("back").notNull(), // translated word
-  source: text("source").notNull(), // "manual" | "wordlist"
-  recallCount: integer("recallCount").notNull().default(0),
-  masteryRound: integer("masteryRound").notNull().default(0), // 0=new, 1=round1done, 2=round2done, 3=learned
-  cooldownUntil: timestamp("cooldownUntil"), // null = available now
-  lastStudiedAt: timestamp("lastStudiedAt"),
-  // Idempotency guard for POST /api/study/complete (WR-04): the commitId of the
-  // study session whose grades were last applied to this card. The per-card
-  // UPDATE is gated on this (apply only when lastCommitId differs), so a retried
-  // batch never double-advances masteryRound or double-increments recallCount.
-  // null = never committed against; legacy rows are null and apply on first write.
-  lastCommitId: text("lastCommitId"),
-  pausedAt: timestamp("pausedAt"), // null = active, non-null = paused at this instant
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
-});
+export const cards = pgTable(
+  "cards",
+  {
+    id: text("id").primaryKey().$type<CardId>(),
+    deckId: text("deckId")
+      .notNull()
+      .references(() => decks.id, { onDelete: "cascade" }),
+    front: text("front").notNull(), // word in native language
+    back: text("back").notNull(), // translated word
+    source: text("source").notNull(), // "manual" | "wordlist"
+    recallCount: integer("recallCount").notNull().default(0),
+    masteryRound: integer("masteryRound").notNull().default(0), // 0=new, 1=round1done, 2=round2done, 3=learned
+    cooldownUntil: timestamp("cooldownUntil"), // null = available now
+    lastStudiedAt: timestamp("lastStudiedAt"),
+    // Idempotency guard for POST /api/study/complete (WR-04): the commitId of the
+    // study session whose grades were last applied to this card. The per-card
+    // UPDATE is gated on this (apply only when lastCommitId differs), so a retried
+    // batch never double-advances masteryRound or double-increments recallCount.
+    // null = never committed against; legacy rows are null and apply on first write.
+    lastCommitId: text("lastCommitId"),
+    pausedAt: timestamp("pausedAt"), // null = active, non-null = paused at this instant
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (table) => [index("cards_deckId_idx").on(table.deckId)],
+);
 
-export const recall_events = pgTable("recall_events", {
-  id: text("id").primaryKey().$type<RecallEventId>(),
-  cardId: text("cardId")
-    .notNull()
-    .references(() => cards.id, { onDelete: "cascade" }),
-  correct: boolean("correct").notNull(),
-  direction: text("direction").notNull(), // "n2t" | "t2n"
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-});
+export const recall_events = pgTable(
+  "recall_events",
+  {
+    id: text("id").primaryKey().$type<RecallEventId>(),
+    cardId: text("cardId")
+      .notNull()
+      .references(() => cards.id, { onDelete: "cascade" }),
+    correct: boolean("correct").notNull(),
+    direction: text("direction").notNull(), // "n2t" | "t2n"
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+  },
+  (table) => [index("recall_events_cardId_idx").on(table.cardId)],
+);
 
 export const milestones_seen = pgTable(
   "milestones_seen",
