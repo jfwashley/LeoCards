@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 27-05-PLAN.md
-last_updated: "2026-07-22T12:53:00.000Z"
-last_activity: 2026-07-22 -- Phase 27 plan 05 (optimistic pause toggle + memoized CardRow + deferred search, PERF-13/PERF-20) complete
+stopped_at: Completed 27-06-PLAN.md
+last_updated: "2026-07-22T12:23:16Z"
+last_activity: 2026-07-22 -- Phase 27 plan 06 (translation-form AbortController race fix + translate route LRU cache + fan-out dedupe, PERF-19/PERF-23) complete
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 36
-  completed_plans: 28
-  percent: 78
+  completed_plans: 29
+  percent: 81
 ---
 
 # Project State
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 — performance-batch-2 (plans 01 + 05 of 10 complete, PERF-12/PERF-13/PERF-20 shipped)
+**Current focus:** Phase 27 — performance-batch-2 (plans 01, 05, 06 of 10 complete, PERF-12/PERF-13/PERF-19/PERF-20/PERF-23 shipped)
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 27 (performance-batch-2) — EXECUTING
-Plan: 05 of 10 just completed (out of numeric order — 27-05 declares `depends_on: []`/wave 1, no dependency on 27-02/03/04); 27-02, 27-03, 27-04, 27-06..10 remain unexecuted
+Plan: 06 of 10 just completed (out of numeric order — 27-06 declares `depends_on: []`/wave 1, no dependency on 27-02/03/04); 27-02, 27-03, 27-04, 27-07..10 remain unexecuted
 Status: Executing Phase 27
-Last activity: 2026-07-22 -- Phase 27 plan 05 (optimistic pause toggle + memoized CardRow + deferred search, PERF-13/PERF-20) complete
+Last activity: 2026-07-22 -- Phase 27 plan 06 (translation-form AbortController race fix + translate route LRU cache + fan-out dedupe, PERF-19/PERF-23) complete
 
 Progress (v3.0): [█████████░] 86% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
 
@@ -106,6 +106,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 27-01: minted PERF-12..PERF-23 into REQUIREMENTS.md; shipped PERF-12 — new `src/lib/auth-session.ts` exports zero-arg `cache()`-wrapped `getSession()`/`getSessionFresh()`; `src/lib/auth.ts` gained an explicit `session.cookieCache: { enabled: true, maxAge: 300 }` block (this project's `drizzleAdapter` database config means better-auth's DB-less auto-default never fires). All 5 non-consolidation RSC call sites (layout, study, habitat, welcome, new-card) swapped to `getSession()`; the 3 D-04 revocation-sensitive sites (account page, `requestEmailChange`, `deleteAccount`) swapped to `getSessionFresh()`. `dashboard/page.tsx`/`deck/browse/page.tsx` deliberately left untouched (owned by 27-03/27-04). Mocked `react`'s `cache()` export in the test with a real memoize-by-zero-args implementation — verified directly against installed source that BOTH the client build (`react.development.js`, pure passthrough) and the react-server build (`react.react-server.development.js`, falls back to calling `fn` directly when no dispatcher is registered) never memoize outside an active Next.js RSC request, so a genuine `toHaveBeenCalledTimes(1)` dedupe assertion against the unmocked primitive is not observable in bare vitest; the mock instead proves auth-session.ts's own contract with `cache()`. `gsd-sdk query state.advance-plan` and `state.record-metric` both re-confirmed corrupting this file's frontmatter `progress:` numbers on this project (regressing completed_phases/total_plans/completed_plans/percent to stale values each call) — hand-repaired both times via `git diff`; `state.add-decision` re-confirmed no-op'ing on this project's heading (`added: false`) — this entry was hand-added instead, consistent with the existing project gotcha note.
 - Phase 27-05: executed out of numeric order (wave 1, `depends_on: []`) — shipped PERF-13 (optimistic pause/resume toggle) + PERF-20 (React.memo CardRow + useDeferredValue search + tween-gated row mount) in `card-list.tsx`. Named the extracted memoized row `CardListRow`, not `CardRow` — the file already imports a type named `CardRow` from `card-edit-dialog.tsx`, so reusing the name would have shadowed it. `handleTogglePause`'s `scheduleRefresh` helper depends on `router.refresh` (the method) rather than `router` (the object) — this file's `useRouter` test mock (and Next's own docs, which make no explicit reference-stability guarantee for the returned object) returns a fresh object literal every render, which would otherwise recreate `handleTogglePause` on every re-render and defeat `CardListRow`'s `React.memo` for every row on every keystroke, not just the toggled one. Row mounting is deferred via a new `rowsMounted` state layered onto the EXISTING `panelMounted`/`open` CSS-keyframe accordion state machine (17-performance-optimization's D-05 pattern), not a second independent animation lifecycle — same 260ms safety-net-timer + `onAnimationEnd` convention already used for panel close. `gsd-sdk query state.advance-plan`/`state.record-metric`/`state.update-progress`/`state.add-decision` remain known-broken on this project (STATE.md hand-edited directly this session, verified via `git diff`).
 
+- Phase 27-06: shipped PERF-19 (`AbortController` fixes translation-form.tsx's stale-response race — a single ref aborted+recreated on every new `translateFrom` fire, composed with the existing `activeField` field-switch guard, not replacing it) + PERF-23 (bounded Map-based LRU cache in `src/lib/translation-cache.ts`, keyed `sourceLang:targetLang:text`, wired into both the `texts[]` and singular branches of `/api/translate`, plus client-side word dedupe inside `review-list.tsx`'s `runTranslationFanOut`). AbortError detection uses a duck-typed `.name` check (not `instanceof Error`) since a jsdom-environment `DOMException` didn't reliably satisfy `instanceof Error`. Edited `review-list.tsx`/`review-list.test.ts` even though the plan's `files_modified` frontmatter omitted them — the task's own `<action>` text explicitly required the fan-out dedupe, which only lives in that file (Rule 2, not scope creep). Fixed a self-inflicted test-isolation bug in `route.test.ts`: the new module-scope `translationCache` singleton persisted across all `it()` blocks under a static top-level import, causing a later frozen-contract test to get a stale cache hit from an earlier test's fixture word — resolved via `vi.resetModules()` + per-test dynamic re-import. `gsd-sdk query state.advance-plan`/`state.record-metric`/`state.update-progress`/`state.add-decision` remain known-broken on this project (STATE.md hand-edited directly this session, verified via `git diff`).
+
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
 - DB workflow: this project uses Drizzle `db:push` (NOT `db:migrate` — the migrations journal is empty); hosted-DB writes gated by the auto-mode classifier.
@@ -132,8 +134,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T12:53:00.000Z
-Stopped at: Completed 27-05-PLAN.md
+Last session: 2026-07-22T12:23:16Z
+Stopped at: Completed 27-06-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -160,3 +162,4 @@ Resume file: None
 | Phase 26 P05 | 10min | 2 tasks | 2 files |
 | Phase 27 P01 | 25min | 3 tasks | 10 files |
 | Phase 27 P05 | 20min | 2 tasks | 2 files |
+| Phase 27 P06 | 25min | 2 tasks | 7 files |
