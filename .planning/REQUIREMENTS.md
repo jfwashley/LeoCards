@@ -48,6 +48,23 @@ Provenance: 2026-06-30 Fable-5 all-phases code review, re-verified against curre
 - [x] **PERF-10**: Photos are downscaled client-side (~1568 px long edge, JPEG re-encode) before upload, and the silent 3.3-5 MB dead zone (server 7 MB cap vs Vercel ~4.5 MB body limit) is closed
 - [x] **PERF-11**: Habitat clips ship with a long-lived immutable `Cache-Control` header (next.config `headers()` for `/habitat/clips/*`), verified in response headers
 
+### Performance — Batch optimizations 2 (Phase 27, from the re-validated Fable-5 review items 8-19)
+
+Provenance: 2026-06-30 Fable-5 all-phases code review, items 8-19 (second tranche; items 1-7 became Phase 26), pasted by Josh 2026-07-22 and saved verbatim to `.planning/research/perf-review-2026-06-30-items-08-19.md`. NOT yet re-verified against current code at discussion time; requirements minted at discussion (same protocol as Phase 26).
+
+- [ ] **PERF-12**: Session lookups deduped within one request via React `cache()` (layout+page share one `auth.api.getSession`); `session.cookieCache` ~5-min TTL lets most getSession calls skip the DB; `/account` + its server actions bypass the cache (`disableCookieCache`) so mutations always see a live session (D-03/D-04).
+- [ ] **PERF-13**: Pause/resume toggle flips the card icon optimistically before the POST resolves, rolls back on error, coalesces trailing `router.refresh()` (`card-list.tsx`).
+- [ ] **PERF-14**: The 9 client-side zod importers use `zod/mini` instead of full zod, identical validation semantics, `zodResolver` unchanged.
+- [ ] **PERF-15**: Browse topic-detail view serializes only the requested topic's ~20-word subset (not all ~280 words) and skips `categoryCounts` on that branch.
+- [ ] **PERF-16**: Dashboard issues one card query (study subset derived in JS, no O(n²) stitch), reads native language from `session.user.nativeLanguage` (no separate `getUserNativeLanguage` query), drops the unread `createdAt` field from the wire payload.
+- [ ] **PERF-17**: Extraction runs on `claude-haiku-4-5` (passing existing eval expectations + manual real-photo side-by-side); streams `partialOutputStream` progressive rows only if measured median exceeds ~4s (D-05/D-06).
+- [ ] **PERF-18**: Secondary indexes on `cards(deckId)`, `decks(userId)`, `recall_events(cardId)`, `session(userId)`, applied to Neon via `db:push` (D-08).
+- [ ] **PERF-19**: Translation form aborts the in-flight request on each new debounced fire (`AbortController`) so a slow earlier response never overwrites a newer one; `AbortError` is a silent no-op (correctness fix).
+- [ ] **PERF-20**: CardList rows `React.memo`-extracted, search filter uses `useDeferredValue`; rows mount only after the accordion tween completes.
+- [ ] **PERF-21**: `/api/study/complete` runs ownership/card/factsBefore reads in one `Promise.all` and derives `factsAfter` in JS (no second `getHabitatFacts`).
+- [ ] **PERF-22**: No `backdropFilter` blur remains over the playing habitat video (`h-prog-card.tsx`, `h-back.tsx`, `h-mood-chip.tsx`, `habitat-scene.tsx`); `account-back.tsx` untouched (D-02).
+- [ ] **PERF-23**: Repeated identical translation requests hit an in-memory LRU (bounded, TTL'd, keyed `sourceLang:targetLang:text`) instead of DeepL on the 2nd+ call, with client-side dedupe within a fan-out (D-09).
+
 ### Account (v3.0 Phase 25 — My Account)
 
 The account/settings surface deferred out of v4.0 Daybreak, built on the shipped Daybreak design system + better-auth. Scope widened at discussion (D-06) to include editable name/email; delete-account is App-Store compliance (self-serve, in-app, genuinely destructive).
@@ -100,6 +117,18 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-09 | Phase 26 | Complete |
 | PERF-10 | Phase 26 | Complete |
 | PERF-11 | Phase 26 | Complete |
+| PERF-12 | Phase 27 | Pending |
+| PERF-13 | Phase 27 | Pending |
+| PERF-14 | Phase 27 | Pending |
+| PERF-15 | Phase 27 | Pending |
+| PERF-16 | Phase 27 | Pending |
+| PERF-17 | Phase 27 | Pending |
+| PERF-18 | Phase 27 | Pending |
+| PERF-19 | Phase 27 | Pending |
+| PERF-20 | Phase 27 | Pending |
+| PERF-21 | Phase 27 | Pending |
+| PERF-22 | Phase 27 | Pending |
+| PERF-23 | Phase 27 | Pending |
 | ACC-01 | Phase 25 | Complete |
 | ACC-02 | Phase 25 | Complete |
 | ACC-03 | Phase 25 | Complete |
