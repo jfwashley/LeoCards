@@ -81,8 +81,8 @@ vi.mock("@/lib/debug-cheat", () => ({
   readQaAuth: h.readQaAuth,
 }));
 
-import { deriveStudySubset } from "@/lib/study-queries";
 import DashboardPage from "@/app/(protected)/dashboard/page";
+import { deriveStudySubset } from "@/lib/study-queries";
 
 const USER_ID = "user-1" as UserId;
 const DECK_ID = "deck-1" as DeckId;

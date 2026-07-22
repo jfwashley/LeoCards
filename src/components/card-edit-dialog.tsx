@@ -18,7 +18,9 @@ export interface CardRow {
   front: string;
   back: string;
   source: string;
-  createdAt: Date;
+  // PERF-16: optional — confirmed unread by any renderer of this type (card-list.tsx,
+  // this file); the dashboard's consolidated data pass no longer serializes it.
+  createdAt?: Date;
   masteryRound?: number; // 0|1|2|3, undefined for backward compat
   pausedAt: Date | null;
   cooldownUntil?: Date | null; // QA-only: populated when QA-authed, null otherwise

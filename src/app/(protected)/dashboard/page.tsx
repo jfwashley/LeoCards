@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -7,13 +6,9 @@ import { CountdownTimer } from "@/components/countdown-timer";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { HabitatHero } from "@/components/habitat-hero";
 import type { UserId } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth-session";
 import { readHabitatOverride, readQaAuth } from "@/lib/debug-cheat";
-import {
-  getDeckCards,
-  getUserDecks,
-  getUserNativeLanguage,
-} from "@/lib/deck-queries";
+import { getDeckCards, getUserDecks } from "@/lib/deck-queries";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import type { CardForSession } from "@/lib/study-engine";
@@ -21,7 +16,7 @@ import {
   assembleSession,
   earliestCooldownEnd as getEarliestCooldownEnd,
 } from "@/lib/study-engine";
-import { getStudyCards } from "@/lib/study-queries";
+import { deriveStudySubset } from "@/lib/study-queries";
 
 interface DashboardPageProps {
   searchParams: Promise<{ deck?: string; celebrate?: string }>;
@@ -196,15 +191,16 @@ function PlusGlyph() {
 export default async function DashboardPage({
   searchParams,
 }: DashboardPageProps) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) return null;
 
-  const [decks, nativeLang, habitatFacts] = await Promise.all([
+  // 25-04 pattern: session.user.nativeLanguage types string | null | undefined
+  // despite its defaultValue: "en" config — normalize with ?? "en".
+  const nativeLang = session.user.nativeLanguage ?? "en";
+
+  const [decks, habitatFacts] = await Promise.all([
     getUserDecks(session.user.id),
-    getUserNativeLanguage(session.user.id),
     getHabitatFacts(session.user.id as UserId),
   ]);
 
@@ -232,10 +228,11 @@ export default async function DashboardPage({
   // decks.length > 0 is guaranteed by the early return above
   if (!activeDeck) return null;
 
-  const [cards, studyCards] = await Promise.all([
-    getDeckCards(activeDeck.id),
-    getStudyCards(activeDeck.id),
-  ]);
+  // PERF-16: ONE card query for the active deck (all columns, all pause
+  // states) — the study subset is derived in JS below instead of a second
+  // getStudyCards round trip.
+  const cards = await getDeckCards(activeDeck.id);
+  const studyCards = deriveStudySubset(cards);
 
   const deckOptions = decks.map((d) => ({
     id: d.id,
@@ -263,26 +260,27 @@ export default async function DashboardPage({
   const cooldownEnd = getEarliestCooldownEnd(allCardsForSession, now);
   const earliestCooldownEnd = cooldownEnd ? cooldownEnd.toISOString() : null;
 
-  // Build masteryRound lookup from study cards
-  const masteryByCardId = new Map(
-    studyCards.map((c) => [c.id as string, c.masteryRound]),
-  );
-
-  const cardRows = cards.map((c) => ({
-    id: c.id,
-    front: c.front,
-    back: c.back,
-    source: c.source,
-    createdAt: c.createdAt,
-    masteryRound: masteryByCardId.get(c.id) ?? 0,
-    pausedAt: c.pausedAt,
-    // QA-only: pass cooldownUntil when QA-authed so CardList can render the badge.
-    // studyCards is already fetched and includes cooldownUntil — no extra DB query.
-    // Customers receive null (no extra payload, no badge prop threaded down).
-    cooldownUntil: qaMode
-      ? (studyCards.find((s) => s.id === c.id)?.cooldownUntil ?? null)
-      : null,
-  }));
+  // PERF-16: masteryRound/cooldownUntil read directly off the single fetched
+  // row (no Map lookup, no per-row studyCards.find() — that was the O(n^2)
+  // stitch). Paused cards are masked to masteryRound 0 / cooldownUntil null
+  // here, matching deriveStudySubset's exclusion of paused cards from the
+  // study subset (identical behavior to the prior two-query version).
+  // createdAt is dropped (PERF-16) — confirmed unread by CardList/CardEditDialog.
+  const cardRows = cards.map((c) => {
+    const isPaused = c.pausedAt !== null;
+    return {
+      id: c.id,
+      front: c.front,
+      back: c.back,
+      source: c.source,
+      masteryRound: isPaused ? 0 : c.masteryRound,
+      pausedAt: c.pausedAt,
+      // QA-only: pass cooldownUntil when QA-authed so CardList can render the
+      // badge. Customers receive null (no extra payload, no badge prop
+      // threaded down).
+      cooldownUntil: qaMode && !isPaused ? c.cooldownUntil : null,
+    };
+  });
 
   const nativeLangLabel = LANGUAGE_LABELS[nativeLang] ?? nativeLang;
   const targetLangLabel = activeDeck
