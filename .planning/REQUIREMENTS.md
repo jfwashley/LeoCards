@@ -52,7 +52,7 @@ Provenance: 2026-06-30 Fable-5 all-phases code review, re-verified against curre
 
 Provenance: 2026-06-30 Fable-5 all-phases code review, items 8-19 (second tranche; items 1-7 became Phase 26), pasted by Josh 2026-07-22 and saved verbatim to `.planning/research/perf-review-2026-06-30-items-08-19.md`. NOT yet re-verified against current code at discussion time; requirements minted at discussion (same protocol as Phase 26).
 
-- [ ] **PERF-12**: Session lookups deduped within one request via React `cache()` (layout+page share one `auth.api.getSession`); `session.cookieCache` ~5-min TTL lets most getSession calls skip the DB; `/account` + its server actions bypass the cache (`disableCookieCache`) so mutations always see a live session (D-03/D-04).
+- [x] **PERF-12**: Session lookups deduped within one request via React `cache()` (layout+page share one `auth.api.getSession`); `session.cookieCache` ~5-min TTL lets most getSession calls skip the DB; `/account` + its server actions bypass the cache (`disableCookieCache`) so mutations always see a live session (D-03/D-04).
 - [ ] **PERF-13**: Pause/resume toggle flips the card icon optimistically before the POST resolves, rolls back on error, coalesces trailing `router.refresh()` (`card-list.tsx`).
 - [ ] **PERF-14**: The 9 client-side zod importers use `zod/mini` instead of full zod, identical validation semantics, `zodResolver` unchanged.
 - [ ] **PERF-15**: Browse topic-detail view serializes only the requested topic's ~20-word subset (not all ~280 words) and skips `categoryCounts` on that branch.
@@ -117,7 +117,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-09 | Phase 26 | Complete |
 | PERF-10 | Phase 26 | Complete |
 | PERF-11 | Phase 26 | Complete |
-| PERF-12 | Phase 27 | Pending |
+| PERF-12 | Phase 27 | Complete |
 | PERF-13 | Phase 27 | Pending |
 | PERF-14 | Phase 27 | Pending |
 | PERF-15 | Phase 27 | Pending |

@@ -229,7 +229,7 @@ Wave 2 (after PERF-09 ships):
 Plans:
 **Wave 1**
 
-- [ ] 27-01-PLAN.md — Requirements minting + session dedupe & cookie caching (item 8, PERF-12)
+- [x] 27-01-PLAN.md — Requirements minting + session dedupe & cookie caching (item 8, PERF-12)
 - [ ] 27-02-PLAN.md — Secondary DB indexes + gated Neon db:push (item 14, PERF-18) [checkpoint]
 - [ ] 27-05-PLAN.md — CardList optimistic pause + row memoization (items 9/16, PERF-13/PERF-20)
 - [ ] 27-06-PLAN.md — Translation stale-response race fix + LRU cache (items 15/19, PERF-19/PERF-23)
@@ -272,7 +272,7 @@ Plans:
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
-| 27. Performance batch 2 | 0/10 | Planned | - |
+| 27. Performance batch 2 | 1/10 | In Progress|  |
 
 ## Backlog
 
