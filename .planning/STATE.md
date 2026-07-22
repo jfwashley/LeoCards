@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 27-01-PLAN.md
-last_updated: "2026-07-22T11:34:54.356Z"
-last_activity: 2026-07-22 -- Phase 27 plan 01 (session cache dedupe, PERF-12) complete
+stopped_at: Completed 27-05-PLAN.md
+last_updated: "2026-07-22T12:53:00.000Z"
+last_activity: 2026-07-22 -- Phase 27 plan 05 (optimistic pause toggle + memoized CardRow + deferred search, PERF-13/PERF-20) complete
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 36
-  completed_plans: 27
-  percent: 75
+  completed_plans: 28
+  percent: 78
 ---
 
 # Project State
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 — performance-batch-2 (plan 01 of 10 complete, PERF-12 shipped)
+**Current focus:** Phase 27 — performance-batch-2 (plans 01 + 05 of 10 complete, PERF-12/PERF-13/PERF-20 shipped)
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 27 (performance-batch-2) — EXECUTING
-Plan: 2 of 10
+Plan: 05 of 10 just completed (out of numeric order — 27-05 declares `depends_on: []`/wave 1, no dependency on 27-02/03/04); 27-02, 27-03, 27-04, 27-06..10 remain unexecuted
 Status: Executing Phase 27
-Last activity: 2026-07-22 -- Phase 27 plan 01 (session cache dedupe, PERF-12) complete
+Last activity: 2026-07-22 -- Phase 27 plan 05 (optimistic pause toggle + memoized CardRow + deferred search, PERF-13/PERF-20) complete
 
 Progress (v3.0): [█████████░] 86% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
 
@@ -104,6 +104,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 26-03: collapsed `saveImageCards`'s per-row insert loop (N `await db.insert(cards).values({single})` calls, each preceded by nothing extra since the auth/ownership check already ran once before the loop) into ONE `db.insert(cards).values(sanitizedInputs.map(...))` call (PERF-08), mirroring the same recall_events master pattern 26-02 already established for a different insert site. Outcome semantics are now genuinely all-or-nothing (a single atomic multi-row INSERT statement either fully lands or fully fails) — the old "continue-on-failure" test modeled a mixed per-row outcome that is structurally impossible after this refactor, so it was replaced (not patched) with an all-fail + all-succeed pair, per 26-PATTERNS.md's prescribed rewrite. `commitReviewRows` in `review-list.tsx` mirrors the same collapse client-side: one `saveImageCards(deckId, rows.map(...))` call instead of N. Noted (not fixed, out of `files_modified` scope): the success-state `isPartial` UI branch in `review-list.tsx` is now dead code — a single atomic INSERT can never produce both `addedCount>0` and `failedCount>0` from the DB path anymore; flagged for a future cleanup pass or the Phase 18 UI audit.
 - Phase 26-05: added `next.config.ts`'s first-ever `headers()` block — a single rule scoped to `source: "/habitat/clips/:path*"` setting `Cache-Control: public, max-age=31536000, immutable` (PERF-11), verified against the installed Next 16.2.1 docs per the AGENTS.md mandatory-caveat instruction. Applied to EXISTING clip filenames with no versioning churn, per D-08; the companion naming rule (future re-renders MUST ship under a new filename) is documented in `scripts/render-habitat-clips.mjs`'s header comment block (comment-only diff, no rendering logic touched). No dev server was running locally at execution time, so the live `curl -sI .../habitat/clips/<file>` response-header proof is deferred to the orchestrator's e2e/verification session (per this plan's own acceptance criteria and the project gotcha against starting a long-lived server just for one check). **Phase 26 (Performance batch) is now code-complete** — all five PERF-07..11 requirements satisfied across 26-01 through 26-05.
 - Phase 27-01: minted PERF-12..PERF-23 into REQUIREMENTS.md; shipped PERF-12 — new `src/lib/auth-session.ts` exports zero-arg `cache()`-wrapped `getSession()`/`getSessionFresh()`; `src/lib/auth.ts` gained an explicit `session.cookieCache: { enabled: true, maxAge: 300 }` block (this project's `drizzleAdapter` database config means better-auth's DB-less auto-default never fires). All 5 non-consolidation RSC call sites (layout, study, habitat, welcome, new-card) swapped to `getSession()`; the 3 D-04 revocation-sensitive sites (account page, `requestEmailChange`, `deleteAccount`) swapped to `getSessionFresh()`. `dashboard/page.tsx`/`deck/browse/page.tsx` deliberately left untouched (owned by 27-03/27-04). Mocked `react`'s `cache()` export in the test with a real memoize-by-zero-args implementation — verified directly against installed source that BOTH the client build (`react.development.js`, pure passthrough) and the react-server build (`react.react-server.development.js`, falls back to calling `fn` directly when no dispatcher is registered) never memoize outside an active Next.js RSC request, so a genuine `toHaveBeenCalledTimes(1)` dedupe assertion against the unmocked primitive is not observable in bare vitest; the mock instead proves auth-session.ts's own contract with `cache()`. `gsd-sdk query state.advance-plan` and `state.record-metric` both re-confirmed corrupting this file's frontmatter `progress:` numbers on this project (regressing completed_phases/total_plans/completed_plans/percent to stale values each call) — hand-repaired both times via `git diff`; `state.add-decision` re-confirmed no-op'ing on this project's heading (`added: false`) — this entry was hand-added instead, consistent with the existing project gotcha note.
+- Phase 27-05: executed out of numeric order (wave 1, `depends_on: []`) — shipped PERF-13 (optimistic pause/resume toggle) + PERF-20 (React.memo CardRow + useDeferredValue search + tween-gated row mount) in `card-list.tsx`. Named the extracted memoized row `CardListRow`, not `CardRow` — the file already imports a type named `CardRow` from `card-edit-dialog.tsx`, so reusing the name would have shadowed it. `handleTogglePause`'s `scheduleRefresh` helper depends on `router.refresh` (the method) rather than `router` (the object) — this file's `useRouter` test mock (and Next's own docs, which make no explicit reference-stability guarantee for the returned object) returns a fresh object literal every render, which would otherwise recreate `handleTogglePause` on every re-render and defeat `CardListRow`'s `React.memo` for every row on every keystroke, not just the toggled one. Row mounting is deferred via a new `rowsMounted` state layered onto the EXISTING `panelMounted`/`open` CSS-keyframe accordion state machine (17-performance-optimization's D-05 pattern), not a second independent animation lifecycle — same 260ms safety-net-timer + `onAnimationEnd` convention already used for panel close. `gsd-sdk query state.advance-plan`/`state.record-metric`/`state.update-progress`/`state.add-decision` remain known-broken on this project (STATE.md hand-edited directly this session, verified via `git diff`).
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -131,8 +132,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T11:34:54.338Z
-Stopped at: Completed 27-01-PLAN.md
+Last session: 2026-07-22T12:53:00.000Z
+Stopped at: Completed 27-05-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -158,3 +159,4 @@ Resume file: None
 | Phase 26 P04 | 15min | 3 tasks | 8 files |
 | Phase 26 P05 | 10min | 2 tasks | 2 files |
 | Phase 27 P01 | 25min | 3 tasks | 10 files |
+| Phase 27 P05 | 20min | 2 tasks | 2 files |
