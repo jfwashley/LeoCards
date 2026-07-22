@@ -52,6 +52,12 @@ findings:
   info: 3
   total: 5
 status: issues_found
+fix_status:
+  WR-01: fixed (04e6a97)
+  WR-02: fixed (183b91e)
+  IN-01: acknowledged-not-fixed
+  IN-02: acknowledged-not-fixed
+  IN-03: acknowledged-not-fixed
 ---
 
 # Phase 27: Code Review Report
@@ -77,6 +83,8 @@ Two correctness gaps in the translate/translation surface are worth fixing befor
 ## Warnings
 
 ### WR-01: Clearing a field mid-flight leaves a stale translation in the emptied-opposite field
+
+**Status:** fixed (commit `04e6a97`) — `translateFrom`'s empty-text early return now aborts the in-flight controller (and dispatches a new `TRANSLATE_CANCEL` action to reset `isTranslating`, since the aborted request never reaches `TRANSLATE_DONE`/`TRANSLATE_ERROR`) before returning. Regression test added in `translation-form.test.tsx`: type -> fire request -> clear field -> resolve stale response -> target field stays empty.
 
 **File:** `src/components/translation-form.tsx:244-320`
 **Issue:** `translateFrom` aborts the previous in-flight request only *after* the empty-text early return:
@@ -104,6 +112,8 @@ const translateFrom = useCallback(async (text, direction) => {
 ```
 
 ### WR-02: Translation cache stores empty results, pinning a cross-user failure for the full TTL
+
+**Status:** fixed (commit `183b91e`) — both the singular and array branches in `route.ts` now skip `translationCache.set()` when the translated value is empty/whitespace-only. Regression tests added in `route.test.ts` (one per branch): empty DeepL result -> second identical request still calls DeepL.
 
 **File:** `src/app/api/translate/route.ts:171` and `src/app/api/translate/route.ts:133-143`; `src/lib/translation-cache.ts:55-68`
 **Issue:** Both DeepL branches cache the result unconditionally, including an empty string:
@@ -134,17 +144,23 @@ if (translated !== undefined && translated.trim() !== "") {
 
 ### IN-01: Array-branch partial miss serializes `null` into a `string[]`-typed response, failing the whole batch client-side
 
+**Status:** acknowledged-not-fixed (out of scope — Info-tier, not fixed in this pass)
+
 **File:** `src/app/api/translate/route.ts:114-145`
 **Issue:** In the array branch, if DeepL returns a result without `.text` for some miss index, `cachedResults[origIdx]` stays `undefined` and is emitted (as JSON `null`) inside `{ translations: cachedResults as string[] }`. `review-list.tsx`'s `BatchTranslationResponseSchema = z.array(z.string())` (review-list.tsx:21-23) rejects any `null` element, so a single dropped item fails the *entire* batch parse, triggering the one retry and then per-row "Translation unavailable" fallback for *all* rows — even the many that translated fine. Graceful but wasteful, and the `as string[]` cast is untrue.
 **Fix:** Fall back to the original source text (or filter/replace) for any still-`undefined` index before responding, so the array is genuinely `string[]`, or have the response schema/handler tolerate per-item nulls.
 
 ### IN-02: `startTransition(async () => …)` in card-list wraps async work that the transition cannot track
 
+**Status:** acknowledged-not-fixed (out of scope — Info-tier, not fixed in this pass)
+
 **File:** `src/components/card-list.tsx:471-494`
 **Issue:** `handleTogglePause` calls `startTransition(async () => { await fetch(...) ... })`. React does not await async transition callbacks — only synchronous updates inside the callback are marked as transitions; everything after the first `await` (the rollback / pending-clear state updates) runs at normal priority. Since the `isPending` slot is discarded (`const [, startTransition] = useTransition()`), the wrapper is functionally inert here (the optimistic `setOptimisticPausedIds`/`setPendingCardIds` calls that matter already run synchronously *before* `startTransition`). Harmless today, but misleading and a latent trap if someone later wires `isPending` to the UI.
 **Fix:** Drop the `useTransition`/`startTransition` wrapper and call the async handler directly, or move to a genuine optimistic-state primitive if transition semantics are actually wanted.
 
 ### IN-03: `optimisticPausedIds` override is never cleared after a successful refresh
+
+**Status:** acknowledged-not-fixed (out of scope — Info-tier, not fixed in this pass)
 
 **File:** `src/components/card-list.tsx:461-497, 750-758`
 **Issue:** On a successful pause/resume, only `scheduleRefresh()` runs; the per-card entry in `optimisticPausedIds` is never deleted (only the failure path via `rollbackPause` removes it). After `router.refresh()` the server `pausedAt` matches the override, so display stays correct — but the override now permanently shadows `!!card.pausedAt` for that card. If the card's pause state later changes through any path other than this component's own toggle (e.g. a second tab, or a future server-driven change), the stale override will mask the real server value until unmount.
