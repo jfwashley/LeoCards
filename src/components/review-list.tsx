@@ -277,8 +277,21 @@ export async function runTranslationFanOut(
   targetLang: string,
   nativeLang: string,
 ): Promise<TranslationFanOutResult[]> {
+  // PERF-23: client-side dedupe — collapse duplicate words into a single
+  // entry so the same text is never sent to /api/translate twice within
+  // one batch (complements the server-side LRU, which dedupes ACROSS
+  // requests/users; this dedupes WITHIN a single fan-out).
+  const uniqueWords: string[] = [];
+  const seenWords = new Set<string>();
+  for (const row of rows) {
+    if (!seenWords.has(row.word)) {
+      seenWords.add(row.word);
+      uniqueWords.push(row.word);
+    }
+  }
+
   const requestBody = JSON.stringify({
-    texts: rows.map((row) => row.word),
+    texts: uniqueWords,
     sourceLang: targetLang,
     targetLang: nativeLang,
   });
@@ -290,9 +303,20 @@ export async function runTranslationFanOut(
     (await attemptTranslationBatch(requestBody)) ??
     (await attemptTranslationBatch(requestBody));
 
-  return rows.map((row, i) => {
-    // DeepL preserves input order, so index-zipping is safe.
-    const translation = translations?.[i];
+  // Map each unique word to its translation (DeepL preserves input order,
+  // so index-zipping against uniqueWords is safe), then look each row's
+  // translation up by word — this is what lets a duplicate row share its
+  // sibling's result without a second request.
+  const translationByWord = new Map<string, string>();
+  if (translations) {
+    uniqueWords.forEach((word, i) => {
+      const translated = translations[i];
+      if (translated !== undefined) translationByWord.set(word, translated);
+    });
+  }
+
+  return rows.map((row) => {
+    const translation = translationByWord.get(row.word);
     if (translation !== undefined) {
       return {
         id: row.id,
