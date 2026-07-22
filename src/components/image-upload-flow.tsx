@@ -13,6 +13,7 @@ import {
   type ImageDropZoneHandle,
 } from "@/components/image-drop-zone";
 import { ReviewList } from "@/components/review-list";
+import { MAX_SERVER_IMAGE_BYTES } from "@/lib/image-constants";
 import { resizeImageForUpload } from "@/lib/image-resize";
 import { validateImageFile } from "@/lib/image-validation";
 
@@ -284,6 +285,23 @@ export function ImageUploadFlow({
       return;
     }
     if (cancelled.current) return; // D-03 late-result guard
+
+    // WR-02: the resized blob is not guaranteed to land under the server's
+    // authoritative MAX_SERVER_IMAGE_BYTES cap (pathological high-entropy
+    // inputs at 1568px/JPEG q0.8 can still exceed it). Mirror the server's
+    // own estimatedBytes formula (extract/route.ts) against the actual
+    // base64 data-URL we are about to send, and fail fast client-side
+    // instead of relying on a post-upload 413 the user can't act on.
+    const estimatedBytes = Math.ceil((dataUrl.length * 3) / 4);
+    if (estimatedBytes > MAX_SERVER_IMAGE_BYTES) {
+      dispatch({
+        type: "EXTRACT_ERROR",
+        status: 413,
+        message:
+          "That image is too detailed to process. Please try a different photo.",
+      });
+      return;
+    }
 
     // deck.language is already BCP-47 ("en"/"fr"/"es") per DeckOption — no DeckOption schema change needed.
     // IN-03: Surface a missing-deck mismatch as a loud error instead of silently
