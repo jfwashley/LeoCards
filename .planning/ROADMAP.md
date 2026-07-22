@@ -220,9 +220,21 @@ Wave 2 (after PERF-09 ships):
 
 **Goal**: The second tranche of the Fable-5 performance review (items 8–19, source: `.planning/research/perf-review-2026-06-30-items-08-19.md`) is re-verified against current code, triaged, and the surviving items shipped — spanning session lookup dedupe + cookie caching, optimistic UI on the pause toggle, client bundle diet (zod/mini), server-side Browse filtering, dashboard query consolidation, extraction latency (Haiku trial / streaming), secondary DB indexes, the translation-form stale-response race fix (a correctness bug), CardList render memoization, the study-complete read-path trim, the habitat backdrop-blur drop, and a translation LRU cache
 **Depends on**: Phase 26 (items 17 and 19 build directly on the shipped PERF-07 db.batch() and PERF-09 texts[] handlers; Phase 15 harness guards the learning pipeline). Runs BEFORE Phase 18 for the same reason 26 did — the re-cert gate certifies final optimized code
-**Requirements**: TBD — minted at discussion after re-verification (line numbers in the review predate Phases 17/25/26; same triage protocol as Phase 26)
-**Status**: Not discussed — next: `/gsd-discuss-phase 27`
-**Plans**: TBD
+**Requirements**: PERF-12, PERF-13, PERF-14, PERF-15, PERF-16, PERF-17, PERF-18, PERF-19, PERF-20, PERF-21, PERF-22, PERF-23 (minted at plan time in REQUIREMENTS.md, item 8→PERF-12 … item 19→PERF-23)
+**Status**: Planned — next: `/gsd-execute-phase 27`
+**Plans**: 10 plans in 2 waves
+
+Plans:
+- [ ] 27-01-PLAN.md — Requirements minting + session dedupe & cookie caching (item 8, PERF-12)
+- [ ] 27-02-PLAN.md — Secondary DB indexes + gated Neon db:push (item 14, PERF-18) [checkpoint]
+- [ ] 27-03-PLAN.md — Server-side Browse filtering (item 11, PERF-15)
+- [ ] 27-04-PLAN.md — Dashboard data-pass consolidation (item 12, PERF-16)
+- [ ] 27-05-PLAN.md — CardList optimistic pause + row memoization (items 9/16, PERF-13/PERF-20)
+- [ ] 27-06-PLAN.md — Translation stale-response race fix + LRU cache (items 15/19, PERF-19/PERF-23)
+- [ ] 27-07-PLAN.md — Client bundle diet: zod → zod/mini (item 10, PERF-14)
+- [ ] 27-08-PLAN.md — Habitat over-video backdrop-blur removal (item 18, PERF-22)
+- [ ] 27-09-PLAN.md — Study/complete read-path trim (item 17, PERF-21)
+- [ ] 27-10-PLAN.md — Extraction latency: Haiku trial + conditional streaming (item 13, PERF-17) [checkpoint]
 
 **Triage watch-list for discussion** (from the 2026-07-22 pre-triage, full notes in the source doc):
 - Item 17 folds into PERF-07's rework, which already shipped (26-02) — re-verify what remains of the read-path waterfall
@@ -239,7 +251,7 @@ Wave 2 (after PERF-09 ships):
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18, 25-27 | 13/TBD | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18, 25-27 | 13/TBD (27: 10 planned) | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -252,7 +264,7 @@ Wave 2 (after PERF-09 ships):
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
-| 27. Performance batch 2 | 0/TBD | Not started | - |
+| 27. Performance batch 2 | 0/10 | Planned | - |
 
 ## Backlog
 
