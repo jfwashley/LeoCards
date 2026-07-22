@@ -13,6 +13,7 @@ import {
   type ImageDropZoneHandle,
 } from "@/components/image-drop-zone";
 import { ReviewList } from "@/components/review-list";
+import { resizeImageForUpload } from "@/lib/image-resize";
 import { validateImageFile } from "@/lib/image-validation";
 
 // Stepper stage indices (D-05)
@@ -134,7 +135,7 @@ function friendlyErrorCopy(status: number): string {
     case 429:
       return "You've made too many requests — please wait a moment and try again.";
     case 413:
-      return "That image is too large for the server to process. Please choose a smaller image (under 5MB).";
+      return "That image is too large for the server to process. Please choose a smaller image (under 4MB).";
     case 415:
       return "That file type isn't supported. Please choose a JPG, PNG, or WebP image.";
     case 504:
@@ -249,13 +250,19 @@ export function ImageUploadFlow({
 
     // Read file as data-URL (file is guaranteed non-null by the guard above)
     const file = state.file;
+    // D-06/PERF-10: downscale client-side (~1568px, JPEG q0.8) before the
+    // upload — a UX/bandwidth optimization only, never a security control
+    // (the server's MAX_SERVER_IMAGE_BYTES cap is authoritative). Guard
+    // against a Cancel landing while the resize is in flight (D-03).
+    const resized = await resizeImageForUpload(file);
+    if (cancelled.current) return; // D-03 late-result guard
     const dataUrl = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);
       // Wrap the ProgressEvent in an Error so the outer catch's
       // `err instanceof Error` check sees a real Error (WR-03).
       reader.onerror = () => reject(new Error("FileReader error"));
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(resized);
     });
 
     // deck.language is already BCP-47 ("en"/"fr"/"es") per DeckOption — no DeckOption schema change needed.
@@ -283,7 +290,12 @@ export function ImageUploadFlow({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           image: dataUrl,
-          mimeType: file.type,
+          // resizeImageForUpload always re-encodes to JPEG (canvas.toBlob),
+          // so the declared mimeType must match the resized bytes, not the
+          // original file.type — the server magic-byte checks the two
+          // against each other (route.ts:141) and would otherwise reject
+          // e.g. a re-encoded PNG as a mimeType mismatch.
+          mimeType: "image/jpeg",
           deckId: state.selectedDeckId,
           targetLanguage,
         }),
