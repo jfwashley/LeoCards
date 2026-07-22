@@ -170,4 +170,39 @@ describe("TranslationForm AbortController stale-response race (PERF-19)", () => 
       screen.queryByText("Translation unavailable — enter manually."),
     ).toBeNull();
   });
+
+  it("WR-01: clearing a field mid-flight aborts the in-flight request so a late-resolving stale response does not land in the just-emptied opposite field", async () => {
+    render(<TranslationForm {...defaultProps} />);
+
+    const nativeInput = screen.getByLabelText("English") as HTMLInputElement;
+
+    // Fire a translation for "cha".
+    fireEvent.change(nativeInput, { target: { value: "cha" } });
+    await act(async () => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(fetchCalls).toHaveLength(1);
+
+    // Clear the field before the in-flight request resolves — the debounced
+    // empty-text call must abort call 1, not just skip issuing a new fetch.
+    fireEvent.change(nativeInput, { target: { value: "" } });
+    await act(async () => {
+      vi.advanceTimersByTime(500);
+    });
+
+    const targetInput = screen.getByLabelText("French") as HTMLInputElement;
+
+    // Resolve the stale first call — if correctly aborted, this resolve()
+    // targets an already-rejected promise and is a no-op.
+    await act(async () => {
+      fetchCalls[0]?.resolve(jsonResponse({ translation: "cha-fr" }));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(targetInput.value).toBe("");
+    expect(
+      screen.queryByText("Translation unavailable — enter manually."),
+    ).toBeNull();
+  });
 });

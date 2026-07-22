@@ -40,6 +40,7 @@ type FormAction =
       message: string;
       clearField: "native" | "target";
     }
+  | { type: "TRANSLATE_CANCEL" }
   | { type: "CLEAR_TRANSLATE_ERROR" }
   | { type: "SAVE_START" }
   | { type: "SAVE_SUCCESS" }
@@ -77,6 +78,11 @@ function formReducer(state: FormState, action: FormAction): FormState {
         translationError: action.message,
         [action.clearField === "native" ? "targetText" : "nativeText"]: "",
       };
+    case "TRANSLATE_CANCEL":
+      // WR-01: a superseded/aborted in-flight request never reaches
+      // TRANSLATE_DONE/TRANSLATE_ERROR — reset the pending flag directly so
+      // the shimmer state doesn't get stuck on indefinitely.
+      return { ...state, isTranslating: false };
     case "CLEAR_TRANSLATE_ERROR":
       return { ...state, translationError: null };
     case "SAVE_START":
@@ -243,7 +249,21 @@ export function TranslationForm({
 
   const translateFrom = useCallback(
     async (text: string, direction: "native" | "target") => {
-      if (!text.trim()) return;
+      if (!text.trim()) {
+        // WR-01: clearing a field mid-flight must cancel any in-flight
+        // request for this direction — otherwise a stale response can still
+        // pass the activeField guard below and land in the field the user
+        // just emptied. Abort BEFORE returning, not after, and reset the
+        // pending flag since the aborted request will never dispatch
+        // TRANSLATE_DONE/TRANSLATE_ERROR itself.
+        const hadInFlight = translateAbortRef.current !== null;
+        translateAbortRef.current?.abort();
+        translateAbortRef.current = null;
+        if (hadInFlight) {
+          dispatch({ type: "TRANSLATE_CANCEL" });
+        }
+        return;
+      }
 
       // Kill any previous in-flight translation before starting a new one.
       translateAbortRef.current?.abort();
