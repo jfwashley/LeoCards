@@ -156,12 +156,13 @@ export async function POST(request: Request) {
 
   try {
     // Instantiate model inside handler — never at module scope (D-03, Pitfall 3)
-    // verified 2026-05-19: claude-sonnet-4-6 is current Sonnet-tier vision-capable model id
-    // (confirmed against https://ai-sdk.dev/providers/ai-sdk-providers/anthropic — listed on
-    // Vercel AI SDK playground as current; no newer Sonnet-tier id has superseded it)
+    // 2026-07-22: trialing claude-haiku-4-5 for extraction latency (PERF-17, D-05) —
+    // typically 2-3x faster / ~1/3 cost vs claude-sonnet-4-6 (previous model, verified
+    // 2026-05-19). Gated by a manual real-photo side-by-side quality check (D-05) before
+    // being considered "done" — revert to claude-sonnet-4-6 above if quality measurably drops.
     // Note: anthropic() reads ANTHROPIC_API_KEY from process.env automatically; key presence
     // is validated above (503 guard). No second arg in @ai-sdk/anthropic@3.x API.
-    const model = anthropic("claude-sonnet-4-6");
+    const model = anthropic("claude-haiku-4-5");
 
     // System prompt — constraint order per 10-AI-SPEC Section 4b.3
     const system =
