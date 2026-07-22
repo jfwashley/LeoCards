@@ -77,7 +77,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline (completed 2026-07-20)
 - [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
-- [ ] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips
+- [x] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips (completed 2026-07-22)
 
 ## Phase Details (v3.0)
 
@@ -174,7 +174,7 @@ Wave 2 (after PERF-09 ships):
 - [x] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
 - [x] 26-03-PLAN.md — PERF-08 review-commit one server action + one multi-row insert
 - [x] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
-- [ ] 26-05-PLAN.md — PERF-11 immutable Cache-Control for /habitat/clips/* + D-08 naming rule
+- [x] 26-05-PLAN.md — PERF-11 immutable Cache-Control for /habitat/clips/* + D-08 naming rule
 
 ### Phase 25: My Account
 
@@ -235,7 +235,7 @@ Wave 2 (after PERF-09 ships):
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
-| 26. Performance batch | 3/5 | In Progress|  |
+| 26. Performance batch | 5/5 | Complete   | 2026-07-22 |
 
 ## Backlog
 

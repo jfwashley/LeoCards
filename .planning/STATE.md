@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 26-04-PLAN.md
-last_updated: "2026-07-22T00:00:14.000Z"
+stopped_at: Completed 26-05-PLAN.md
+last_updated: "2026-07-22T00:07:15.000Z"
 last_activity: 2026-07-22
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 26
-  completed_plans: 25
-  percent: 96
+  completed_plans: 26
+  percent: 100
 ---
 
 # Project State
@@ -26,12 +26,12 @@ See: .planning/PROJECT.md
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 26 (performance-batch) — EXECUTING
+Phase: 26 (performance-batch) — COMPLETE
 Plan: 5 of 5
-Status: Ready to execute
+Status: All 5 plans complete; awaiting orchestrator wave-gate/e2e/review gates before Phase 26 formally closes
 Last activity: 2026-07-22
 
-Progress (v3.0): [████████░░] 84% (Phases 14/15/16/17/25 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 PERF-07 (26-02) + PERF-08 (26-03) + PERF-09 (26-01) + PERF-10 (26-04) complete, PERF-11 remains; Phase 18 PERF-05/06 runs last so its re-cert gate certifies the optimized code)
+Progress (v3.0): [█████████░] 86% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
 
 ## Shipped Milestones
 
@@ -42,7 +42,7 @@ Progress (v3.0): [████████░░] 84% (Phases 14/15/16/17/25 com
 
 ## Milestone Note
 
-v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)** and **Phase 25 My Account is complete (2026-07-20, ACC-01..06)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phases 26 and 18 remain unbuilt.** Phase 26 (Performance batch, added 2026-07-21 from the re-validated Fable-5 all-phases review) runs FIRST so Phase 18's one-command re-cert gate locks in the optimized numbers as the regression baseline; v3.0 closes with Phase 18.
+v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)**, **Phase 25 My Account is complete (2026-07-20, ACC-01..06)**, and **Phase 26 Performance batch is now complete (2026-07-22, PERF-07..11 all satisfied across 26-01..26-05)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt** — it runs last so its one-command re-cert gate locks in the Phase 26 optimized numbers as the regression baseline; v3.0 closes with Phase 18.
 
 ## Accumulated Context
 
@@ -101,6 +101,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 26-02: collapsed the study-commit's step-6 write phase (recall_events insert + N sequential per-card `await db.update` + habitat upsert, 1+N+1 round trips) into ONE atomic `db.batch()` call — a real single-round-trip Neon `sql.transaction()` (PERF-07). D-01 honored: WR-04's commitId idempotency machinery kept byte-identical (belt-and-braces, smallest diff); D-02 proof landed as a `batchCalls===1` unit assertion, not a timing gate. Rule 1 fix: 26-RESEARCH.md's illustrative `Batchable` type (`ReturnType<typeof db.insert> | ReturnType<typeof db.update>`) failed `tsc` (pre-`.values()` builder types don't satisfy drizzle's `BatchItem` constraint) — redeclared as `typeof insertRecallEvents | (typeof cardUpdateQueries)[number] | typeof upsertHabitat`, derived from the actual constructed query objects. Flag for future `db.batch()` usage in this codebase: use the actual-object-`typeof` pattern, not `ReturnType<typeof db.insert/db.update>`.
 - Phase 26-04: implemented client-side photo downscale (PERF-10, D-06/D-07) — new `resizeImageForUpload(file, {maxEdge=1568, quality=0.8})` helper (native `createImageBitmap` + canvas + `toBlob`, zero new deps) wired into `image-upload-flow.tsx`'s `handleExtract` before the existing FileReader/base64/fetch pipeline, honoring the D-03 `cancelled` ref guard. Closed the silent 3.3-5MB Vercel body-limit dead zone: client cap loosened 5MB->20MB, server cap (authoritative) tightened 7MB->4MB. All four scattered "5MB" references (constants, constants test, validation copy, e2e/11) retargeted, plus a fifth straggler (`image-validation.test.ts`, not in the plan's `files_modified`) caught by the mandatory grep sweep. Rule 1 fix: `/api/extract`'s `mimeType` field was still sending the ORIGINAL file's declared type after the resize (which always re-encodes to JPEG) — the server's magic-byte check (`route.ts:141`) would have rejected any non-JPEG-original upload; hardcoded to `"image/jpeg"`. D-06 shipped at its planned default (0.8, no bump to 0.9 — no accuracy regression observed; real-photo/EXIF fidelity deferred to manual UAT per Pitfall 5, jsdom cannot exercise real canvas encoding). Full `npx tsc --noEmit` clean; full `npx vitest run` green (2200 passed, 6 skipped, unchanged pass count).
 - Phase 26-03: collapsed `saveImageCards`'s per-row insert loop (N `await db.insert(cards).values({single})` calls, each preceded by nothing extra since the auth/ownership check already ran once before the loop) into ONE `db.insert(cards).values(sanitizedInputs.map(...))` call (PERF-08), mirroring the same recall_events master pattern 26-02 already established for a different insert site. Outcome semantics are now genuinely all-or-nothing (a single atomic multi-row INSERT statement either fully lands or fully fails) — the old "continue-on-failure" test modeled a mixed per-row outcome that is structurally impossible after this refactor, so it was replaced (not patched) with an all-fail + all-succeed pair, per 26-PATTERNS.md's prescribed rewrite. `commitReviewRows` in `review-list.tsx` mirrors the same collapse client-side: one `saveImageCards(deckId, rows.map(...))` call instead of N. Noted (not fixed, out of `files_modified` scope): the success-state `isPartial` UI branch in `review-list.tsx` is now dead code — a single atomic INSERT can never produce both `addedCount>0` and `failedCount>0` from the DB path anymore; flagged for a future cleanup pass or the Phase 18 UI audit.
+- Phase 26-05: added `next.config.ts`'s first-ever `headers()` block — a single rule scoped to `source: "/habitat/clips/:path*"` setting `Cache-Control: public, max-age=31536000, immutable` (PERF-11), verified against the installed Next 16.2.1 docs per the AGENTS.md mandatory-caveat instruction. Applied to EXISTING clip filenames with no versioning churn, per D-08; the companion naming rule (future re-renders MUST ship under a new filename) is documented in `scripts/render-habitat-clips.mjs`'s header comment block (comment-only diff, no rendering logic touched). No dev server was running locally at execution time, so the live `curl -sI .../habitat/clips/<file>` response-header proof is deferred to the orchestrator's e2e/verification session (per this plan's own acceptance criteria and the project gotcha against starting a long-lived server just for one check). **Phase 26 (Performance batch) is now code-complete** — all five PERF-07..11 requirements satisfied across 26-01 through 26-05.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
@@ -128,8 +129,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T00:00:14.000Z
-Stopped at: Completed 26-04-PLAN.md
+Last session: 2026-07-22T00:07:15.000Z
+Stopped at: Completed 26-05-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -153,3 +154,4 @@ Resume file: None
 | Phase 26 P02 | 8min | 2 tasks | 2 files |
 | Phase 26 P03 | 10min | 2 tasks | 4 files |
 | Phase 26 P04 | 15min | 3 tasks | 8 files |
+| Phase 26 P05 | 10min | 2 tasks | 2 files |
