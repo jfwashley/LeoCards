@@ -472,6 +472,14 @@ export function ReviewList({
     state.rows.length === 0 || !state.rows.some((r) => r.kept);
   const keptCount = state.rows.filter((r) => r.kept).length;
   const plural = (n: number) => (n !== 1 ? "s" : "");
+  // WR-01: saveImageCards is all-or-nothing (PERF-08) — a single empty
+  // nativeText (an un-fixed "Translation unavailable" row, or a row the
+  // user manually cleared) would abort the ENTIRE batch, including every
+  // correctly-translated card. Mirror the step-a noWordsKept guard: block
+  // the commit until every kept row has a non-empty translation.
+  const hasEmptyTranslation = state.translationRows.some(
+    (r) => r.nativeText.trim() === "",
+  );
 
   // ─── Render: loading-dedupe ───────────────────────────────────────────────
 
@@ -546,7 +554,9 @@ export function ReviewList({
               nativeLabel={nativeLangLabel}
               target={row.word}
               native={row.nativeText}
-              failed={row.translationError !== null}
+              failed={
+                row.translationError !== null || row.nativeText.trim() === ""
+              }
               last={i === state.translationRows.length - 1}
               onEditTarget={(v) =>
                 dispatch({ type: "EDIT_TARGET", id: row.id, word: v })
@@ -566,9 +576,25 @@ export function ReviewList({
             </ACBtn>
           ) : (
             <>
-              <ACBtn kind="primary" onClick={handleCommit}>
+              <ACBtn
+                kind={hasEmptyTranslation ? "disabled" : "primary"}
+                disabled={hasEmptyTranslation}
+                onClick={hasEmptyTranslation ? undefined : handleCommit}
+              >
                 Add {n} card{plural(n)}
               </ACBtn>
+              {hasEmptyTranslation && (
+                <p
+                  style={{
+                    fontSize: 13.5,
+                    color: "#9C8467",
+                    textAlign: "center",
+                    margin: 0,
+                  }}
+                >
+                  Fill in every translation before adding.
+                </p>
+              )}
               <div style={{ display: "flex", gap: 8 }}>
                 <ACBtn
                   kind="ghost"
