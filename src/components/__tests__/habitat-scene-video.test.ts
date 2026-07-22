@@ -95,3 +95,28 @@ describe("Phase 24 — celebratingLevel wiring in habitat-scene.tsx", () => {
     expect(SCENE_SRC).not.toMatch(/_celebratingLevel/);
   });
 });
+
+// Phase 27-08 (PERF-22) — offline banner blur removal. habitat-scene.tsx is a
+// "use client" component with heavy dependencies (HabitatVideo, dynamic
+// three.js import, localStorage cache); a full DOM render here would require
+// mocking most of the module. A source-level assertion is the acceptable
+// regression guard per this plan's task (a rendered-DOM assertion would be
+// awkward for this file, unlike the 3 simpler daybreak atoms covered in
+// h-habitat-overlays-no-blur.test.tsx).
+describe("Phase 27-08 — offline banner has no backdrop-filter blur (PERF-22)", () => {
+  it("VS8: the offline banner's inline style no longer sets backdropFilter", () => {
+    const bannerBlock = SCENE_SRC.slice(
+      SCENE_SRC.indexOf('data-testid="habitat-offline-banner"'),
+      SCENE_SRC.indexOf('data-testid="habitat-offline-banner"') + 400,
+    );
+    expect(bannerBlock).not.toMatch(/backdropFilter/);
+    // The near-solid background stays untouched — only the blur was removed.
+    expect(bannerBlock).toMatch(/background:\s*"rgba\(74,51,28,0\.82\)"/);
+  });
+
+  it("VS9: no WebkitBackdropFilter or backdrop-filter survives anywhere in habitat-scene.tsx", () => {
+    expect(SCENE_SRC).not.toMatch(/backdropFilter/);
+    expect(SCENE_SRC).not.toMatch(/WebkitBackdropFilter/);
+    expect(SCENE_SRC).not.toMatch(/backdrop-blur/);
+  });
+});
