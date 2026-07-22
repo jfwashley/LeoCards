@@ -461,6 +461,44 @@ describe("translation fan-out (batched)", () => {
       3,
     );
   });
+
+  it("PERF-23: collapses duplicate words into a single entry in the batch request, and still maps a translation back onto every row (including the duplicate)", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ translations: ["dog", "cat"] }),
+    });
+
+    // "chien" appears twice across two different rows (e.g. the same word
+    // extracted from two regions of an image) — the fan-out must send it
+    // to /api/translate only ONCE, not twice.
+    const rows: TranslationRow[] = [
+      { id: "tr-0", word: "chien", nativeText: "", translationError: null },
+      { id: "tr-1", word: "chat", nativeText: "", translationError: null },
+      { id: "tr-2", word: "chien", nativeText: "", translationError: null },
+    ];
+
+    const results = await runTranslationFanOut(rows, "fr", "en");
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/translate",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          texts: ["chien", "chat"], // deduped — "chien" sent once
+          sourceLang: "fr",
+          targetLang: "en",
+        }),
+      }),
+    );
+
+    // Both "chien" rows (index 0 and index 2) get the same translation.
+    expect(results[0]?.nativeText).toBe("dog");
+    expect(results[0]?.translationError).toBeNull();
+    expect(results[1]?.nativeText).toBe("cat");
+    expect(results[2]?.nativeText).toBe("dog");
+    expect(results[2]?.translationError).toBeNull();
+  });
 });
 
 // ============================================================
