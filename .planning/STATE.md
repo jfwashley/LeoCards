@@ -130,9 +130,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T00:07:15.000Z
-Stopped at: Completed 26-05-PLAN.md
-Resume file: None
+Last session: 2026-07-22 (Phase 27 discussion)
+Stopped at: Phase 27 context gathered (12/12 items in, D-01..D-11 locked)
+Resume file: .planning/phases/27-performance-batch-2/27-CONTEXT.md
 
 ## Performance Metrics
 
