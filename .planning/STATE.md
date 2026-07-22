@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 27-06-PLAN.md
-last_updated: "2026-07-22T12:23:16Z"
-last_activity: 2026-07-22 -- Phase 27 plan 06 (translation-form AbortController race fix + translate route LRU cache + fan-out dedupe, PERF-19/PERF-23) complete
+stopped_at: Completed 27-08-PLAN.md
+last_updated: "2026-07-22T12:41:06Z"
+last_activity: 2026-07-22 -- Phase 27 plan 08 (removed backdrop-filter blur from 4 over-video habitat overlays, PERF-22) complete
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 36
-  completed_plans: 29
-  percent: 81
+  completed_plans: 30
+  percent: 83
 ---
 
 # Project State
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 — performance-batch-2 (plans 01, 05, 06 of 10 complete, PERF-12/PERF-13/PERF-19/PERF-20/PERF-23 shipped)
+**Current focus:** Phase 27 — performance-batch-2 (plans 01, 05, 06, 08 of 10 complete, PERF-12/PERF-13/PERF-19/PERF-20/PERF-22/PERF-23 shipped)
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 27 (performance-batch-2) — EXECUTING
-Plan: 06 of 10 just completed (out of numeric order — 27-06 declares `depends_on: []`/wave 1, no dependency on 27-02/03/04); 27-02, 27-03, 27-04, 27-07..10 remain unexecuted
+Plan: 08 of 10 just completed (out of numeric order — 27-08 declares `depends_on: []`/wave 1, no dependency on 27-02/03/04); 27-02, 27-03, 27-04, 27-07, 27-09, 27-10 remain unexecuted
 Status: Executing Phase 27
-Last activity: 2026-07-22 -- Phase 27 plan 06 (translation-form AbortController race fix + translate route LRU cache + fan-out dedupe, PERF-19/PERF-23) complete
+Last activity: 2026-07-22 -- Phase 27 plan 08 (removed backdrop-filter blur from 4 over-video habitat overlays, PERF-22) complete
 
 Progress (v3.0): [█████████░] 86% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
 
@@ -108,6 +108,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 - Phase 27-06: shipped PERF-19 (`AbortController` fixes translation-form.tsx's stale-response race — a single ref aborted+recreated on every new `translateFrom` fire, composed with the existing `activeField` field-switch guard, not replacing it) + PERF-23 (bounded Map-based LRU cache in `src/lib/translation-cache.ts`, keyed `sourceLang:targetLang:text`, wired into both the `texts[]` and singular branches of `/api/translate`, plus client-side word dedupe inside `review-list.tsx`'s `runTranslationFanOut`). AbortError detection uses a duck-typed `.name` check (not `instanceof Error`) since a jsdom-environment `DOMException` didn't reliably satisfy `instanceof Error`. Edited `review-list.tsx`/`review-list.test.ts` even though the plan's `files_modified` frontmatter omitted them — the task's own `<action>` text explicitly required the fan-out dedupe, which only lives in that file (Rule 2, not scope creep). Fixed a self-inflicted test-isolation bug in `route.test.ts`: the new module-scope `translationCache` singleton persisted across all `it()` blocks under a static top-level import, causing a later frozen-contract test to get a stale cache hit from an earlier test's fixture word — resolved via `vi.resetModules()` + per-test dynamic re-import. `gsd-sdk query state.advance-plan`/`state.record-metric`/`state.update-progress`/`state.add-decision` remain known-broken on this project (STATE.md hand-edited directly this session, verified via `git diff`).
 
+- Phase 27-08: shipped PERF-22 — removed `backdropFilter` blur from all four over-video habitat overlays (`h-prog-card.tsx:45` 6px, `h-back.tsx:19`, `h-mood-chip.tsx:27`, `habitat-scene.tsx:308` offline banner, all 4px); the ~92%-opaque backgrounds already provided panel contrast so the diff is exactly one property removed per file. `account-back.tsx` deliberately left untouched (D-02), confirmed via grep before/after. Added a DOM-rendered `style.backdropFilter` assertion test for the 3 simple RSC atoms and a source-level grep assertion (VS8/VS9) extending the existing `habitat-scene-video.test.ts` file for the heavier `habitat-scene.tsx` (full DOM render would need mocking `HabitatVideo`/three.js/localStorage — impractical for this regression guard). Full `npx vitest run` showed 4-6 non-deterministic timeout failures across different, unrelated files on each of two consecutive runs (`deck-switcher.test.tsx`, `image-upload-flow-extract-errors.test.tsx`, `review-list-commit-guard.test.tsx`, `cooldown-config.test.ts`) — none touched by this plan, each passes in isolation; flagging as full-suite parallel-execution timeout flakiness (wider than the previously-documented single `cooldown-config.test.ts` flake) rather than a regression. `gsd-sdk query requirements.mark-complete`/`roadmap.update-plan-progress` both verified correct via `git diff` this session; STATE.md hand-edited directly per the known-broken `state.*` verbs.
+
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
 - DB workflow: this project uses Drizzle `db:push` (NOT `db:migrate` — the migrations journal is empty); hosted-DB writes gated by the auto-mode classifier.
@@ -134,8 +136,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T12:23:16Z
-Stopped at: Completed 27-06-PLAN.md
+Last session: 2026-07-22T12:41:06Z
+Stopped at: Completed 27-08-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -163,3 +165,4 @@ Resume file: None
 | Phase 27 P01 | 25min | 3 tasks | 10 files |
 | Phase 27 P05 | 20min | 2 tasks | 2 files |
 | Phase 27 P06 | 25min | 2 tasks | 7 files |
+| Phase 27 P08 | 15min | 2 tasks | 5 files |
