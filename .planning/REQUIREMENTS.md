@@ -55,7 +55,7 @@ Provenance: 2026-06-30 Fable-5 all-phases code review, items 8-19 (second tranch
 - [x] **PERF-12**: Session lookups deduped within one request via React `cache()` (layout+page share one `auth.api.getSession`); `session.cookieCache` ~5-min TTL lets most getSession calls skip the DB; `/account` + its server actions bypass the cache (`disableCookieCache`) so mutations always see a live session (D-03/D-04).
 - [x] **PERF-13**: Pause/resume toggle flips the card icon optimistically before the POST resolves, rolls back on error, coalesces trailing `router.refresh()` (`card-list.tsx`).
 - [ ] **PERF-14**: The 9 client-side zod importers use `zod/mini` instead of full zod, identical validation semantics, `zodResolver` unchanged.
-- [ ] **PERF-15**: Browse topic-detail view serializes only the requested topic's ~20-word subset (not all ~280 words) and skips `categoryCounts` on that branch.
+- [x] **PERF-15**: Browse topic-detail view serializes only the requested topic's ~20-word subset (not all ~280 words) and skips `categoryCounts` on that branch.
 - [ ] **PERF-16**: Dashboard issues one card query (study subset derived in JS, no O(n²) stitch), reads native language from `session.user.nativeLanguage` (no separate `getUserNativeLanguage` query), drops the unread `createdAt` field from the wire payload.
 - [ ] **PERF-17**: Extraction runs on `claude-haiku-4-5` (passing existing eval expectations + manual real-photo side-by-side); streams `partialOutputStream` progressive rows only if measured median exceeds ~4s (D-05/D-06).
 - [x] **PERF-18**: Secondary indexes on `cards(deckId)`, `decks(userId)`, `recall_events(cardId)`, `session(userId)`, applied to Neon via `db:push` (D-08).
@@ -120,7 +120,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-12 | Phase 27 | Complete |
 | PERF-13 | Phase 27 | Complete |
 | PERF-14 | Phase 27 | Pending |
-| PERF-15 | Phase 27 | Pending |
+| PERF-15 | Phase 27 | Complete |
 | PERF-16 | Phase 27 | Pending |
 | PERF-17 | Phase 27 | Pending |
 | PERF-18 | Phase 27 | Complete |

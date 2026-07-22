@@ -239,7 +239,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 27-03-PLAN.md — Server-side Browse filtering (item 11, PERF-15)
+- [x] 27-03-PLAN.md — Server-side Browse filtering (item 11, PERF-15)
 - [ ] 27-04-PLAN.md — Dashboard data-pass consolidation (item 12, PERF-16)
 - [ ] 27-07-PLAN.md — Client bundle diet: zod → zod/mini (item 10, PERF-14)
 
@@ -272,7 +272,7 @@ Plans:
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
-| 27. Performance batch 2 | 6/10 | In Progress|  |
+| 27. Performance batch 2 | 7/10 | In Progress|  |
 
 ## Backlog
 
