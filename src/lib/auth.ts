@@ -39,5 +39,17 @@ export const auth = betterAuth({
     },
     revokeSessionsOnPasswordReset: true,
   },
+  session: {
+    // Because `database` (drizzleAdapter) is set above, better-auth's
+    // DB-less auto-default for cookieCache does NOT fire — this block
+    // must be explicit. 5-minute TTL (D-03); default "compact" strategy
+    // is HMAC-SHA256-signed, no encryption needed for this non-sensitive
+    // payload. /account + its 2 mutation server actions bypass this via
+    // getSessionFresh (D-04) — see src/lib/auth-session.ts.
+    cookieCache: {
+      enabled: true,
+      maxAge: 300,
+    },
+  },
   plugins: [nextCookies()], // MUST be last plugin in array
 });
