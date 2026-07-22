@@ -4,11 +4,23 @@ import { z } from "zod";
 import { env } from "@/env";
 import { auth } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
+import { createTranslationCache } from "@/lib/translation-cache";
 
 // 30 requests per minute per user — generous for auto-translate, prevents key abuse
 const translateLimiter = createRateLimiter({
   windowMs: 60_000,
   maxRequests: 30,
+});
+
+// PERF-23: bounded in-memory LRU in front of DeepL — same single-instance
+// deployment assumptions as the rate limiter above. Translation output is
+// deterministic public dictionary content (source text -> target text,
+// identical for every user), so sharing the cache across users is safe
+// (T-27-06-02). Sized generously (a few thousand entries, ~1h TTL) since
+// the value is short strings.
+const translationCache = createTranslationCache({
+  maxSize: 5000,
+  ttlMs: 60 * 60 * 1000,
 });
 
 const RequestSchema = z
@@ -96,13 +108,41 @@ export async function POST(request: Request) {
   // Array branch (PERF-09) — before the singular branch. The .refine() above
   // guarantees exactly one of texts/text is present at this point.
   if (texts) {
+    // PERF-23: check the cache for every item BEFORE calling DeepL — only
+    // the misses are sent to translateText, and each freshly-translated
+    // miss is cached for the next request.
+    const cachedResults: (string | undefined)[] = texts.map((t) =>
+      translationCache.get(t, sourceLang, targetLang),
+    );
+    const missIndices: number[] = [];
+    cachedResults.forEach((v, i) => {
+      if (v === undefined) missIndices.push(i);
+    });
+
+    if (missIndices.length === 0) {
+      return Response.json({ translations: cachedResults as string[] });
+    }
+
     try {
+      const missTexts = missIndices.map((i) => texts[i] as string);
       const results = await client.translateText(
-        texts,
+        missTexts,
         sourceLang,
         targetLangCode,
       );
-      return Response.json({ translations: results.map((r) => r.text) });
+      missIndices.forEach((origIdx, k) => {
+        const translated = results[k]?.text;
+        if (translated !== undefined) {
+          cachedResults[origIdx] = translated;
+          translationCache.set(
+            texts[origIdx] as string,
+            sourceLang,
+            targetLang,
+            translated,
+          );
+        }
+      });
+      return Response.json({ translations: cachedResults as string[] });
     } catch {
       return Response.json(
         { error: "Translation service unavailable" },
@@ -111,12 +151,24 @@ export async function POST(request: Request) {
     }
   }
 
+  // PERF-23: cache check before the singular-branch DeepL call — a hit
+  // short-circuits with zero DeepL calls.
+  const cachedSingular = translationCache.get(
+    text as string,
+    sourceLang,
+    targetLang,
+  );
+  if (cachedSingular !== undefined) {
+    return Response.json({ translation: cachedSingular });
+  }
+
   try {
     const result = await client.translateText(
       text as string,
       sourceLang,
       targetLangCode,
     );
+    translationCache.set(text as string, sourceLang, targetLang, result.text);
     return Response.json({ translation: result.text });
   } catch {
     return Response.json(

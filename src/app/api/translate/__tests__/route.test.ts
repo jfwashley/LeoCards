@@ -40,8 +40,14 @@ vi.mock("deepl-node", () => ({
   }),
 }));
 
-// Subject import — after all vi.mock calls
-import { POST } from "@/app/api/translate/route";
+// Subject import — module-scope `let`, re-imported fresh in beforeEach via
+// vi.resetModules(). The route now holds a module-scope translation-cache
+// singleton (PERF-23); a static top-level import would let that cache leak
+// state across tests within this file (e.g. a "chien" translation cached
+// by one test silently short-circuiting DeepL in a later test that expects
+// a fresh call). Re-importing after resetModules re-runs the route's
+// module body, giving every test a brand-new, empty cache instance.
+let POST: typeof import("@/app/api/translate/route").POST;
 
 // --- Request factory ---
 
@@ -63,8 +69,10 @@ function mockAllowed() {
   mockLimiterCheck.mockReturnValue({ allowed: true });
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   vi.clearAllMocks();
+  vi.resetModules();
+  ({ POST } = await import("@/app/api/translate/route"));
 });
 
 describe("POST /api/translate", () => {
