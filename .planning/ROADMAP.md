@@ -173,7 +173,7 @@ Wave 1 (deployable alone — Josh approves the push):
 Wave 2 (after PERF-09 ships):
 - [x] 26-02-PLAN.md — PERF-07 study-commit single db.batch() round trip (WR-04 preserved)
 - [x] 26-03-PLAN.md — PERF-08 review-commit one server action + one multi-row insert
-- [ ] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
+- [x] 26-04-PLAN.md — PERF-10 client-side photo resize (~1568px JPEG) + server cap 7→4MB
 - [ ] 26-05-PLAN.md — PERF-11 immutable Cache-Control for /habitat/clips/* + D-08 naming rule
 
 ### Phase 25: My Account
