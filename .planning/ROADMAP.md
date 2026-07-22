@@ -223,7 +223,7 @@ Wave 2 (after PERF-09 ships):
 **Goal**: The second tranche of the Fable-5 performance review (items 8–19, source: `.planning/research/perf-review-2026-06-30-items-08-19.md`) is re-verified against current code, triaged, and the surviving items shipped — spanning session lookup dedupe + cookie caching, optimistic UI on the pause toggle, client bundle diet (zod/mini), server-side Browse filtering, dashboard query consolidation, extraction latency (Haiku trial / streaming), secondary DB indexes, the translation-form stale-response race fix (a correctness bug), CardList render memoization, the study-complete read-path trim, the habitat backdrop-blur drop, and a translation LRU cache
 **Depends on**: Phase 26 (items 17 and 19 build directly on the shipped PERF-07 db.batch() and PERF-09 texts[] handlers; Phase 15 harness guards the learning pipeline). Runs BEFORE Phase 18 for the same reason 26 did — the re-cert gate certifies final optimized code
 **Requirements**: PERF-12, PERF-13, PERF-14, PERF-15, PERF-16, PERF-17, PERF-18, PERF-19, PERF-20, PERF-21, PERF-22, PERF-23 (minted at plan time in REQUIREMENTS.md, item 8→PERF-12 … item 19→PERF-23)
-**Status**: Planned — next: `/gsd-execute-phase 27`
+**Status**: Complete (2026-07-22) — all 12 requirements (PERF-12..PERF-23) satisfied across 27-01 through 27-10
 **Plans**: 10 plans in 2 waves
 
 Plans:
@@ -235,7 +235,7 @@ Plans:
 - [x] 27-06-PLAN.md — Translation stale-response race fix + LRU cache (items 15/19, PERF-19/PERF-23)
 - [x] 27-08-PLAN.md — Habitat over-video backdrop-blur removal (item 18, PERF-22)
 - [x] 27-09-PLAN.md — Study/complete read-path trim (item 17, PERF-21)
-- [ ] 27-10-PLAN.md — Extraction latency: Haiku trial + conditional streaming (item 13, PERF-17) [checkpoint]
+- [x] 27-10-PLAN.md — Extraction latency: Haiku trial + conditional streaming (item 13, PERF-17) [checkpoint]
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -259,7 +259,7 @@ Plans:
 | v2.0 Image-to-Flashcards | 9-11 | 10/10 | Complete | 2026-05-20 |
 | v2.1 Living Habitat | 12-13.2 | 14/14 | Complete | 2026-05-29 |
 | v4.0 Daybreak | 19-24 | 23/23 | Complete | 2026-06-24 |
-| v3.0 Performance & QA | 14-18, 25-27 | 13/TBD (27: 10 planned) | In progress (resumed) | — |
+| v3.0 Performance & QA | 14-18, 25-27 | 13/TBD (27: 10/10 complete) | In progress (resumed) | — |
 
 ### v3.0 Performance & QA
 
@@ -272,7 +272,7 @@ Plans:
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
-| 27. Performance batch 2 | 9/10 | In Progress|  |
+| 27. Performance batch 2 | 10/10 | Complete   | 2026-07-22 |
 
 ## Backlog
 

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Completed 27-07-PLAN.md
-last_updated: "2026-07-22T14:53:19Z"
-last_activity: 2026-07-22 -- Phase 27 plan 07 (zod/mini client bundle diet, PERF-14) complete
+stopped_at: Completed 27-10-PLAN.md
+last_updated: "2026-07-22T21:54:59Z"
+last_activity: 2026-07-22 -- Phase 27 plan 10 (extraction latency Haiku trial, PERF-17) complete -- Phase 27 fully complete (10/10)
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 36
-  completed_plans: 35
-  percent: 97
+  completed_plans: 36
+  percent: 100
 ---
 
 # Project State
@@ -21,17 +21,17 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 — performance-batch-2 (plans 01, 02, 03, 04, 05, 06, 07, 08, 09 of 10 complete, PERF-12/PERF-13/PERF-14/PERF-15/PERF-16/PERF-18/PERF-19/PERF-20/PERF-21/PERF-22/PERF-23 shipped)
+**Current focus:** Phase 27 — performance-batch-2 COMPLETE (all 10/10 plans done, PERF-12..PERF-23 all shipped); Phase 18 is the only remaining phase before v3.0 closes
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 27 (performance-batch-2) — EXECUTING
-Plan: 07 of 10 just completed; 27-10 remains unexecuted
-Status: Executing Phase 27
-Last activity: 2026-07-22 -- Phase 27 plan 07 (zod/mini client bundle diet, PERF-14) complete
+Phase: 27 (performance-batch-2) — COMPLETE
+Plan: 10 of 10 complete
+Status: Phase 27 complete; Phase 18 remains before v3.0 closes
+Last activity: 2026-07-22 -- Phase 27 plan 10 (extraction latency Haiku trial, PERF-17) complete -- Phase 27 fully complete (10/10)
 
-Progress (v3.0): [█████████░] 97% (Phases 14/15/16/17/25/26 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 now 9/10 plans complete; Phase 18 PERF-05/06 remains — runs last so its re-cert gate certifies the optimized code)
+Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
 ## Shipped Milestones
 
@@ -42,7 +42,7 @@ Progress (v3.0): [█████████░] 97% (Phases 14/15/16/17/25/26 
 
 ## Milestone Note
 
-v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)**, **Phase 25 My Account is complete (2026-07-20, ACC-01..06)**, and **Phase 26 Performance batch is now complete (2026-07-22, PERF-07..11 all satisfied across 26-01..26-05)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt** — it runs last so its one-command re-cert gate locks in the Phase 26 optimized numbers as the regression baseline; v3.0 closes with Phase 18.
+v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)**, **Phase 25 My Account is complete (2026-07-20, ACC-01..06)**, **Phase 26 Performance batch is now complete (2026-07-22, PERF-07..11 all satisfied across 26-01..26-05)**, and **Phase 27 Performance batch 2 is now complete (2026-07-22, PERF-12..23 all satisfied across 27-01..27-10)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt** — it runs last so its one-command re-cert gate locks in the Phase 26/27 optimized numbers as the regression baseline; v3.0 closes with Phase 18.
 
 ## Accumulated Context
 
@@ -116,6 +116,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 - Phase 27-03: shipped PERF-15 — `browse/page.tsx`'s topic-detail (BrowseList) branch now serializes only `filterWords(wordList.words, {category: requestedTopic})` (~15-25 words) instead of the full ~280-word wordlist; `categoryCounts` is only computed on the topic-picker (BrowseTiles) branch. Extracted a new pure `shapeBrowseData(words, requestedTopic)` helper returning a discriminated union (`{kind:"detail",topic,words}` | `{kind:"picker",categoryCounts}`) so the branch-shaping logic is unit-testable without a session/DB harness — first test coverage for this page. Swapped `auth.api.getSession({headers: await headers()})` to the 27-01 cached `getSession()` accessor; opportunistically swapped the separate `getUserNativeLanguage` DB round trip for `session.user.nativeLanguage ?? "en"` (same pattern already proven in `/account/page.tsx`, Phase 25-04). `?topic=` CATEGORIES validation (WR-01) kept byte-unchanged; CEFR filter stays client-side. `npx tsc --noEmit` clean; scoped `biome check` clean after one auto-format pass; full `npx vitest run` 2234 passed/6 skipped/1 failed (pre-existing documented `image-upload-flow-extract-errors.test.tsx` flake, unrelated, passes in isolation).
 
+- Phase 27-10: shipped PERF-17 — extraction model swapped to `claude-haiku-4-5` (Task 1, drop-in string change, all error-handling branches preserved byte-unchanged). Task 2's blocking D-05/D-06 checkpoint was resolved by Josh (2026-07-22) as "done — keep Haiku, no streaming, no revert": Josh delegated to the orchestrator's recommendation, backed by a synthetic side-by-side (throwaway script mirroring the route's own system prompt/schema/temperature-0, direct API calls, since deleted) against two screenshots — one showed Haiku/Sonnet returning identical 20-word sets with correct accents (Haiku API median 2101ms vs Sonnet 3375ms, well under the ~4s D-06 streaming threshold), the other (an adversarial no-vocab UI screenshot) showed Haiku noisier than Sonnet on non-target images, mitigated by the existing review-list row-deselection safety net. Model id `claude-haiku-4-5` confirmed live-resolving to `claude-haiku-4-5-20251001` (RESEARCH Assumption A1 verified). Task 3's "done" branch executed as the plan's own documented no-op — zero further code changes. The original real-photo/EXIF-fidelity D-05 test (vs. the synthetic screenshot test actually run) remains a residual manual-UAT gap, flagged in the SUMMARY for the verifier to carry into `27-HUMAN-UAT.md` (mirrors the `26-HUMAN-UAT.md` item-1 pattern). **Phase 27 (Performance batch 2) is now fully code-complete** — all 12 requirements (PERF-12..PERF-23) satisfied across 27-01 through 27-10. `state.*` verbs remain known-broken on this project; STATE.md/ROADMAP.md/REQUIREMENTS.md hand-edited directly this session.
+
 - Phase 27-04: shipped PERF-16 — `dashboard/page.tsx` now fetches a deck's cards with exactly ONE `getDeckCards` call; the study subset is derived in JS via a new pure `deriveStudySubset(allCards)` helper in `study-queries.ts` that mirrors `getStudyCards`' `isNull(pausedAt)` filter and column projection, replacing the prior `getDeckCards`+`getStudyCards` double fetch. Eliminated the O(n²) `studyCards.find((s) => s.id === c.id)` per-row stitch AND the `masteryByCardId` Map by reading `masteryRound`/`cooldownUntil` directly off the single fetched row, guarded on `c.pausedAt` (paused cards forced to `masteryRound:0`/`cooldownUntil:null`, byte-identical to the OLD Map-fallback behavior — no behavior change). `getUserNativeLanguage` dropped from the dashboard entirely (`session.user.nativeLanguage ?? "en"`, 25-04 pattern); swapped to the 27-01 cached `getSession()`. `createdAt` dropped from the client `cardRows` payload after confirming via grep it's unread by `card-list.tsx`/`card-edit-dialog.tsx`; Rule 3 fix — made `CardRow.createdAt` (`card-edit-dialog.tsx`, outside this plan's `files_modified`) optional, since dropping the field otherwise failed `tsc` against `CardList`'s `cards: CardRow[]` prop contract. `getStudyCards`/`getUserNativeLanguage` remain exported unchanged (still used by `/study` and `/deck/new-card`). `npx tsc --noEmit` clean; scoped `biome check` clean after one auto-format pass (test file import order); full `npx vitest run` 2238 passed/6 skipped/1 failed (same pre-existing documented `image-upload-flow-extract-errors.test.tsx` flake, unrelated, passes in isolation). `gsd-sdk query roadmap.update-plan-progress 27` and `requirements.mark-complete PERF-16` both verified correct via `git diff` this session (7/10 → 8/10, no corruption); STATE.md hand-edited directly per the known-broken `state.*` verbs.
 
 - Phase 27-02: shipped PERF-18 — converted `session`, `decks`, `cards`, `recall_events` in `src/db/schema.ts` from the 2-arg `pgTable(name, columns)` form to the 3-arg array-callback form (matching the existing `milestones_seen` precedent) and declared `cards_deckId_idx`, `decks_userId_idx`, `recall_events_cardId_idx`, `session_userId_idx` — zero column/data changes, `tsc --noEmit` clean. Task 2 was a BLOCKING `checkpoint:human-verify` gate (D-08): paused until Josh explicitly authorized the hosted-DB write ("Authorized — push now"); orchestrator then extracted `DATABASE_URL` via `grep` from `.env.local` (never sourced, per T-27-02-02 — the file contains a runnable curl+API-key block that executes on `source`) and ran `npm run db:push`. Output: `[✓] Changes applied` (not "no changes detected" — rules out the Pitfall 5 wrong/empty-DB false-positive). Post-push `pg_indexes` verification confirmed all four indexes exist on the correct Neon production instance; noted a harmless same-named index on Neon's own internal `neon_auth.session` schema (not drizzle-managed, pre-existing, unrelated). `gsd-sdk query roadmap.update-plan-progress 27` verified correct via `git diff` this session (5/10 → 6/10, no corruption); STATE.md and REQUIREMENTS.md hand-edited directly per the known-broken `state.*` verbs.
@@ -146,8 +148,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-22T14:53:19Z
-Stopped at: Completed 27-07-PLAN.md
+Last session: 2026-07-22T21:54:59Z
+Stopped at: Completed 27-10-PLAN.md
 Resume file: None
 
 ## Performance Metrics
@@ -181,3 +183,4 @@ Resume file: None
 | Phase 27 P03 | 15min | 2 tasks | 2 files |
 | Phase 27 P04 | 20min | 2 tasks | 4 files |
 | Phase 27 P07 | 25min | 2 tasks | 9 files |
+| Phase 27 P10 | ~5min (continuation, Task 3 only) | 3 tasks (1 code + 1 checkpoint + 1 no-op) | 1 file |
