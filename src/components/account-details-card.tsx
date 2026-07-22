@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import { ACBanner } from "@/components/daybreak/ac-banner";
 import { Card } from "@/components/daybreak/card";
@@ -17,8 +17,8 @@ import { authClient } from "@/lib/auth-client";
 // D-05/D-06/D-07 — view/edit details card. Schema mirrors signup/page.tsx's
 // exact zod rules (25-PATTERNS.md).
 const detailsSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email"),
+  name: z.string().check(z.minLength(1, "Name is required")),
+  email: z.email("Please enter a valid email"),
 });
 
 type DetailsFormValues = z.infer<typeof detailsSchema>;

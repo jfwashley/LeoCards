@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import { useAccountDirty } from "@/components/account-dirty-context";
 import { Card } from "@/components/daybreak/card";
@@ -16,14 +16,16 @@ import { authClient } from "@/lib/auth-client";
 // (25-PATTERNS.md), extended with a required currentPassword field.
 const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z.string().min(8, "Password must be at least 8 characters"),
-    confirmNewPassword: z.string().min(1, "Please confirm your new password"),
+    currentPassword: z.string().check(z.minLength(1, "Current password is required")),
+    newPassword: z.string().check(z.minLength(8, "Password must be at least 8 characters")),
+    confirmNewPassword: z.string().check(z.minLength(1, "Please confirm your new password")),
   })
-  .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "Passwords do not match",
-    path: ["confirmNewPassword"],
-  });
+  .check(
+    z.refine((data) => data.newPassword === data.confirmNewPassword, {
+      message: "Passwords do not match",
+      path: ["confirmNewPassword"],
+    }),
+  );
 
 type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 

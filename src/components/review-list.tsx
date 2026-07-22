@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useRef } from "react";
-import { z } from "zod";
+import * as z from "zod/mini";
 import { ACBanner } from "@/components/daybreak/ac-banner";
 import { ACBtn } from "@/components/daybreak/ac-btn";
 import { ACPairRow } from "@/components/daybreak/ac-pair-row";

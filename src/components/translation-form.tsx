@@ -2,13 +2,13 @@
 
 import { useCallback, useReducer, useRef } from "react";
 import { useDebouncedCallback as useDebounceCallback } from "use-debounce";
-import { z } from "zod";
+import * as z from "zod/mini";
 import { ACBanner } from "@/components/daybreak/ac-banner";
 import { ACBtn } from "@/components/daybreak/ac-btn";
 import { saveCard } from "@/lib/deck-actions";
 
 const TranslationResponseSchema = z.object({
-  translation: z.string().min(1),
+  translation: z.string().check(z.minLength(1)),
 });
 
 interface TranslationFormProps {
