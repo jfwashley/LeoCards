@@ -235,7 +235,7 @@ Wave 2 (after PERF-09 ships):
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
 | 18. Field validation & guardrails | 0/TBD | Not started | - |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
-| 26. Performance batch | 5/5 | Complete   | 2026-07-22 |
+| 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 
 ## Backlog
 
