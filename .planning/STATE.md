@@ -47,6 +47,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 ## Accumulated Context
 
 ### Roadmap Evolution
+- Phase 28 added (2026-07-23): Native mobile packaging — LeoCards as installable iOS + Android apps; approach (Capacitor/WebView vs PWA+TWA vs native rewrite) decided at discuss-phase; sequenced AFTER Phase 18 so re-cert still certifies the web code first
 
 - Phase 25 added (2026-07-12): My Account — dashboard-accessible, Daybreak-styled account section: view account details, change password, log out, delete account. This is the account/settings page explicitly deferred out of v4.0 Daybreak scope. Depends on Phase 24 (Daybreak design system); independent of Phases 17/18.
 - Phase 27 added (2026-07-22): Performance batch 2 — items 8–19 of the 2026-06-30 Fable-5 all-phases perf review (second tranche; items 1–7 became Phase 26), pasted by Josh 2026-07-22 and saved verbatim to `.planning/research/perf-review-2026-06-30-items-08-19.md` with pre-triage notes. NOT yet re-verified against current code — line numbers predate Phases 17/25/26; requirements minted at discussion (same protocol as 26). Sequenced BEFORE Phase 18 for the same re-cert rationale. Items 17/19 build on shipped PERF-07/PERF-09; item 15 is a correctness bug (translation-form stale-response race); item 8's cookieCache TTL interacts with Phase 25 revocation semantics. `gsd-sdk phase.add` misplaced the block into Backlog + skipped the checklist AGAIN (third occurrence) — relocated manually; auto-slug dir renamed to `27-performance-batch-2`.

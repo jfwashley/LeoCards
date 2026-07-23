@@ -65,7 +65,7 @@ Full details: [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
-## 🚧 v3.0 Performance & QA (Phases 14-18, 25-27)
+## 🚧 v3.0 Performance & QA (Phases 14-18, 25-28)
 
 **Milestone goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
 
@@ -79,6 +79,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 - [x] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips (completed 2026-07-22)
 - [x] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache (completed 2026-07-22)
+- [ ] **Phase 28: Native mobile packaging** - LeoCards ships as installable iOS and Android apps; packaging approach (Capacitor/WebView shell vs PWA+TWA vs native rewrite) decided at discuss-phase
 
 ## Phase Details (v3.0)
 
@@ -251,6 +252,17 @@ Plans:
 - Item 8's cookieCache TTL delays session-revocation propagation — interacts with Phase 25's delete-account/change-password revocation semantics
 - Items 9 + 16 both touch card-list.tsx — likely one plan
 
+### Phase 28: Native mobile packaging
+
+**Goal**: LeoCards ships as installable iOS and Android apps backed by the existing Next.js app — packaging approach (Capacitor/WebView shell pointed at the hosted app vs PWA + TWA vs native rewrite) decided at discuss-phase, covering app-store readiness (icons, splash screens, store listings, review-guideline compliance for wrapped web apps), and mobile-specific integration (safe areas, camera/photo-picker for image extraction, better-auth session cookies inside an embedded webview, habitat video playback)
+**Depends on**: Phase 18 (runs AFTER the v3.0 re-cert gate — packaging targets the certified, optimized web build; Phase 18 remains the web-code finisher)
+**Requirements**: TBD — minted at discussion
+**Status**: Not discussed — next: `/gsd-discuss-phase 28`
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 28 to break down)
+
 ## Progress
 
 | Milestone | Phases | Plans | Status | Shipped |
@@ -273,6 +285,7 @@ Plans:
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
+| 28. Native mobile packaging | 0/TBD | Not started | - |
 
 ## Backlog
 
