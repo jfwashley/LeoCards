@@ -4,13 +4,13 @@ milestone: v3.0
 milestone_name: Performance & QA
 status: executing
 stopped_at: Phase 18 context gathered
-last_updated: "2026-07-24T21:23:42.597Z"
-last_activity: 2026-07-24 -- Phase 18 planning complete
+last_updated: "2026-07-24T22:27:47+01:00"
+last_activity: 2026-07-24 -- Phase 18 Plan 02 (gate evaluator) complete
 progress:
   total_phases: 9
   completed_phases: 6
   total_plans: 39
-  completed_plans: 33
+  completed_plans: 34
   percent: 67
 ---
 
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 27 COMPLETE (PERF-12..23 shipped, 27-HUMAN-UAT ×4 parked); Phase 18 (field validation & re-cert) is the only remaining v3.0 phase
+**Current focus:** Phase 18 — field-validation-guardrails
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 27 (performance-batch-2) — COMPLETE 2026-07-22 (10/10 plans; verifier 12/12 must-haves, human_needed → 27-HUMAN-UAT.md ×4; deep review 0C/2W both fixed; qa:run all journeys; e2e web+mobile green)
-Plan: 10 of 10 complete
-Status: Ready to execute
-Last activity: 2026-07-24 -- Phase 18 planning complete
+Phase: 18 (field-validation-guardrails) — EXECUTING
+Plan: 2 of 6 (18-02 complete — Wave 1 parallel plan; 18-01 still pending, independent depends_on:[])
+Status: Executing Phase 18
+Last activity: 2026-07-24 -- Phase 18 Plan 02 (gate evaluator pure lib) complete
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -124,6 +124,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 - Phase 27-02: shipped PERF-18 — converted `session`, `decks`, `cards`, `recall_events` in `src/db/schema.ts` from the 2-arg `pgTable(name, columns)` form to the 3-arg array-callback form (matching the existing `milestones_seen` precedent) and declared `cards_deckId_idx`, `decks_userId_idx`, `recall_events_cardId_idx`, `session_userId_idx` — zero column/data changes, `tsc --noEmit` clean. Task 2 was a BLOCKING `checkpoint:human-verify` gate (D-08): paused until Josh explicitly authorized the hosted-DB write ("Authorized — push now"); orchestrator then extracted `DATABASE_URL` via `grep` from `.env.local` (never sourced, per T-27-02-02 — the file contains a runnable curl+API-key block that executes on `source`) and ran `npm run db:push`. Output: `[✓] Changes applied` (not "no changes detected" — rules out the Pitfall 5 wrong/empty-DB false-positive). Post-push `pg_indexes` verification confirmed all four indexes exist on the correct Neon production instance; noted a harmless same-named index on Neon's own internal `neon_auth.session` schema (not drizzle-managed, pre-existing, unrelated). `gsd-sdk query roadmap.update-plan-progress 27` verified correct via `git diff` this session (5/10 → 6/10, no corruption); STATE.md and REQUIREMENTS.md hand-edited directly per the known-broken `state.*` verbs.
 
+- Phase 18-02: shipped the D-13-1 gate-evaluation layer — `evaluateGates(medians, thresholds, baseline, driftPct=15)` (absolute hard-fail on lcp/tbt/cls/score, D-09 drift WARNING never a failure, null-baseline no-throw first-run path) and `deriveExceptionGate(median, headroomPct=15)` (D-11 mechanical accepted-miss gate, `getBundleKb`-style `Number.isFinite` fail-loud guard), both added to `scripts/measure-cwv-lib.mjs` alongside the existing pure lib functions. TDD RED (`d30e249`, 12 failing tests confirmed via a real vitest run) → GREEN (`907698a`, 43/43 passing) — no REFACTOR commit needed. Zero deviations. This is Wave 1's second parallel plan (18-01 independently pending — Speed Insights integration, `depends_on: []` on both); 18-03/18-04 (`depends_on: ["18-01","18-02"]` / `["18-02","18-03"]`) can now build on this pure-lib export once 18-01 also lands. PERF-06 NOT marked complete in REQUIREMENTS.md — it spans Plans 02-05 (evaluator, baseline, orchestrator, live demo) and only the orchestrator's full pipeline satisfies the requirement text; left "Pending" deliberately, `roadmap.update-plan-progress 18` verified correct via `git diff` this session (0/6 → 1/6, checkbox on 18-02 line only). `state.*` verbs remain known-broken on this project (per the accumulated pattern below); STATE.md hand-edited directly.
+
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
 - DB workflow: this project uses Drizzle `db:push` (NOT `db:migrate` — the migrations journal is empty); hosted-DB writes gated by the auto-mode classifier.
@@ -150,9 +152,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-24T19:19:56.500Z
-Stopped at: Phase 18 context gathered
-Resume file: .planning/phases/18-field-validation-guardrails/18-CONTEXT.md
+Last session: 2026-07-24T22:27:47+01:00
+Stopped at: Phase 18 Plan 02 (gate evaluator) complete
+Resume file: .planning/phases/18-field-validation-guardrails/18-02-SUMMARY.md
 
 ## Performance Metrics
 
@@ -186,3 +188,4 @@ Resume file: .planning/phases/18-field-validation-guardrails/18-CONTEXT.md
 | Phase 27 P04 | 20min | 2 tasks | 4 files |
 | Phase 27 P07 | 25min | 2 tasks | 9 files |
 | Phase 27 P10 | ~5min (continuation, Task 3 only) | 3 tasks (1 code + 1 checkpoint + 1 no-op) | 1 file |
+| Phase 18 P02 | 5min | 1 task (TDD RED+GREEN) | 2 files |
