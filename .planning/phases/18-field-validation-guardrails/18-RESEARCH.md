@@ -407,19 +407,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 **If this table is empty:** N/A — see entries above.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Is prod currently running the Phase 26/27 code, or still the held Phase 17 deployment?**
+1. **Is prod currently running the Phase 26/27 code, or still the held Phase 17 deployment?** — RESOLVED: 18-01 T3 and 18-03 T1 gate the deploy/baseline on Vercel deployment SHA == `git rev-parse origin/main`.
    - What we know: STATE.md explicitly records "Deploy HELD" after Phase 17 (2026-07-19/20), with Josh to deploy manually later. No STATE.md entry after that point explicitly confirms a subsequent deploy, though Phase 25/26/27 all closed with commits merged to `main` and AGENTS.md says pushing to `main` auto-deploys.
    - What's unclear: Whether the "HELD" instruction was a one-time pause that auto-deploy resumed after, or whether it persisted through Phase 25/26/27 (deliberately, to batch a release) and prod is still stale as of this research date (2026-07-24).
    - Recommendation: The plan's first task under D-10 should include a concrete verification step (check the Vercel dashboard's current deployment SHA against `git log -1 main`, or curl a version/build-id marker if one exists) before treating the fresh baseline as "the locked Phase 18 baseline certifying 26/27." If prod is stale, the plan needs an explicit "confirm/trigger production deploy" step first.
 
-2. **Exact route-name mapping between the app's route paths and Speed Insights' "Route" grouping.**
+2. **Exact route-name mapping between the app's route paths and Speed Insights' "Route" grouping.** — RESOLVED: 18-06 T1 explicitly confirms which dashboard view (Route vs Path) cleanly isolates each key route, with the `/study` query-string caveat noted, before drawing conclusions.
    - What we know: Speed Insights' dashboard offers both a "Route" view (the actual pages you built — i.e., the App Router file-system route, which for this app should read naturally as `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse`) and a "Path" view (the literal URL requested, which for `/study` would include the `?deck=` query string per the app's own redirect behavior documented in `measure-cwv.mjs`).
    - What's unclear: Whether Speed Insights' "Route" grouping collapses `?deck=...` query variants of `/study` into one bucket automatically (likely, since it's framework-route-aware) or whether the dashboard needs the "Path" view instead to see `/study` traffic cleanly, given the app's own redirect-to-dashboard-if-no-deck behavior could otherwise show `/study` visits attributed to `/dashboard`.
    - Recommendation: This is a "read the actual dashboard once real data exists" question, not something resolvable via docs alone — the planner should schedule the D-03 comparison-doc task to explicitly confirm which view (Route vs Path) cleanly isolates each of the 4 key routes before drawing conclusions from the numbers, and note the `/study` query-string caveat as something to check.
 
-3. **Per-run Speed-Insights event cost of running the perf harness against prod during the 14-day window.**
+3. **Per-run Speed-Insights event cost of running the perf harness against prod during the 14-day window.** — RESOLVED: 18-06 T2 notes the harness-inflation caveat in the comparison doc so harness traffic is not misattributed to real users; non-blocking (monthly cap resets, failure mode is pause not data loss).
    - What we know: Hobby tier caps at 10,000 events/month; a real prod page load with the Speed Insights script installed will emit RUM data points same as a real user visit.
    - What's unclear: Exact event count per `measure:cwv`/`perf:recert` invocation (24 route×preset×run page loads in a full run) was not measured live in this research session.
    - Recommendation: Not a blocker — the cap resets monthly and pausing (not data loss) is the failure mode — but the comparison doc should note if any obvious spike from harness runs shows up in the "by day" breakdown, so field data isn't accidentally attributed to "real user traffic" when it was actually the harness itself.
