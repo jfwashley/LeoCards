@@ -167,7 +167,28 @@ QA comes first deliberately: the harness must protect the core journey before pe
   2. A single command re-certifies all perf gates (warm-prod lab regression guardrail across the four routes), runnable on demand before any release
   3. The re-certification gate fails loudly when any route regresses below its gates — demonstrated, not assumed
 
-**Plans**: TBD
+**Plans**: 6 plans (5 waves) — Speed Insights wired + deployed early (Plan 01) to start the 14-day D-03 field window; the PERF-06 re-cert gate is built during the window (Plans 02-05); the field comparison doc (Plan 06) closes the phase when Josh returns
+
+Wave 1 (parallel):
+
+- [ ] 18-01-PLAN.md — Speed Insights integration + prod deploy + freshness (starts the 14-day window) (PERF-05)
+- [ ] 18-02-PLAN.md — Gate evaluator pure lib (evaluateGates/deriveExceptionGate) + D-13-1 unit tests (PERF-06)
+
+Wave 2:
+
+- [ ] 18-03-PLAN.md — Fresh D-10 baseline + D-11 exception-gate threshold table (PERF-06)
+
+Wave 3:
+
+- [ ] 18-04-PLAN.md — perf-recert.mjs orchestrator (CWV half + nav-gate half) + perf:recert script (PERF-06)
+
+Wave 4:
+
+- [ ] 18-05-PLAN.md — Green + red-path (D-13-2) live demo + D-15 cadence doc (PERF-06)
+
+Wave 5 (after the 14-day window):
+
+- [ ] 18-06-PLAN.md — Field p75 vs CWV Good-band comparison doc — closes PERF-05 + the phase (PERF-05)
 
 ### Phase 25: My Account
 
