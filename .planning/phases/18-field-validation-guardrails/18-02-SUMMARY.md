@@ -99,3 +99,12 @@ None - no external service configuration required.
 ---
 *Phase: 18-field-validation-guardrails*
 *Completed: 2026-07-24*
+
+## Self-Check: PASSED
+
+- FOUND: scripts/measure-cwv-lib.mjs
+- FOUND: scripts/__tests__/measure-cwv-lib.test.ts
+- FOUND: .planning/phases/18-field-validation-guardrails/18-02-SUMMARY.md
+- FOUND: d30e249 (test commit)
+- FOUND: 907698a (feat commit)
+- FOUND: a5163fd (docs/summary commit)
