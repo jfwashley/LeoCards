@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 import {
   classifyBottleneck,
   computeMedians,
+  deriveExceptionGate,
+  evaluateGates,
   extractMetrics,
   getBundleKb,
   median,
@@ -322,5 +324,105 @@ describe("resolveOutDir (Phase 17 D-09)", () => {
         "sub/../.planning/phases/16-performance-baseline-measure/baseline/nested",
       ),
     ).toThrow(/immutable Phase 16 baseline/);
+  });
+});
+
+describe("evaluateGates", () => {
+  const thresholds = { lcp: 2500, tbt: 200, cls: 0.1, score: 90 };
+
+  it("all-pass: medians under every absolute gate -> hardFail false, failures empty", () => {
+    const medians = { lcp: 2000, tbt: 150, cls: 0.05, score: 95 };
+    const result = evaluateGates(medians, thresholds, null);
+    expect(result.hardFail).toBe(false);
+    expect(result.failures).toEqual([]);
+  });
+
+  it("single-metric fail: LCP breaches -> hardFail true, failures contains LCP, others absent", () => {
+    const medians = { lcp: 2600, tbt: 150, cls: 0.05, score: 95 };
+    const result = evaluateGates(medians, thresholds, null);
+    expect(result.hardFail).toBe(true);
+    expect(result.failures.some((f) => f.includes("LCP"))).toBe(true);
+    expect(result.failures.some((f) => f.includes("TBT"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("CLS"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("Perf"))).toBe(false);
+  });
+
+  it("single-metric fail: TBT breaches -> hardFail true, failures contains TBT, others absent", () => {
+    const medians = { lcp: 2000, tbt: 250, cls: 0.05, score: 95 };
+    const result = evaluateGates(medians, thresholds, null);
+    expect(result.hardFail).toBe(true);
+    expect(result.failures.some((f) => f.includes("TBT"))).toBe(true);
+    expect(result.failures.some((f) => f.includes("LCP"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("CLS"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("Perf"))).toBe(false);
+  });
+
+  it("single-metric fail: CLS breaches -> hardFail true, failures contains CLS, others absent", () => {
+    const medians = { lcp: 2000, tbt: 150, cls: 0.15, score: 95 };
+    const result = evaluateGates(medians, thresholds, null);
+    expect(result.hardFail).toBe(true);
+    expect(result.failures.some((f) => f.includes("CLS"))).toBe(true);
+    expect(result.failures.some((f) => f.includes("LCP"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("TBT"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("Perf"))).toBe(false);
+  });
+
+  it("single-metric fail: Perf score below gate -> hardFail true, failures contains Perf, others absent", () => {
+    const medians = { lcp: 2000, tbt: 150, cls: 0.05, score: 80 };
+    const result = evaluateGates(medians, thresholds, null);
+    expect(result.hardFail).toBe(true);
+    expect(result.failures.some((f) => f.includes("Perf"))).toBe(true);
+    expect(result.failures.some((f) => f.includes("LCP"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("TBT"))).toBe(false);
+    expect(result.failures.some((f) => f.includes("CLS"))).toBe(false);
+  });
+
+  it("D-11 exception-gate pass: a route whose TBT would breach the default gate passes under its derived exception threshold", () => {
+    const medians = { lcp: 2000, tbt: 338, cls: 0.05, score: 92 };
+    // default gate (200) would fail; derived exception gate from a 320ms
+    // baseline median (deriveExceptionGate(320) ~= 368) should pass.
+    const exceptionThresholds = {
+      ...thresholds,
+      tbt: deriveExceptionGate(320),
+    };
+    const result = evaluateGates(medians, exceptionThresholds, null);
+    expect(result.hardFail).toBe(false);
+  });
+
+  it("D-09 drift warning without failure: a metric >15% worse than baseline but still under the absolute threshold -> hardFail false AND warnings non-empty", () => {
+    const baseline = { lcp: 1500, tbt: 100, cls: 0.02 };
+    // TBT after (120) is under the 200 gate but is +20% worse than baseline's 100.
+    const medians = { lcp: 1500, tbt: 120, cls: 0.02, score: 95 };
+    const result = evaluateGates(medians, thresholds, baseline);
+    expect(result.hardFail).toBe(false);
+    expect(result.warnings.length).toBeGreaterThan(0);
+    expect(result.warnings.some((w) => w.includes("TBT"))).toBe(true);
+  });
+
+  it("drift with null baseline: no warnings, no throw (first-run path)", () => {
+    const medians = { lcp: 2000, tbt: 150, cls: 0.05, score: 95 };
+    expect(() => evaluateGates(medians, thresholds, null)).not.toThrow();
+    const result = evaluateGates(medians, thresholds, null);
+    expect(result.warnings).toEqual([]);
+  });
+});
+
+describe("deriveExceptionGate", () => {
+  it("computes median * 1.15 rounded (deriveExceptionGate(320, 15) === 368)", () => {
+    expect(deriveExceptionGate(320, 15)).toBe(368);
+  });
+
+  it("defaults headroomPct to 15 when omitted", () => {
+    expect(deriveExceptionGate(320)).toBe(368);
+  });
+
+  it("throws with an actionable message on a non-finite median (NaN)", () => {
+    expect(() => deriveExceptionGate(Number.NaN)).toThrow(/median/i);
+  });
+
+  it("throws with an actionable message on a non-finite median (undefined)", () => {
+    expect(() =>
+      deriveExceptionGate(undefined as unknown as number),
+    ).toThrow(/median/i);
   });
 });
