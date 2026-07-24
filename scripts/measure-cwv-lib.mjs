@@ -280,6 +280,81 @@ export function renderSummary(rows) {
   return lines.join("\n");
 }
 
+// ── Phase 18 (D-09/D-11/D-13) — gate evaluation ──────────────────────────
+//
+// Pure gate-evaluation layer: perf-recert.mjs (Plan 04) calls these AFTER
+// computing medians via computeMedians() above. Same purity contract as the
+// rest of this module — no process.env, no network, no process.exit, no
+// top-level await. Callers (the orchestrator) validate any env-derived
+// thresholds before passing them in; these functions assume clean input
+// except where explicitly guarded (deriveExceptionGate's Number.isFinite
+// check, mirroring getBundleKb's fail-loud pattern above).
+
+/**
+ * Evaluate a route's median metrics against absolute hard-fail gates
+ * (D-09) and, when a locked baseline is provided, emit drift WARNINGS
+ * (never failures) for any metric that regressed by more than `driftPct`
+ * percent vs baseline (D-09). Never hard-fails on drift alone — "red must
+ * mean a real regression, never Lighthouse noise."
+ *
+ * @param {Record<string, number>} medians — a route's computeMedians() output
+ * @param {{lcp:number, tbt:number, cls:number, score:number}} thresholds — absolute hard-fail gates (may be a per-route D-11 exception)
+ * @param {Record<string, number>|null} baseline — locked Phase 18 baseline medians for this route, or null (first run)
+ * @param {number} [driftPct=15] — drift-warning threshold percent (D-09)
+ * @returns {{ hardFail: boolean, failures: string[], warnings: string[] }}
+ */
+export function evaluateGates(medians, thresholds, baseline, driftPct = 15) {
+  const failures = [];
+  const warnings = [];
+
+  if (medians.lcp > thresholds.lcp) {
+    failures.push(`LCP ${medians.lcp}ms > ${thresholds.lcp}ms`);
+  }
+  if (medians.tbt > thresholds.tbt) {
+    failures.push(`TBT ${medians.tbt}ms > ${thresholds.tbt}ms`);
+  }
+  if (medians.cls > thresholds.cls) {
+    failures.push(`CLS ${medians.cls} > ${thresholds.cls}`);
+  }
+  if (medians.score < thresholds.score) {
+    failures.push(`Perf ${medians.score} < ${thresholds.score}`);
+  }
+
+  if (baseline) {
+    for (const key of ["lcp", "tbt", "cls"]) {
+      const before = baseline[key];
+      const after = medians[key];
+      if (before > 0 && (after - before) / before > driftPct / 100) {
+        const pct = Math.round(((after - before) / before) * 100);
+        warnings.push(`${key.toUpperCase()} drifted +${pct}% vs baseline`);
+      }
+    }
+  }
+
+  return { hardFail: failures.length > 0, failures, warnings };
+}
+
+/**
+ * Mechanically derive a per-route D-11 accepted-miss exception gate: a
+ * route's fresh median plus a fixed headroom percentage. Used when a route
+ * still misses its absolute gate at the fresh Phase 18 baseline — the
+ * exception is green on day one and still catches further regression.
+ *
+ * @param {number} median — the route's fresh baseline median for this metric
+ * @param {number} [headroomPct=15] — headroom percentage above the median
+ * @returns {number} the derived exception gate threshold, rounded
+ * @throws if `median` is not a finite number (getBundleKb fail-loud pattern)
+ */
+export function deriveExceptionGate(median, headroomPct = 15) {
+  if (!Number.isFinite(median)) {
+    throw new Error(
+      `deriveExceptionGate: median must be a finite number (got ${median}) — ` +
+        "pass the route's fresh baseline median for this metric",
+    );
+  }
+  return Math.round(median * (1 + headroomPct / 100));
+}
+
 // ── Phase 17 (D-09) — route filter + OUT_DIR redirect ────────────────────
 //
 // These two functions are the pure decision-logic half of the D-09 route-

@@ -421,8 +421,8 @@ describe("deriveExceptionGate", () => {
   });
 
   it("throws with an actionable message on a non-finite median (undefined)", () => {
-    expect(() =>
-      deriveExceptionGate(undefined as unknown as number),
-    ).toThrow(/median/i);
+    expect(() => deriveExceptionGate(undefined as unknown as number)).toThrow(
+      /median/i,
+    );
   });
 });
