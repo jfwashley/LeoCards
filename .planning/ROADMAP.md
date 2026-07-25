@@ -171,7 +171,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 
 Wave 1 (parallel):
 
-- [ ] 18-01-PLAN.md — Speed Insights integration + prod deploy + freshness (starts the 14-day window) (PERF-05)
+- [x] 18-01-PLAN.md — Speed Insights integration + prod deploy + freshness (starts the 14-day window) (PERF-05)
 - [x] 18-02-PLAN.md — Gate evaluator pure lib (evaluateGates/deriveExceptionGate) + D-13-1 unit tests (PERF-06)
 
 Wave 2:
@@ -302,7 +302,7 @@ Plans:
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
-| 18. Field validation & guardrails | 1/6 | In Progress|  |
+| 18. Field validation & guardrails | 2/6 | In Progress|  |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |

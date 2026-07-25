@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 18 context gathered
-last_updated: "2026-07-24T22:27:47+01:00"
-last_activity: 2026-07-24 -- Phase 18 Plan 02 (gate evaluator) complete
+stopped_at: Phase 18 Plan 01 (Speed Insights field-data wiring) complete
+last_updated: "2026-07-25T09:00:00+01:00"
+last_activity: 2026-07-25 -- Phase 18 Plan 01 (Speed Insights wiring, D-03 window started 2026-07-25) complete
 progress:
   total_phases: 9
   completed_phases: 6
   total_plans: 39
-  completed_plans: 34
+  completed_plans: 35
   percent: 67
 ---
 
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 18 (field-validation-guardrails) — EXECUTING
-Plan: 2 of 6 (18-02 complete — Wave 1 parallel plan; 18-01 still pending, independent depends_on:[])
+Plan: 2 of 6 (18-01 and 18-02 both complete — Wave 1 fully done; 18-03/18-04 depend on both and can now proceed)
 Status: Executing Phase 18
-Last activity: 2026-07-24 -- Phase 18 Plan 02 (gate evaluator pure lib) complete
+Last activity: 2026-07-25 -- Phase 18 Plan 01 (Speed Insights field-data wiring) complete; D-03 14-day window started 2026-07-25
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -124,6 +124,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 - Phase 27-02: shipped PERF-18 — converted `session`, `decks`, `cards`, `recall_events` in `src/db/schema.ts` from the 2-arg `pgTable(name, columns)` form to the 3-arg array-callback form (matching the existing `milestones_seen` precedent) and declared `cards_deckId_idx`, `decks_userId_idx`, `recall_events_cardId_idx`, `session_userId_idx` — zero column/data changes, `tsc --noEmit` clean. Task 2 was a BLOCKING `checkpoint:human-verify` gate (D-08): paused until Josh explicitly authorized the hosted-DB write ("Authorized — push now"); orchestrator then extracted `DATABASE_URL` via `grep` from `.env.local` (never sourced, per T-27-02-02 — the file contains a runnable curl+API-key block that executes on `source`) and ran `npm run db:push`. Output: `[✓] Changes applied` (not "no changes detected" — rules out the Pitfall 5 wrong/empty-DB false-positive). Post-push `pg_indexes` verification confirmed all four indexes exist on the correct Neon production instance; noted a harmless same-named index on Neon's own internal `neon_auth.session` schema (not drizzle-managed, pre-existing, unrelated). `gsd-sdk query roadmap.update-plan-progress 27` verified correct via `git diff` this session (5/10 → 6/10, no corruption); STATE.md and REQUIREMENTS.md hand-edited directly per the known-broken `state.*` verbs.
 
+- Phase 18-01: shipped the field-data wiring for PERF-05 — `@vercel/speed-insights` (2.x, T-18-SC legitimacy-verified by Josh: Vercel first-party, v2.0.0, source repo present, no postinstall) installed and `<SpeedInsights />` mounted via the `/next` entry point as a sibling after `{children}` inside `<body>` in `src/app/layout.tsx` (additive-only diff, `fda0b54`). Task 3's human-action checkpoint resolved 2026-07-25: Josh enabled Speed Insights in the Vercel dashboard, and `main` was pushed to `origin/main` with Josh's authorisation (`origin/main` == `fda0b54`) — this deploy simultaneously resolves the Phase 17 "Deploy HELD" note below, since prod now runs main HEAD (Phase 26/27 optimized code + SpeedInsights) instead of the stale 2026-07-15 build. Beacon confirmed firing (`/_vercel/speed-insights/script.js` returns 200; a live `/login` page load produced a 200 GET for the hashed loader script). **D-03 14-day field-data window start date: 2026-07-25** (closes on/after 2026-08-08) — Plan 06's field-vs-lab comparison doc cannot run before that date. PERF-05 marked complete in REQUIREMENTS.md. `gsd-sdk query roadmap.update-plan-progress 18` and `requirements.mark-complete PERF-05` both verified correct via `git diff` this session (1/6 -> 2/6; PERF-05 checkbox + traceability table); `state.*` verbs remain known-broken on this project per the accumulated pattern below — STATE.md hand-edited directly.
 - Phase 18-02: shipped the D-13-1 gate-evaluation layer — `evaluateGates(medians, thresholds, baseline, driftPct=15)` (absolute hard-fail on lcp/tbt/cls/score, D-09 drift WARNING never a failure, null-baseline no-throw first-run path) and `deriveExceptionGate(median, headroomPct=15)` (D-11 mechanical accepted-miss gate, `getBundleKb`-style `Number.isFinite` fail-loud guard), both added to `scripts/measure-cwv-lib.mjs` alongside the existing pure lib functions. TDD RED (`d30e249`, 12 failing tests confirmed via a real vitest run) → GREEN (`907698a`, 43/43 passing) — no REFACTOR commit needed. Zero deviations. This is Wave 1's second parallel plan (18-01 independently pending — Speed Insights integration, `depends_on: []` on both); 18-03/18-04 (`depends_on: ["18-01","18-02"]` / `["18-02","18-03"]`) can now build on this pure-lib export once 18-01 also lands. PERF-06 NOT marked complete in REQUIREMENTS.md — it spans Plans 02-05 (evaluator, baseline, orchestrator, live demo) and only the orchestrator's full pipeline satisfies the requirement text; left "Pending" deliberately, `roadmap.update-plan-progress 18` verified correct via `git diff` this session (0/6 → 1/6, checkbox on 18-02 line only). `state.*` verbs remain known-broken on this project (per the accumulated pattern below); STATE.md hand-edited directly.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
@@ -139,7 +140,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 **Non-blocking flag (Phase 25-04):** during this plan's execution, commits from a live, concurrently-running session (`fix(17): WR-01` through `WR-04`, `docs(17)`, `style(17)`) landed interleaved with 25-04's own commits on this exact working tree/branch — one briefly swept up 25-04's staged test file into its own commit (self-corrected via that session's own `git reset`; no data lost, verified byte-intact). 25-04 adopted pathspec-scoped commits (`git commit -- <files>`) for the remainder of its execution and every commit was individually verified clean. No corrective action needed on this plan's own output, but flagging for Josh: if two GSD sessions are running against this repo at once, confirm that's intentional — `parallelization: false` in `.planning/config.json` only governs within-phase plan execution, not cross-session working-tree access.
 
-**RESOLVED — 17-05 checkpoint (Josh, 2026-07-19):** PERF-04's D-15 gate ("real content visible ≤100ms median, prefetch-warm") measured 1.3-8s across all 6 hub-and-spoke nav pairs against a local prod build — roughly 20-80x over the bar. Root cause (per `node_modules/next/dist/docs/01-app/02-guides/prefetching.md`): all 4 key routes are genuinely dynamic Server Components (session + DB reads), and the docs' own prefetching-behavior table states dynamic pages are "not [fully] prefetched unless loading.js" and have "Client Cache TTL: Off, unless enabled [experimental staleTimes]" — so every nav is a real, unavoidable server round trip under the stable API surface. **Verdict: PERF-04 = ACCEPTED MISS, phase closed.** The instant-nav goal carries to Phase 18/backlog; candidate future paths recorded but NOT chosen this phase: (a) `loading.tsx` shells (would require relaxing D-15's skeletons-don't-count bar) or (b) Cache Components/PPR (experimental, needs a dedicated D-07 checkpoint). D-16 ("default prefetch sufficient") is corrected to measured-wrong for dynamic routes. Gates that DID pass: qa:run 5/5 (criterion-4, zero residue, 19 stale test users swept); /habitat D-11 non-regressed (mobile Perf 93/TBT 308ms vs previously-flagged 81/777ms); PERF-03 after-record = the committed 2026-07-17T23:07Z full run (3 of 4 routes certify, new-card D-04 accepted-miss per 17-04); immutable Phase 16 baseline untouched across the whole phase; task_d326ebac (INP prod-build-only) cleared. Three items parked as manual UAT — see `.planning/phases/17-performance-optimization/17-HUMAN-UAT.md`. Deploy HELD — Josh will deploy manually later; prod still runs the 2026-07-15 deployment, Phase 17 Wave 4/5 code is not yet live.
+**RESOLVED — 17-05 checkpoint (Josh, 2026-07-19):** PERF-04's D-15 gate ("real content visible ≤100ms median, prefetch-warm") measured 1.3-8s across all 6 hub-and-spoke nav pairs against a local prod build — roughly 20-80x over the bar. Root cause (per `node_modules/next/dist/docs/01-app/02-guides/prefetching.md`): all 4 key routes are genuinely dynamic Server Components (session + DB reads), and the docs' own prefetching-behavior table states dynamic pages are "not [fully] prefetched unless loading.js" and have "Client Cache TTL: Off, unless enabled [experimental staleTimes]" — so every nav is a real, unavoidable server round trip under the stable API surface. **Verdict: PERF-04 = ACCEPTED MISS, phase closed.** The instant-nav goal carries to Phase 18/backlog; candidate future paths recorded but NOT chosen this phase: (a) `loading.tsx` shells (would require relaxing D-15's skeletons-don't-count bar) or (b) Cache Components/PPR (experimental, needs a dedicated D-07 checkpoint). D-16 ("default prefetch sufficient") is corrected to measured-wrong for dynamic routes. Gates that DID pass: qa:run 5/5 (criterion-4, zero residue, 19 stale test users swept); /habitat D-11 non-regressed (mobile Perf 93/TBT 308ms vs previously-flagged 81/777ms); PERF-03 after-record = the committed 2026-07-17T23:07Z full run (3 of 4 routes certify, new-card D-04 accepted-miss per 17-04); immutable Phase 16 baseline untouched across the whole phase; task_d326ebac (INP prod-build-only) cleared. Three items parked as manual UAT — see `.planning/phases/17-performance-optimization/17-HUMAN-UAT.md`.
+
+**RESOLVED — 18-01 Task 3 checkpoint (Josh, 2026-07-25):** the Deploy HELD note above is now resolved — Josh pushed current `main` (`fda0b54`) to `origin/main` as part of enabling Speed Insights, so prod now runs main HEAD (Phase 26/27 optimized code + the Phase 18-01 SpeedInsights mount), not the stale 2026-07-15 build. This makes prod current for the Plan 03 baseline as a side effect of starting the D-03 field-data window.
 
 ## Carried Tech Debt
 
@@ -152,9 +155,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-24T22:27:47+01:00
-Stopped at: Phase 18 Plan 02 (gate evaluator) complete
-Resume file: .planning/phases/18-field-validation-guardrails/18-02-SUMMARY.md
+Last session: 2026-07-25T09:00:00+01:00
+Stopped at: Phase 18 Plan 01 (Speed Insights field-data wiring) complete
+Resume file: .planning/phases/18-field-validation-guardrails/18-01-SUMMARY.md
 
 ## Performance Metrics
 
@@ -189,3 +192,4 @@ Resume file: .planning/phases/18-field-validation-guardrails/18-02-SUMMARY.md
 | Phase 27 P07 | 25min | 2 tasks | 9 files |
 | Phase 27 P10 | ~5min (continuation, Task 3 only) | 3 tasks (1 code + 1 checkpoint + 1 no-op) | 1 file |
 | Phase 18 P02 | 5min | 1 task (TDD RED+GREEN) | 2 files |
+| Phase 18 P01 | ~10min active (spans a human-action checkpoint) | 3 tasks (2 checkpoints + 1 auto) | 3 files |
