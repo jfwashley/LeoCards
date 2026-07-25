@@ -24,6 +24,7 @@ status: issues_found
 **Depth:** standard
 **Files Reviewed:** 6
 **Status:** issues_found
+**Fix pass:** 2026-07-25 — CR-01 and WR-01..WR-05 fixed (commits `feb683c`, `0a18f4d`, `f725550`, `558710b`, `db36658`, `29a1619`); IN-07 partially addressed (WR-04/WR-05 regression tests). IN-01..IN-06 remain open (out of fix scope). Per-finding status lines below.
 
 ## Summary
 
@@ -38,6 +39,7 @@ The overall architecture is sound — compose-via-spawn, atomic writes, report-o
 ### CR-01: Nav-gate half can certify against the wrong server — no port-3000 preflight, server-spawn failures silently swallowed
 
 **File:** `scripts/perf-recert.mjs:341-352, 409-427`
+**Status:** fixed (`feb683c`) — preflight fetch fails the nav half loud if anything already answers on :3000 before build/spawn; server child exit/error listeners + a `died` result from `waitForServer` surface early child death immediately.
 **Issue:** The nav-gate half spawns `npm run start` with `stdio: "ignore"` and no `exit`/`error` listener, then declares the server "up" as soon as *anything* responds at `http://localhost:3000` (`waitForServer` returns true on any response, from any server). If port 3000 is already occupied when the run starts:
 
 1. **Stale leaked prod server** (from a previous run whose kill failed, or a manual `npm run start`): `next start` fails with "port in use", the failure is invisible (`stdio: "ignore"`), `waitForServer` immediately succeeds against the *old build*, and the gate produces a **false PASS certifying code that was never measured**. The freshly built `.next` output is never served.
@@ -78,6 +80,7 @@ serverChild.on("exit", () => {
 ### WR-01: Baseline-thresholds shape is never validated — a missing/typo'd gate key or bad `driftPct` silently disables that gate
 
 **File:** `scripts/perf-recert.mjs:531-540` (and `scripts/measure-cwv-lib.mjs:310-321`)
+**Status:** fixed (`0a18f4d`) — step-2 validation now asserts driftPct finite, all expected key routes present (via `resolveRoutes(null)`), every resolved lcp/tbt/cls/score threshold finite, and each route's `medians` object present; throws before any measurement.
 **Issue:** The script's entire T-18-03b rationale (lines 96-101) is that a NaN threshold makes `median > NaN` always false, *silently disabling* the gate — and it guards that class rigorously for `GATE_*` env vars. But the same failure class is wide open through `18-baseline-thresholds.json`: if a route's `gates` block loses or renames a key (e.g. `"perf"` instead of `"score"`), `resolveThresholds` passes `undefined` through, and in `evaluateGates` `medians.score < undefined` is `false` — that gate is silently disabled with a green run. Likewise a non-numeric `"driftPct"` yields `driftPct / 100 === NaN` and `> NaN` is always false, silently disabling every drift warning. The committed baseline is currently well-formed, so this is latent — but the file is the single mutable input the whole gate hangs off.
 **Fix:** After the overlay in the step-2 validation loop, assert every resolved threshold is finite, and validate `driftPct`:
 ```js
@@ -98,6 +101,7 @@ if (!Number.isFinite(driftPct)) throw new Error("driftPct is not finite");
 ### WR-02: Empty `routes` object produces a vacuous overall PASS with zero routes evaluated
 
 **File:** `scripts/perf-recert.mjs:537, 562`
+**Status:** fixed (`f725550`) — throws on missing/non-object/empty `baseline.routes` before any measurement, mirroring measure-cwv.mjs's `ROUTES.length === 0` guard.
 **Issue:** If `baseline.routes` is `{}` (or every entry is removed in a bad edit), the validation loop is a no-op, `runCwvHalf` returns zero rows, `anyCwvHardFail` is `false`, and — provided the spawn and nav gate succeed — the run reports overall **PASSED** with an *empty* CWV table. The header comment (line 100-101) explicitly claims to mirror measure-cwv.mjs's `ROUTES.length === 0` fail-loud guard, but no such guard exists here. (`routes` missing entirely does throw via `Object.entries(undefined)` — only the empty-object case slips through.)
 **Fix:**
 ```js
@@ -112,12 +116,14 @@ if (Object.keys(baseline.routes).length === 0) {
 ### WR-03: Minute-granularity `runId` lets a same-minute rerun overwrite the previous run's report — violating the D-07 "never overwritten" evidence-trail invariant
 
 **File:** `scripts/perf-recert.mjs:197-205, 544-552, 586-594`
+**Status:** fixed (`558710b`) — runId now second-granularity (`recert-YYYY-MM-DD-HHmmss`), which also de-shares the `measurements/<runId>/cwv` directory across retries; the report writer additionally disambiguates the filename (`-2`, `-3`, …) instead of overwriting if a collision still occurs.
 **Issue:** `formatRunId` resolves to the minute (`recert-YYYY-MM-DD-HHmm`). A run that fails fast (e.g. `npm run build` failure, baseline parse error) followed by an immediate retry within the same minute produces the *same* runId: `writeTextAtomic`/`writeJsonAtomic` `rename` over the existing `${runId}.md`/`${runId}.json`, destroying the FAILED report that D-07 and AGENTS.md line 29 declare "part of the evidence trail, never re-edited". The shared `measurements/${runId}/cwv` directory additionally means a retry whose measure-cwv fails early can read back *stale artifacts from the first run* and evaluate them as fresh.
 **Fix:** Include seconds in the runId (`-${hh}${mm}${ss}`), and/or fail loud if `${runId}.md` already exists before writing.
 
 ### WR-04: `deriveExceptionGate` rounds to an integer, producing a broken (0 or near-0) gate for CLS-scale metrics
 
 **File:** `scripts/measure-cwv-lib.mjs:355`
+**Status:** fixed (`db36658`) — precision-aware rounding: values >= 1 round to integers (ms metrics unchanged), sub-1 values round to 3 decimals (`deriveExceptionGate(0.08)` → 0.092, `(0.6)` → 0.69); regression tests added.
 **Issue:** `Math.round(median * (1 + headroomPct / 100))` is correct for millisecond metrics but silently destroys sub-1 metrics: CLS is one of the four gated metrics and the function is documented as metric-generic ("the route's fresh baseline median *for this metric*"). `deriveExceptionGate(0.08)` returns `0` — an exception gate that is *impossible to pass* (any CLS > 0 hard-fails), the inverse of D-11's "green on day one" contract. `deriveExceptionGate(0.6)` returns `1`, a gate 10x looser than the 0.1 absolute gate. Nothing in code, JSDoc, or tests restricts the function to ms metrics.
 **Fix:** Round to a metric-appropriate precision, e.g.:
 ```js
@@ -129,6 +135,7 @@ return raw >= 1 ? Math.round(raw) : Math.round(raw * 1000) / 1000;
 ### WR-05: CLS drift warnings are dead on arrival — the `before > 0` guard plus all-zero committed CLS baselines means a CLS regression can never warn
 
 **File:** `scripts/measure-cwv-lib.mjs:327` (with `18-baseline-thresholds.json`)
+**Status:** fixed (`29a1619`) — `before === 0 && after > 0` now warns (`"CLS drifted from 0 to 0.09 vs baseline"`); the percentage branch is unchanged for nonzero baselines; regression tests added (0 → 0.09 warns under-gate, 0 → 0 stays silent).
 **Issue:** The drift loop skips any metric whose baseline is `0` (`before > 0` guard — a reasonable div-by-zero defence in isolation). But every committed route baseline has `cls: 0`, so the CLS drift warning can *never* fire: a regression from 0 to 0.09 stays under the 0.1 absolute gate and produces neither a failure nor a warning — silent. D-09 requires "each metric's delta vs the locked Phase 18 baseline; deltas >~15% worse surface as a loud WARNING". As shipped, the entire CLS drift channel is dead in practice from day one.
 **Fix:** Special-case a zero baseline:
 ```js
@@ -178,6 +185,7 @@ if (before === 0 && after > 0) {
 ### IN-07: Test coverage gaps in the new gate-evaluation suites
 
 **File:** `scripts/__tests__/measure-cwv-lib.test.ts:330-428`
+**Status:** partially addressed (`db36658`, `29a1619`) — the CLS-scale `deriveExceptionGate` cases (would have caught WR-04) and the zero-baseline drift cases (would have caught WR-05) are added. Remaining open: exactly-at-threshold boundary cases, drift exactly at `driftPct`, and a multi-metric simultaneous-failure case.
 **Issue:** The `evaluateGates`/`deriveExceptionGate` suites are solid but miss: exactly-at-threshold boundaries (gates use strict `>`/`<` — a median exactly at the gate passes, untested), drift exactly at `driftPct` (strict `>` — no warning, untested), a multi-metric simultaneous-failure case, and any CLS-scale `deriveExceptionGate` input (which would have caught WR-04), plus a zero-baseline drift case (which would have caught WR-05).
 **Fix:** Add boundary cases (`lcp === thresholds.lcp` passes; drift exactly +15% does not warn), a two-failure case asserting both messages, `deriveExceptionGate(0.08)`, and a `baseline.cls === 0` regression case.
 
