@@ -1,0 +1,106 @@
+{
+  "runId": "recert-2026-07-25-1354",
+  "dateIso": "2026-07-25T12:54:01.741Z",
+  "exitCode": 0,
+  "cwvSpawnOk": true,
+  "cwv": [
+    {
+      "route": "/dashboard",
+      "preset": "mobile",
+      "status": "WARN",
+      "medians": {
+        "lcp": 1820.1411,
+        "tbt": 137.76811981201172,
+        "cls": 0,
+        "fcp": 779.3729801879883,
+        "ttfb": 10,
+        "score": 98,
+        "bootupTime": 4310.667999999952
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [],
+      "warnings": [
+        "TBT drifted +165% vs baseline"
+      ]
+    },
+    {
+      "route": "/study",
+      "preset": "mobile",
+      "status": "WARN",
+      "medians": {
+        "lcp": 1502.0891000000001,
+        "tbt": 71,
+        "cls": 0,
+        "fcp": 772.8690801879883,
+        "ttfb": 8,
+        "score": 99,
+        "bootupTime": 315.83999999999986
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [],
+      "warnings": [
+        "TBT drifted +20% vs baseline"
+      ]
+    },
+    {
+      "route": "/deck/new-card",
+      "preset": "mobile",
+      "status": "WARN",
+      "medians": {
+        "lcp": 1756.9787999999999,
+        "tbt": 81.76811981201172,
+        "cls": 0,
+        "fcp": 778.2106801879883,
+        "ttfb": 16,
+        "score": 99,
+        "bootupTime": 4235.49999999995
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [],
+      "warnings": [
+        "TBT drifted +16% vs baseline"
+      ]
+    },
+    {
+      "route": "/deck/browse",
+      "preset": "mobile",
+      "status": "PASS",
+      "medians": {
+        "lcp": 1605.8310999999999,
+        "tbt": 68,
+        "cls": 0,
+        "fcp": 865.1966801879882,
+        "ttfb": 9,
+        "score": 99,
+        "bootupTime": 4282.719999999947
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [],
+      "warnings": []
+    }
+  ],
+  "nav": {
+    "status": "PASS",
+    "detail": "instant-nav gate passed (<=850ms median, D-12)"
+  }
+}
