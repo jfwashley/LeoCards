@@ -71,6 +71,7 @@
 //     instead (mirrors measure-cwv.mjs's own runCleanup() pattern).
 
 import { spawn, spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -189,10 +190,13 @@ async function writeTextAtomic(filePath, content) {
 
 /**
  * Build the dated run id used for the report filenames (D-07): one file per
- * run, never overwritten.
+ * run, never overwritten. Second-granularity (WR-03): a minute-granularity
+ * id let a fast-fail + same-minute retry silently rename over the previous
+ * run's FAILED report — destroying evidence AGENTS.md declares "never
+ * re-edited" — and share its measurements/<runId>/cwv artifact directory.
  *
  * @param {Date} date
- * @returns {string} e.g. "recert-2026-07-25-1430"
+ * @returns {string} e.g. "recert-2026-07-25-143017"
  */
 function formatRunId(date) {
   const pad = (n) => String(n).padStart(2, "0");
@@ -201,7 +205,8 @@ function formatRunId(date) {
   const d = pad(date.getDate());
   const hh = pad(date.getHours());
   const mm = pad(date.getMinutes());
-  return `recert-${y}-${m}-${d}-${hh}${mm}`;
+  const ss = pad(date.getSeconds());
+  return `recert-${y}-${m}-${d}-${hh}${mm}${ss}`;
 }
 
 // ── CWV half (Task 1) ─────────────────────────────────────────────────────
@@ -672,8 +677,31 @@ try {
     navResult,
     exitCode,
   });
-  await writeTextAtomic(path.join(MEASUREMENTS_DIR, `${runId}.md`), reportMd);
-  await writeJsonAtomic(path.join(MEASUREMENTS_DIR, `${runId}.json`), {
+  // WR-03/D-07: a run's report is NEVER overwritten. Second-granularity
+  // runIds make a collision near-impossible, but if one still occurs
+  // (clock skew, manual file placement), disambiguate the filename rather
+  // than rename over the earlier run's evidence.
+  let reportId = runId;
+  for (
+    let n = 2;
+    existsSync(path.join(MEASUREMENTS_DIR, `${reportId}.md`)) ||
+    existsSync(path.join(MEASUREMENTS_DIR, `${reportId}.json`));
+    n += 1
+  ) {
+    reportId = `${runId}-${n}`;
+  }
+  if (reportId !== runId) {
+    console.error(
+      `[perf-recert] report ${runId}.md/.json already exists — writing ` +
+        `${reportId}.md/.json instead (existing run reports are evidence, ` +
+        "never overwritten, D-07)",
+    );
+  }
+  await writeTextAtomic(
+    path.join(MEASUREMENTS_DIR, `${reportId}.md`),
+    reportMd,
+  );
+  await writeJsonAtomic(path.join(MEASUREMENTS_DIR, `${reportId}.json`), {
     runId,
     dateIso,
     exitCode,
@@ -681,7 +709,7 @@ try {
     cwv: cwvRows,
     nav: navResult,
   });
-  console.log(`\n[perf-recert] wrote ${runId}.md / ${runId}.json`);
+  console.log(`\n[perf-recert] wrote ${reportId}.md / ${reportId}.json`);
   console.log("\n[perf-recert] --- Aggregate CWV table ---");
   console.log(renderCwvTable(cwvRows));
   console.log("\n[perf-recert] --- Nav-gate half ---");
