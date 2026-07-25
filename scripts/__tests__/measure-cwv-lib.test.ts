@@ -399,6 +399,27 @@ describe("evaluateGates", () => {
     expect(result.warnings.some((w) => w.includes("TBT"))).toBe(true);
   });
 
+  it("zero-baseline drift (WR-05): CLS regressing from a 0 baseline to 0.09 warns even though it stays under the 0.1 absolute gate", () => {
+    // Every committed route baseline has cls: 0 — before the fix the
+    // `before > 0` guard made the CLS drift channel dead on arrival.
+    const baseline = { lcp: 1500, tbt: 100, cls: 0 };
+    const medians = { lcp: 1500, tbt: 100, cls: 0.09, score: 95 };
+    const result = evaluateGates(medians, thresholds, baseline);
+    expect(result.hardFail).toBe(false);
+    expect(result.warnings.some((w) => w.includes("CLS"))).toBe(true);
+    expect(result.warnings.some((w) => w.includes("drifted from 0"))).toBe(
+      true,
+    );
+  });
+
+  it("zero-baseline no-drift: CLS staying at 0 over a 0 baseline produces no warning", () => {
+    const baseline = { lcp: 1500, tbt: 100, cls: 0 };
+    const medians = { lcp: 1500, tbt: 100, cls: 0, score: 95 };
+    const result = evaluateGates(medians, thresholds, baseline);
+    expect(result.hardFail).toBe(false);
+    expect(result.warnings).toEqual([]);
+  });
+
   it("drift with null baseline: no warnings, no throw (first-run path)", () => {
     const medians = { lcp: 2000, tbt: 150, cls: 0.05, score: 95 };
     expect(() => evaluateGates(medians, thresholds, null)).not.toThrow();

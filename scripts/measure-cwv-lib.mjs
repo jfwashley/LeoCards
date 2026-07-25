@@ -324,7 +324,17 @@ export function evaluateGates(medians, thresholds, baseline, driftPct = 15) {
     for (const key of ["lcp", "tbt", "cls"]) {
       const before = baseline[key];
       const after = medians[key];
-      if (before > 0 && (after - before) / before > driftPct / 100) {
+      if (before === 0 && after > 0) {
+        // WR-05: percentage drift is undefined over a zero baseline, but a
+        // regression FROM zero is still a regression — every committed
+        // route baseline has cls: 0, so without this branch the CLS drift
+        // channel could never fire (a 0 -> 0.09 regression stayed under
+        // the 0.1 absolute gate AND produced no warning). Any nonzero
+        // value over a zero baseline warns.
+        warnings.push(
+          `${key.toUpperCase()} drifted from 0 to ${after} vs baseline`,
+        );
+      } else if (before > 0 && (after - before) / before > driftPct / 100) {
         const pct = Math.round(((after - before) / before) * 100);
         warnings.push(`${key.toUpperCase()} drifted +${pct}% vs baseline`);
       }
