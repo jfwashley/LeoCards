@@ -1,0 +1,116 @@
+{
+  "runId": "recert-2026-07-25-1405",
+  "dateIso": "2026-07-25T13:05:42.104Z",
+  "exitCode": 1,
+  "cwvSpawnOk": true,
+  "cwv": [
+    {
+      "route": "/dashboard",
+      "preset": "mobile",
+      "status": "FAIL",
+      "medians": {
+        "lcp": 1663.8755999999998,
+        "tbt": 288.7681198120117,
+        "cls": 0,
+        "fcp": 799.8756,
+        "ttfb": 6,
+        "score": 94,
+        "bootupTime": 4487.403999999924
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 10,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [
+        "TBT 288.7681198120117ms > 10ms"
+      ],
+      "warnings": [
+        "TBT drifted +455% vs baseline"
+      ]
+    },
+    {
+      "route": "/study",
+      "preset": "mobile",
+      "status": "FAIL",
+      "medians": {
+        "lcp": 1501.6289000000002,
+        "tbt": 68,
+        "cls": 0,
+        "fcp": 773.8607801879883,
+        "ttfb": 13,
+        "score": 100,
+        "bootupTime": 305.0999999999997
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 10,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [
+        "TBT 68ms > 10ms"
+      ],
+      "warnings": [
+        "TBT drifted +15% vs baseline"
+      ]
+    },
+    {
+      "route": "/deck/new-card",
+      "preset": "mobile",
+      "status": "FAIL",
+      "medians": {
+        "lcp": 1513.8688,
+        "tbt": 253.9999999999999,
+        "cls": 0,
+        "fcp": 791.3329801879883,
+        "ttfb": 9,
+        "score": 95,
+        "bootupTime": 4519.283999999954
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 10,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [
+        "TBT 253.9999999999999ms > 10ms"
+      ],
+      "warnings": [
+        "TBT drifted +259% vs baseline"
+      ]
+    },
+    {
+      "route": "/deck/browse",
+      "preset": "mobile",
+      "status": "FAIL",
+      "medians": {
+        "lcp": 1606.8038999999999,
+        "tbt": 158,
+        "cls": 0,
+        "fcp": 881.9255,
+        "ttfb": 7,
+        "score": 98,
+        "bootupTime": 4546.899999999943
+      },
+      "thresholds": {
+        "lcp": 2500,
+        "tbt": 10,
+        "cls": 0.1,
+        "score": 90
+      },
+      "failures": [
+        "TBT 158ms > 10ms"
+      ],
+      "warnings": [
+        "TBT drifted +72% vs baseline"
+      ]
+    }
+  ],
+  "nav": {
+    "status": "PASS",
+    "detail": "instant-nav gate passed (<=850ms median, D-12)"
+  }
+}
