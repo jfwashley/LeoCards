@@ -1,4 +1,5 @@
 import "@/env";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Baloo_2, Figtree } from "next/font/google";
 import "./globals.css";
@@ -38,7 +39,10 @@ export default function RootLayout({
         "font-sans",
       )}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        {children}
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
