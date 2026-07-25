@@ -74,7 +74,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import { evaluateGates } from "./measure-cwv-lib.mjs";
+import { evaluateGates, resolveRoutes } from "./measure-cwv-lib.mjs";
 
 // ── Root resolution (mirrors measure-cwv.mjs / qa-run.mjs pattern) ──────────
 const __filename = fileURLToPath(import.meta.url);
@@ -578,11 +578,43 @@ try {
   const baseline = JSON.parse(baselineRaw);
   const driftPct = baseline.driftPct ?? 15;
 
-  // 2. Validate every route's GATE_* overrides NOW, before any measurement
-  //    runs (T-18-03b) — a malformed override must abort loud immediately.
+  // 2. Validate the baseline table + every route's GATE_* overrides NOW,
+  //    before any measurement runs (T-18-03b / WR-01) — a malformed
+  //    override, a missing/typo'd gate key, or a non-numeric driftPct
+  //    would make `median > NaN`/`> undefined` always false, silently
+  //    DISABLING that gate/warning instead of failing it.
+  if (!Number.isFinite(driftPct)) {
+    throw new Error(
+      `baseline "driftPct" is not a finite number (got ${JSON.stringify(
+        baseline.driftPct,
+      )}) — a non-finite driftPct silently disables every drift warning`,
+    );
+  }
+  for (const route of resolveRoutes(null)) {
+    if (!Object.hasOwn(baseline.routes ?? {}, route)) {
+      throw new Error(
+        `baseline.routes is missing expected key route "${route}" — ` +
+          "refusing to certify a partial route set",
+      );
+    }
+  }
   for (const [route, cfg] of Object.entries(baseline.routes)) {
-    resolveThresholds({ ...cfg.gates, ...cfg.exceptions });
-    void route; // validated for its side effect (fail-loud); value unused here
+    const resolved = resolveThresholds({ ...cfg.gates, ...cfg.exceptions });
+    for (const key of ["lcp", "tbt", "cls", "score"]) {
+      if (!Number.isFinite(resolved[key])) {
+        throw new Error(
+          `baseline thresholds for ${route} resolve to a missing/non-finite ` +
+            `"${key}" — a non-finite threshold silently disables that gate ` +
+            "instead of failing it (T-18-03b class)",
+        );
+      }
+    }
+    if (!cfg.medians || typeof cfg.medians !== "object") {
+      throw new Error(
+        `baseline route ${route} has no "medians" object — drift warnings ` +
+          "for this route would be silently disabled",
+      );
+    }
   }
 
   // 3. Run the CWV half: spawn measure-cwv.mjs into a per-run output
