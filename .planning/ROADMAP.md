@@ -176,7 +176,7 @@ Wave 1 (parallel):
 
 Wave 2:
 
-- [ ] 18-03-PLAN.md — Fresh D-10 baseline + D-11 exception-gate threshold table (PERF-06)
+- [x] 18-03-PLAN.md — Fresh D-10 baseline + D-11 exception-gate threshold table (PERF-06)
 
 Wave 3:
 
@@ -302,7 +302,7 @@ Plans:
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
-| 18. Field validation & guardrails | 2/6 | In Progress|  |
+| 18. Field validation & guardrails | 3/6 | In Progress|  |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |

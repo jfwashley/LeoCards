@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 18 Plan 01 (Speed Insights field-data wiring) complete
-last_updated: "2026-07-25T09:00:00+01:00"
-last_activity: 2026-07-25 -- Phase 18 Plan 01 (Speed Insights wiring, D-03 window started 2026-07-25) complete
+stopped_at: Phase 18 Plan 03 (fresh baseline + threshold table) complete
+last_updated: "2026-07-25T13:00:00+01:00"
+last_activity: 2026-07-25 -- Phase 18 Plan 03 (fresh 26/27 baseline committed immutable, zero D-11 exceptions) complete
 progress:
   total_phases: 9
   completed_phases: 6
   total_plans: 39
-  completed_plans: 35
+  completed_plans: 36
   percent: 67
 ---
 
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 18 (field-validation-guardrails) — EXECUTING
-Plan: 2 of 6 (18-01 and 18-02 both complete — Wave 1 fully done; 18-03/18-04 depend on both and can now proceed)
+Plan: 3 of 6 (18-01, 18-02, 18-03 all complete — Wave 2's baseline is locked immutable; 18-04 orchestrator can now proceed)
 Status: Executing Phase 18
-Last activity: 2026-07-25 -- Phase 18 Plan 01 (Speed Insights field-data wiring) complete; D-03 14-day window started 2026-07-25
+Last activity: 2026-07-25 -- Phase 18 Plan 03 (fresh Phase 26/27 baseline + threshold table, committed immutable, zero D-11 exceptions) complete
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -42,7 +42,7 @@ Progress (v3.0): [██████████] 100% of all currently-planned 
 
 ## Milestone Note
 
-v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)**, **Phase 25 My Account is complete (2026-07-20, ACC-01..06)**, **Phase 26 Performance batch is now complete (2026-07-22, PERF-07..11 all satisfied across 26-01..26-05)**, and **Phase 27 Performance batch 2 is now complete (2026-07-22, PERF-12..23 all satisfied across 27-01..27-10)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 remains unbuilt** — it runs last so its one-command re-cert gate locks in the Phase 26/27 optimized numbers as the regression baseline; v3.0 closes with Phase 18.
+v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-24). v4.0 is complete + archived; v3.0 is now resumed to finish Phases 15-18. Phase 16 is complete (immutable warm-prod baseline committed). **Phase 17 is now complete (closed 2026-07-20, PERF-04 accepted-miss)**, **Phase 25 My Account is complete (2026-07-20, ACC-01..06)**, **Phase 26 Performance batch is now complete (2026-07-22, PERF-07..11 all satisfied across 26-01..26-05)**, and **Phase 27 Performance batch 2 is now complete (2026-07-22, PERF-12..23 all satisfied across 27-01..27-10)** — see [[project_leocards_v3_perf_qa_pending]] reminder for update. **Phase 18 is now 3 of 6 plans complete** (18-01 Speed Insights wiring, 18-02 gate evaluator, 18-03 immutable fresh baseline all shipped) — the immutable Phase 26/27 regression baseline is locked; 18-04 (re-cert orchestrator) is next; v3.0 closes with Phase 18.
 
 ## Accumulated Context
 
@@ -125,6 +125,7 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 - Phase 27-02: shipped PERF-18 — converted `session`, `decks`, `cards`, `recall_events` in `src/db/schema.ts` from the 2-arg `pgTable(name, columns)` form to the 3-arg array-callback form (matching the existing `milestones_seen` precedent) and declared `cards_deckId_idx`, `decks_userId_idx`, `recall_events_cardId_idx`, `session_userId_idx` — zero column/data changes, `tsc --noEmit` clean. Task 2 was a BLOCKING `checkpoint:human-verify` gate (D-08): paused until Josh explicitly authorized the hosted-DB write ("Authorized — push now"); orchestrator then extracted `DATABASE_URL` via `grep` from `.env.local` (never sourced, per T-27-02-02 — the file contains a runnable curl+API-key block that executes on `source`) and ran `npm run db:push`. Output: `[✓] Changes applied` (not "no changes detected" — rules out the Pitfall 5 wrong/empty-DB false-positive). Post-push `pg_indexes` verification confirmed all four indexes exist on the correct Neon production instance; noted a harmless same-named index on Neon's own internal `neon_auth.session` schema (not drizzle-managed, pre-existing, unrelated). `gsd-sdk query roadmap.update-plan-progress 27` verified correct via `git diff` this session (5/10 → 6/10, no corruption); STATE.md and REQUIREMENTS.md hand-edited directly per the known-broken `state.*` verbs.
 
 - Phase 18-01: shipped the field-data wiring for PERF-05 — `@vercel/speed-insights` (2.x, T-18-SC legitimacy-verified by Josh: Vercel first-party, v2.0.0, source repo present, no postinstall) installed and `<SpeedInsights />` mounted via the `/next` entry point as a sibling after `{children}` inside `<body>` in `src/app/layout.tsx` (additive-only diff, `fda0b54`). Task 3's human-action checkpoint resolved 2026-07-25: Josh enabled Speed Insights in the Vercel dashboard, and `main` was pushed to `origin/main` with Josh's authorisation (`origin/main` == `fda0b54`) — this deploy simultaneously resolves the Phase 17 "Deploy HELD" note below, since prod now runs main HEAD (Phase 26/27 optimized code + SpeedInsights) instead of the stale 2026-07-15 build. Beacon confirmed firing (`/_vercel/speed-insights/script.js` returns 200; a live `/login` page load produced a 200 GET for the hashed loader script). **D-03 14-day field-data window start date: 2026-07-25** (closes on/after 2026-08-08) — Plan 06's field-vs-lab comparison doc cannot run before that date. PERF-05 marked complete in REQUIREMENTS.md. `gsd-sdk query roadmap.update-plan-progress 18` and `requirements.mark-complete PERF-05` both verified correct via `git diff` this session (1/6 -> 2/6; PERF-05 checkbox + traceability table); `state.*` verbs remain known-broken on this project per the accumulated pattern below — STATE.md hand-edited directly.
+- Phase 18-03: shipped the fresh, immutable D-10 Phase 18 baseline — a full 4-route x mobile+desktop warm-prod run against deployed `fda0b54` (Phase 26/27 code, confirmed live via the Speed Insights loader script). All four key routes pass every absolute gate (LCP<=2500/TBT<=200/CLS<=0.1/Perf>=90 mobile medians); `18-baseline-thresholds.json` records an empty `exceptions: {}` for every route — the Phase 17 D-04 accepted-miss candidate (`/deck/new-card`, 338ms TBT) now measures 70.8ms TBT, resolved outright by the Phase 26/27 batch rather than needing a carried D-11 exception. Josh approved the Task 3 checkpoint 2026-07-25 ("Verified — reflects 26/27, commit immutable"); `baseline/` + `18-BASELINE-SUMMARY.md` + `18-baseline-thresholds.json` committed together as one immutable, never-re-edited set (`7dc0960`). PERF-06 NOT marked complete — per 18-02's note it spans Plans 02-05 and only the Plan 04 orchestrator's full pipeline satisfies the requirement text. `gsd-sdk query roadmap.update-plan-progress 18` reconfirmed a pre-existing miscount on this project: it counted `18-BASELINE-SUMMARY.md` (a baseline artifact, not a plan summary) as a 4th completed plan via its `*-SUMMARY.md` glob, reporting 4/6 instead of the correct 3/6 — hand-corrected in ROADMAP.md's phase table row after verifying via `git diff`. `state.*` verbs remain known-broken on this project; STATE.md hand-edited directly.
 - Phase 18-02: shipped the D-13-1 gate-evaluation layer — `evaluateGates(medians, thresholds, baseline, driftPct=15)` (absolute hard-fail on lcp/tbt/cls/score, D-09 drift WARNING never a failure, null-baseline no-throw first-run path) and `deriveExceptionGate(median, headroomPct=15)` (D-11 mechanical accepted-miss gate, `getBundleKb`-style `Number.isFinite` fail-loud guard), both added to `scripts/measure-cwv-lib.mjs` alongside the existing pure lib functions. TDD RED (`d30e249`, 12 failing tests confirmed via a real vitest run) → GREEN (`907698a`, 43/43 passing) — no REFACTOR commit needed. Zero deviations. This is Wave 1's second parallel plan (18-01 independently pending — Speed Insights integration, `depends_on: []` on both); 18-03/18-04 (`depends_on: ["18-01","18-02"]` / `["18-02","18-03"]`) can now build on this pure-lib export once 18-01 also lands. PERF-06 NOT marked complete in REQUIREMENTS.md — it spans Plans 02-05 (evaluator, baseline, orchestrator, live demo) and only the orchestrator's full pipeline satisfies the requirement text; left "Pending" deliberately, `roadmap.update-plan-progress 18` verified correct via `git diff` this session (0/6 → 1/6, checkbox on 18-02 line only). `state.*` verbs remain known-broken on this project (per the accumulated pattern below); STATE.md hand-edited directly.
 
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
@@ -155,9 +156,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-07-25T09:00:00+01:00
-Stopped at: Phase 18 Plan 01 (Speed Insights field-data wiring) complete
-Resume file: .planning/phases/18-field-validation-guardrails/18-01-SUMMARY.md
+Last session: 2026-07-25T13:00:00+01:00
+Stopped at: Phase 18 Plan 03 (fresh baseline + threshold table) complete
+Resume file: .planning/phases/18-field-validation-guardrails/18-03-SUMMARY.md
 
 ## Performance Metrics
 
@@ -193,3 +194,4 @@ Resume file: .planning/phases/18-field-validation-guardrails/18-01-SUMMARY.md
 | Phase 27 P10 | ~5min (continuation, Task 3 only) | 3 tasks (1 code + 1 checkpoint + 1 no-op) | 1 file |
 | Phase 18 P02 | 5min | 1 task (TDD RED+GREEN) | 2 files |
 | Phase 18 P01 | ~10min active (spans a human-action checkpoint) | 3 tasks (2 checkpoints + 1 auto) | 3 files |
+| Phase 18 P03 | continuation session (Task 3 checkpoint resume only) | 3 tasks (2 checkpoints + 1 auto) | 15 files |
