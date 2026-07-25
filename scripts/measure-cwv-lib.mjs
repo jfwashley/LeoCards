@@ -342,7 +342,12 @@ export function evaluateGates(medians, thresholds, baseline, driftPct = 15) {
  *
  * @param {number} median — the route's fresh baseline median for this metric
  * @param {number} [headroomPct=15] — headroom percentage above the median
- * @returns {number} the derived exception gate threshold, rounded
+ * @returns {number} the derived exception gate threshold, rounded to a
+ *   metric-appropriate precision: integers for ms-scale values (>= 1),
+ *   3 decimals for sub-1 unitless values (CLS scale) — integer rounding
+ *   would turn e.g. a 0.08 CLS median into a gate of 0, an exception that
+ *   is IMPOSSIBLE to pass (the inverse of D-11's green-on-day-one
+ *   contract) (WR-04)
  * @throws if `median` is not a finite number (getBundleKb fail-loud pattern)
  */
 export function deriveExceptionGate(median, headroomPct = 15) {
@@ -352,7 +357,8 @@ export function deriveExceptionGate(median, headroomPct = 15) {
         "pass the route's fresh baseline median for this metric",
     );
   }
-  return Math.round(median * (1 + headroomPct / 100));
+  const raw = median * (1 + headroomPct / 100);
+  return raw >= 1 ? Math.round(raw) : Math.round(raw * 1000) / 1000;
 }
 
 // ── Phase 17 (D-09) — route filter + OUT_DIR redirect ────────────────────

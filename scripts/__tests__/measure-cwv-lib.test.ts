@@ -416,6 +416,34 @@ describe("deriveExceptionGate", () => {
     expect(deriveExceptionGate(320)).toBe(368);
   });
 
+  it("derives a passable sub-1 gate for a CLS-scale median (WR-04: integer rounding produced an impossible 0 gate)", () => {
+    // 0.08 * 1.15 = 0.092 — before the precision-aware fix this rounded to
+    // 0, a gate any CLS > 0 hard-fails (inverse of D-11 green-on-day-one).
+    expect(deriveExceptionGate(0.08)).toBe(0.092);
+  });
+
+  it("rounds a sub-1 CLS-scale gate to 3 decimals, not to the nearest integer (WR-04: 0.6 previously became a 10x-loose gate of 1)", () => {
+    expect(deriveExceptionGate(0.6)).toBe(0.69);
+  });
+
+  it("keeps a derived sub-1 gate strictly greater than the median itself (green on day one)", () => {
+    const gate = deriveExceptionGate(0.08);
+    expect(gate).toBeGreaterThan(0.08);
+    // ...and the fresh median passes its own derived exception gate.
+    const medians = { lcp: 2000, tbt: 150, cls: 0.08, score: 95 };
+    const result = evaluateGates(
+      medians,
+      { lcp: 2500, tbt: 200, cls: gate, score: 90 },
+      null,
+    );
+    expect(result.hardFail).toBe(false);
+  });
+
+  it("still rounds ms-scale medians (>= 1) to integers", () => {
+    expect(deriveExceptionGate(1)).toBe(1);
+    expect(deriveExceptionGate(320.4)).toBe(Math.round(320.4 * 1.15));
+  });
+
   it("throws with an actionable message on a non-finite median (NaN)", () => {
     expect(() => deriveExceptionGate(Number.NaN)).toThrow(/median/i);
   });
