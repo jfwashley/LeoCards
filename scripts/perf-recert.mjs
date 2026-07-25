@@ -331,24 +331,29 @@ const NAV_GATE_SERVER_URL = "http://localhost:3000";
 const NAV_GATE_SERVER_TIMEOUT_MS = 90_000;
 
 /**
- * Poll a URL with `fetch` until it responds (any status) or the timeout
- * elapses.
+ * Poll a URL with `fetch` until it responds (any status), the timeout
+ * elapses, or the spawned server child is detected dead (CR-01: without the
+ * `died` check, a `next start` that exits immediately — e.g. port in use —
+ * would be polled for the full 90s and then misreported as a timeout).
  *
  * @param {string} url
  * @param {number} timeoutMs
- * @returns {Promise<boolean>} true once the server responds, false on timeout
+ * @param {() => boolean} [childDied] — returns true once the server child
+ *   has exited/errored; checked before every poll attempt
+ * @returns {Promise<"up"|"timeout"|"died">}
  */
-async function waitForServer(url, timeoutMs) {
+async function waitForServer(url, timeoutMs, childDied = () => false) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
+    if (childDied()) return "died";
     try {
       await fetch(url);
-      return true;
+      return "up";
     } catch {
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }
-  return false;
+  return childDied() ? "died" : "timeout";
 }
 
 /**
@@ -396,6 +401,27 @@ async function runNavGateHalf() {
     "[perf-recert] ============================================================",
   );
 
+  // CR-01 preflight: fail loud if ANYTHING already answers on port 3000
+  // BEFORE building/spawning. A stale leaked prod server here would be
+  // silently certified in place of the fresh build (false PASS); a running
+  // dev server would be measured under PERF_PROD_BUILD=1 (false FAIL) —
+  // both violate D-09's "red must mean a real regression, never noise".
+  let alreadyUp = false;
+  try {
+    await fetch(NAV_GATE_SERVER_URL, { signal: AbortSignal.timeout(2000) });
+    alreadyUp = true;
+  } catch {
+    // port free (connection refused / timed out) — expected, proceed
+  }
+  if (alreadyUp) {
+    return {
+      status: "FAIL",
+      detail:
+        `something is already serving ${NAV_GATE_SERVER_URL} — stop it first ` +
+        "(a stale/dev server here would be certified in place of the fresh prod build)",
+    };
+  }
+
   console.log("[perf-recert] building local prod build (npm run build)...");
   const buildResult = spawnSync("npm", ["run", "build"], {
     stdio: "inherit",
@@ -415,11 +441,31 @@ async function runNavGateHalf() {
       shell: true,
     });
 
+    // CR-01: with stdio "ignore" an immediate child death (e.g. `next
+    // start` port-in-use error) is otherwise invisible — track it so
+    // waitForServer fails loud instead of polling a dead server.
+    let serverExited = false;
+    serverChild.on("exit", () => {
+      serverExited = true;
+    });
+    serverChild.on("error", () => {
+      serverExited = true;
+    });
+
     const up = await waitForServer(
       NAV_GATE_SERVER_URL,
       NAV_GATE_SERVER_TIMEOUT_MS,
+      () => serverExited,
     );
-    if (!up) {
+    if (up === "died") {
+      return {
+        status: "FAIL",
+        detail:
+          "local prod server (npm run start) exited before responding — " +
+          "check the build output and that port 3000 was free",
+      };
+    }
+    if (up !== "up") {
       return {
         status: "FAIL",
         detail: `local prod server did not respond at ${NAV_GATE_SERVER_URL} within ${NAV_GATE_SERVER_TIMEOUT_MS}ms`,
