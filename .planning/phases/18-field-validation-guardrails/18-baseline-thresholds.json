@@ -1,0 +1,65 @@
+{
+  "driftPct": 15,
+  "routes": {
+    "/dashboard": {
+      "medians": {
+        "lcp": 1964.4,
+        "tbt": 52,
+        "cls": 0,
+        "score": 99
+      },
+      "gates": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "exceptions": {}
+    },
+    "/study": {
+      "medians": {
+        "lcp": 1650.59,
+        "tbt": 59,
+        "cls": 0,
+        "score": 99
+      },
+      "gates": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "exceptions": {}
+    },
+    "/deck/new-card": {
+      "medians": {
+        "lcp": 1662.17,
+        "tbt": 70.77,
+        "cls": 0,
+        "score": 100
+      },
+      "gates": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "exceptions": {}
+    },
+    "/deck/browse": {
+      "medians": {
+        "lcp": 1755.35,
+        "tbt": 91.77,
+        "cls": 0,
+        "score": 99
+      },
+      "gates": {
+        "lcp": 2500,
+        "tbt": 200,
+        "cls": 0.1,
+        "score": 90
+      },
+      "exceptions": {}
+    }
+  }
+}
