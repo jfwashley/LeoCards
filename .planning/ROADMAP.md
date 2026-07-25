@@ -75,7 +75,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 15: Core-journey QA harness** - The core learning journey is provably correct via scripted, time-resumable QA against the real pipeline (completed 2026-06-25)
 - [x] **Phase 16: Performance baseline (Measure)** - Codified warm-prod measurement produces per-route baselines and ranked bottlenecks — no optimization (completed 2026-07-02)
 - [x] **Phase 17: Performance optimization** - Every key route meets CWV "Good" gates and warm navigation feels instant, each change measured against the Phase 16 baseline (completed 2026-07-20)
-- [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release
+- [ ] **Phase 18: Field validation & guardrails** - Field data confirms lab results and a one-command gate re-certifies perf before any release (5/6 plans complete 2026-07-25 -- 18-06 close-out blocked on the 14-day D-03 field-data window, closes on/after 2026-08-08)
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 - [x] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips (completed 2026-07-22)
 - [x] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache (completed 2026-07-22)
@@ -184,7 +184,7 @@ Wave 3:
 
 Wave 4:
 
-- [ ] 18-05-PLAN.md — Green + red-path (D-13-2) live demo + D-15 cadence doc (PERF-06)
+- [x] 18-05-PLAN.md — Green + red-path (D-13-2) live demo + D-15 cadence doc (PERF-06)
 
 Wave 5 (after the 14-day window):
 
@@ -302,7 +302,7 @@ Plans:
 | 15. Core-journey QA harness | 5/5 | Complete    | 2026-06-25 |
 | 16. Performance baseline (Measure) | 3/3 | Complete    | 2026-07-02 |
 | 17. Performance optimization | 5/5 | Complete    | 2026-07-20 |
-| 18. Field validation & guardrails | 4/6 | In Progress|  |
+| 18. Field validation & guardrails | 5/6 | In Progress|  |
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |

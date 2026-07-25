@@ -36,7 +36,7 @@ Key routes (perf scope): `/dashboard`, `/study`, `/deck/new-card`, `/deck/browse
 ### Performance — Field Validation & Guardrails
 
 - [x] **PERF-05**: Field p75 data (Vercel Speed Insights / CrUX) confirms lab medians on key routes once traffic accrues, or variance is documented
-- [ ] **PERF-06**: A single command re-certifies all perf gates (lab regression guardrail covering the four routes), runnable on demand before any release
+- [x] **PERF-06**: A single command re-certifies all perf gates (lab regression guardrail covering the four routes), runnable on demand before any release
 
 ### Performance — Batch optimizations (Phase 26, from the re-validated Fable-5 review)
 
@@ -111,7 +111,7 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | PERF-03 | Phase 17 | Complete |
 | PERF-04 | Phase 17 | Complete |
 | PERF-05 | Phase 18 | Complete |
-| PERF-06 | Phase 18 | Pending |
+| PERF-06 | Phase 18 | Complete |
 | PERF-07 | Phase 26 | Complete |
 | PERF-08 | Phase 26 | Complete |
 | PERF-09 | Phase 26 | Complete |
