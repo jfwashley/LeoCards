@@ -70,7 +70,7 @@
 //     spawnSync child processes and read back their written JSON artifacts
 //     instead (mirrors measure-cwv.mjs's own runCleanup() pattern).
 
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -231,14 +231,10 @@ async function runCwvHalf(routes, driftPct, cwvOutDirAbs, cwvOutDirRel) {
     "[perf-recert] ============================================================",
   );
 
-  const cwvSpawnResult = spawnSync(
-    process.execPath,
-    [MEASURE_CWV_PATH],
-    {
-      stdio: "inherit",
-      env: { ...process.env, PHASE_OUT_DIR: cwvOutDirRel },
-    },
-  );
+  const cwvSpawnResult = spawnSync(process.execPath, [MEASURE_CWV_PATH], {
+    stdio: "inherit",
+    env: { ...process.env, PHASE_OUT_DIR: cwvOutDirRel },
+  });
   const cwvSpawnOk = (cwvSpawnResult.status ?? 1) === 0;
   if (!cwvSpawnOk) {
     console.error(
@@ -322,6 +318,140 @@ async function runCwvHalf(routes, driftPct, cwvOutDirAbs, cwvOutDirRel) {
   return { rows, cwvSpawnOk };
 }
 
+// ── Nav-gate half (Task 2) ────────────────────────────────────────────────
+//
+// Run SEQUENTIALLY after the CWV half (never parallel — self-contention
+// would skew timing; also fits the D-06 ~35-40 min serial budget). Manages
+// the local prod-build server lifecycle itself, since playwright.config.ts
+// has `webServer: undefined` (Pitfall 7) — it never reimplements the
+// instant-nav gate's own assertions, it only invokes the existing
+// e2e/13-perf.spec.ts test file under PERF_PROD_BUILD=1.
+
+const NAV_GATE_SERVER_URL = "http://localhost:3000";
+const NAV_GATE_SERVER_TIMEOUT_MS = 90_000;
+
+/**
+ * Poll a URL with `fetch` until it responds (any status) or the timeout
+ * elapses.
+ *
+ * @param {string} url
+ * @param {number} timeoutMs
+ * @returns {Promise<boolean>} true once the server responds, false on timeout
+ */
+async function waitForServer(url, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      await fetch(url);
+      return true;
+    } catch {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+  }
+  return false;
+}
+
+/**
+ * Kill a spawned child (and, on Windows, its full process tree — `npm run
+ * start` wraps `next start` in a child of its own, and a bare
+ * `child.kill()` would only signal the npm wrapper, leaking the actual
+ * `next start` server on port 3000). Best-effort: never throws.
+ *
+ * @param {import('node:child_process').ChildProcess} child
+ */
+function killProcessTree(child) {
+  if (!child || child.pid === undefined) return;
+  try {
+    if (process.platform === "win32") {
+      spawnSync("taskkill", ["/pid", String(child.pid), "/t", "/f"]);
+    } else {
+      child.kill("SIGTERM");
+    }
+  } catch (err) {
+    console.error(
+      `[perf-recert] failed to kill nav-gate server (pid ${child.pid}): ${err.message}`,
+    );
+  }
+}
+
+/**
+ * Build + serve a local prod build, then run the existing instant-nav gate
+ * (e2e/13-perf.spec.ts, "instant-nav" grep, D-12: 850ms) against it under
+ * PERF_PROD_BUILD=1 — the sole prod-vs-dev signal (e2e/perf-markers.ts).
+ * The server child is ALWAYS killed in `finally`, regardless of pass/fail/
+ * throw (mirrors measure-cwv.mjs's browser-close-in-finally discipline;
+ * T-18-07: a leaked `next start` server would occupy port 3000 for every
+ * later run).
+ *
+ * @returns {Promise<{ status: "PASS"|"FAIL", detail: string }>}
+ */
+async function runNavGateHalf() {
+  console.log(
+    "\n[perf-recert] ============================================================",
+  );
+  console.log(
+    "[perf-recert] Nav-gate half — local prod build + instant-nav gate (850ms)",
+  );
+  console.log(
+    "[perf-recert] ============================================================",
+  );
+
+  console.log("[perf-recert] building local prod build (npm run build)...");
+  const buildResult = spawnSync("npm", ["run", "build"], {
+    stdio: "inherit",
+    cwd: ROOT,
+    shell: true,
+  });
+  if ((buildResult.status ?? 1) !== 0) {
+    return { status: "FAIL", detail: "npm run build failed" };
+  }
+
+  let serverChild;
+  try {
+    console.log("[perf-recert] starting local prod server (npm run start)...");
+    serverChild = spawn("npm", ["run", "start"], {
+      cwd: ROOT,
+      stdio: "ignore",
+      shell: true,
+    });
+
+    const up = await waitForServer(
+      NAV_GATE_SERVER_URL,
+      NAV_GATE_SERVER_TIMEOUT_MS,
+    );
+    if (!up) {
+      return {
+        status: "FAIL",
+        detail: `local prod server did not respond at ${NAV_GATE_SERVER_URL} within ${NAV_GATE_SERVER_TIMEOUT_MS}ms`,
+      };
+    }
+
+    console.log(
+      "[perf-recert] running e2e/13-perf.spec.ts instant-nav gate (PERF_PROD_BUILD=1)...",
+    );
+    const testResult = spawnSync(
+      "npx",
+      ["playwright", "test", "e2e/13-perf.spec.ts", "--grep", "instant-nav"],
+      {
+        stdio: "inherit",
+        cwd: ROOT,
+        shell: true,
+        env: { ...process.env, PERF_PROD_BUILD: "1" },
+      },
+    );
+    const passed = (testResult.status ?? 1) === 0;
+    return {
+      status: passed ? "PASS" : "FAIL",
+      detail: passed
+        ? "instant-nav gate passed (<=850ms median, D-12)"
+        : "instant-nav gate FAILED — see playwright output above",
+    };
+  } finally {
+    // T-18-07: kill the server child regardless of pass/fail/throw.
+    killProcessTree(serverChild);
+  }
+}
+
 // ── Report rendering ─────────────────────────────────────────────────────
 
 /**
@@ -341,10 +471,17 @@ function renderCwvTable(cwvRows) {
 }
 
 /**
- * @param {{ runId: string, dateIso: string, cwvRows: Array<object>, cwvSpawnOk: boolean, exitCode: number }} input
+ * @param {{ runId: string, dateIso: string, cwvRows: Array<object>, cwvSpawnOk: boolean, navResult: {status: string, detail: string}|null, exitCode: number }} input
  * @returns {string} markdown report
  */
-function renderReportMarkdown({ runId, dateIso, cwvRows, cwvSpawnOk, exitCode }) {
+function renderReportMarkdown({
+  runId,
+  dateIso,
+  cwvRows,
+  cwvSpawnOk,
+  navResult,
+  exitCode,
+}) {
   const lines = [];
   const overall = exitCode === 0 ? "PASSED" : "FAILED";
   lines.push(`# Phase 18 Re-cert — ${runId}`);
@@ -358,6 +495,16 @@ function renderReportMarkdown({ runId, dateIso, cwvRows, cwvSpawnOk, exitCode })
   lines.push("## CWV half (per-route gate evaluation)");
   lines.push("");
   lines.push(renderCwvTable(cwvRows));
+  lines.push("");
+  lines.push("## Nav-gate half (instant-nav, 850ms, D-12)");
+  lines.push("");
+  if (navResult) {
+    lines.push("| Gate | Status | Detail |");
+    lines.push("|------|--------|--------|");
+    lines.push(`| instant-nav | ${navResult.status} | ${navResult.detail} |`);
+  } else {
+    lines.push("_(not run — CWV half aborted before this half started)_");
+  }
   lines.push("");
   return lines.join("\n");
 }
@@ -375,6 +522,7 @@ console.log(
 let exitCode = 0;
 let cwvRows = [];
 let cwvSpawnOk = false;
+let navResult = null;
 const runDate = new Date();
 const runId = formatRunId(runDate);
 
@@ -412,7 +560,14 @@ try {
   cwvSpawnOk = cwvHalfResult.cwvSpawnOk;
 
   const anyCwvHardFail = cwvRows.some((row) => row.status === "FAIL");
-  if (anyCwvHardFail || !cwvSpawnOk) exitCode = 1;
+
+  // 4. Run the nav-gate half SEQUENTIALLY after the CWV half (never
+  //    Promise.all — self-contention would skew timing, D-06 budget).
+  navResult = await runNavGateHalf();
+
+  if (anyCwvHardFail || !cwvSpawnOk || navResult.status === "FAIL") {
+    exitCode = 1;
+  }
 } catch (err) {
   console.error(`\n[perf-recert] FAIL — ${err.message}`);
   exitCode = 1;
@@ -425,6 +580,7 @@ try {
     dateIso,
     cwvRows,
     cwvSpawnOk,
+    navResult,
     exitCode,
   });
   await writeTextAtomic(path.join(MEASUREMENTS_DIR, `${runId}.md`), reportMd);
@@ -434,10 +590,17 @@ try {
     exitCode,
     cwvSpawnOk,
     cwv: cwvRows,
+    nav: navResult,
   });
   console.log(`\n[perf-recert] wrote ${runId}.md / ${runId}.json`);
   console.log("\n[perf-recert] --- Aggregate CWV table ---");
   console.log(renderCwvTable(cwvRows));
+  console.log("\n[perf-recert] --- Nav-gate half ---");
+  console.log(
+    navResult
+      ? `instant-nav: ${navResult.status} — ${navResult.detail}`
+      : "(not run — CWV half aborted before this half started)",
+  );
   console.log(
     `\n[perf-recert] Overall: ${exitCode === 0 ? "PASSED" : "FAILED"}`,
   );

@@ -23,7 +23,8 @@
     "qa:run": "node scripts/qa-run.mjs",
     "qa:cleanup": "node scripts/cleanup-test-users.mjs %@test.local",
     "measure:cwv": "node scripts/measure-cwv.mjs",
-    "measure:cleanup": "node scripts/cleanup-test-users.mjs %@test.local"
+    "measure:cleanup": "node scripts/cleanup-test-users.mjs %@test.local",
+    "perf:recert": "node scripts/perf-recert.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "3.0.78",
