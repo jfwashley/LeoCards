@@ -583,6 +583,17 @@ try {
   //    override, a missing/typo'd gate key, or a non-numeric driftPct
   //    would make `median > NaN`/`> undefined` always false, silently
   //    DISABLING that gate/warning instead of failing it.
+  if (
+    !baseline.routes ||
+    typeof baseline.routes !== "object" ||
+    Object.keys(baseline.routes).length === 0
+  ) {
+    throw new Error(
+      "baseline.routes is missing or empty — refusing to report a vacuous " +
+        "PASS with zero routes evaluated (mirrors measure-cwv.mjs's " +
+        "ROUTES.length === 0 fail-loud guard)",
+    );
+  }
   if (!Number.isFinite(driftPct)) {
     throw new Error(
       `baseline "driftPct" is not a finite number (got ${JSON.stringify(
@@ -591,7 +602,7 @@ try {
     );
   }
   for (const route of resolveRoutes(null)) {
-    if (!Object.hasOwn(baseline.routes ?? {}, route)) {
+    if (!Object.hasOwn(baseline.routes, route)) {
       throw new Error(
         `baseline.routes is missing expected key route "${route}" — ` +
           "refusing to certify a partial route set",
