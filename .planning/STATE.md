@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 28 context gathered
-last_updated: "2026-08-03T13:34:25.456Z"
+stopped_at: Phase 28 split into 28.1-28.5 (roadmap restructure + NAT-01..08 minted)
+last_updated: "2026-08-03T14:30:00+01:00"
 last_activity: "2026-07-25 -- Phase 18 Plan 05 (perf:recert demonstrated green + red-path against real prod, D-15 cadence doc) complete"
 progress:
-  total_phases: 9
+  total_phases: 13
   completed_phases: 6
   total_plans: 39
   completed_plans: 38
-  percent: 67
+  percent: 46
 ---
 
 # Project State
@@ -47,6 +47,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 ## Accumulated Context
 
 ### Roadmap Evolution
+
+- Phase 28 split into 28.1-28.5 (2026-08-03): the discuss-phase resolved the packaging question as a **native rewrite programme** — React Native + Expo app, existing Next.js/Vercel backend API-ified into screen-shaped REST (web stays first-class), same-repo workspaces + shared domain packages, close = TestFlight + Play-internal builds carrying core loop + basic account. NAT-01..NAT-08 minted in REQUIREMENTS.md (28.1: NAT-01/02, 28.2: NAT-03/04, 28.3: NAT-05, 28.4: NAT-06, 28.5: NAT-07/08). PROJECT.md "Mobile app — web only" out-of-scope line superseded; frontmatter total_phases 9→13, percent recomputed 46 (6/13 phases). Split done via hand-edit + git-diff verification, deliberately NOT `gsd-sdk phase.add` (three documented Backlog-misplacement failures on this repo). Full decisions: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md` (D-01..D-20).
 
 - Phase 28 added (2026-07-23): Native mobile packaging — LeoCards as installable iOS + Android apps; approach (Capacitor/WebView vs PWA+TWA vs native rewrite) decided at discuss-phase; sequenced AFTER Phase 18 so re-cert still certifies the web code first
 
@@ -158,8 +160,8 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-08-03T13:34:25.421Z
-Stopped at: Phase 28 context gathered
+Last session: 2026-08-03T14:30:00+01:00
+Stopped at: Phase 28 split into 28.1-28.5 (roadmap restructure + NAT-01..08 minted); next: /gsd-plan-phase 28.1
 Resume file: .planning/phases/28-native-mobile-packaging/28-CONTEXT.md
 
 **Non-blocking flag (2026-08-03, Phase 28 discuss session):** `gsd-sdk query state.record-session` has now ALSO corrupted this file's frontmatter `progress:` numbers (bumped completed_phases 6→7, completed_plans 38→39, percent 67→78 while Phase 18-06 remains blocked) — despite 25-03 having verified it safe. Treat the ENTIRE `state.*` verb family as suspect on this project: after ANY `state.*` call, verify via `git diff` and hand-repair before committing (update-progress / add-decision / advance-plan / record-metric / record-session all now confirmed corrupting).
