@@ -16,11 +16,11 @@ every consumer already transpiles TS natively.
 - **DR-02 — six-key subpath export map, not one collapsed barrel.** `.` (ids
   only), `./ids`, `./study`, `./habitat`, `./schemas`, `./contracts`. Two hard
   reasons this is not negotiable:
-  1. Multiple existing test files `vi.mock()` both `@/lib/study-engine` and
-     `@/lib/habitat-engine` in the SAME file (e.g.
+  1. Multiple test files `vi.mock()` both `@leocards/domain/study` and
+     `@leocards/domain/habitat` in the SAME file (e.g.
      `src/app/api/study/__tests__/cooldown-config.test.ts`). Collapsing both
      engines behind one module id would make those mocks collide. Distinct
-     subpaths keep every existing `vi.mock` a pure string swap.
+     subpaths keep every `vi.mock` a pure string swap.
   2. Zod schemas live behind `./schemas` and must NEVER be re-exported from
      `.`, `./study` or `./habitat` — many web files that import engine types
      are `"use client"`; a barrel that pulled zod transitively would risk

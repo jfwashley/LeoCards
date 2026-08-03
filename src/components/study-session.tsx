@@ -1,5 +1,10 @@
 "use client";
 
+import type {
+  GradeEntry,
+  SessionCard,
+  SessionStats,
+} from "@leocards/domain/study";
 import { AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +14,6 @@ import { LionFace } from "@/components/daybreak/lion-face";
 import { TBtn } from "@/components/daybreak/t-btn";
 import { LevelUpOverlay } from "@/components/level-up-overlay";
 import { StudyCard } from "@/components/study-card";
-import type { GradeEntry, SessionCard, SessionStats } from "@/lib/study-engine";
 
 // ============================================================
 // State types

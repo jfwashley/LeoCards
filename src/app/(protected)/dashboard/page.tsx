@@ -1,6 +1,10 @@
+import type { CardForSession } from "@leocards/domain/study";
+import {
+  assembleSession,
+  earliestCooldownEnd as getEarliestCooldownEnd,
+} from "@leocards/domain/study";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-
 import { CardList } from "@/components/card-list";
 import { CountdownTimer } from "@/components/countdown-timer";
 import { DashboardHeader } from "@/components/dashboard-header";
@@ -11,11 +15,6 @@ import { readHabitatOverride, readQaAuth } from "@/lib/debug-cheat";
 import { getDeckCards, getUserDecks } from "@/lib/deck-queries";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
-import type { CardForSession } from "@/lib/study-engine";
-import {
-  assembleSession,
-  earliestCooldownEnd as getEarliestCooldownEnd,
-} from "@/lib/study-engine";
 import { deriveStudySubset } from "@/lib/study-queries";
 
 interface DashboardPageProps {

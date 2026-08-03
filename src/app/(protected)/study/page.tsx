@@ -1,3 +1,5 @@
+import type { CardForSession } from "@leocards/domain/study";
+import { assembleSession } from "@leocards/domain/study";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { StudySession } from "@/components/study-session";
@@ -6,8 +8,6 @@ import type { DeckId } from "@/db/schema";
 import { decks } from "@/db/schema";
 import { getSession } from "@/lib/auth-session";
 import { readQaAuth } from "@/lib/debug-cheat";
-import type { CardForSession } from "@/lib/study-engine";
-import { assembleSession } from "@/lib/study-engine";
 import { getStudyCards } from "@/lib/study-queries";
 
 export default async function StudyPage(props: {

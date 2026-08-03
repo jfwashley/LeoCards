@@ -13,14 +13,14 @@ const studyCompleteLimiter = createRateLimiter({
   maxRequests: 10,
 });
 
+import type { GradeEntry } from "@leocards/domain/study";
+import { computeCardUpdate, DEFAULT_COOLDOWN_MS } from "@leocards/domain/study";
 import { env } from "@/env";
 import { readQaTimeOffset } from "@/lib/debug-cheat";
 import type { HabitatFacts } from "@/lib/habitat-engine";
 import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
-import type { GradeEntry } from "@/lib/study-engine";
-import { computeCardUpdate, DEFAULT_COOLDOWN_MS } from "@/lib/study-engine";
 
 // QA (QAOB-02): compute the cooldown configuration with D-09 precedence:
 //   1. STUDY_COOLDOWN_MINUTES (when set) wins over everything — short non-zero

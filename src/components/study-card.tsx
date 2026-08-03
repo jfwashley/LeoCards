@@ -1,9 +1,9 @@
 "use client";
 
+import type { SessionCard } from "@leocards/domain/study";
 import { motion, useMotionValue, useTransform } from "motion/react";
 import type { QaCardData } from "@/components/qa-state-badge";
 import { QaStateBadge } from "@/components/qa-state-badge";
-import type { SessionCard } from "@/lib/study-engine";
 
 interface StudyCardProps {
   card: SessionCard;

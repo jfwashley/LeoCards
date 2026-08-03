@@ -1,5 +1,5 @@
+import { DEFAULT_COOLDOWN_MS } from "@leocards/domain/study";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { DEFAULT_COOLDOWN_MS } from "@/lib/study-engine";
 
 // Test all four STUDY_COOLDOWN_MINUTES precedence branches (D-09) for
 // buildCooldownConfig() exported from the study/complete route.
@@ -35,8 +35,9 @@ vi.mock("@/lib/habitat-queries", () => ({
   getHabitatFacts: vi.fn(),
 }));
 
-vi.mock("@/lib/study-engine", async (importOriginal) => {
-  const original = await importOriginal<typeof import("@/lib/study-engine")>();
+vi.mock("@leocards/domain/study", async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import("@leocards/domain/study")>();
   return original;
 });
 

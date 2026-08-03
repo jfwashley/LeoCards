@@ -1,3 +1,4 @@
+import { computeUnpauseUpdate } from "@leocards/domain/study";
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import type { NextRequest } from "next/server";
@@ -6,7 +7,6 @@ import type { CardId } from "@/db/schema";
 import { cards, decks } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
-import { computeUnpauseUpdate } from "@/lib/study-engine";
 
 // 30/min/user — same window as the pause endpoint. See
 // 12-RESEARCH.md § "Rate limit window for pause/unpause" for rationale.
