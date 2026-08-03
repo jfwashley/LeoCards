@@ -192,3 +192,43 @@ test.describe("Habitat — autoplay recovery (visibility + gesture)", () => {
       .toBe(false);
   });
 });
+
+// Reduced-motion opt-in (2026-08-03): the still poster stays the default, but
+// the "Motion paused" pill is a toggle — an explicit tap mounts and plays the
+// clip, tapping again returns to the still. Covers Windows users whose OS
+// "Animation effects" toggle maps to prefers-reduced-motion.
+test.describe("Habitat — reduced-motion opt-in", () => {
+  test("still by default; the pill toggles motion on and back off", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await signUpWithDeck(page, "French");
+    await page.goto("/habitat");
+
+    const still = page.locator(STILL_SELECTOR);
+    const video = page.locator(VIDEO_SELECTOR);
+    const pill = page.locator('[data-testid="habitat-motion-paused"]');
+
+    // Default: still poster only, no video element, pill invites a tap.
+    await expect(pill).toBeVisible({ timeout: 15_000 });
+    await expect(video).toHaveCount(0);
+    await expect(still).toHaveCount(1);
+    await expect(pill).toHaveAttribute("aria-pressed", "false");
+
+    // Opt in: video mounts and plays.
+    await pill.click();
+    await expect(video).toHaveCount(1);
+    await expect(pill).toHaveAttribute("aria-pressed", "true");
+    await expect
+      .poll(() => video.evaluate((v) => (v as HTMLVideoElement).paused), {
+        timeout: 5_000,
+      })
+      .toBe(false);
+
+    // Opt back out: video unmounts, still remains.
+    await pill.click();
+    await expect(video).toHaveCount(0);
+    await expect(still).toHaveCount(1);
+    await expect(pill).toHaveAttribute("aria-pressed", "false");
+  });
+});

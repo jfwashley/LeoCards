@@ -106,6 +106,9 @@ export function HabitatScene({
   const [state, setState] = useState<HabitatState>(habitatState);
   const [error, setError] = useState(false);
   const [offline, setOffline] = useState(false);
+  // Reduced-motion opt-in (2026-08-03): session-only — motion stays off by
+  // default on every visit; the "Motion paused" pill below toggles it.
+  const [forceMotion, setForceMotion] = useState(false);
   const prevLevelRef = useRef(habitatState.level);
 
   // Plan 13.1-VIDEO-03: dev-only — detect `?capture=video` to mount the live
@@ -261,7 +264,7 @@ export function HabitatScene({
         {captureMode && HabitatCanvasCapture ? (
           <HabitatCanvasCapture habitatState={state} />
         ) : (
-          <HabitatVideo habitatState={state} />
+          <HabitatVideo habitatState={state} forceMotion={forceMotion} />
         )}
 
         {/* D-05 / D-11: mood tint — CSS sibling layer over the untouched decayFilter.
@@ -336,10 +339,19 @@ export function HabitatScene({
               </div>
             )}
 
-            {/* D-03: "Motion paused" label for reduced-motion users (HabScreen line 94) */}
+            {/* D-03 + opt-in (2026-08-03): the "Motion paused" label is now a
+                toggle. Reduced-motion still shows a still by default, but an
+                explicit tap opts into motion (forceMotion) and back out —
+                user-initiated motion is the accessibility-correct escape
+                hatch, and it covers Windows users whose OS "Animation
+                effects" toggle maps to prefers-reduced-motion without them
+                ever choosing reduced motion. */}
             {reducedMotion && (
-              <div
+              <button
+                type="button"
                 data-testid="habitat-motion-paused"
+                aria-pressed={forceMotion}
+                onClick={() => setForceMotion((v) => !v)}
                 style={{
                   position: "relative",
                   zIndex: 3,
@@ -347,14 +359,21 @@ export function HabitatScene({
                   marginBottom: 10,
                   fontSize: 12,
                   fontWeight: 600,
+                  fontFamily: "inherit",
                   color: "#9C8467",
                   background: "rgba(255,255,255,0.8)",
                   padding: "5px 12px",
                   borderRadius: 999,
+                  border: "none",
+                  cursor: "pointer",
                 }}
               >
-                &#9208; Motion paused
-              </div>
+                {forceMotion ? (
+                  <>&#9208; Pause motion</>
+                ) : (
+                  <>&#9208; Motion paused &mdash; tap to play</>
+                )}
+              </button>
             )}
 
             {/* D-10: bottom card switch — decay card when isDecaying, progress card otherwise */}

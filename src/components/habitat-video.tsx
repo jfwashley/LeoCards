@@ -21,7 +21,11 @@
 //   • Reduced-motion: SSR-safe. Server + first client render emit the <video>
 //     markup (so there is never CLS and the markup is deterministic); after
 //     mount, if `prefers-reduced-motion: reduce` matches, swap to the still
-//     poster <img> — no autoplaying motion for reduced-motion users.
+//     poster <img> — no autoplaying motion for reduced-motion users. The
+//     scene's "Motion paused" pill (habitat-scene.tsx) can set `forceMotion`
+//     to opt back into motion explicitly (2026-08-03): the prop neutralises
+//     the media query here, so the full normal pipeline (autoplay, recovery,
+//     freeze tier) applies while it is on.
 //   • Autoplay recovery: browsers pause silent autoplaying videos on their own
 //     (hidden-tab optimisation, OS sleep/wake) and strict autoplay policies
 //     block them outright — none of which auto-recovers reliably, leaving a
@@ -106,9 +110,18 @@ const FILL_STYLE = {
   display: "block" as const,
 };
 
-export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
+export function HabitatVideo({
+  habitatState,
+  forceMotion = false,
+}: {
+  habitatState: HabitatState;
+  forceMotion?: boolean;
+}) {
   const { level, mood, quality } = habitatState;
-  const reducedMotion = usePrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  // An explicit user opt-in (the scene's "Motion paused" toggle) overrides the
+  // media query; everything downstream keys off the effective value.
+  const reducedMotion = prefersReducedMotion && !forceMotion;
 
   // D-03/D-04 freeze tier + autoplay recovery — attach ref to <video>.
   const videoRef = useRef<HTMLVideoElement>(null);
