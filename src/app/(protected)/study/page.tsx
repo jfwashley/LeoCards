@@ -1,14 +1,10 @@
-import type { CardForSession } from "@leocards/domain/study";
-import { assembleSession } from "@leocards/domain/study";
-import { and, eq } from "drizzle-orm";
+import type { SessionCard } from "@leocards/domain/study";
 import { redirect } from "next/navigation";
 import { StudySession } from "@/components/study-session";
-import { db } from "@/db";
-import type { DeckId } from "@/db/schema";
-import { decks } from "@/db/schema";
+import type { CardId, UserId } from "@/db/schema";
 import { getSession } from "@/lib/auth-session";
+import { loadStudySessionCore } from "@/lib/core/study";
 import { readQaAuth } from "@/lib/debug-cheat";
-import { getStudyCards } from "@/lib/study-queries";
 
 export default async function StudyPage(props: {
   searchParams: Promise<{ deck?: string }>;
@@ -25,38 +21,33 @@ export default async function StudyPage(props: {
     redirect("/login");
   }
 
-  // Verify deck belongs to authenticated user (SEC-02)
-  const [ownedDeck] = await db
-    .select({ id: decks.id })
-    .from(decks)
-    .where(
-      and(
-        eq(decks.id, deckId as DeckId),
-        eq(decks.userId, session.user.id as string),
-      ),
-    );
+  const result = await loadStudySessionCore({
+    userId: session.user.id as UserId,
+    deckId,
+    now: new Date(),
+  });
 
-  if (!ownedDeck) {
+  if (!result.ok) {
     redirect("/dashboard");
   }
 
-  const rawCards = await getStudyCards(deckId);
+  if (result.data.cards.length === 0) {
+    redirect(`/dashboard?deck=${deckId}`);
+  }
 
-  const allCards: CardForSession[] = rawCards.map((c) => ({
-    id: c.id,
+  // Revive the wire cards (ISO strings) back into the Date-bearing shape
+  // StudySession's initialCards prop expects — the page is the adapter, the
+  // wire contract itself stays unchanged.
+  const sessionCards: SessionCard[] = result.data.cards.map((c) => ({
+    id: c.id as CardId,
     front: c.front,
     back: c.back,
     masteryRound: c.masteryRound,
-    cooldownUntil: c.cooldownUntil,
-    createdAt: c.createdAt,
-    isResurface: false,
+    cooldownUntil: c.cooldownUntil ? new Date(c.cooldownUntil) : null,
+    createdAt: new Date(c.createdAt),
+    isResurface: c.isResurface,
+    stage: c.stage,
   }));
-
-  const sessionCards = assembleSession(allCards, new Date());
-
-  if (sessionCards.length === 0) {
-    redirect(`/dashboard?deck=${deckId}`);
-  }
 
   const qaMode = await readQaAuth();
 
