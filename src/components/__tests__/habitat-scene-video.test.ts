@@ -25,11 +25,14 @@ const VIDEO_SRC = readFileSync(
 );
 
 describe("Phase 13.1-VIDEO-02 — scene swapped to video", () => {
-  it("VS1: habitat-scene.tsx renders <HabitatVideo habitatState={state} /> and imports it", () => {
+  it("VS1: habitat-scene.tsx renders <HabitatVideo habitatState={state} .../> and imports it", () => {
     expect(SCENE_SRC).toMatch(
       /import\s*\{\s*HabitatVideo\s*\}\s*from\s*["']@\/components\/habitat-video["']/,
     );
-    expect(SCENE_SRC).toMatch(/<HabitatVideo\s+habitatState=\{state\}\s*\/>/);
+    // Additional props (e.g. forceMotion, added by the reduced-motion opt-in)
+    // are allowed — the invariant is that the scene mounts HabitatVideo with
+    // the habitat state, not the exact prop list.
+    expect(SCENE_SRC).toMatch(/<HabitatVideo\s+habitatState=\{state\}[^>]*\/>/);
   });
 
   it("VS2: the live Three.js canvas is imported ONLY behind a NODE_ENV dev gate (tree-shaken from production)", () => {
