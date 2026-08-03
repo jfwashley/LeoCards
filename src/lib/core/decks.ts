@@ -102,12 +102,17 @@ export async function saveCardCore(input: {
   const { userId } = input;
 
   // Combined-WHERE ownership gate (IN-01) — a single atomic query that
-  // structurally cannot return a foreign-user deck row.
+  // structurally cannot return a foreign-user deck row. The returned
+  // userId is also compared in application code as a defense-in-depth
+  // belt-and-braces check; either a missing row or a mismatched owner
+  // resolves to the identical "forbidden" outcome, so existence never
+  // leaks either way (T-12-08).
   const deckRows = await db
-    .select({ id: decks.id })
+    .select({ id: decks.id, userId: decks.userId })
     .from(decks)
     .where(and(eq(decks.id, deckId as DeckId), eq(decks.userId, userId)));
-  if (!deckRows[0]) {
+  const deckRow = deckRows[0];
+  if (!deckRow || deckRow.userId !== userId) {
     return { ok: false, code: "forbidden" };
   }
 

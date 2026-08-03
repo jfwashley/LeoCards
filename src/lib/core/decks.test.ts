@@ -158,7 +158,9 @@ describe("createDeckCore", () => {
 
 describe("saveCardCore", () => {
   it("returns { ok: true, data: { id } } for an owned deck and inserts one row with the given source", async () => {
-    selectChain.where.mockResolvedValueOnce([{ id: FAKE_DECK_ID }]);
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
+    ]);
 
     const result = await saveCardCore({
       userId: FAKE_USER_ID,
@@ -196,6 +198,26 @@ describe("saveCardCore", () => {
     expect(db.insert).not.toHaveBeenCalled();
   });
 
+  it("returns { ok: false, code: 'forbidden' } when the returned row belongs to a different user, and issues no insert", async () => {
+    // Defense-in-depth: in production the combined-WHERE clause itself
+    // guarantees a foreign-owner row is never returned, but this proves
+    // the application-level check independently rejects it too.
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: "other-user" },
+    ]);
+
+    const result = await saveCardCore({
+      userId: FAKE_USER_ID,
+      deckId: FAKE_DECK_ID,
+      front: "hello",
+      back: "bonjour",
+      source: "manual",
+    });
+
+    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(db.insert).not.toHaveBeenCalled();
+  });
+
   it("returns { ok: false, code: 'invalid' } for card data outside CreateCardSchema's bounds and issues no insert", async () => {
     const result = await saveCardCore({
       userId: FAKE_USER_ID,
@@ -210,7 +232,9 @@ describe("saveCardCore", () => {
   });
 
   it("never triggers Next.js page-cache invalidation", async () => {
-    selectChain.where.mockResolvedValueOnce([{ id: FAKE_DECK_ID }]);
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
+    ]);
 
     await saveCardCore({
       userId: FAKE_USER_ID,
@@ -224,7 +248,9 @@ describe("saveCardCore", () => {
   });
 
   it("never resolves a session itself", async () => {
-    selectChain.where.mockResolvedValueOnce([{ id: FAKE_DECK_ID }]);
+    selectChain.where.mockResolvedValueOnce([
+      { id: FAKE_DECK_ID, userId: FAKE_USER_ID },
+    ]);
 
     await saveCardCore({
       userId: FAKE_USER_ID,
