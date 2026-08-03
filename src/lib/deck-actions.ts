@@ -1,22 +1,13 @@
 "use server";
 
-import { and, count, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import type { CardId, DeckId, UserId } from "@/db/schema";
 import { cards, decks } from "@/db/schema";
 import { auth } from "@/lib/auth";
-
-// ============================================================
-// Language label map for auto-generated deck names
-// ============================================================
-
-const LANGUAGE_LABELS: Record<string, string> = {
-  en: "English",
-  fr: "French",
-  es: "Spanish",
-};
+import { createDeckCore, saveCardCore } from "@/lib/core/decks";
 
 /** Allow-list of valid language codes (SEC-06) */
 const ALLOWED_LANGUAGES = new Set(["fr", "es", "en"]);
@@ -38,20 +29,15 @@ export async function createDeck(language: string) {
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;
 
-  // Count existing decks for this user+language to compute n
-  const existing = await db
-    .select({ count: count() })
-    .from(decks)
-    .where(and(eq(decks.userId, userId), eq(decks.language, language)));
+  const result = await createDeckCore({ userId, language });
+  if (!result.ok) {
+    if (result.code === "invalid") throw new Error("Invalid language");
+    if (result.code === "forbidden") throw new Error("Forbidden");
+    throw new Error("Unauthorized");
+  }
 
-  const n = Number(existing[0]?.count ?? 0) + 1;
-  const label = LANGUAGE_LABELS[language] ?? language;
-  const name = `${label} #${n}`;
-  const id = crypto.randomUUID() as DeckId;
-
-  await db.insert(decks).values({ id, userId, language, name });
   revalidatePath("/dashboard");
-  return { id, name, language };
+  return result.data;
 }
 
 // ============================================================
@@ -72,20 +58,15 @@ export async function saveCard(
   if (!session) throw new Error("Unauthorized");
   const userId = session.user.id as UserId;
 
-  // Verify deck ownership
-  const deckRows = await db
-    .select()
-    .from(decks)
-    .where(eq(decks.id, deckId as DeckId));
-  const deck = deckRows[0];
-  if (!deck || deck.userId !== userId) throw new Error("Forbidden");
+  const result = await saveCardCore({ userId, deckId, front, back, source });
+  if (!result.ok) {
+    if (result.code === "forbidden") throw new Error("Forbidden");
+    if (result.code === "invalid") throw new Error("Invalid card data");
+    throw new Error("Unauthorized");
+  }
 
-  const id = crypto.randomUUID() as CardId;
-  await db
-    .insert(cards)
-    .values({ id, deckId: deckId as DeckId, front, back, source });
   revalidatePath("/dashboard");
-  return { id };
+  return result.data;
 }
 
 // ============================================================
