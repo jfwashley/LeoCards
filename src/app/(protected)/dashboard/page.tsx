@@ -1,9 +1,3 @@
-import { computeHabitatState } from "@leocards/domain/habitat";
-import type { CardForSession } from "@leocards/domain/study";
-import {
-  assembleSession,
-  earliestCooldownEnd as getEarliestCooldownEnd,
-} from "@leocards/domain/study";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CardList } from "@/components/card-list";
@@ -12,10 +6,8 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { HabitatHero } from "@/components/habitat-hero";
 import type { UserId } from "@/db/schema";
 import { getSession } from "@/lib/auth-session";
+import { loadDashboardCore } from "@/lib/core/dashboard";
 import { readHabitatOverride, readQaAuth } from "@/lib/debug-cheat";
-import { getDeckCards, getUserDecks } from "@/lib/deck-queries";
-import { getHabitatFacts } from "@/lib/habitat-queries";
-import { deriveStudySubset } from "@/lib/study-queries";
 
 interface DashboardPageProps {
   searchParams: Promise<{ deck?: string; celebrate?: string }>;
@@ -198,22 +190,8 @@ export default async function DashboardPage({
   // despite its defaultValue: "en" config — normalize with ?? "en".
   const nativeLang = session.user.nativeLanguage ?? "en";
 
-  const [decks, habitatFacts] = await Promise.all([
-    getUserDecks(session.user.id),
-    getHabitatFacts(session.user.id as UserId),
-  ]);
-
   const habitatOverride = await readHabitatOverride();
   const qaMode = await readQaAuth();
-  const habitatState = computeHabitatState(
-    habitatFacts,
-    new Date(),
-    habitatOverride ?? undefined,
-  );
-
-  if (decks.length === 0) {
-    redirect("/welcome");
-  }
 
   const params = await searchParams;
   const requestedDeckId = params.deck;
@@ -222,81 +200,64 @@ export default async function DashboardPage({
     rawCelebrate !== null && !Number.isNaN(rawCelebrate)
       ? Math.max(1, Math.min(10, rawCelebrate))
       : null;
-  const activeDeck = decks.find((d) => d.id === requestedDeckId) ?? decks[0];
 
-  // decks.length > 0 is guaranteed by the early return above
+  // D-07: this page and the native-v1 read endpoint compute every derived
+  // flag from this ONE function — deliberately WITHOUT the QA time offset
+  // (only the route handler applies it, mirroring /api/habitat's existing
+  // page/route asymmetry).
+  const result = await loadDashboardCore({
+    userId: session.user.id as UserId,
+    nativeLanguage: nativeLang,
+    requestedDeckId,
+    now: new Date(),
+    habitatOverride: habitatOverride ?? undefined,
+    qaMode,
+  });
+
+  if (!result.ok) return null;
+
+  if (result.data.needsOnboarding) {
+    redirect("/welcome");
+  }
+
+  const { data } = result;
+  const habitatState = data.habitat;
+
+  const deckOptions = data.decks;
+  const activeDeck = deckOptions.find((d) => d.id === data.activeDeckId);
+
+  // needsOnboarding is guaranteed false here (redirect above), so
+  // activeDeckId always resolves to one of deckOptions — this guard exists
+  // only because the wire shape is flat (not a discriminated union)
+  // TypeScript can narrow across, mirroring the page's own defensive-null
+  // convention (if (!session) return null, above).
   if (!activeDeck) return null;
 
-  // PERF-16: ONE card query for the active deck (all columns, all pause
-  // states) — the study subset is derived in JS below instead of a second
-  // getStudyCards round trip.
-  const cards = await getDeckCards(activeDeck.id);
-  const studyCards = deriveStudySubset(cards);
+  const hasDueCards = data.hasDueCards;
+  const dueCount = data.dueCount;
+  const earliestCooldownEnd = data.earliestCooldownEnd;
+  const allPaused = data.allPaused;
+  const sleeping = data.sleeping;
 
-  const deckOptions = decks.map((d) => ({
-    id: d.id,
-    name: d.name,
-    language: d.language,
-  }));
-
-  const now = new Date();
-
-  // Map study cards to CardForSession for engine calls
-  const allCardsForSession: CardForSession[] = studyCards.map((c) => ({
+  // The core's response carries ISO strings (JSON-safe); CardList's CardRow
+  // prop still expects Date | null — revived here, at the page's own
+  // presentation boundary, without changing the wire contract or any
+  // component's prop types.
+  const cardRows = data.cards.map((c) => ({
     id: c.id,
     front: c.front,
     back: c.back,
+    source: c.source,
     masteryRound: c.masteryRound,
-    cooldownUntil: c.cooldownUntil,
-    createdAt: c.createdAt,
-    isResurface: false,
+    pausedAt: c.pausedAt !== null ? new Date(c.pausedAt) : null,
+    cooldownUntil: c.cooldownUntil !== null ? new Date(c.cooldownUntil) : null,
   }));
 
-  const sessionCards = assembleSession(allCardsForSession, now);
-  const hasDueCards = sessionCards.length > 0;
-  const dueCount = sessionCards.length;
-
-  const cooldownEnd = getEarliestCooldownEnd(allCardsForSession, now);
-  const earliestCooldownEnd = cooldownEnd ? cooldownEnd.toISOString() : null;
-
-  // PERF-16: masteryRound/cooldownUntil read directly off the single fetched
-  // row (no Map lookup, no per-row studyCards.find() — that was the O(n^2)
-  // stitch). Paused cards are masked to masteryRound 0 / cooldownUntil null
-  // here, matching deriveStudySubset's exclusion of paused cards from the
-  // study subset (identical behavior to the prior two-query version).
-  // createdAt is dropped (PERF-16) — confirmed unread by CardList/CardEditDialog.
-  const cardRows = cards.map((c) => {
-    const isPaused = c.pausedAt !== null;
-    return {
-      id: c.id,
-      front: c.front,
-      back: c.back,
-      source: c.source,
-      masteryRound: isPaused ? 0 : c.masteryRound,
-      pausedAt: c.pausedAt,
-      // QA-only: pass cooldownUntil when QA-authed so CardList can render the
-      // badge. Customers receive null (no extra payload, no badge prop
-      // threaded down).
-      cooldownUntil: qaMode && !isPaused ? c.cooldownUntil : null,
-    };
-  });
-
   const nativeLangLabel = LANGUAGE_LABELS[nativeLang] ?? nativeLang;
-  const targetLangLabel = activeDeck
-    ? (LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language)
-    : "Learning";
+  const targetLangLabel =
+    LANGUAGE_LABELS[activeDeck.language] ?? activeDeck.language;
 
   const hasCards = cardRows.length > 0;
-
-  // All-paused: cards exist, nothing due, no cooldown active, AND every card is paused.
-  const allPaused =
-    hasCards &&
-    !hasDueCards &&
-    !earliestCooldownEnd &&
-    cardRows.every((c) => c.pausedAt !== null);
-
-  // Sleeping: resting/cooldown state for the hero
-  const sleeping = Boolean(earliestCooldownEnd && !hasDueCards);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
