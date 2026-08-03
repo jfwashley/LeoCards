@@ -60,3 +60,135 @@ test.describe("Habitat — video mood/decay (VIDEO-02, replaces 28-screenshot ba
     }
   });
 });
+
+// Autoplay recovery — browsers pause silent autoplaying clips on their own
+// (hidden-tab optimisation, OS sleep/wake) and strict autoplay policies block
+// them outright; neither auto-recovers, which left /habitat frozen on a still
+// until reload. habitat-video.tsx now retries play() on visibilitychange and
+// on the first user gesture. The designed D-03/D-04 mobile freeze is woken
+// ONLY by an explicit tap on the scene (Option 3, 2026-08-03) or a tab
+// return — incidental gestures elsewhere never wake it.
+test.describe("Habitat — autoplay recovery (visibility + gesture)", () => {
+  const isPaused = (v: SVGElement | HTMLElement) =>
+    (v as HTMLVideoElement).paused;
+
+  test("desktop: a browser-initiated pause is recovered by a user gesture", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name === "mobile",
+      "desktop-only — under 768px the freeze tier owns pause semantics",
+    );
+    await signUpWithDeck(page, "French");
+    await page.goto("/habitat");
+    const video = page.locator(VIDEO_SELECTOR);
+    await expect(video).toHaveCount(1, { timeout: 15_000 });
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 10_000 })
+      .toBe(false);
+
+    // Simulate a browser-initiated pause (what the hidden-tab silent-video
+    // optimisation or a dropped sleep/wake resume leaves behind).
+    await video.evaluate((v) => (v as HTMLVideoElement).pause());
+    await expect.poll(() => video.evaluate(isPaused)).toBe(true);
+
+    // Any real pointerdown (empty page area — nothing clickable) must resume.
+    await page.mouse.move(640, 600);
+    await page.mouse.down();
+    await page.mouse.up();
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 5_000 })
+      .toBe(false);
+  });
+
+  test("desktop: a browser-initiated pause is recovered on visibilitychange", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name === "mobile",
+      "desktop-only — under 768px the freeze tier owns pause semantics",
+    );
+    await signUpWithDeck(page, "French");
+    await page.goto("/habitat");
+    const video = page.locator(VIDEO_SELECTOR);
+    await expect(video).toHaveCount(1, { timeout: 15_000 });
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 10_000 })
+      .toBe(false);
+
+    await video.evaluate((v) => (v as HTMLVideoElement).pause());
+    await expect.poll(() => video.evaluate(isPaused)).toBe(true);
+
+    // The page is visible in-test, so dispatching visibilitychange exercises
+    // the same listener + visibility guard a real tab return goes through.
+    await page.evaluate(() =>
+      document.dispatchEvent(new Event("visibilitychange")),
+    );
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 5_000 })
+      .toBe(false);
+  });
+
+  test("mobile: designed freeze ignores gestures outside the scene but re-arms on tab return", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "mobile",
+      "mobile-only — freeze tier is active under 768px",
+    );
+    await signUpWithDeck(page, "French");
+    await page.goto("/habitat");
+    const video = page.locator(VIDEO_SELECTOR);
+    await expect(video).toHaveCount(1, { timeout: 15_000 });
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 10_000 })
+      .toBe(false);
+
+    // D-03/D-04: the freeze tier pauses after ~10s of viewing.
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 15_000 })
+      .toBe(true);
+
+    // A tap on the page BELOW the scene must not wake the designed freeze
+    // (and a touch-scroll never produces a click at all).
+    await page.touchscreen.tap(206, 700);
+    await page.waitForTimeout(750);
+    expect(await video.evaluate(isPaused)).toBe(true);
+
+    // But returning to the tab is a fresh viewing session — clip re-plays.
+    await page.evaluate(() =>
+      document.dispatchEvent(new Event("visibilitychange")),
+    );
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 5_000 })
+      .toBe(false);
+  });
+
+  test("mobile: a tap on the habitat scene wakes the designed freeze (Option 3)", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "mobile",
+      "mobile-only — freeze tier is active under 768px",
+    );
+    await signUpWithDeck(page, "French");
+    await page.goto("/habitat");
+    const video = page.locator(VIDEO_SELECTOR);
+    await expect(video).toHaveCount(1, { timeout: 15_000 });
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 10_000 })
+      .toBe(false);
+
+    // Wait out the designed freeze…
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 15_000 })
+      .toBe(true);
+
+    // …then tap the scene itself. (206,130) is the empty band between HTop
+    // and the bottom cards — inside the video's rect, no interactive target.
+    await page.touchscreen.tap(206, 130);
+    await expect
+      .poll(() => video.evaluate(isPaused), { timeout: 5_000 })
+      .toBe(false);
+  });
+});

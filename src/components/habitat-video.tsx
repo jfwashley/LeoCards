@@ -22,6 +22,13 @@
 //     markup (so there is never CLS and the markup is deterministic); after
 //     mount, if `prefers-reduced-motion: reduce` matches, swap to the still
 //     poster <img> — no autoplaying motion for reduced-motion users.
+//   • Autoplay recovery: browsers pause silent autoplaying videos on their own
+//     (hidden-tab optimisation, OS sleep/wake) and strict autoplay policies
+//     block them outright — none of which auto-recovers reliably, leaving a
+//     frozen still until reload. visibilitychange + first-gesture listeners
+//     retry play(). Incidental gestures never resume the designed D-03/D-04
+//     freeze — only an explicit tap on the scene (Option 3, 2026-08-03) or a
+//     tab return wakes it for another ~10s cycle.
 //   • CLS=0: the parent wrapper (habitat-scene.tsx) carries the intrinsic
 //     16/9 size; the video/still are `position:absolute; inset:0` inside it.
 
@@ -103,7 +110,7 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
   const { level, mood, quality } = habitatState;
   const reducedMotion = usePrefersReducedMotion();
 
-  // D-03/D-04: mobile freeze tier — attach ref to <video> and freeze after ~10s on narrow viewports.
+  // D-03/D-04 freeze tier + autoplay recovery — attach ref to <video>.
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: level+mood intentionally added even though not read in body — <video key={clipBasename(level,mood)}> remounts on changes; deps force re-bind to new node (WR-01)
@@ -111,12 +118,20 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
     const video = videoRef.current;
     if (!video || reducedMotion) return;
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    if (!isMobile) return; // desktop: keep looping (D-03)
 
     let freezeTimer: ReturnType<typeof setTimeout> | null = null;
+    // True only while the D-03/D-04 freeze tier has paused the video ON
+    // PURPOSE. Distinguishes "we froze it" from browser-initiated pauses
+    // (hidden-tab silent-video optimisation, OS sleep/wake, autoplay-policy
+    // block) so the recovery listeners below never undo the designed freeze.
+    let frozenByDesign = false;
+    // Mirrors the latest IntersectionObserver callback; desktop has no
+    // observer and is always eligible to play (D-03: keep looping).
+    let inView = !isMobile;
 
     const freeze = () => {
       freezeTimer = null; // null out after firing so the guard reflects reality (WR-02)
+      frozenByDesign = true;
       video.pause();
     };
     const scheduleFreeze = () => {
@@ -124,30 +139,91 @@ export function HabitatVideo({ habitatState }: { habitatState: HabitatState }) {
       freezeTimer = setTimeout(freeze, 10_000); // ~2 loops (D-04: tuning knob)
     };
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          // Gate scheduleFreeze on successful play so a rejected autoplay-policy
-          // promise doesn't arm a freeze timer against a never-started video (WR-02).
-          video
-            .play()
-            .then(scheduleFreeze)
-            .catch(() => {}); // catch autoplay-policy rejection (Pitfall 3, T-24-03-PLAY)
-        } else {
-          if (freezeTimer !== null) {
-            clearTimeout(freezeTimer);
-            freezeTimer = null;
-          } // null out so guard stays accurate (WR-02)
-          video.pause(); // offscreen: pause immediately
-        }
-      },
-      { threshold: 0.1 },
-    );
+    // Single playback entry point. Gate scheduleFreeze on successful play so a
+    // rejected autoplay-policy promise doesn't arm a freeze timer against a
+    // never-started video (WR-02). Rejection is not terminal: the visibility
+    // and gesture listeners below retry (Pitfall 3, T-24-03-PLAY).
+    const tryPlay = () => {
+      frozenByDesign = false;
+      video
+        .play()
+        .then(isMobile ? scheduleFreeze : undefined)
+        .catch(() => {});
+    };
 
-    observer.observe(video);
+    let observer: IntersectionObserver | null = null;
+    if (isMobile) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          inView = entry?.isIntersecting ?? false;
+          if (inView) {
+            tryPlay();
+          } else {
+            if (freezeTimer !== null) {
+              clearTimeout(freezeTimer);
+              freezeTimer = null;
+            } // null out so guard stays accurate (WR-02)
+            video.pause(); // offscreen: pause immediately
+          }
+        },
+        { threshold: 0.1 },
+      );
+      observer.observe(video);
+    }
+
+    // Recovery 1 — tab shown again (also fires after OS sleep/wake). Browsers
+    // pause silent autoplaying videos in hidden tabs and their auto-resume can
+    // be dropped; without this the clip stays a frozen still until reload.
+    // Returning to the tab counts as a fresh viewing session, so a designed
+    // freeze is re-armed too (same semantics as scrolling away and back).
+    const onVisibilityChange = () => {
+      if (document.visibilityState !== "visible" || !inView) return;
+      tryPlay();
+    };
+
+    // Recovery 2 — first user gesture. Strict autoplay policies (enterprise
+    // AutoplayAllowed=false, blocker extensions) reject play() until a gesture
+    // grants transient activation; pointerdown/keydown carry it. Must NOT
+    // resume the designed freeze — waking it is the scene tap's job below.
+    const onGesture = () => {
+      if (!video.paused || frozenByDesign || !inView) return;
+      tryPlay();
+    };
+
+    // Option 3 (2026-08-03): resume-on-tap — a tap on the habitat scene wakes
+    // a DESIGNED freeze for another ~10s cycle. `click`, not pointerdown, so a
+    // touch-scroll that merely starts on the scene never wakes it; scoped to
+    // the video's rect and to non-interactive targets so buttons/links inside
+    // the scene chrome keep their own meaning.
+    const onSceneClick = (e: MouseEvent) => {
+      if (!frozenByDesign || !video.paused || !inView) return;
+      const target = e.target as Element | null;
+      if (
+        target?.closest("button, a, input, select, textarea, [role='button']")
+      )
+        return;
+      const r = video.getBoundingClientRect();
+      if (
+        e.clientX < r.left ||
+        e.clientX > r.right ||
+        e.clientY < r.top ||
+        e.clientY > r.bottom
+      )
+        return;
+      tryPlay();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pointerdown", onGesture);
+    window.addEventListener("keydown", onGesture);
+    window.addEventListener("click", onSceneClick);
 
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pointerdown", onGesture);
+      window.removeEventListener("keydown", onGesture);
+      window.removeEventListener("click", onSceneClick);
       if (freezeTimer !== null) clearTimeout(freezeTimer);
     };
   }, [reducedMotion, level, mood]);
