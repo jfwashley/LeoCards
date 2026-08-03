@@ -287,11 +287,11 @@ Plans:
 **Depends on**: Phase 18's PERF-06 re-cert gate (shipped 18-05) as the regression guard for backend changes; 18-06 (field-comparison doc) may close in parallel — no hard block
 **Requirements**: NAT-01, NAT-02
 **Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
-**Status**: Planned — next: `/gsd:execute-phase 28.1`
+**Status**: In Progress — 1/9 plans complete (28.1-01 shipped 2026-08-03); next: 28.1-02
 **Plans**: 9 plans across 7 waves
 
 Plans:
-- [ ] 28.1-01-PLAN.md — Workspaces root, `@leocards/domain` package shape, branded IDs relocated, zero-DDL-drift proof
+- [x] 28.1-01-PLAN.md — Workspaces root, `@leocards/domain` package shape, branded IDs relocated, zero-DDL-drift proof
 - [ ] 28.1-02-PLAN.md — SRS engine + habitat engine relocated into the package; 31 import sites repointed
 - [ ] 28.1-03-PLAN.md — Shared zod schemas + API contract types + DR-03 error convention; `/api/study/complete` rewired
 - [ ] 28.1-04-PLAN.md — `createDeckCore`/`saveCardCore` extracted; `createDeck`/`saveCard` actions delegate (D-03 mechanism)
@@ -359,7 +359,7 @@ Plans:
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
-| 28.1 Native foundation — workspace & API | 0/9 | Planned | - |
+| 28.1 Native foundation — workspace & API | 1/9 | In Progress|  |
 | 28.2 Expo app shell & auth | 0/TBD | Not started | - |
 | 28.3 Core loop on native | 0/TBD | Not started | - |
 | 28.4 Habitat on native | 0/TBD | Not started | - |
