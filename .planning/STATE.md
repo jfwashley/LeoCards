@@ -162,6 +162,8 @@ Last session: 2026-08-03T13:34:25.421Z
 Stopped at: Phase 28 context gathered
 Resume file: .planning/phases/28-native-mobile-packaging/28-CONTEXT.md
 
+**Non-blocking flag (2026-08-03, Phase 28 discuss session):** `gsd-sdk query state.record-session` has now ALSO corrupted this file's frontmatter `progress:` numbers (bumped completed_phases 6→7, completed_plans 38→39, percent 67→78 while Phase 18-06 remains blocked) — despite 25-03 having verified it safe. Treat the ENTIRE `state.*` verb family as suspect on this project: after ANY `state.*` call, verify via `git diff` and hand-repair before committing (update-progress / add-decision / advance-plan / record-metric / record-session all now confirmed corrupting).
+
 ## Performance Metrics
 
 | Phase | Plan | Duration | Notes |
