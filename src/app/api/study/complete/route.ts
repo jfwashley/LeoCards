@@ -1,6 +1,5 @@
 import { and, eq, inArray, isNull, ne, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
-import { z } from "zod";
 import { db } from "@/db";
 import type { CardId, DeckId, RecallEventId, UserId } from "@/db/schema";
 import { cards, decks, habitat_metadata, recall_events } from "@/db/schema";
@@ -15,6 +14,7 @@ const studyCompleteLimiter = createRateLimiter({
 
 import type { HabitatFacts } from "@leocards/domain/habitat";
 import { computeHabitatState } from "@leocards/domain/habitat";
+import { CommitSchema } from "@leocards/domain/schemas";
 import type { GradeEntry } from "@leocards/domain/study";
 import { computeCardUpdate, DEFAULT_COOLDOWN_MS } from "@leocards/domain/study";
 import { env } from "@/env";
@@ -42,26 +42,6 @@ export function buildCooldownConfig(): Record<number, number | null> {
 }
 
 const COOLDOWN_CONFIG = buildCooldownConfig();
-
-// ============================================================
-// Validation schemas
-// ============================================================
-
-const GradeSchema = z.object({
-  cardId: z.string(),
-  direction: z.enum(["n2t", "t2n"]),
-  correct: z.boolean(),
-});
-
-const CommitSchema = z.object({
-  deckId: z.string(),
-  // Per-session idempotency key (UUID from the client, stable across retries).
-  // Required so a replayed batch (study-session.tsx RETRY_COMMIT) is a no-op
-  // rather than a double-apply (WR-04). Bounded because it is concatenated into
-  // recall_events primary keys.
-  commitId: z.string().min(1).max(100),
-  grades: z.array(GradeSchema).min(1).max(500),
-});
 
 /**
  * Deterministic recall_events primary key derived from the per-session commitId
