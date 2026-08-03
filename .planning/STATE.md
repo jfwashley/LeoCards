@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 28 split into 28.1-28.5 (roadmap restructure + NAT-01..08 minted)
-last_updated: "2026-08-03T14:30:00+01:00"
-last_activity: "2026-07-25 -- Phase 18 Plan 05 (perf:recert demonstrated green + red-path against real prod, D-15 cadence doc) complete"
+stopped_at: Phase 28.1 planned (9 plans / 7 waves, checker passed 0 blockers) — ready to execute
+last_updated: "2026-08-03T16:29:00+01:00"
+last_activity: "2026-08-03 -- Phase 28.1 planning complete (CONTEXT derived from 28-CONTEXT.md, RESEARCH, PATTERNS, 9 PLANs, checker passed)"
 progress:
   total_phases: 13
   completed_phases: 6
-  total_plans: 39
+  total_plans: 48
   completed_plans: 38
   percent: 46
 ---
@@ -28,8 +28,9 @@ See: .planning/PROJECT.md
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 18 (field-validation-guardrails) — EXECUTING
 Plan: 5 of 6 (18-01, 18-02, 18-03, 18-04, 18-05 all complete — the re-cert gate is now demonstrated both green and red against real prod, evidence committed, PERF-06 satisfied; 18-06 phase close-out remains blocked on the 14-day D-03 field-data window, closing on/after 2026-08-08)
-Status: Executing Phase 18
-Last activity: 2026-07-25 -- Phase 18 Plan 05 (perf:recert demonstrated green + red-path against real prod, D-15 cadence doc) complete
+Status: Executing Phase 18 (18-06 blocked until on/after 2026-08-08, D-03 field window); Phase 28.1 PLANNED — ready to execute
+Next phase: 28.1 (native-foundation-workspace-api) — 9 plans / 7 waves planned 2026-08-03, checker passed 0 blockers; run `/gsd-execute-phase 28.1`
+Last activity: 2026-08-03 -- Phase 28.1 planning complete (research → pattern map → 9 plans → checker passed; 3 warnings addressed same session)
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -160,9 +161,11 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-08-03T14:30:00+01:00
-Stopped at: Phase 28 split into 28.1-28.5 (roadmap restructure + NAT-01..08 minted); next: /gsd-plan-phase 28.1
-Resume file: .planning/phases/28-native-mobile-packaging/28-CONTEXT.md
+Last session: 2026-08-03T16:29:00+01:00
+Stopped at: Phase 28.1 planning complete (28.1-CONTEXT.md derived from programme context → RESEARCH → PATTERNS → VALIDATION → 9 PLANs across 7 waves → plan-checker passed 0 blockers / 3 warnings, all addressed); next: /gsd-execute-phase 28.1
+Resume file: .planning/phases/28.1-native-foundation-workspace-api/
+
+**Non-blocking flag (2026-08-03, Phase 28.1 plan session):** `gsd-sdk query check.decision-coverage-plan` and `gsd-tools.cjs gap-analysis` both parse ZERO trackable D-NN decisions from this project's CONTEXT.md files (tested against 28.1, 28, and the completed Phase 25 context — all return "no trackable decisions") — the decision-coverage gate therefore silently self-skips on this project. Decision→plan coverage must be verified manually (the 28.1 plan-checker did so, Dimension 7). `roadmap.annotate-dependencies` verified safe (clean no-op, empty git diff).
 
 **Non-blocking flag (2026-08-03, Phase 28 discuss session):** `gsd-sdk query state.record-session` has now ALSO corrupted this file's frontmatter `progress:` numbers (bumped completed_phases 6→7, completed_plans 38→39, percent 67→78 while Phase 18-06 remains blocked) — despite 25-03 having verified it safe. Treat the ENTIRE `state.*` verb family as suspect on this project: after ANY `state.*` call, verify via `git diff` and hand-repair before committing (update-progress / add-decision / advance-plan / record-metric / record-session all now confirmed corrupting).
 
