@@ -76,6 +76,19 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 - [x] **ACC-05**: The user can delete their account behind an explicit two-step confirmation (no password re-entry, no typed confirmation); deletion removes all their data (decks, words/cards, SRS/recall state, sessions, habitat progress) and invalidates the session — a deleted user can no longer sign in and their email frees up (D-12/D-13/D-14)
 - [x] **ACC-06**: The section is Daybreak-styled and consistent with the v4.0 design system on desktop and mobile, per `.planning/phases/25-my-account/25-UI-SPEC.md`
 
+### Native apps (Phases 28.1-28.5 — native rewrite programme)
+
+Minted 2026-08-03 at the Phase 28 roadmap restructure, per `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md` (D-01..D-20). Programme close = installable TestFlight + Play-internal builds carrying the core loop + basic account; public store release is a later, separate step.
+
+- [ ] **NAT-01**: The repo is a workspaces monorepo — `mobile/` (Expo) + `packages/` (shared TS) alongside the unchanged root Next.js app — with shared domain packages holding the SRS rules, habitat-state maths, zod schemas, and API contract types, imported by the web app (D-06/D-07)
+- [ ] **NAT-02**: Every read/write the native v1 needs is exposed as a screen-shaped REST `/api/*` route handler (one request per screen load) validated by the shared zod schemas; web server actions delegate to the same core functions; `qa:run` and `perf:recert` stay green throughout the conversion (D-03/D-04)
+- [ ] **NAT-03**: The Expo app signs up, signs in, and signs out against the existing better-auth backend with correct session semantics — revocation-sensitive paths use fresh session reads, mirroring the web's getSession/getSessionFresh split (D-02/D-03)
+- [ ] **NAT-04**: The app is online-required with a friendly Leo-branded offline screen and retry wherever the network is missing — no blank screens, no sync engineering (D-15)
+- [ ] **NAT-05**: The core loop works end-to-end on device: dashboard, study sessions with SRS behaviour identical to web by construction (shared package), and manual add-a-word (D-07/D-10)
+- [ ] **NAT-06**: The habitat renders on native via streamed + on-device-cached clips (expo-video against `/habitat/clips/*`), with level/mood/decay parity and the system Reduce Motion poster fallback (D-08/D-16)
+- [ ] **NAT-07**: A basic account section exists on native — view details and sign out; full account management (incl. in-app deletion parity, required by Apple only at public review) is deferred to the public-release step (D-10)
+- [ ] **NAT-08**: Installable builds reach real devices via TestFlight (iOS) and the Play internal track (Android) through EAS, carrying the commissioned icon + splash, display name "LeoCards", and bundle ID `com.joshashley.leocards` (D-09/D-11/D-17..D-20)
+
 ## Future Requirements (deferred)
 
 - Live extraction eval run (10-HUMAN-UAT) — blocked on real photos + FR/ES tutor
@@ -135,3 +148,11 @@ The account/settings surface deferred out of v4.0 Daybreak, built on the shipped
 | ACC-04 | Phase 25 | Complete |
 | ACC-05 | Phase 25 | Complete |
 | ACC-06 | Phase 25 | Complete |
+| NAT-01 | Phase 28.1 | Pending |
+| NAT-02 | Phase 28.1 | Pending |
+| NAT-03 | Phase 28.2 | Pending |
+| NAT-04 | Phase 28.2 | Pending |
+| NAT-05 | Phase 28.3 | Pending |
+| NAT-06 | Phase 28.4 | Pending |
+| NAT-07 | Phase 28.5 | Pending |
+| NAT-08 | Phase 28.5 | Pending |

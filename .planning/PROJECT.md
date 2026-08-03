@@ -92,7 +92,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 - Gamified animal abilities (animals are visual rewards only)
 - Social features / shareable habitats — single-player only
 - Pronunciation features — audio/speech not in scope
-- Mobile app — web only
+- ~~Mobile app — web only~~ — **superseded 2026-08-03**: native iOS + Android apps are IN scope as the Phase 28.1-28.5 native rewrite programme (React Native + Expo on the existing Next.js backend; web stays first-class; see `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`)
 - Multi-image batch upload (deferred — IMG-F1)
 - Live camera capture (deferred — IMG-F2)
 - Per-word source-language tagging for mixed-language images (deferred — EXT-F1)
@@ -118,7 +118,7 @@ The tiger must feel alive — users should feel genuine motivation to open the a
 
 - **Tech stack**: Next.js 16, Better Auth, Drizzle + Neon, Three.js (build-time only), Vercel AI SDK v6 + `@ai-sdk/anthropic` v3, Biome, Vitest, Playwright
 - **Languages**: French, Spanish, English (pre-made lists and image extraction)
-- **Scope**: Web-first, single-player
+- **Scope**: Two-surface — web (first-class) + native mobile (React Native + Expo, Phases 28.1-28.5); single-player
 - **Database**: Neon HTTP driver — no transaction support (sequential writes only, per-row failure tolerance in batched commits)
 
 ## Key Decisions

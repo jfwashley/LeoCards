@@ -65,7 +65,7 @@ Full details: [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
 
 </details>
 
-## 🚧 v3.0 Performance & QA (Phases 14-18, 25-28)
+## 🚧 v3.0 Performance & QA (Phases 14-18, 25-27, 28.1-28.5)
 
 **Milestone goal:** Make the app feel instant on every key route, and make the core learning journey provably correct with a scripted, time-aware QA harness.
 
@@ -79,7 +79,13 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 25: My Account** - Users can view their account details, change their password, log out, and delete their account from a Daybreak-styled My Account section reachable from the dashboard (completed 2026-07-20)
 - [x] **Phase 26: Performance batch** - The five re-validated Fable-5 review wins land: batched study-commit and review-commit writes, batched DeepL translation (fixes the live >30-word failure), client-side image resize, and immutable caching for habitat clips (completed 2026-07-22)
 - [x] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache (completed 2026-07-22)
-- [ ] **Phase 28: Native mobile packaging** - LeoCards ships as installable iOS and Android apps; packaging approach (Capacitor/WebView shell vs PWA+TWA vs native rewrite) decided at discuss-phase
+> **Phase 28 resolved at discussion (2026-08-03):** native rewrite programme — a React Native + Expo app backed by the existing Next.js backend, delivered as sub-phases 28.1-28.5 below (decisions in `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`). Programme closes at installable TestFlight + Play-internal builds carrying the core loop + basic account; public store release is a later, separate step.
+
+- [ ] **Phase 28.1: Native foundation — workspace & API** - The repo becomes a workspaces monorepo with shared domain packages, and every native-v1 read/write is a screen-shaped REST endpoint (web app unchanged; qa:run + perf:recert stay green)
+- [ ] **Phase 28.2: Expo app shell & auth** - The Expo app boots with a navigation shell, better-auth sign up/in/out against the existing backend, and the friendly Leo offline screen
+- [ ] **Phase 28.3: Core loop on native** - Dashboard, study sessions (shared SRS behaviour by construction), and manual add-a-word work end-to-end on device
+- [ ] **Phase 28.4: Habitat on native** - Streamed + on-device-cached habitat clips with level/mood/decay parity and the Reduce Motion poster fallback
+- [ ] **Phase 28.5: Identity & device delivery** - Commissioned icon/splash integrated ("LeoCards", `com.joshashley.leocards`) and installable builds on TestFlight + Play internal track — closes the programme
 
 ## Phase Details (v3.0)
 
@@ -273,16 +279,52 @@ Plans:
 - Item 8's cookieCache TTL delays session-revocation propagation — interacts with Phase 25's delete-account/change-password revocation semantics
 - Items 9 + 16 both touch card-list.tsx — likely one plan
 
-### Phase 28: Native mobile packaging
+**Phase 28 programme (native rewrite, 28.1-28.5)** — resolved at discussion 2026-08-03: LeoCards' mobile apps are a **native rewrite** — a React Native + Expo app for iOS and Android backed by the existing Next.js/Vercel deployment as the single backend (server-action mutations converted to screen-shaped REST `/api/*`; web app stays first-class permanently). Programme close = installable builds (TestFlight + Play internal) carrying the core loop + basic account. Public store release, notifications, offline sync, image-extraction/Browse parity, and app-wide art refresh are explicitly deferred. All decisions (D-01..D-20): `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`. **Early human actions (start any time, off the critical path):** enrol Apple Developer (~£79/yr) + Google Play (~£20 one-off) accounts (D-11); brief the icon/splash artist (D-17/D-18).
 
-**Goal**: LeoCards ships as installable iOS and Android apps backed by the existing Next.js app — packaging approach (Capacitor/WebView shell pointed at the hosted app vs PWA + TWA vs native rewrite) decided at discuss-phase, covering app-store readiness (icons, splash screens, store listings, review-guideline compliance for wrapped web apps), and mobile-specific integration (safe areas, camera/photo-picker for image extraction, better-auth session cookies inside an embedded webview, habitat video playback)
-**Depends on**: Phase 18 (runs AFTER the v3.0 re-cert gate — packaging targets the certified, optimized web build; Phase 18 remains the web-code finisher)
-**Requirements**: TBD — minted at discussion
-**Status**: Not discussed — next: `/gsd-discuss-phase 28`
+### Phase 28.1: Native foundation — workspace & API
+
+**Goal**: The repo is a workspaces monorepo (`mobile/` + `packages/` alongside the unchanged root Next.js app), shared domain packages hold the SRS rules / habitat-state maths / zod schemas / API contract types, and every read/write the native v1 needs is a screen-shaped REST `/api/*` handler that web server actions also delegate to — web behaviour unchanged throughout
+**Depends on**: Phase 18's PERF-06 re-cert gate (shipped 18-05) as the regression guard for backend changes; 18-06 (field-comparison doc) may close in parallel — no hard block
+**Requirements**: NAT-01, NAT-02
+**Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
+**Status**: Not started — next: `/gsd-plan-phase 28.1`
 **Plans**: TBD
 
-Plans:
-- [ ] TBD (run /gsd-plan-phase 28 to break down)
+### Phase 28.2: Expo app shell & auth
+
+**Goal**: The Expo app exists (EAS-configured), boots to a navigation shell, authenticates against the existing better-auth backend — sign up/in/out with correct session/revocation semantics (mirroring the web's getSession/getSessionFresh split) — and shows the friendly Leo offline screen wherever the network is missing
+**Depends on**: Phase 28.1 (workspace + API foundation)
+**Requirements**: NAT-03, NAT-04
+**Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
+**Status**: Not started
+**Plans**: TBD
+
+### Phase 28.3: Core loop on native
+
+**Goal**: The daily habit works end-to-end on device — dashboard, study sessions with SRS behaviour identical to web by construction (shared domain package), and manual add-a-word
+**Depends on**: Phase 28.2 (shell + auth)
+**Requirements**: NAT-05
+**Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
+**Status**: Not started
+**Plans**: TBD
+
+### Phase 28.4: Habitat on native
+
+**Goal**: The habitat lives on native — streamed + on-device-cached clips (expo-video against `/habitat/clips/*`), level/mood/decay parity with web, system Reduce Motion shows the poster fallback
+**Depends on**: Phase 28.2 (shell + auth); can run parallel to 28.3
+**Requirements**: NAT-06
+**Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
+**Status**: Not started
+**Plans**: TBD
+
+### Phase 28.5: Identity & device delivery
+
+**Goal**: The commissioned icon + splash are integrated (display name "LeoCards", bundle ID `com.joshashley.leocards`), a basic account section (view details, sign out) exists, and installable builds reach real devices via TestFlight (iOS) + Play internal track (Android) through EAS — closing the programme
+**Depends on**: Phases 28.3 + 28.4 (builds must carry the core loop + habitat); externally on the art commission (D-17) and both developer accounts (D-11)
+**Requirements**: NAT-07, NAT-08
+**Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
+**Status**: Not started
+**Plans**: TBD
 
 ## Progress
 
@@ -306,7 +348,11 @@ Plans:
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
-| 28. Native mobile packaging | 0/TBD | Not started | - |
+| 28.1 Native foundation — workspace & API | 0/TBD | Not started | - |
+| 28.2 Expo app shell & auth | 0/TBD | Not started | - |
+| 28.3 Core loop on native | 0/TBD | Not started | - |
+| 28.4 Habitat on native | 0/TBD | Not started | - |
+| 28.5 Identity & device delivery | 0/TBD | Not started | - |
 
 ## Backlog
 
