@@ -8,15 +8,14 @@
 // regression reference the split must never silently diverge from, not dead
 // code. See 17-03-SUMMARY.md for the full rationale.
 
+import type { HabitatState } from "@leocards/domain/habitat";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import { AppHeader } from "@/components/app-header";
 import { CardList } from "@/components/card-list";
 import { CountdownTimer } from "@/components/countdown-timer";
 import type { DeckOption } from "@/components/deck-switcher";
 import { HabitatHero } from "@/components/habitat-hero";
-import type { HabitatState } from "@/lib/habitat-engine";
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",

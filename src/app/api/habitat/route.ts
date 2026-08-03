@@ -1,8 +1,8 @@
+import { computeHabitatState } from "@leocards/domain/habitat";
 import { headers } from "next/headers";
 import type { UserId } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { readHabitatOverride, readQaTimeOffset } from "@/lib/debug-cheat";
-import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 
 // ============================================================

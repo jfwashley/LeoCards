@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 
+import type { HabitatState } from "@leocards/domain/habitat";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { HabitatHero } from "@/components/habitat-hero";
 import { HabitatMedallion } from "@/components/habitat-medallion";
-import type { HabitatState } from "@/lib/habitat-engine";
 
 // HabitatHero uses next/link — mock it so jsdom doesn't choke on routing.
 // vitest hoists vi.mock() calls automatically so this placement is fine.

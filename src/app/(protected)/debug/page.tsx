@@ -13,12 +13,12 @@
 // localStorage). When the secret env var is unset, the endpoints 404 and this
 // page shows a disabled notice.
 
+import type { HabitatState, TigerMood } from "@leocards/domain/habitat";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
 
 const SECRET_KEY = "leo-debug-secret";
 const MOODS: TigerMood[] = ["excited", "happy", "neutral", "sad"];

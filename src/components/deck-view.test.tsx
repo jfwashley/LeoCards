@@ -60,9 +60,9 @@ vi.mock("@/components/daybreak/lion-face", () => ({
   LionFace: () => <span data-testid="lion-face" />,
 }));
 
+import type { HabitatState } from "@leocards/domain/habitat";
 import type { CardRow } from "@/components/deck-view";
 import { DeckView } from "@/components/deck-view";
-import type { HabitatState } from "@/lib/habitat-engine";
 
 afterEach(() => cleanup());
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { UserId } from "@/db/schema";
+import type { UserId } from "../ids";
 import {
   classifyMood,
   computeHabitatState,

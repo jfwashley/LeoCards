@@ -13,12 +13,12 @@ const studyCompleteLimiter = createRateLimiter({
   maxRequests: 10,
 });
 
+import type { HabitatFacts } from "@leocards/domain/habitat";
+import { computeHabitatState } from "@leocards/domain/habitat";
 import type { GradeEntry } from "@leocards/domain/study";
 import { computeCardUpdate, DEFAULT_COOLDOWN_MS } from "@leocards/domain/study";
 import { env } from "@/env";
 import { readQaTimeOffset } from "@/lib/debug-cheat";
-import type { HabitatFacts } from "@/lib/habitat-engine";
-import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { markMilestonesSeen } from "@/lib/milestone-queries";
 

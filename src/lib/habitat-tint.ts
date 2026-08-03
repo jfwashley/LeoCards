@@ -10,7 +10,7 @@
 // - level >= 9  → golden-hour rgba overlay (radial gradient applied by caller, D-05)
 // D-14: NO sleeping/napping/night-cycle tint — only these 4 moods + decay + golden-hour.
 
-import type { TigerMood } from "@/lib/habitat-engine";
+import type { TigerMood } from "@leocards/domain/habitat";
 
 export function moodTint(
   mood: TigerMood,

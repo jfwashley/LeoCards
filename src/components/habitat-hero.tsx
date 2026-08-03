@@ -1,6 +1,6 @@
+import type { HabitatState } from "@leocards/domain/habitat";
 import Link from "next/link";
 import { HabitatMedallion } from "@/components/habitat-medallion";
-import type { HabitatState } from "@/lib/habitat-engine";
 
 // ---------------------------------------------------------------------------
 // Props

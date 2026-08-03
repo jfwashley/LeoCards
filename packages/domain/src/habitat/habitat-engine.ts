@@ -1,4 +1,4 @@
-import type { UserId } from "@/db/schema";
+import type { UserId } from "../ids";
 
 // ============================================================
 // Constants — exported for transparency and use in tests/UI

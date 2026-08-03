@@ -36,10 +36,10 @@
 //   • CLS=0: the parent wrapper (habitat-scene.tsx) carries the intrinsic
 //     16/9 size; the video/still are `position:absolute; inset:0` inside it.
 
+import type { HabitatState } from "@leocards/domain/habitat";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import type { HabitatState } from "@/lib/habitat-engine";
 
 // ---------------------------------------------------------------------------
 // Pure helpers (exported for node-env Vitest — no jsdom in this repo)

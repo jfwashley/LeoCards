@@ -1,7 +1,7 @@
 "use client";
 
+import { LEVEL_THRESHOLDS } from "@leocards/domain/habitat";
 import { LionFace } from "@/components/daybreak/lion-face";
-import { LEVEL_THRESHOLDS } from "@/lib/habitat-engine";
 
 // ---------------------------------------------------------------------------
 // Props

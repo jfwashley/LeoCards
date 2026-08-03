@@ -1,4 +1,4 @@
-import type { TigerMood } from "@/lib/habitat-engine";
+import type { TigerMood } from "@leocards/domain/habitat";
 
 // ============================================================
 // Mood rank mapping — used to determine transition direction

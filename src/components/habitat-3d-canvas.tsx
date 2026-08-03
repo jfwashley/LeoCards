@@ -29,6 +29,7 @@
 //     flip `data-ready` to "false" on loss; restart RAF + restore
 //     `data-ready` on restore.
 
+import type { HabitatState } from "@leocards/domain/habitat";
 import { useEffect, useRef, useState } from "react";
 import type * as THREE from "three";
 import {
@@ -49,7 +50,6 @@ import {
   type MoodAnimState,
 } from "@/lib/habitat-3d/mood-decay";
 import { attachOrbit, buildSceneHost } from "@/lib/habitat-3d/scene-host";
-import type { HabitatState } from "@/lib/habitat-engine";
 
 // ---------------------------------------------------------------------------
 // matchMedia stub plumbing (test-only)

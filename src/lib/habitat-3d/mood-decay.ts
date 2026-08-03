@@ -38,8 +38,8 @@
 //     the lion root so a future pass can read it; the unit tests assert
 //     `state.sparkleOn` directly.
 
+import type { TigerMood } from "@leocards/domain/habitat";
 import * as THREE from "three";
-import type { TigerMood } from "@/lib/habitat-engine";
 import type { ClayWorld } from "./clay-world";
 
 // ---------------------------------------------------------------------------

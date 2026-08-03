@@ -1,5 +1,6 @@
 "use client";
 
+import type { HabitatState, TigerMood } from "@leocards/domain/habitat";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { HBack } from "@/components/daybreak/h-back";
@@ -10,7 +11,6 @@ import { HabitatCelebration } from "@/components/habitat-celebration";
 import { HabitatVideo } from "@/components/habitat-video";
 import { Button } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import type { HabitatState, TigerMood } from "@/lib/habitat-engine";
 import { moodTint } from "@/lib/habitat-tint";
 
 // localStorage cache key for offline support (Pattern 8 from RESEARCH.md)

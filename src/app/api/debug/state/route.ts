@@ -1,3 +1,4 @@
+import { computeHabitatState } from "@leocards/domain/habitat";
 import { and, asc, eq } from "drizzle-orm";
 import { cookies, headers } from "next/headers";
 import { db } from "@/db";
@@ -11,7 +12,6 @@ import {
   readQaTimeOffset,
   verifyOverride,
 } from "@/lib/debug-cheat";
-import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 
 // Phase 13.2 QA cheat console.

@@ -1,3 +1,4 @@
+import { computeHabitatState } from "@leocards/domain/habitat";
 import type { CardForSession } from "@leocards/domain/study";
 import {
   assembleSession,
@@ -13,7 +14,6 @@ import type { UserId } from "@/db/schema";
 import { getSession } from "@/lib/auth-session";
 import { readHabitatOverride, readQaAuth } from "@/lib/debug-cheat";
 import { getDeckCards, getUserDecks } from "@/lib/deck-queries";
-import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 import { deriveStudySubset } from "@/lib/study-queries";
 

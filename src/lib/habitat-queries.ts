@@ -2,11 +2,11 @@
 // These are called from Server Components or Route Handlers, not from the client via server actions.
 // Each caller is responsible for verifying the userId comes from a valid session.
 
+import type { HabitatFacts } from "@leocards/domain/habitat";
 import { and, count, eq, gte } from "drizzle-orm";
 import { db } from "@/db";
 import type { UserId } from "@/db/schema";
 import { cards, decks, habitat_metadata } from "@/db/schema";
-import type { HabitatFacts } from "@/lib/habitat-engine";
 
 // ============================================================
 // getHabitatFacts

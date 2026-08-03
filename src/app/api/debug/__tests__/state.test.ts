@@ -127,7 +127,7 @@ vi.mock("@/lib/habitat-queries", () => ({
   getHabitatFacts: mockGetHabitatFacts,
 }));
 
-vi.mock("@/lib/habitat-engine", () => ({
+vi.mock("@leocards/domain/habitat", () => ({
   computeHabitatState: mockComputeHabitatState,
 }));
 

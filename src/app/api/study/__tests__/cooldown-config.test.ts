@@ -27,7 +27,7 @@ vi.mock("next/headers", () => ({
   headers: vi.fn().mockResolvedValue(new Headers()),
 }));
 
-vi.mock("@/lib/habitat-engine", () => ({
+vi.mock("@leocards/domain/habitat", () => ({
   computeHabitatState: vi.fn(),
 }));
 

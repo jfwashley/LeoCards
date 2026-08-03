@@ -1,8 +1,8 @@
+import { computeHabitatState } from "@leocards/domain/habitat";
 import { HabitatScene } from "@/components/habitat-scene";
 import type { UserId } from "@/db/schema";
 import { getSession } from "@/lib/auth-session";
 import { readHabitatOverride } from "@/lib/debug-cheat";
-import { computeHabitatState } from "@/lib/habitat-engine";
 import { getHabitatFacts } from "@/lib/habitat-queries";
 
 // Server component shell — fetches habitat state directly from DB (no HTTP round-trip)

@@ -19,10 +19,10 @@
 // into a client component.
 
 import { createHmac, timingSafeEqual } from "node:crypto";
+import type { HabitatOverride, TigerMood } from "@leocards/domain/habitat";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { env } from "@/env";
-import type { HabitatOverride, TigerMood } from "@/lib/habitat-engine";
 
 /** Cookie name for the signed habitat override. */
 export const CHEAT_COOKIE = "leo-habitat-cheat";

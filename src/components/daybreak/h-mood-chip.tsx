@@ -4,7 +4,7 @@
 // No "use client" — pure props-to-markup, RSC-safe.
 // Uses cfg?.color / cfg?.label (no "!" — biome noNonNullAssertion).
 
-import type { TigerMood } from "@/lib/habitat-engine";
+import type { TigerMood } from "@leocards/domain/habitat";
 
 // MOOD palette from daybreak-habitat.jsx lines 11-13.
 const MOOD_CONFIG: Record<TigerMood, { label: string; color: string }> = {
