@@ -10,16 +10,23 @@ import {
 
 // ============================================================
 // Branded types — prevent ID mix-ups at the TypeScript level
+// Declared once in packages/domain/src/ids.ts. Imported here (for local use
+// in this file's own branded column-type annotations below) AND
+// re-exported (not merely imported — DR-09) so every existing
+// `import type { ... } from "@/db/schema"` consumer keeps resolving
+// unchanged. `export ... from` alone does not create a local binding per ES
+// module semantics, so both statements are required.
 // ============================================================
 
-declare const __brand: unique symbol;
-type Brand<T, B> = T & { [__brand]: B };
+import type { CardId, DeckId, RecallEventId, UserId } from "@leocards/domain";
 
-export type UserId = Brand<string, "UserId">;
-export type DeckId = Brand<string, "DeckId">;
-export type CardId = Brand<string, "CardId">;
-export type RecallEventId = Brand<string, "RecallEventId">;
-export type RecallDirection = "n2t" | "t2n";
+export type {
+  CardId,
+  DeckId,
+  RecallDirection,
+  RecallEventId,
+  UserId,
+} from "@leocards/domain";
 
 // ============================================================
 // Better Auth tables — must match Better Auth's expected shape
