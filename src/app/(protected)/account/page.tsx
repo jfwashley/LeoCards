@@ -6,8 +6,8 @@ import { ACBanner } from "@/components/daybreak/ac-banner";
 import { AccountBack } from "@/components/daybreak/account-back";
 import { DeleteAccountRow } from "@/components/delete-account-row";
 import type { UserId } from "@/db/schema";
-import { getPendingEmailChange } from "@/lib/account-queries";
 import { getSessionFresh } from "@/lib/auth-session";
+import { loadAccountCore } from "@/lib/core/account";
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
@@ -15,12 +15,14 @@ const LANGUAGE_LABELS: Record<string, string> = {
   es: "Spanish",
 };
 
-// D-02/D-03 — /account RSC page shell: fetches the session once, computes
-// display strings server-side, reads pending-email state, allow-lists
-// ?verified, and composes every section inside AccountDirtyProvider.
-// Inherits (protected)/layout.tsx's session gate; the `if (!session) return
-// null` here is a defensive belt-and-suspenders fallback, matching
-// dashboard/page.tsx and habitat/page.tsx exactly (25-PATTERNS.md).
+// D-02/D-03 — /account RSC page shell: fetches the session once, delegates
+// to the same composition GET /api/account uses (src/lib/core/account.ts),
+// computes display strings server-side from that core's raw output,
+// allow-lists ?verified, and composes every section inside the
+// dirty-tracking provider below. Inherits (protected)/layout.tsx's session
+// gate; the `if (!session) return null` here is a defensive
+// belt-and-suspenders fallback, matching dashboard/page.tsx and
+// habitat/page.tsx exactly (25-PATTERNS.md).
 export default async function AccountPage({
   searchParams,
 }: {
@@ -29,16 +31,22 @@ export default async function AccountPage({
   const session = await getSessionFresh();
   if (!session) return null;
 
-  const userId = session.user.id as UserId;
+  const result = await loadAccountCore({
+    userId: session.user.id as UserId,
+    name: session.user.name,
+    email: session.user.email,
+    createdAt: session.user.createdAt,
+    nativeLanguage: session.user.nativeLanguage,
+  });
+  if (!result.ok) return null;
 
   const memberSince = new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
-  }).format(session.user.createdAt);
-  const nativeLanguage = session.user.nativeLanguage ?? "en";
-  const nativeLanguageLabel = LANGUAGE_LABELS[nativeLanguage] ?? nativeLanguage;
-  const pendingEmail =
-    (await getPendingEmailChange(userId, session.user.email))?.newEmail ?? null;
+  }).format(new Date(result.data.createdAt));
+  const nativeLanguageLabel =
+    LANGUAGE_LABELS[result.data.nativeLanguage] ?? result.data.nativeLanguage;
+  const pendingEmail = result.data.pendingEmail;
 
   const params = await searchParams;
   // T-25-04-B: allow-list ?verified to exactly "success"/"expired"/null --
