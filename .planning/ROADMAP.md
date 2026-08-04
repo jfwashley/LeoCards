@@ -296,7 +296,7 @@ Plans:
 - [x] 28.1-03-PLAN.md — Shared zod schemas + API contract types + DR-03 error convention; `/api/study/complete` rewired
 - [x] 28.1-04-PLAN.md — `createDeckCore`/`saveCardCore` extracted; `createDeck`/`saveCard` actions delegate (D-03 mechanism)
 - [x] 28.1-05-PLAN.md — `GET /api/dashboard` + `loadDashboardCore`; RSC dashboard page delegates
-- [ ] 28.1-06-PLAN.md — `GET /api/study` + `loadStudySessionCore`; RSC study page delegates
+- [x] 28.1-06-PLAN.md — `GET /api/study` + `loadStudySessionCore`; RSC study page delegates
 - [ ] 28.1-07-PLAN.md — `POST /api/cards`, `POST /api/decks`, `GET /api/account` (fresh session read)
 - [ ] 28.1-08-PLAN.md — `mobile/` Expo workspace member + real Metro resolution proof
 - [ ] 28.1-09-PLAN.md — Phase gate: full sweep + `qa:run`, deploy authorisation, post-deploy `perf:recert`
@@ -359,7 +359,7 @@ Plans:
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
-| 28.1 Native foundation — workspace & API | 5/9 | In Progress|  |
+| 28.1 Native foundation — workspace & API | 6/9 | In Progress|  |
 | 28.2 Expo app shell & auth | 0/TBD | Not started | - |
 | 28.3 Core loop on native | 0/TBD | Not started | - |
 | 28.4 Habitat on native | 0/TBD | Not started | - |
