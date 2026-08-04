@@ -81,7 +81,7 @@ QA comes first deliberately: the harness must protect the core journey before pe
 - [x] **Phase 27: Performance batch 2** - Items 8-19 of the Fable-5 perf review (2026-06-30) re-verified against current code and shipped: session dedupe/cookie caching, optimistic pause toggle, zod/mini, server-side Browse filtering, dashboard data-pass consolidation, extraction model/streaming trial, secondary indexes, translation-form abort race fix, CardList memoization, study-complete read-path trim, backdrop-blur drop, translation LRU cache (completed 2026-07-22)
 > **Phase 28 resolved at discussion (2026-08-03):** native rewrite programme — a React Native + Expo app backed by the existing Next.js backend, delivered as sub-phases 28.1-28.5 below (decisions in `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`). Programme closes at installable TestFlight + Play-internal builds carrying the core loop + basic account; public store release is a later, separate step.
 
-- [ ] **Phase 28.1: Native foundation — workspace & API** - The repo becomes a workspaces monorepo with shared domain packages, and every native-v1 read/write is a screen-shaped REST endpoint (web app unchanged; qa:run + perf:recert stay green)
+- [x] **Phase 28.1: Native foundation — workspace & API** - The repo becomes a workspaces monorepo with shared domain packages, and every native-v1 read/write is a screen-shaped REST endpoint (web app unchanged; qa:run + perf:recert stay green) (completed 2026-08-04)
 - [ ] **Phase 28.2: Expo app shell & auth** - The Expo app boots with a navigation shell, better-auth sign up/in/out against the existing backend, and the friendly Leo offline screen
 - [ ] **Phase 28.3: Core loop on native** - Dashboard, study sessions (shared SRS behaviour by construction), and manual add-a-word work end-to-end on device
 - [ ] **Phase 28.4: Habitat on native** - Streamed + on-device-cached habitat clips with level/mood/decay parity and the Reduce Motion poster fallback
@@ -299,7 +299,7 @@ Plans:
 - [x] 28.1-06-PLAN.md — `GET /api/study` + `loadStudySessionCore`; RSC study page delegates
 - [x] 28.1-07-PLAN.md — `POST /api/cards`, `POST /api/decks`, `GET /api/account` (fresh session read)
 - [x] 28.1-08-PLAN.md — `mobile/` Expo workspace member + real Metro resolution proof
-- [ ] 28.1-09-PLAN.md — Phase gate: full sweep + `qa:run`, deploy authorisation, post-deploy `perf:recert`
+- [x] 28.1-09-PLAN.md — Phase gate: full sweep + `qa:run`, deploy authorisation, post-deploy `perf:recert`
 
 ### Phase 28.2: Expo app shell & auth
 
@@ -359,7 +359,7 @@ Plans:
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
-| 28.1 Native foundation — workspace & API | 8/9 | In Progress|  |
+| 28.1 Native foundation — workspace & API | 9/9 | Complete   | 2026-08-04 |
 | 28.2 Expo app shell & auth | 0/TBD | Not started | - |
 | 28.3 Core loop on native | 0/TBD | Not started | - |
 | 28.4 Habitat on native | 0/TBD | Not started | - |
