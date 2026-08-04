@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
-status: executing
-stopped_at: "Phase 28.1 Plan 08 complete (mobile/ shipped as a real Expo workspace member — 5 hand-authored files, expo@57.0.10 + react-native@0.86.2 approved at Task 1's package-legitimacy checkpoint, react/react-dom pinned to 19.2.3 per Expo SDK 57's own bundledNativeModules.json; real Metro cross-boundary resolution of @leocards/domain proven via two npx expo export --platform android runs, 578 modules bundled, LEVEL_THRESHOLDS literal sequence confirmed intact in the --no-bytecode plain-JS output); NAT-01 now 4 of 5 contributing plans done (01/02/03/08), 1 remaining: 09; NAT-02 unchanged (5 of 6 done: 03/04/05/06/07), 1 remaining: 09 — next: 28.1-09"
-last_updated: "2026-08-04T09:20:00.000Z"
-last_activity: 2026-08-04 -- Phase 28.1 Plan 08 (28.1-08) executed
+status: ready_to_plan
+stopped_at: Phase 28.1 complete (9/9) — ready to discuss Phase 28.2
+last_updated: 2026-08-04T21:19:59.607Z
+last_activity: 2026-08-04 -- Phase 28.1 verified passed (18/18 must-haves) and marked complete; next: discuss/plan 28.2
 progress:
   total_phases: 13
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 48
-  completed_plans: 46
-  percent: 46
+  completed_plans: 47
+  percent: 54
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md
 
 **Core value:** The tiger must feel alive — users should feel genuine motivation to open the app and learn because something real (and cute) is counting on them.
-**Current focus:** Phase 28.1 — native-foundation-workspace-api
+**Current focus:** Phase 28.2 — expo app shell & auth
 
 ## Current Position
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
-Phase: 28.1 (native-foundation-workspace-api) — EXECUTING
-Plan: 9 of 9 complete (28.1-09 shipped 2026-08-04 — phase gate PASSED: qa:run 5/5 + cleanup zero-residue (blocker carried since 28.1-03 resolved), full sweep green (tsc root+domain, vitest 804/6/0, npm ci, build with all 12 native-v1 routes), prod deploy live at e0c4c9c (Josh's "authorised — push" executed by the orchestrator after a subagent-context permission denial; verified 3 ways: reflog, GitHub status API Vercel success, first-hand prod /api/dashboard 401 probe), habitat e2e 8/0/4-skipped incl. first green run of 86982c2's reduced-motion spec, perf:recert red-then-green (run 1 FAILED on machine contention, Josh's "Quiet re-run" decision, run 2 PASSED — /study + /deck/browse clean, /dashboard + /deck/new-card D-09 WARN-only drift); NAT-01 and NAT-02 both satisfied and flipped in REQUIREMENTS.md)
-Status: Phase 28.1 execution complete (9/9) — phase verification pending (Phase 18-06 remains blocked until on/after 2026-08-08, D-03 field window)
-Next phase: 28.2 (native rewrite programme, NAT-03/04) — after 28.1 verification; Phase 18-06 close-out unblocks on/after 2026-08-08
-Last activity: 2026-08-04 -- Phase 28.1 Plan 09 executed: gate sweep green, prod deploy verified live, two-run perf:recert resolved PASSED (measurement contention confirmed via quiet re-run), NAT-01/02 flipped; close-out completed inline by the orchestrator after the long-lived executor agent stalled (stream watchdog) mid-close-out
+Phase: 28.2
+Plan: Not started
+Status: Ready to plan
+Next phase: 28.3 (core loop on native, NAT-05) — after 28.2; Phase 18-06 close-out unblocks on/after 2026-08-08 (D-03 field window, now accumulating against the 28.1 deploy)
+Last activity: 2026-08-04 -- Phase 28.1 verified passed (gsd-verifier, 18/18 must-haves, live prod re-probed) and marked complete; code review 0C/7W/10I committed as follow-up input
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -170,9 +170,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-08-04 (afternoon)
-Stopped at: Phase 28.1 ALL 9 PLANS COMPLETE — 28.1-09 phase gate passed (qa:run 5/5, prod deploy e0c4c9c live and 3-way verified, perf:recert certified PASSED on Josh-decided quiet re-run after a contention-noise first run); orchestrator proceeding to phase verification (gsd-verifier); local main ahead of origin/main by the 2 D-07 report commits + close-out commit(s), next push needs Josh's word
-Resume file: .planning/phases/28.1-native-foundation-workspace-api/
+Last session: 2026-08-04 (evening)
+Stopped at: Phase 28.1 COMPLETE AND VERIFIED — 9/9 plans, verifier passed 18/18 must-haves (live prod independently re-probed), code review committed (0 Critical / 7 Warning / 10 Info — follow-up input, incl. WR-01 empty-batch save-and-quit trap and WR-02 per-instance rate limiting), phase marked complete in ROADMAP/STATE/REQUIREMENTS; local main ahead of origin/main by the post-deploy .planning commits only (reports, review, verification, close-out) — next push needs Josh's word; npm-audit dependency-security follow-up (better-auth critical) recommended before or alongside 28.2; next: /gsd-discuss-phase 28.2
+Resume file: .planning/ROADMAP.md (Phase 28.2)
 
 **Non-blocking flag (2026-08-03, Phase 28.1-05 execute session):** two more instances of the stale-acceptance-criteria-grep-count pattern first flagged in 28.1-04 (`crypto.randomUUID`) — `grep -c 'createRateLimiter' route.ts` and `grep -c 'loadDashboardCore' page.tsx` were both plan-stated as "returns 1", both empirically verified (before implementing, and again after) at 2 — `grep -c` counts matching LINES, and an idiomatic `import { X } from ...` followed by a separate `const y = X(...)` call-site line are two lines containing the same literal substring. Verified against `pause/route.ts`'s own `createRateLimiter` (also greps to 2) as an independent precedent check before writing any code; implemented idiomatically both times rather than distorting the code (e.g. import aliasing) to force a count of 1 — full detail in `28.1-05-SUMMARY.md`'s Deviations section. This is now 3 occurrences of this specific sub-pattern (distinct from the separately-tracked "acceptance-criteria-self-tripping-comment" pattern, 5 occurrences across 28.1-01/02/03) — flagging for 28.1-06 through 09: any plan text with a bare "X() returns 1" grep criterion on a function/const that is BOTH imported AND called should be verified empirically before trusting the number.
 

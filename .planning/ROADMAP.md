@@ -359,7 +359,7 @@ Plans:
 | 25. My Account | 5/5 | Complete    | 2026-07-20 |
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
-| 28.1 Native foundation — workspace & API | 9/9 | Complete   | 2026-08-04 |
+| 28.1 Native foundation — workspace & API | 9/9 | Complete    | 2026-08-04 |
 | 28.2 Expo app shell & auth | 0/TBD | Not started | - |
 | 28.3 Core loop on native | 0/TBD | Not started | - |
 | 28.4 Habitat on native | 0/TBD | Not started | - |
