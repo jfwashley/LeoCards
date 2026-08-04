@@ -1,0 +1,116 @@
+{
+  "route": "/study",
+  "preset": "desktop",
+  "runs": [
+    {
+      "lcp": 1561.5292,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 796.7610801879882,
+      "ttfb": 56,
+      "score": 94,
+      "bootupTime": 1131.665999999986
+    },
+    {
+      "lcp": 1529.6073000000001,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 768.6073,
+      "ttfb": 56,
+      "score": 94,
+      "bootupTime": 0.9060000000000001
+    },
+    {
+      "lcp": 1692.3626,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 779.3626,
+      "ttfb": 69,
+      "score": 93,
+      "bootupTime": 0
+    },
+    {
+      "lcp": 1579.2185,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 816.2185,
+      "ttfb": 133,
+      "score": 94,
+      "bootupTime": 0
+    },
+    {
+      "lcp": 1533.9981,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 767.9981,
+      "ttfb": 56,
+      "score": 94,
+      "bootupTime": 0.902
+    },
+    {
+      "lcp": 1557.7930999999999,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 792.7931,
+      "ttfb": 55,
+      "score": 93,
+      "bootupTime": 1.5650000000000002
+    }
+  ],
+  "warmRuns": [
+    {
+      "lcp": 1529.6073000000001,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 768.6073,
+      "ttfb": 56,
+      "score": 94,
+      "bootupTime": 0.9060000000000001
+    },
+    {
+      "lcp": 1692.3626,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 779.3626,
+      "ttfb": 69,
+      "score": 93,
+      "bootupTime": 0
+    },
+    {
+      "lcp": 1579.2185,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 816.2185,
+      "ttfb": 133,
+      "score": 94,
+      "bootupTime": 0
+    },
+    {
+      "lcp": 1533.9981,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 767.9981,
+      "ttfb": 56,
+      "score": 94,
+      "bootupTime": 0.902
+    },
+    {
+      "lcp": 1557.7930999999999,
+      "tbt": 0,
+      "cls": 0,
+      "fcp": 792.7931,
+      "ttfb": 55,
+      "score": 93,
+      "bootupTime": 1.5650000000000002
+    }
+  ],
+  "medians": {
+    "lcp": 1557.7930999999999,
+    "tbt": 0,
+    "cls": 0,
+    "fcp": 779.3626,
+    "ttfb": 56,
+    "score": 94,
+    "bootupTime": 0.902
+  }
+}
