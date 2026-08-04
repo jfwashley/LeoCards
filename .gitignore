@@ -58,6 +58,10 @@ next-env.d.ts
 # claude
 .claude/
 
+# Expo build artefacts (mobile/ workspace member)
+mobile/.expo/
+mobile/dist/
+
 .vercel
 
 # local credentials — never commit
