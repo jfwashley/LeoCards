@@ -307,8 +307,24 @@ Plans:
 **Depends on**: Phase 28.1 (workspace + API foundation)
 **Requirements**: NAT-03, NAT-04
 **Canonical refs**: `.planning/phases/28-native-mobile-packaging/28-CONTEXT.md`
-**Status**: Not started
-**Plans**: TBD
+**Status**: Planned — 14 plans across 10 waves; next: 28.2-01
+**Plans**: 14 plans across 10 waves
+
+Plans:
+- [ ] 28.2-01-PLAN.md — better-auth peer-floor bump + @better-auth/expo install, full web regression (supply-chain + upgrade gate)
+- [ ] 28.2-02-PLAN.md — EAS account, `eas init` project link, committed build profiles, zero builds (D-35)
+- [ ] 28.2-03-PLAN.md — `expo()` plugin + `trustedOrigins` in src/lib/auth.ts, Josh-approved prod deploy, post-deploy perf:recert
+- [ ] 28.2-04-PLAN.md — Native dependency install (SDK-pinned) + legitimacy gate + dual-platform Expo Go boot probe
+- [ ] 28.2-05-PLAN.md — expo-router entry, Daybreak theme module, backend-target config, fonts + splash hold
+- [ ] 28.2-06-PLAN.md — Daybreak atoms: Leo as react-native-svg (D-30), TField (tested field rules), TBtn
+- [ ] 28.2-07-PLAN.md — Auth client (SecureStore + fresh-session split), form schemas, one-shot signed-out notice
+- [ ] 28.2-08-PLAN.md — AuthCard + DaybreakAuthScene port (gradient, sun/glow, hills, ghost peeks)
+- [ ] 28.2-09-PLAN.md — Auth shell layout, login screen, signed-out notice, tested non-enumerating error mapping
+- [ ] 28.2-10-PLAN.md — Signup + native-language picker (D-22), forgot-password with sent state (D-21)
+- [ ] 28.2-11-PLAN.md — Bottom-tab shell (D-25/D-26), hand-drawn tab glyphs, three Leo-branded teasers (D-28)
+- [ ] 28.2-12-PLAN.md — Root session guard, boot revocation check, header account glyph + sign-out sheet (D-24/D-27)
+- [ ] 28.2-13-PLAN.md — Offline screen with tested transition rules and auto-recover (NAT-04/D-32)
+- [ ] 28.2-14-PLAN.md — Phase gate: dual-platform auth loop (D-33), production proof + sweep (D-36), requirement close-out
 
 ### Phase 28.3: Core loop on native
 
@@ -360,7 +376,7 @@ Plans:
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
 | 28.1 Native foundation — workspace & API | 9/9 | Complete    | 2026-08-04 |
-| 28.2 Expo app shell & auth | 0/TBD | Not started | - |
+| 28.2 Expo app shell & auth | 0/14 | Planned | - |
 | 28.3 Core loop on native | 0/TBD | Not started | - |
 | 28.4 Habitat on native | 0/TBD | Not started | - |
 | 28.5 Identity & device delivery | 0/TBD | Not started | - |
