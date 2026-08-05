@@ -311,7 +311,7 @@ Plans:
 **Plans**: 14 plans across 10 waves
 
 Plans:
-- [ ] 28.2-01-PLAN.md — better-auth peer-floor bump + @better-auth/expo install, full web regression (supply-chain + upgrade gate)
+- [x] 28.2-01-PLAN.md — better-auth peer-floor bump + @better-auth/expo install, full web regression (supply-chain + upgrade gate)
 - [ ] 28.2-02-PLAN.md — EAS account, `eas init` project link, committed build profiles, zero builds (D-35)
 - [ ] 28.2-03-PLAN.md — `expo()` plugin + `trustedOrigins` in src/lib/auth.ts, Josh-approved prod deploy, post-deploy perf:recert
 - [ ] 28.2-04-PLAN.md — Native dependency install (SDK-pinned) + legitimacy gate + dual-platform Expo Go boot probe
@@ -376,7 +376,7 @@ Plans:
 | 26. Performance batch | 5/5 | Complete    | 2026-07-22 |
 | 27. Performance batch 2 | 10/10 | Complete    | 2026-07-22 |
 | 28.1 Native foundation — workspace & API | 9/9 | Complete    | 2026-08-04 |
-| 28.2 Expo app shell & auth | 0/14 | Planned | - |
+| 28.2 Expo app shell & auth | 1/14 | In Progress|  |
 | 28.3 Core loop on native | 0/TBD | Not started | - |
 | 28.4 Habitat on native | 0/TBD | Not started | - |
 | 28.5 Identity & device delivery | 0/TBD | Not started | - |
