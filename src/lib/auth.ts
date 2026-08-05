@@ -1,3 +1,4 @@
+import { expo } from "@better-auth/expo";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
@@ -51,5 +52,16 @@ export const auth = betterAuth({
       maxAge: 300,
     },
   },
-  plugins: [nextCookies()], // MUST be last plugin in array
+  // The native app's custom URL scheme is always trusted so its requests pass
+  // the same origin-evaluation logic the web app already relies on. The
+  // wildcard entries that follow exist only to let a local Expo Go client
+  // reach a dev server, keyed off the server's own NODE_ENV — never
+  // client-supplied — so they can never widen production's trust surface.
+  trustedOrigins: [
+    "leocards://",
+    ...(process.env.NODE_ENV === "development"
+      ? ["exp://", "exp://**", "exp://192.168.*.*:*/**"]
+      : []),
+  ],
+  plugins: [expo(), nextCookies()], // nextCookies() MUST stay last plugin in array
 });
