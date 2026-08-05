@@ -3,6 +3,12 @@
     "name": "LeoCards",
     "slug": "leocards",
     "version": "0.0.0",
-    "scheme": "leocards"
+    "scheme": "leocards",
+    "extra": {
+      "eas": {
+        "projectId": "ac3e5558-8401-4e0d-96b5-ee555b656165"
+      }
+    },
+    "owner": "jfwashley"
   }
 }
