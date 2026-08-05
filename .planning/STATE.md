@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: ready_to_plan
-stopped_at: Phase 28.1 complete (9/9) — ready to discuss Phase 28.2
-last_updated: 2026-08-04T21:19:59.607Z
-last_activity: 2026-08-04 -- Phase 28.1 verified passed (18/18 must-haves) and marked complete; next: discuss/plan 28.2
+stopped_at: Phase 28.2 context gathered — ready to plan
+last_updated: 2026-08-05T07:52:03.943Z
+last_activity: 2026-08-05 -- Phase 28.2 discussed (4 areas, D-21..D-36 captured in 28.2-CONTEXT.md); next: plan 28.2
 progress:
   total_phases: 13
   completed_phases: 7
@@ -28,9 +28,9 @@ See: .planning/PROJECT.md
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 28.2
 Plan: Not started
-Status: Ready to plan
+Status: Context gathered (28.2-CONTEXT.md, D-21..D-36) — ready to plan
 Next phase: 28.3 (core loop on native, NAT-05) — after 28.2; Phase 18-06 close-out unblocks on/after 2026-08-08 (D-03 field window, now accumulating against the 28.1 deploy)
-Last activity: 2026-08-04 -- Phase 28.1 verified passed (gsd-verifier, 18/18 must-haves, live prod re-probed) and marked complete; code review 0C/7W/10I committed as follow-up input
+Last activity: 2026-08-05 -- Phase 28.2 discuss-phase complete: 4 areas (auth flow scope, navigation shell, Daybreak/Leo on native, done-bar & dev runtime), 16 decisions D-21..D-36 continuing the 28-CONTEXT programme numbering
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -170,9 +170,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-08-04 (evening)
-Stopped at: Phase 28.1 COMPLETE AND VERIFIED — 9/9 plans, verifier passed 18/18 must-haves (live prod independently re-probed), code review committed (0 Critical / 7 Warning / 10 Info — follow-up input, incl. WR-01 empty-batch save-and-quit trap and WR-02 per-instance rate limiting), phase marked complete in ROADMAP/STATE/REQUIREMENTS; local main ahead of origin/main by the post-deploy .planning commits only (reports, review, verification, close-out) — next push needs Josh's word; npm-audit dependency-security follow-up (better-auth critical) recommended before or alongside 28.2; next: /gsd-discuss-phase 28.2
-Resume file: .planning/ROADMAP.md (Phase 28.2)
+Last session: 2026-08-05 (morning)
+Stopped at: Phase 28.2 context gathered via /gsd-discuss-phase — 4 areas discussed, 16 decisions captured as D-21..D-36 in 28.2-CONTEXT.md (numbering continues 28-CONTEXT's D-01..D-20). Carried forward from 28.1 close-out: local main is ahead of origin/main by .planning commits only (next push needs Josh's word); the npm-audit better-auth critical (≤1.6.21) intersects 28.2's auth work — flagged for the researcher in 28.2-CONTEXT.md code_context. Next: /gsd:plan-phase 28.2
+Resume file: .planning/phases/28.2-expo-app-shell-auth/28.2-CONTEXT.md
 
 **Non-blocking flag (2026-08-03, Phase 28.1-05 execute session):** two more instances of the stale-acceptance-criteria-grep-count pattern first flagged in 28.1-04 (`crypto.randomUUID`) — `grep -c 'createRateLimiter' route.ts` and `grep -c 'loadDashboardCore' page.tsx` were both plan-stated as "returns 1", both empirically verified (before implementing, and again after) at 2 — `grep -c` counts matching LINES, and an idiomatic `import { X } from ...` followed by a separate `const y = X(...)` call-site line are two lines containing the same literal substring. Verified against `pause/route.ts`'s own `createRateLimiter` (also greps to 2) as an independent precedent check before writing any code; implemented idiomatically both times rather than distorting the code (e.g. import aliasing) to force a count of 1 — full detail in `28.1-05-SUMMARY.md`'s Deviations section. This is now 3 occurrences of this specific sub-pattern (distinct from the separately-tracked "acceptance-criteria-self-tripping-comment" pattern, 5 occurrences across 28.1-01/02/03) — flagging for 28.1-06 through 09: any plan text with a bare "X() returns 1" grep criterion on a function/const that is BOTH imported AND called should be verified empirically before trusting the number.
 
