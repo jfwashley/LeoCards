@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Performance & QA
 status: executing
-stopped_at: Phase 28.2 UI-SPEC approved
-last_updated: "2026-08-05T11:38:22.000Z"
-last_activity: 2026-08-05 -- Phase 28.2 Plan 01 complete (better-auth 1.6.26 + @better-auth/expo)
+stopped_at: Phase 28.2 Plan 02 complete
+last_updated: "2026-08-05T13:17:16.000Z"
+last_activity: 2026-08-05 -- Phase 28.2 Plan 02 complete (EAS project linked @jfwashley/leocards, eas.json committed, zero builds)
 progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 62
-  completed_plans: 49
+  completed_plans: 50
   percent: 62
 ---
 
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md
 
 Milestone: v3.0 Performance & QA (resumed 2026-06-25 after v4.0 Daybreak shipped)
 Phase: 28.2 (expo-app-shell-auth) — EXECUTING
-Plan: 2 of 14
+Plan: 3 of 14
 Status: Executing Phase 28.2
 Next phase: 28.3 (core loop on native, NAT-05) — after 28.2; Phase 18-06 close-out unblocks on/after 2026-08-08 (D-03 field window, now accumulating against the 28.1 deploy)
-Last activity: 2026-08-05 -- Phase 28.2 Plan 01 complete (better-auth 1.6.26 + @better-auth/expo)
+Last activity: 2026-08-05 -- Phase 28.2 Plan 02 complete (EAS project linked @jfwashley/leocards, eas.json committed, zero builds)
 
 Progress (v3.0): [██████████] 100% of all currently-planned plans (Phases 14/15/16/17/25/26/27 complete — Phase 17 closed 2026-07-20 w/ PERF-04 accepted-miss; Phase 25 My Account closed 2026-07-20 w/ ACC-01..06 satisfied; Phase 26 Performance batch closed 2026-07-22 w/ PERF-07..11 all satisfied (26-01..26-05); Phase 27 Performance batch 2 closed 2026-07-22 w/ PERF-12..23 all satisfied (27-01..27-10); Phase 18 PERF-05/06 remains TBD-scoped and NOT yet counted in this bar — it runs last so its re-cert gate certifies the optimized code, and v3.0 does not close until it ships)
 
@@ -144,6 +144,8 @@ v3.0 was paused after Phase 14 to ship the v4.0 Daybreak UI redesign (Phases 19-
 
 - Phase 28.2-01: shipped the better-auth version bump — Josh approved both package legitimacy and the 1.5.6->1.6.26 move together at the Task 1 blocking-human gate (live `npm view` evidence: peer floor `^1.6.26`, same `github.com/better-auth/better-auth` monorepo for both packages, no `postinstall` on either, publish timestamp ~14h old). Task 2 hit TWO ERESOLVE errors installing `better-auth@1.6.26`+`@better-auth/expo@1.6.26` in one command — both traced to npm's incremental resolver reconciling stale on-disk 1.5.6-era sub-adapter state (confirmed via `npm view better-auth@1.6.26 dependencies`: the target graph is internally consistent, every sub-adapter pinned to 1.6.26 in lockstep) rather than an unsatisfiable request; per the plan's explicit instruction, stopped both times rather than reaching for `--force`/`--legacy-peer-deps` and returned a checkpoint. Josh pre-authorized "A, then B if A fails": Step A (add `@better-auth/core` explicitly to the same install) ERESOLVEd one level deeper on `better-call`'s peer; Step B (delete `package-lock.json` + `node_modules` incl. `mobile/node_modules`, fresh `npm install` against a hand-edited `package.json`) succeeded cleanly. Lockfile-drift audit (old-vs-new `packages` map diff, partitioned by better-auth family vs everything else) found ~1068 packages touched outside the family, but zero direct `package.json` dependency crossed its own declared semver range and zero new top-level entry appeared — judged as ordinary months-stale-lockfile churn, not Josh's "extensive or suspicious" stop bar, so proceeded without a second checkpoint. `npm ci` then failed `EBADPLATFORM` on a single mismarked nested lockfile entry (`node_modules/vitest/node_modules/@esbuild/aix-ppc64` missing `optional:true`, carrying stale `extraneous:true` instead) — fixed with one idempotent zero-flag `npm install` re-run (arborist self-corrected, `removed 15 packages`), not a lockfile hand-edit. Full regression: `tsc` x2 clean, `vitest run` 804/6/0 (matching the true, re-established pre-bump baseline of 803/6/1-explained-flake — a 5th pre-existing parallel-execution flake, `change-password-card.test.tsx`, logged to `28.2-expo-app-shell-auth/deferred-items.md`, did not trigger post-bump), `npm run build` clean (all native-v1 routes + `/api/auth/[...all]` present), `npm ci` clean. `npm audit` critical count 1->0 (GHSA-qq9h-g4jm-xgf3 cleared as a side effect; app never used the affected magic-link/email-OTP plugins). Zero `src/` changes; committed locally (`b47c67a`) but NOT pushed — plan 28.2-03 owns the `src/lib/auth.ts` edit and the deploy. NAT-03 traceability deliberately left unmarked in REQUIREMENTS.md (phase convention: only the last contributing plan, 28.2-14, flips it). `gsd-sdk query state.*` verbs remain known-broken on this project; STATE.md hand-edited directly this session, verified via `git diff`.
 
+- Phase 28.2-02: shipped the D-35 EAS linkage — `eas init --account jfwashley --non-interactive --json` created and linked `@jfwashley/leocards` (project ID `ac3e5558-8401-4e0d-96b5-ee555b656165`) into `mobile/app.json`'s `extra.eas.projectId`; chose the `jfwashley` personal account over `joshuaashleysteam` since LeoCards is Josh's personal project and the CLI's own ambiguity error explicitly named `jfwashley` as the default. `mobile/eas.json` added with `development`/`preview`/`production` build profiles (dev-client+internal / internal / default-store respectively) plus a `cli.version: ">= 21.5.0"` pin — no credentials/env/submit blocks per D-35. Task 1's blocking `checkpoint:human-action` gate resolved cleanly: the pre-checkpoint `whoami` precheck correctly reported "Not logged in" (did not self-resolve), Josh created the account + ran `eas login`, and the post-resume `whoami` re-check confirmed `jfwashley` authenticated before Task 2 proceeded. **New CLI-behavior discovery, not a code bug:** the literal acceptance-criterion command `npx eas-cli@latest config --non-interactive` (zero flags) fails — "Input is required, but stdin is not readable. Failed to display prompt: Select build profile", exit 1 — even though the installed CLI's own `--help` text states the profile "Defaults to production if defined in eas.json." Verified this is a genuine eas-cli 21.5.0 resolution-flow gap (not caused by this plan's `eas.json` content, and not a transient npx hiccup — reproduced across 4 flag variations including explicit `/dev/null` stdin) by running all 6 explicit `-e {development,preview,production} -p {android,ios}` combinations, every one of which exits 0 and prints a fully-resolved valid config — flagging for any future executor who hits this exact command in an acceptance criterion: use explicit `-e`/`-p` flags, the bare non-interactive form cannot be trusted on this CLI version (plausibly related to `app.json`'s auto-populated `platforms: ["ios","android","web"]`, since EAS Build has no "web" profile concept to resolve against). `eas init` also wrote an `owner: "jfwashley"` field into `app.json` beyond the plan's anticipated "projectId only" diff — expected, CLI-driven behaviour for disambiguating a multi-account setup on every future `eas` command, not a manual addition (confirmed via `git diff` no other unexpected keys were added). Zero `eas build` invocations at any point (confirmed across the full session transcript); the `mobile/dist/` export artefact from a bundling-confirmation run (`expo export --platform android`, 578 modules) was deleted before commit, tree clean. NAT-03 traceability deliberately left unmarked in REQUIREMENTS.md (phase convention: only 28.2-14, the last contributing plan, flips it). `gsd-sdk query state.*` verbs remain known-broken on this project; STATE.md hand-edited directly this session, verified via `git diff`; `roadmap.update-plan-progress 28.2` used (verified safe via `git diff`) for the plan-count/checkbox update.
+
 - Phase 14 (QA observability foundations, complete 2026-06-17) is the OBSERVABILITY SURFACE Phase 15's harness builds on: QA-mode cookie + `readQaAuth()` gate, `STUDY_COOLDOWN_MINUTES` env precedence (short non-zero cooldowns), `/debug` live per-card SRS state table (real data), `QaStateBadge` (`R0·n2t` style) RSC-gated onto study + dashboard, and a prod-parity gating e2e (no badges / QA endpoints 404 when secret unset).
 - Phase 15 must drive the REAL pipeline (app's own API routes / browser flows), NEVER the `/debug` virtual override (that override is the cheat console for visual states, not a journey harness).
 - DB workflow: this project uses Drizzle `db:push` (NOT `db:migrate` — the migrations journal is empty); hosted-DB writes gated by the auto-mode classifier.
@@ -172,9 +174,9 @@ None blocking. Phase 15 needs careful time-resumable manifest design (QAJ-03) + 
 
 ## Session Continuity
 
-Last session: 2026-08-05T11:38:22.000Z
-Stopped at: Phase 28.2 Plan 01 complete (better-auth 1.6.26 + @better-auth/expo installed, zero src/ changes, nothing pushed)
-Resume file: .planning/phases/28.2-expo-app-shell-auth/28.2-02-PLAN.md
+Last session: 2026-08-05T13:17:16.000Z
+Stopped at: Phase 28.2 Plan 02 complete (EAS project linked @jfwashley/leocards, eas.json committed, zero builds triggered, nothing pushed)
+Resume file: .planning/phases/28.2-expo-app-shell-auth/28.2-03-PLAN.md
 
 **Non-blocking flag (2026-08-05, Phase 28.2-01 execute session):** the documented full-suite parallel-execution vitest flake set now has a 5th member — `src/components/change-password-card.test.tsx` failed once during pre-bump baseline capture (full run: `1 failed | 803 passed | 6 skipped`), but passed 10/10 in isolation with zero uncommitted changes and no recent file history; did not recur on the post-bump full run (`804/6/0`). Full detail logged to `.planning/phases/28.2-expo-app-shell-auth/deferred-items.md` per Scope Boundary (out of that plan's `files_modified`). The flake set for future executors' reference is now: `deck-switcher`, `image-upload-flow-extract-errors`, `review-list-commit-guard`, `cooldown-config`, `change-password-card`.
 
